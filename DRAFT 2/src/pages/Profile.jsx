@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { getProfile, getUserVideos, signOut, updateProfile, supabase } from '../lib/supabase.js'
 
-const C = { card:'#161616', border:'#2A2A2A', border2:'#383838', accent:'#C8FF00', muted:'#888', sub:'#555', surface:'#0D0D0D', pink:'#FF2D78', blue:'#00C2FF', green:'#00E676' }
+const C = { card:'#161616', border:'#2A2A2A', border2:'#383838', accent:'#C8FF00', muted:'#888', sub:'#555', pink:'#FF2D78', blue:'#00C2FF', green:'#00E676' }
 const ACC = { PG:C.accent, SG:C.pink, SF:C.blue, PF:C.green, C:'#9B5CFF', scout:'#FF6B00', coach:'#FF6B00' }
 const fmt = n => n>=1000?(n/1000).toFixed(1)+'K':String(n||0)
 
@@ -17,8 +17,11 @@ function Av({ profile, size=80, accent=C.accent, ring=false, onClick }) {
         : <div style={{ width:size, height:size, borderRadius:'50%', background:`${accent}20`, border:`1.5px solid ${accent}55`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:size*.33, fontWeight:700, color:accent, fontFamily:"'Space Grotesk',sans-serif" }}>{initials}</div>
       }
       {onClick && (
-        <div style={{ position:'absolute', bottom:ring?4:0, right:ring?4:0, width:22, height:22, borderRadius:'50%', background:accent, display:'flex', alignItems:'center', justifyContent:'center', border:'2px solid #000' }}>
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <div style={{ position:'absolute', bottom:0, right:0, width:24, height:24, borderRadius:'50%', background:accent, display:'flex', alignItems:'center', justifyContent:'center', border:'2px solid #000' }}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
         </div>
       )}
     </div>
@@ -35,6 +38,7 @@ export default function Profile({ session }) {
   const [editing, setEdit]   = useState(false)
   const [saving, setSaving]  = useState(false)
   const [uploading, setUplAv]= useState(false)
+  const [avatarError, setAvErr] = useState('')
   const [editForm, setEF]    = useState({})
   const avatarRef            = useRef()
 
@@ -48,7 +52,14 @@ export default function Profile({ session }) {
       .then(([{ data:p }, { data:v }]) => {
         setProf(p)
         setVideos(v||[])
-        setEF({ full_name:p?.full_name||'', bio:p?.bio||'', school:p?.school||'', year:p?.year||'', height:p?.height||'', position:p?.position||'' })
+        setEF({
+          full_name: p?.full_name||'',
+          bio:       p?.bio||'',
+          school:    p?.school||'',
+          year:      p?.year||'',
+          height:    p?.height||'',
+          position:  p?.position||''
+        })
         setLoad(false)
       })
   }, [targetId])
@@ -64,21 +75,40 @@ export default function Profile({ session }) {
   const uploadAvatar = async e => {
     const file = e.target.files[0]
     if (!file) return
+    if (!file.type.startsWith('image/')) { setAvErr('Please select an image'); return }
     setUplAv(true)
+    setAvErr('')
     try {
-      const ext  = file.name.split('.').pop()
+      const ext  = file.name.split('.').pop().toLowerCase()
       const path = `${session.user.id}.${ext}`
-      await supabase.storage.from('videos').upload(path, file, { upsert:true })
-      const { data:{ publicUrl } } = supabase.storage.from('videos').getPublicUrl(path)
+
+      // Upload to videos bucket under avatars folder (simpler, uses existing bucket)
+      const { error: uploadError } = await supabase.storage
+        .from('videos')
+        .upload(`avatars/${path}`, file, { upsert:true, cacheControl:'3600' })
+
+      if (uploadError) throw uploadError
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('videos')
+        .getPublicUrl(`avatars/${path}`)
+
       await updateProfile(session.user.id, { avatar_url: publicUrl })
-      setProf(p=>({...p, avatar_url:publicUrl}))
-    } catch(e) { console.error(e) }
+      setProf(p=>({...p, avatar_url: publicUrl }))
+    } catch(err) {
+      console.error('Avatar upload error:', err)
+      setAvErr(err.message || 'Upload failed')
+    }
     setUplAv(false)
   }
 
   const handleSignOut = async () => { await signOut(); navigate('/') }
 
-  const inp = { background:C.card, border:`1.5px solid ${C.border}`, borderRadius:10, padding:'12px 14px', color:'#fff', fontSize:14, outline:'none', width:'100%', WebkitAppearance:'none' }
+  const inp = {
+    background: C.card, border: `1.5px solid ${C.border}`, borderRadius: 10,
+    padding: '12px 14px', color: '#fff', fontSize: 14, outline: 'none',
+    width: '100%', WebkitAppearance: 'none'
+  }
   const focus = e => e.target.style.borderColor = C.accent
   const blur  = e => e.target.style.borderColor = C.border
 
@@ -103,9 +133,8 @@ export default function Profile({ session }) {
     <div style={{ height:'100%', overflowY:'auto', WebkitOverflowScrolling:'touch' }}>
       <div style={{ padding:'20px 18px 0', maxWidth:560, margin:'0 auto' }}>
 
-        {/* Header row */}
+        {/* Header */}
         <div style={{ display:'flex', gap:20, alignItems:'flex-start', marginBottom:16 }}>
-          {/* Avatar with upload */}
           <div style={{ position:'relative' }}>
             <Av profile={profile} size={80} accent={accent} ring onClick={isOwn ? ()=>avatarRef.current.click() : undefined}/>
             {uploading && (
@@ -117,7 +146,6 @@ export default function Profile({ session }) {
           </div>
 
           <div style={{ flex:1 }}>
-            {/* Stats */}
             <div style={{ display:'flex', marginBottom:14 }}>
               {[[videos.length,'Posts'],[profile?.followers_count||0,'Followers'],[profile?.following_count||0,'Following']].map(([v,k])=>(
                 <div key={k} style={{ flex:1, textAlign:'center' }}>
@@ -126,26 +154,27 @@ export default function Profile({ session }) {
                 </div>
               ))}
             </div>
-            {/* Action buttons */}
             <div style={{ display:'flex', gap:8 }}>
-              {isOwn
-                ? <>
-                    <button onClick={() => setEdit(!editing)}
-                      style={{ flex:1, padding:'9px 0', borderRadius:10, fontWeight:700, fontSize:14, background:C.card, color:'#fff', border:`1.5px solid ${C.border2}` }}>
-                      {editing ? 'Cancel' : 'Edit Profile'}
-                    </button>
-                    <button onClick={handleSignOut}
-                      style={{ padding:'9px 14px', borderRadius:10, fontWeight:700, fontSize:13, background:'transparent', color:C.muted, border:`1.5px solid ${C.border}` }}>
-                      Sign out
-                    </button>
-                  </>
-                : <button style={{ flex:1, padding:'9px 0', borderRadius:10, fontWeight:700, fontSize:14, background:accent, color:'#000', border:'none' }}>Follow</button>
-              }
+              {isOwn ? <>
+                <button onClick={() => setEdit(!editing)}
+                  style={{ flex:1, padding:'9px 0', borderRadius:10, fontWeight:700, fontSize:14, background:C.card, color:'#fff', border:`1.5px solid ${C.border2}` }}>
+                  {editing ? 'Cancel' : 'Edit Profile'}
+                </button>
+                <button onClick={handleSignOut}
+                  style={{ padding:'9px 14px', borderRadius:10, fontWeight:700, fontSize:13, background:'transparent', color:C.muted, border:`1.5px solid ${C.border}` }}>
+                  Sign out
+                </button>
+              </> : (
+                <button style={{ flex:1, padding:'9px 0', borderRadius:10, fontWeight:700, fontSize:14, background:accent, color:'#000', border:'none' }}>Follow</button>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Bio section */}
+        {avatarError && <p style={{ color:C.pink, fontSize:12, marginBottom:10, fontWeight:600 }}>{avatarError}</p>}
+        {isOwn && !uploading && <p style={{ fontSize:11, color:C.muted, marginBottom:12 }}>Tap your photo to change it</p>}
+
+        {/* Bio */}
         {!editing ? (
           <div style={{ marginBottom:16 }}>
             <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:18, fontWeight:700, marginBottom:2 }}>{profile?.full_name||profile?.username}</div>
@@ -178,7 +207,7 @@ export default function Profile({ session }) {
         </div>
       </div>
 
-      {/* Videos */}
+      {/* Videos tab */}
       {tab==='videos' && (
         <div style={{ maxWidth:560, margin:'0 auto' }}>
           {videos.length===0 && (
@@ -213,7 +242,7 @@ export default function Profile({ session }) {
         </div>
       )}
 
-      {/* About */}
+      {/* About tab */}
       {tab==='about' && (
         <div style={{ maxWidth:560, margin:'0 auto', padding:'16px 18px' }}>
           {[['Position',profile?.position],['School',profile?.school],['Year',profile?.year],['Height',profile?.height],['Role',profile?.role]].filter(([,v])=>v).map(([k,v])=>(
@@ -222,18 +251,11 @@ export default function Profile({ session }) {
               <span style={{ fontSize:14, fontWeight:700 }}>{v}</span>
             </div>
           ))}
-          {isOwn && (
-            <div style={{ marginTop:24, padding:16, background:C.card, borderRadius:12, border:`1px solid ${C.border}`, textAlign:'center' }}>
-              <p style={{ fontSize:13, color:C.muted, marginBottom:12 }}>Change your profile photo by tapping your avatar at the top</p>
-              <button onClick={() => avatarRef.current?.click()} style={{ background:C.accent, color:'#000', border:'none', borderRadius:10, padding:'10px 22px', fontWeight:800, fontSize:13 }}>
-                Upload Photo
-              </button>
-            </div>
-          )}
         </div>
       )}
 
       <div style={{ height:40 }}/>
+      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
   )
 }
