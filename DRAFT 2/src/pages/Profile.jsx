@@ -68,7 +68,7 @@ export default function Profile({ session }) {
     try {
       const ext  = file.name.split('.').pop()
       const path = `avatars/${session.user.id}.${ext}`
-      await supabase.storage.from('videos').upload(path, file, { upsert:true })
+      await supabase.storage.from('avatars').upload(path, file, { upsert:true })
       const { data:{ publicUrl } } = supabase.storage.from('videos').getPublicUrl(path)
       await updateProfile(session.user.id, { avatar_url: publicUrl })
       setProf(p=>({...p, avatar_url:publicUrl}))
