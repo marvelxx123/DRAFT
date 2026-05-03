@@ -1,16 +1,21 @@
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { supabase } from './lib/supabase.js'
-import Feed        from './pages/Feed.jsx'
-import Discover    from './pages/Discover.jsx'
-import Upload      from './pages/Upload.jsx'
-import Profile     from './pages/Profile.jsx'
-import Login       from './pages/Login.jsx'
-import Register    from './pages/Register.jsx'
-import BottomNav   from './components/BottomNav.jsx'
+import { T } from './lib/theme.js'
+import Feed           from './pages/Feed.jsx'
+import Discover       from './pages/Discover.jsx'
+import Upload         from './pages/Upload.jsx'
+import Profile        from './pages/Profile.jsx'
+import Login          from './pages/Login.jsx'
+import Register       from './pages/Register.jsx'
+import ScoutDashboard from './pages/ScoutDashboard.jsx'
+import StatsDashboard from './pages/StatsDashboard.jsx'
+import Messages       from './pages/Messages.jsx'
+import Notifications  from './pages/Notifications.jsx'
+import BottomNav      from './components/BottomNav.jsx'
 
 export default function App() {
-  const [session, setSession] = useState(undefined) // undefined = loading
+  const [session, setSession] = useState(undefined)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session))
@@ -18,25 +23,32 @@ export default function App() {
     return () => subscription.unsubscribe()
   }, [])
 
-  // Still loading
   if (session === undefined) return (
-    <div style={{ height:'100%', display:'flex', alignItems:'center', justifyContent:'center', background:'#000' }}>
-      <div style={{ width:32, height:32, borderRadius:'50%', border:'3px solid #C8FF00', borderTopColor:'transparent', animation:'spin 0.8s linear infinite' }}/>
-      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+    <div style={{ height:'100vh', display:'flex', alignItems:'center', justifyContent:'center', background:'#000' }}>
+      <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:20 }}>
+        <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:48, fontWeight:700, letterSpacing:-3, color:T.electric, lineHeight:.9 }}>DRAFT</div>
+        <div style={{ width:36, height:2.5, background:`linear-gradient(90deg, ${T.electric}, ${T.lime})`, borderRadius:2 }}/>
+        <div className="spin" style={{ width:22, height:22, borderRadius:'50%', border:`2.5px solid ${T.electric}`, borderTopColor:'transparent', marginTop:4 }}/>
+      </div>
     </div>
   )
 
   return (
-    <div style={{ height:'100%', display:'flex', flexDirection:'column', background:'#000' }}>
+    <div style={{ height:'100vh', display:'flex', flexDirection:'column', background:T.bg, overflow:'hidden' }}>
       <div style={{ flex:1, overflow:'hidden', position:'relative' }}>
         <Routes>
-          <Route path="/"        element={<Feed session={session}/>} />
-          <Route path="/discover"element={<Discover session={session}/>} />
-          <Route path="/upload"  element={session ? <Upload session={session}/> : <Navigate to="/login"/>} />
-          <Route path="/profile" element={session ? <Profile session={session}/> : <Navigate to="/login"/>} />
+          <Route path="/"                element={<Feed session={session}/>} />
+          <Route path="/discover"        element={<Discover session={session}/>} />
+          <Route path="/upload"          element={session ? <Upload session={session}/> : <Navigate to="/login"/>} />
+          <Route path="/profile"         element={<Profile session={session}/>} />
           <Route path="/profile/:userId" element={<Profile session={session}/>} />
-          <Route path="/login"   element={session ? <Navigate to="/"/> : <Login/>} />
-          <Route path="/register"element={session ? <Navigate to="/"/> : <Register/>} />
+          <Route path="/scouts"          element={<ScoutDashboard session={session}/>} />
+          <Route path="/stats"           element={session ? <StatsDashboard session={session}/> : <Navigate to="/login"/>} />
+          <Route path="/messages"        element={session ? <Messages session={session}/> : <Navigate to="/login"/>} />
+          <Route path="/notifications"   element={<Notifications session={session}/>} />
+          <Route path="/login"           element={session ? <Navigate to="/"/> : <Login/>} />
+          <Route path="/register"        element={session ? <Navigate to="/"/> : <Register/>} />
+          <Route path="*"                element={<Navigate to="/"/>} />
         </Routes>
       </div>
       <BottomNav session={session}/>
