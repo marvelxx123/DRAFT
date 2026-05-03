@@ -26,15 +26,16 @@ export default function App() {
   if (session === undefined) return (
     <div style={{ height:'100vh', display:'flex', alignItems:'center', justifyContent:'center', background:'#000' }}>
       <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:20 }}>
-        <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:48, fontWeight:700, letterSpacing:-3, color:T.electric, lineHeight:.9 }}>DRAFT</div>
-        <div style={{ width:36, height:2.5, background:`linear-gradient(90deg, ${T.electric}, ${T.lime})`, borderRadius:2 }}/>
-        <div className="spin" style={{ width:22, height:22, borderRadius:'50%', border:`2.5px solid ${T.electric}`, borderTopColor:'transparent', marginTop:4 }}/>
+        <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:48, fontWeight:700, letterSpacing:-3, color:'#00D4FF', lineHeight:.9 }}>DRAFT</div>
+        <div style={{ width:36, height:2.5, background:'linear-gradient(90deg, #00D4FF, #C8FF00)', borderRadius:2 }}/>
+        <div style={{ width:22, height:22, borderRadius:'50%', border:'2.5px solid #00D4FF', borderTopColor:'transparent', animation:'spin .7s linear infinite', marginTop:4 }}/>
       </div>
+      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
   )
 
   return (
-    <div style={{ height:'100vh', display:'flex', flexDirection:'column', background:T.bg, overflow:'hidden' }}>
+    <div style={{ height:'100vh', display:'flex', flexDirection:'column', background:'#000000', overflow:'hidden' }}>
       <div style={{ flex:1, overflow:'hidden', position:'relative' }}>
         <Routes>
           <Route path="/"                element={<Feed session={session}/>} />
