@@ -59,7 +59,6 @@ const css = `
 `
 
 /* ── Helpers ── */
-const fmt = n => n >= 1000 ? (n/1000).toFixed(1)+'K' : String(n||0)
 
 function Ic({ n, size=18, color='#fff', sw=1.7 }) {
   const s = { width:size, height:size, display:'block', flexShrink:0 }
