@@ -15,6 +15,74 @@ function Av({ profile, size=80, accent, ring=false }) {
   )
 }
 
+function ScoutReportPanel({ report }) {
+  const cats = [
+    ['Athleticism',  report.categories?.athleticism],
+    ['Shooting',     report.categories?.shooting],
+    ['Ball Handling',report.categories?.ball_handling],
+    ['Court Vision', report.categories?.court_vision],
+    ['Defense',      report.categories?.defense],
+    ['Physicality',  report.categories?.physicality],
+  ].filter(([, v]) => v != null)
+
+  return (
+    <div style={{ background:T.card, borderBottom:`1px solid ${T.border}`, padding:'16px 18px' }}>
+      {/* Score header */}
+      <div style={{ display:'flex', alignItems:'center', gap:14, marginBottom:14 }}>
+        <div style={{ width:58, height:58, borderRadius:14, background:`${T.gold}14`, border:`2px solid ${T.gold}40`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+          <span style={{ fontFamily:"'Space Mono',monospace", fontSize:22, fontWeight:700, color:T.gold }}>{report.overall_score}</span>
+        </div>
+        <div>
+          <div style={{ fontSize:11, fontWeight:800, color:T.gold, letterSpacing:1.5 }}>AI DRAFT SCORE</div>
+          <div style={{ fontSize:11, color:T.sub, marginTop:3 }}>Powered by Gemini AI</div>
+        </div>
+      </div>
+
+      {/* Category bars */}
+      {cats.length > 0 && (
+        <div style={{ display:'flex', flexDirection:'column', gap:7, marginBottom:14 }}>
+          {cats.map(([label, val]) => (
+            <div key={label} style={{ display:'flex', alignItems:'center', gap:8 }}>
+              <span style={{ fontSize:11, color:T.sub, width:90, flexShrink:0 }}>{label}</span>
+              <div style={{ flex:1, height:4, background:T.card2, borderRadius:2 }}>
+                <div style={{ height:'100%', width:`${(val/10)*100}%`, background:T.electric, borderRadius:2 }}/>
+              </div>
+              <span style={{ fontSize:11, fontWeight:700, color:T.text2, width:14, textAlign:'right' }}>{val}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Written report */}
+      {report.scouting_report && (
+        <p style={{ fontSize:13, color:T.text2, lineHeight:1.65, marginBottom:12, fontStyle:'italic', borderLeft:`2px solid ${T.electric}`, paddingLeft:10 }}>
+          {report.scouting_report}
+        </p>
+      )}
+
+      {/* Strengths */}
+      {report.strengths?.length > 0 && (
+        <div style={{ marginBottom:10 }}>
+          <div style={{ fontSize:10, fontWeight:800, color:T.lime, letterSpacing:1.5, marginBottom:5 }}>STRENGTHS</div>
+          {report.strengths.map((s, i) => (
+            <div key={i} style={{ fontSize:12, color:T.text2, marginBottom:3 }}>✓ {s}</div>
+          ))}
+        </div>
+      )}
+
+      {/* Areas to improve */}
+      {report.areas_to_improve?.length > 0 && (
+        <div>
+          <div style={{ fontSize:10, fontWeight:800, color:T.sub, letterSpacing:1.5, marginBottom:5 }}>WORK ON</div>
+          {report.areas_to_improve.map((a, i) => (
+            <div key={i} style={{ fontSize:12, color:T.sub, marginBottom:3 }}>→ {a}</div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function Profile({ session }) {
   const { userId }           = useParams()
   const navigate             = useNavigate()
@@ -26,6 +94,7 @@ export default function Profile({ session }) {
   const [saving, setSaving]  = useState(false)
   const [uplAv, setUplAv]    = useState(false)
   const [editForm, setEF]    = useState({})
+  const [expandedReport, setExpandedReport] = useState(null)
   const avatarRef            = useRef()
 
   const targetId = userId || session?.user?.id
@@ -40,11 +109,21 @@ export default function Profile({ session }) {
         setProf(p); setVideos(v||[])
         setEF({ full_name:p?.full_name||'', bio:p?.bio||'', school:p?.school||'', year:p?.year||'', height:p?.height||'', position:p?.position||'' })
         setLoad(false)
-        // Track profile view (not own)
         if (!isOwn && session?.user?.id && p?.id) {
           supabase.from('notifications').insert({ user_id:p.id, actor_id:session.user.id, type:'view', text:'viewed your profile', link:`/profile/${p.id}`, read:false }).then(()=>{})
         }
       })
+  }, [targetId])
+
+  // Live-update scout scores as Gemini finishes analyzing
+  useEffect(() => {
+    if (!targetId) return
+    const ch = supabase.channel(`video_scores_${targetId}`)
+      .on('postgres_changes', { event:'UPDATE', schema:'public', table:'videos', filter:`user_id=eq.${targetId}` },
+        payload => setVideos(vs => vs.map(v => v.id === payload.new.id ? { ...v, ...payload.new } : v))
+      )
+      .subscribe()
+    return () => supabase.removeChannel(ch)
   }, [targetId])
 
   const saveProfile = async () => {
@@ -99,14 +178,12 @@ export default function Profile({ session }) {
   return (
     <div style={{ height:'100%', overflowY:'auto', WebkitOverflowScrolling:'touch', background:T.bg }}>
 
-      {/* Subtle accent top strip */}
       <div style={{ height:2, background:`linear-gradient(90deg, ${accent}, transparent)` }}/>
 
       <div style={{ padding:'18px 18px 0', maxWidth:560, margin:'0 auto' }}>
 
         {/* Header */}
         <div style={{ display:'flex', gap:18, alignItems:'flex-start', marginBottom:18 }}>
-          {/* Avatar */}
           <div style={{ position:'relative', flexShrink:0 }}>
             <div onClick={isOwn ? ()=>avatarRef.current.click() : undefined} style={{ cursor:isOwn?'pointer':'default' }}>
               <Av profile={profile} size={76} ring/>
@@ -125,7 +202,6 @@ export default function Profile({ session }) {
             <input ref={avatarRef} type="file" accept="image/*" onChange={uploadAvatar} style={{ display:'none' }}/>
           </div>
 
-          {/* Stats + buttons */}
           <div style={{ flex:1 }}>
             <div style={{ display:'flex', marginBottom:14 }}>
               {[[videos.length,'Posts'],[profile?.followers_count||0,'Followers'],[profile?.following_count||0,'Following']].map(([v,k])=>(
@@ -159,7 +235,6 @@ export default function Profile({ session }) {
             <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:4 }}>
               <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:18, fontWeight:700 }}>{profile?.full_name||profile?.username}</div>
               {isScout && <span style={{ fontSize:10, fontWeight:800, color:T.scoutBlue, background:`${T.scoutBlue}18`, padding:'2px 7px', borderRadius:5 }}>SCOUT</span>}
-              {profile?.verified && <span style={{ fontSize:13, color:T.scoutBlue }}>✓</span>}
             </div>
             {profile?.position && <div style={{ fontSize:13, fontWeight:600, color:accent, marginBottom:5 }}>{[profile.position, profile.school, profile.year].filter(Boolean).join(' · ')}</div>}
             {profile?.bio && <p style={{ fontSize:14, color:T.sub, lineHeight:1.65, marginBottom:10 }}>{profile.bio}</p>}
@@ -176,7 +251,7 @@ export default function Profile({ session }) {
             <input placeholder="Height" value={editForm.height} onChange={e=>setEF(f=>({...f,height:e.target.value}))} style={inp} onFocus={focus} onBlur={blur}/>
             <textarea placeholder="Bio" value={editForm.bio} onChange={e=>setEF(f=>({...f,bio:e.target.value}))} rows={3} style={{ ...inp, resize:'none', lineHeight:1.5 }} onFocus={focus} onBlur={blur}/>
             <button onClick={saveProfile} disabled={saving}
-              style={{ background:T.white, color:'#000', border:'none', borderRadius:10, padding:'13px', fontWeight:800, fontSize:14, fontFamily:"'Space Grotesk',sans-serif", opacity:saving?.6:1 }}>
+              style={{ background:T.white, color:'#000', border:'none', borderRadius:10, padding:'13px', fontWeight:800, fontSize:14, fontFamily:"'Space Grotesk',sans-serif", opacity:saving ? 0.6 : 1 }}>
               {saving?'Saving…':'Save Changes'}
             </button>
           </div>
@@ -237,22 +312,36 @@ export default function Profile({ session }) {
               {isOwn && <Link to="/upload" style={{ background:T.white, color:'#000', borderRadius:10, padding:'11px 24px', fontWeight:800, fontSize:14, textDecoration:'none', display:'inline-block', fontFamily:"'Space Grotesk',sans-serif" }}>Upload First Video</Link>}
             </div>
           )}
-          {videos.map(v=>(
-            <div key={v.id} style={{ padding:'14px 18px', borderBottom:`1px solid ${T.border}`, display:'flex', gap:13, alignItems:'center' }}>
-              <div style={{ width:60, height:60, borderRadius:10, background:T.card2, border:`1px solid ${T.border}`, flexShrink:0, overflow:'hidden', position:'relative' }}>
-                <video src={v.video_url} style={{ width:'100%', height:'100%', objectFit:'cover' }} muted playsInline/>
-                <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center', background:'rgba(0,0,0,.35)' }}>
-                  <svg width="14" height="16" viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          {videos.map(v => (
+            <div key={v.id}>
+              <div style={{ padding:'14px 18px', borderBottom: expandedReport === v.id && v.scout_report ? 'none' : `1px solid ${T.border}`, display:'flex', gap:13, alignItems:'center' }}>
+                <div style={{ width:60, height:60, borderRadius:10, background:T.card2, border:`1px solid ${T.border}`, flexShrink:0, overflow:'hidden', position:'relative' }}>
+                  <video src={v.video_url} style={{ width:'100%', height:'100%', objectFit:'cover' }} muted playsInline/>
+                  <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center', background:'rgba(0,0,0,.35)' }}>
+                    <svg width="14" height="16" viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  </div>
+                </div>
+                <div style={{ flex:1, minWidth:0 }}>
+                  <div style={{ fontSize:14, fontWeight:700, marginBottom:3, color:T.text, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{v.title}</div>
+                  <div style={{ fontSize:11, color:T.sub }}>{fmt(v.views_count)} views · {v.category} · {timeAgo(v.created_at)}</div>
+                  {v.scout_score != null ? (
+                    <button onClick={() => setExpandedReport(expandedReport === v.id ? null : v.id)}
+                      style={{ marginTop:5, background:'none', border:'none', padding:0, display:'flex', alignItems:'center', gap:5, cursor:'pointer' }}>
+                      <span style={{ fontSize:11, fontWeight:800, color:T.gold }}>AI Scout: {v.scout_score}</span>
+                      <span style={{ fontSize:10, color:T.sub }}>{expandedReport === v.id ? '▲' : '▼'} Report</span>
+                    </button>
+                  ) : (
+                    <span style={{ fontSize:11, color:T.sub, marginTop:4, display:'block' }}>🤖 Analyzing…</span>
+                  )}
+                </div>
+                <div style={{ display:'flex', alignItems:'center', gap:4, flexShrink:0 }}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill={T.crimson}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  <span style={{ fontSize:12, color:T.sub, fontWeight:600 }}>{fmt(v.likes_count)}</span>
                 </div>
               </div>
-              <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ fontSize:14, fontWeight:700, marginBottom:3, color:T.text, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{v.title}</div>
-                <div style={{ fontSize:11, color:T.sub }}>{fmt(v.views_count)} views · {v.category} · {timeAgo(v.created_at)}</div>
-              </div>
-              <div style={{ display:'flex', alignItems:'center', gap:4, flexShrink:0 }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill={T.crimson}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                <span style={{ fontSize:12, color:T.sub, fontWeight:600 }}>{fmt(v.likes_count)}</span>
-              </div>
+              {expandedReport === v.id && v.scout_report && (
+                <ScoutReportPanel report={v.scout_report}/>
+              )}
             </div>
           ))}
         </div>
