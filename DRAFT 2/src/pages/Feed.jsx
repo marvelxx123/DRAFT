@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getFeedVideos, getLike, addLike, removeLike, getComments, addComment } from '../lib/supabase.js'
+import { getFeedVideos, getLike, addLike, removeLike, getComments, addComment, getFollow, follow, unfollow } from '../lib/supabase.js'
 import { supabase } from '../lib/supabase.js'
 import { T, POS, CAT, fmt, timeAgo, initials } from '../lib/theme.js'
 
@@ -84,7 +84,7 @@ function CommentsPanel({ video, session, onClose }) {
                 <span style={{ fontSize:11, color:T.sub }}>{timeAgo(c.created_at)}</span>
               </div>
               <p style={{ fontSize:14, color:T.text2, lineHeight:1.5 }}>{c.text}</p>
-              <button onClick={()=>setCL(p=>({...p,[i]:!p[i]}))} style={{ background:'none', border:'none', display:'flex', alignItems:'center', gap:4, marginTop:6 }}>
+              <button onClick={()=>setCL(prev=>({...prev,[i]:!prev[i]}))} style={{ background:'none', border:'none', display:'flex', alignItems:'center', gap:4, marginTop:6 }}>
                 <Ic n="heart" size={12} color={cLikes[i]?T.crimson:T.sub} fill={!!cLikes[i]}/>
                 <span style={{ fontSize:11, color:cLikes[i]?T.crimson:T.sub, fontWeight:600 }}>{c.likes_count+(cLikes[i]?1:0)}</span>
               </button>
@@ -115,21 +115,27 @@ function CommentsPanel({ video, session, onClose }) {
 }
 
 function VideoSlide({ video, session, isActive }) {
-  const navigate          = useNavigate()
-  const [liked, setLiked] = useState(false)
-  const [likes, setLikes] = useState(video.likes_count||0)
-  const [saved, setSaved] = useState(false)
-  const [showC, setShowC] = useState(false)
-  const [heart, setHeart] = useState(false)
-  const [paused, setPause]= useState(false)
-  const videoRef          = useRef()
-  const p                 = video.profiles
-  const accent            = POS[p?.position] || T.electric
-  const catColor          = CAT[video.category] || T.electric
+  const navigate              = useNavigate()
+  const [liked, setLiked]     = useState(false)
+  const [likes, setLikes]     = useState(video.likes_count||0)
+  const [saved, setSaved]     = useState(false)
+  const [showC, setShowC]     = useState(false)
+  const [heart, setHeart]     = useState(false)
+  const [paused, setPause]    = useState(false)
+  const [following, setFollowing] = useState(false)
+  const videoRef              = useRef()
+  const p                     = video.profiles
+  const accent                = POS[p?.position] || T.electric
+  const catColor              = CAT[video.category] || T.electric
 
   useEffect(() => {
     if (!session) return
     getLike(session.user.id, video.id).then(({ data }) => setLiked(!!data))
+  }, [video.id, session])
+
+  useEffect(() => {
+    if (!session || !p?.id || session.user.id === p.id) return
+    getFollow(session.user.id, p.id).then(({ data }) => setFollowing(!!data))
   }, [video.id, session])
 
   useEffect(() => {
@@ -147,6 +153,15 @@ function VideoSlide({ video, session, isActive }) {
     else await addLike(session.user.id, video.id)
   }
 
+  const doFollow = async (e) => {
+    e.stopPropagation()
+    if (!session) { navigate('/login'); return }
+    const was = following
+    setFollowing(!was)
+    if (was) await unfollow(session.user.id, p.id)
+    else await follow(session.user.id, p.id)
+  }
+
   const share = () => {
     const url = `${window.location.origin}/profile/${p?.id}`
     if (navigator.share) navigator.share({ title:video.title, url })
@@ -158,7 +173,7 @@ function VideoSlide({ video, session, isActive }) {
       {/* Video */}
       <video ref={videoRef} src={video.video_url} loop muted playsInline
         style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover' }}
-        onClick={()=>setPause(p=>!p)} onDoubleClick={doLike}/>
+        onClick={()=>setPause(prev=>!prev)} onDoubleClick={doLike}/>
 
       {/* Pause icon */}
       {paused && (
@@ -191,24 +206,27 @@ function VideoSlide({ video, session, isActive }) {
       {/* Bottom left — info */}
       <div style={{ position:'absolute', bottom:16, left:0, width:'80%', padding:'0 16px 18px', zIndex:20 }}>
         {/* Player row */}
-        <button onClick={()=>navigate(`/profile/${p?.id}`)}
-          style={{ background:'none', border:'none', display:'flex', alignItems:'center', gap:12, marginBottom:12, padding:0, width:'100%', textAlign:'left' }}>
-          <div style={{ position:'relative' }}>
-            <Av profile={p} size={46} color={accent}/>
-            <div style={{ position:'absolute', bottom:-4, left:'50%', transform:'translateX(-50%)', background:T.surface, border:`1px solid ${T.border2}`, borderRadius:10, padding:'1px 7px' }}>
-              <span style={{ fontSize:9, fontWeight:800, color:accent, letterSpacing:.5 }}>{p?.position || 'PG'}</span>
+        <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:12 }}>
+          <button onClick={()=>navigate(`/profile/${p?.id}`)}
+            style={{ background:'none', border:'none', display:'flex', alignItems:'center', gap:12, flex:1, padding:0, textAlign:'left' }}>
+            <div style={{ position:'relative' }}>
+              <Av profile={p} size={46} color={accent}/>
+              <div style={{ position:'absolute', bottom:-4, left:'50%', transform:'translateX(-50%)', background:T.surface, border:`1px solid ${T.border2}`, borderRadius:10, padding:'1px 7px' }}>
+                <span style={{ fontSize:9, fontWeight:800, color:accent, letterSpacing:.5 }}>{p?.position || 'PG'}</span>
+              </div>
             </div>
-          </div>
-          <div style={{ flex:1 }}>
-            <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontWeight:700, fontSize:16, color:'#fff', lineHeight:1.2 }}>{p?.full_name || p?.username}</div>
-            <div style={{ fontSize:12, color:'rgba(255,255,255,.5)', fontWeight:500 }}>{p?.school}</div>
-          </div>
+            <div style={{ flex:1 }}>
+              <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontWeight:700, fontSize:16, color:'#fff', lineHeight:1.2 }}>{p?.full_name || p?.username}</div>
+              <div style={{ fontSize:12, color:'rgba(255,255,255,.5)', fontWeight:500 }}>{p?.school}</div>
+            </div>
+          </button>
           {session?.user?.id !== p?.id && (
-            <div style={{ padding:'6px 14px', background:'rgba(255,255,255,.08)', borderRadius:18, border:'1px solid rgba(255,255,255,.15)', backdropFilter:'blur(8px)' }}>
-              <span style={{ fontSize:12, fontWeight:700, color:'#fff' }}>+ Follow</span>
-            </div>
+            <button onClick={doFollow}
+              style={{ padding:'6px 14px', background:following?`${T.electric}18`:'rgba(255,255,255,.08)', borderRadius:18, border:following?`1px solid ${T.electric}40`:'1px solid rgba(255,255,255,.15)', backdropFilter:'blur(8px)', flexShrink:0 }}>
+              <span style={{ fontSize:12, fontWeight:700, color:following?T.electric:'#fff' }}>{following?'Following':'+ Follow'}</span>
+            </button>
           )}
-        </button>
+        </div>
 
         {/* Title */}
         <p style={{ fontSize:15, fontWeight:600, color:'rgba(255,255,255,.92)', marginBottom:10, lineHeight:1.4 }}>{video.title}</p>

@@ -100,10 +100,10 @@ export default function Register() {
             <div>
               <p style={{ fontSize:11, fontWeight:700, color:T.sub, letterSpacing:1.5, textTransform:'uppercase', marginBottom:10 }}>Position</p>
               <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
-                {POSITIONS.map(p=>(
-                  <button key={p} onClick={()=>set('position',p)}
-                    style={{ padding:'9px 18px', borderRadius:20, border:`1.5px solid ${form.position===p?T.lime:T.border3}`, background:form.position===p?T.lime:'transparent', color:form.position===p?'#000':T.sub, fontSize:14, fontWeight:800, transition:'all .18s' }}>
-                    {p}
+                {POSITIONS.map(pos=>(
+                  <button key={pos} onClick={()=>set('position',pos)}
+                    style={{ padding:'9px 18px', borderRadius:20, border:`1.5px solid ${form.position===pos?T.lime:T.border3}`, background:form.position===pos?T.lime:'transparent', color:form.position===pos?'#000':T.sub, fontSize:14, fontWeight:800, transition:'all .18s' }}>
+                    {pos}
                   </button>
                 ))}
               </div>
@@ -137,7 +137,7 @@ export default function Register() {
 
           <div style={{ display:'flex', gap:10 }}>
             <button onClick={()=>setStep(1)} style={{ flex:1, padding:'16px', background:'transparent', border:`1.5px solid ${T.border3}`, borderRadius:14, fontWeight:700, color:T.sub, fontSize:15 }}>← Back</button>
-            <button onClick={submit} disabled={loading} style={{ flex:2, padding:'16px', background:T.white, color:'#000', border:'none', borderRadius:14, fontWeight:800, fontSize:16, fontFamily:"'Space Grotesk',sans-serif", opacity:loading?.6:1 }}>
+            <button onClick={submit} disabled={loading} style={{ flex:2, padding:'16px', background:T.white, color:'#000', border:'none', borderRadius:14, fontWeight:800, fontSize:16, fontFamily:"'Space Grotesk',sans-serif", opacity:loading ? 0.6 : 1 }}>
               {loading ? 'Creating…' : 'Create Profile 🏀'}
             </button>
           </div>
