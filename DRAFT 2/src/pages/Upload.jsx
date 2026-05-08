@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { uploadVideo } from '../lib/supabase.js'
+import { uploadVideo, analyzeVideo } from '../lib/supabase.js'
 import { T, CAT } from '../lib/theme.js'
 
 const CATS = ['GAME','TRAINING','HIGHLIGHT','DEFENSE','TOURNAMENT','CAMP']
@@ -31,9 +31,11 @@ export default function Upload({ session }) {
     setStep(3)
     const interval = setInterval(() => setProg(p => p < 88 ? p+2 : p), 200)
     try {
-      await uploadVideo(session.user.id, file, { title:form.title.trim(), category:form.category, description:form.description||null })
+      const video = await uploadVideo(session.user.id, file, { title:form.title.trim(), category:form.category, description:form.description||null })
       clearInterval(interval); setProg(100); setDone(true)
-      setTimeout(() => navigate('/'), 1000)
+      // Fire-and-forget — AI analysis runs in background, no need to wait
+      analyzeVideo(video.id, video.video_url, session.user.id).catch(() => {})
+      setTimeout(() => navigate('/profile'), 1800)
     } catch(e) {
       clearInterval(interval); setErr(e.message); setStep(2)
     }
@@ -118,7 +120,7 @@ export default function Upload({ session }) {
           {error && <p style={{ color:T.crimson, fontSize:13, fontWeight:600, textAlign:'center' }}>{error}</p>}
 
           <button onClick={submit}
-            style={{ padding:'16px', background:(!form.title||!form.category)?T.card:T.white, color:(!form.title||!form.category)?T.sub:'#000', border:'none', borderRadius:14, fontWeight:800, fontSize:15, fontFamily:"'Space Grotesk',sans-serif", opacity:(!form.title||!form.category)?.5:1, transition:'all .18s', marginTop:4 }}>
+            style={{ padding:'16px', background:(!form.title||!form.category)?T.card:T.white, color:(!form.title||!form.category)?T.sub:'#000', border:'none', borderRadius:14, fontWeight:800, fontSize:15, fontFamily:"'Space Grotesk',sans-serif", opacity:(!form.title||!form.category)?0.5:1, transition:'all .18s', marginTop:4 }}>
             Upload to DRAFT
           </button>
         </div>
@@ -127,9 +129,15 @@ export default function Upload({ session }) {
       {/* Step 3 — Progress */}
       {step===3 && (
         <div style={{ textAlign:'center', paddingTop:52 }}>
-          <div style={{ fontSize:52, marginBottom:20 }}>{done?'✅':'⬆️'}</div>
-          <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:24, fontWeight:700, marginBottom:12 }}>{done?'Posted!':'Uploading…'}</div>
-          <p style={{ fontSize:14, color:T.sub, marginBottom:28 }}>{done?'Your video is live on DRAFT.':'Saving your video…'}</p>
+          <div style={{ fontSize:52, marginBottom:20 }}>{done ? '🏀' : '⬆️'}</div>
+          <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:24, fontWeight:700, marginBottom:12 }}>
+            {done ? 'Film is live!' : 'Uploading…'}
+          </div>
+          <p style={{ fontSize:14, color:T.sub, marginBottom:28, lineHeight:1.65 }}>
+            {done
+              ? <>🤖 <strong style={{ color:T.electric }}>AI Scout is analyzing your film…</strong><br/>Check your profile in ~1 min for your score."
+              : 'Saving your video…'}
+          </p>
           <div style={{ height:4, background:T.card2, borderRadius:2, overflow:'hidden', marginBottom:8 }}>
             <div style={{ height:'100%', background:`linear-gradient(90deg, ${T.electric}, ${T.lime})`, borderRadius:2, width:`${progress}%`, transition:'width .3s' }}/>
           </div>

@@ -33,6 +33,8 @@ create table videos (
   likes_count int default 0,
   comments_count int default 0,
   views_count int default 0,
+  scout_score int default null,
+  scout_report jsonb default null,
   created_at timestamptz default now()
 );
 
@@ -120,12 +122,12 @@ create policy "follows_public_read"  on follows for select using (true);
 create policy "follows_auth_insert"  on follows for insert with check (auth.uid() = follower_id);
 create policy "follows_auth_delete"  on follows for delete using (auth.uid() = follower_id);
 
--- Messages: only sender and receiver can read, only sender can insert
+-- Messages: only sender and receiver can access
 create policy "messages_read"   on messages for select using (auth.uid() = sender_id or auth.uid() = receiver_id);
 create policy "messages_insert" on messages for insert with check (auth.uid() = sender_id);
 create policy "messages_update" on messages for update using (auth.uid() = receiver_id);
 
--- Notifications: only the recipient can read/update
+-- Notifications: only recipient can access
 create policy "notifs_read"   on notifications for select using (auth.uid() = user_id);
 create policy "notifs_insert" on notifications for insert with check (true);
 create policy "notifs_update" on notifications for update using (auth.uid() = user_id);
