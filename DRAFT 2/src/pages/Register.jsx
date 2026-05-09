@@ -73,7 +73,6 @@ export default function Register() {
 
         {/* Step 1 */}
         {step===1 && <>
-          {/* Role toggle */}
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom:4 }}>
             {[['player','🏀','Player'],['scout','🎯','Scout / Coach']].map(([r,ic,lbl])=>(
               <button key={r} onClick={()=>set('role',r)}
@@ -111,7 +110,7 @@ export default function Register() {
           )}
 
           <input value={form.school} onChange={e=>set('school',e.target.value)}
-            placeholder={form.role==='player'?'School or Team':'Organization'} style={inp} onFocus={focus} onBlur={blur}/>
+            placeholder={form.role==='player' ? 'School or Team' : 'Organization'} style={inp} onFocus={focus} onBlur={blur}/>
 
           <div>
             <p style={{ fontSize:11, fontWeight:700, color:T.sub, letterSpacing:1.5, textTransform:'uppercase', marginBottom:10 }}>Year</p>
@@ -126,7 +125,7 @@ export default function Register() {
           </div>
 
           {form.role==='player' && (
-            <input value={form.height} onChange={e=>set('height',e.target.value)} placeholder="Height (e.g. 6'4\")" style={inp} onFocus={focus} onBlur={blur}/>
+            <input value={form.height} onChange={e=>set('height',e.target.value)} placeholder={"Height (e.g. 6'4\")"} style={inp} onFocus={focus} onBlur={blur}/>
           )}
 
           <textarea value={form.bio} onChange={e=>set('bio',e.target.value)} rows={3}
