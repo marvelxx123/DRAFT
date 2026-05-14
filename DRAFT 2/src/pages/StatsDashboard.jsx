@@ -4,14 +4,6 @@ import { useNavigate } from 'react-router-dom'
 import { supabase, updateProfile } from '../lib/supabase.js'
 
 /* ── COLORS ── */
-const C = {
-  bg:'#000', surface:'#0A0A0A', card:'#141414', card2:'#1C1C1C',
-  border:'#252525', border2:'#333',
-  text:'#FFF', text2:'#CCC', sub:'#888', muted:'#555',
-  accent:'#C8FF00', pink:'#FF2D78', blue:'#00C2FF',
-  green:'#00E676', purple:'#9B5CFF', orange:'#FF6B00',
-  gold:'#FFB800',
-}
 
 const POS_COLOR = { PG:T.lime, SG:T.crimson, SF:T.scoutBlue, PF:'#30D158', C:'#BF5AF2' }
 
