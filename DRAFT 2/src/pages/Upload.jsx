@@ -33,7 +33,6 @@ export default function Upload({ session }) {
     try {
       const video = await uploadVideo(session.user.id, file, { title:form.title.trim(), category:form.category, description:form.description||null })
       clearInterval(interval); setProg(100); setDone(true)
-      // Fire-and-forget — AI analysis runs in background, no need to wait
       analyzeVideo(video.id, video.video_url, session.user.id).catch(() => {})
       setTimeout(() => navigate('/profile'), 1800)
     } catch(e) {
@@ -54,14 +53,14 @@ export default function Upload({ session }) {
         {[1,2,3].map(n=><div key={n} style={{ flex:1, height:2, borderRadius:1, background:step>=n?T.electric:T.border2, transition:'background .3s' }}/>)}
       </div>
 
-      {/* Step 1 — Pick file */}
+      {/* Step 1 */}
       {step===1 && (
         <div>
           <div onClick={()=>fileRef.current.click()}
             style={{ border:`1.5px dashed ${T.border3}`, borderRadius:16, padding:'48px 20px', textAlign:'center', cursor:'pointer', transition:'all .2s' }}
             onTouchStart={e=>{e.currentTarget.style.borderColor=T.electric;e.currentTarget.style.background=`${T.electric}06`}}
             onTouchEnd={e=>{e.currentTarget.style.borderColor=T.border3;e.currentTarget.style.background='transparent'}}>
-            <div style={{ fontSize:48, marginBottom:14 }}>🎬</div>
+            <div style={{ fontSize:48, marginBottom:14 }}>🎥</div>
             <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:20, fontWeight:700, marginBottom:8 }}>Tap to choose video</div>
             <p style={{ fontSize:14, color:T.sub, marginBottom:20 }}>MP4, MOV · up to 500MB</p>
             <div style={{ display:'inline-block', padding:'11px 26px', background:T.white, color:'#000', borderRadius:10, fontWeight:800, fontSize:14, fontFamily:"'Space Grotesk',sans-serif" }}>Choose Video</div>
@@ -77,7 +76,7 @@ export default function Upload({ session }) {
         </div>
       )}
 
-      {/* Step 2 — Details */}
+      {/* Step 2 */}
       {step===2 && (
         <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
           {preview && <video src={preview} muted playsInline controls style={{ width:'100%', borderRadius:12, maxHeight:220, background:'#111', objectFit:'cover' }}/>}
@@ -126,7 +125,7 @@ export default function Upload({ session }) {
         </div>
       )}
 
-      {/* Step 3 — Progress */}
+      {/* Step 3 */}
       {step===3 && (
         <div style={{ textAlign:'center', paddingTop:52 }}>
           <div style={{ fontSize:52, marginBottom:20 }}>{done ? '🏀' : '⬆️'}</div>
@@ -135,7 +134,7 @@ export default function Upload({ session }) {
           </div>
           <p style={{ fontSize:14, color:T.sub, marginBottom:28, lineHeight:1.65 }}>
             {done
-              ? <>🤖 <strong style={{ color:T.electric }}>AI Scout is analyzing your film…</strong><br/>Check your profile in ~1 min for your score."
+              ? <>🤖 <strong style={{ color:T.electric }}>AI Scout is analyzing your film…</strong><br/>Check your profile in ~1 min for your score.</>
               : 'Saving your video…'}
           </p>
           <div style={{ height:4, background:T.card2, borderRadius:2, overflow:'hidden', marginBottom:8 }}>
