@@ -13,8 +13,8 @@
     html { scroll-behavior: smooth; font-size: 16px; }
     body {
       font-family: 'Inter', sans-serif;
-      background: #03045E;
-      color: #fff;
+      background: #FFFFFF;
+      color: #03045E;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
@@ -36,6 +36,9 @@
       --white-faint:  rgba(255,255,255,0.08);
       --border:       rgba(0,180,216,0.15);
       --red-alert:    #F87171;
+      --text-dark:    #03045E;
+      --text-mid:     #0077B6;
+      --text-muted:   #4A90A4;
     }
 
     /* ─── Keyframes ──────────────────────────────────────────────────── */
@@ -128,7 +131,7 @@
       border-bottom: 1px solid transparent;
     }
     nav.scrolled {
-      background: rgba(3,4,94,0.95);
+      background: rgba(255,255,255,0.95);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom-color: var(--border);
@@ -146,7 +149,7 @@
       font-weight: 800;
       font-size: 1.35rem;
       letter-spacing: 0.06em;
-      color: var(--white);
+      color: var(--ocean-deep);
     }
     .nav-links {
       display: flex;
@@ -156,11 +159,11 @@
     .nav-links a {
       font-size: 0.875rem;
       font-weight: 500;
-      color: rgba(255,255,255,0.55);
+      color: rgba(3,4,94,0.55);
       transition: color 0.2s;
       letter-spacing: 0.01em;
     }
-    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover { color: var(--ocean-deep); }
     .nav-right {
       display: flex;
       align-items: center;
@@ -169,10 +172,10 @@
     .nav-pricing-link {
       font-size: 0.875rem;
       font-weight: 500;
-      color: rgba(255,255,255,0.55);
+      color: rgba(3,4,94,0.55);
       transition: color 0.2s;
     }
-    .nav-pricing-link:hover { color: var(--white); }
+    .nav-pricing-link:hover { color: var(--ocean-deep); }
     .nav-cta-btn {
       display: inline-flex;
       align-items: center;
@@ -205,7 +208,7 @@
     .hamburger span {
       display: block;
       width: 22px; height: 2px;
-      background: rgba(255,255,255,0.7);
+      background: rgba(3,4,94,0.7);
       border-radius: 2px;
     }
 
@@ -214,7 +217,7 @@
       display: none;
       position: fixed;
       top: 68px; left: 0; right: 0;
-      background: rgba(3,4,94,0.97);
+      background: rgba(255,255,255,0.97);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(0,180,216,0.2);
@@ -229,10 +232,10 @@
       padding: 16px 0;
       font-size: 1rem;
       font-weight: 600;
-      color: rgba(255,255,255,0.7);
+      color: rgba(3,4,94,0.7);
       border-bottom: 1px solid rgba(0,180,216,0.1);
     }
-    #mobileNav a.mobile-nav-link:hover { color: var(--white); }
+    #mobileNav a.mobile-nav-link:hover { color: var(--ocean-deep); }
     #mobileNav a.mobile-nav-cta {
       display: block;
       margin-top: 20px;
@@ -249,7 +252,7 @@
     /* ─── HERO ───────────────────────────────────────────────────────── */
     #hero {
       min-height: 100vh;
-      background: var(--ocean-deep);
+      background: #FFFFFF;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -275,8 +278,8 @@
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+        linear-gradient(rgba(0,119,182,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,119,182,0.06) 1px, transparent 1px);
       background-size: 80px 80px;
       pointer-events: none;
       mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
@@ -321,7 +324,7 @@
       font-size: clamp(56px, 8vw, 96px);
       line-height: 0.95;
       letter-spacing: -0.03em;
-      color: var(--white);
+      color: var(--ocean-deep);
       margin-bottom: 32px;
     }
     .hero-h1 .ever {
@@ -332,7 +335,7 @@
     .hero-sub {
       font-size: clamp(16px, 2vw, 20px);
       font-weight: 400;
-      color: rgba(255,255,255,0.55);
+      color: rgba(3,4,94,0.6);
       line-height: 1.65;
       max-width: 520px;
       margin-bottom: 44px;
@@ -393,7 +396,7 @@
       margin-right: 32px;
       border-right: 1px solid var(--border);
       font-size: 0.8rem;
-      color: rgba(255,255,255,0.4);
+      color: rgba(3,4,94,0.5);
       white-space: nowrap;
     }
     .hero-stat:last-child { border-right: none; margin-right: 0; padding-right: 0; }
@@ -401,7 +404,7 @@
       display: block;
       font-size: 1.1rem;
       font-weight: 700;
-      color: rgba(255,255,255,0.85);
+      color: var(--ocean-deep);
       margin-bottom: 2px;
     }
 
@@ -515,7 +518,7 @@
 
     /* ─── STATS STRIP ────────────────────────────────────────────────── */
     .stats-strip {
-      background: #023E8A;
+      background: #F0F9FF;
       border-top: 1px solid rgba(0,180,216,0.2);
       border-bottom: 1px solid rgba(0,180,216,0.2);
       padding: 20px 28px;
@@ -532,19 +535,19 @@
     .strip-stat {
       font-size: 0.82rem;
       font-weight: 500;
-      color: var(--ocean-light);
+      color: var(--ocean-mid);
       white-space: nowrap;
     }
-    .strip-stat strong { color: var(--white); font-weight: 700; }
+    .strip-stat strong { color: var(--ocean-bright); font-weight: 700; }
     .strip-sep {
-      color: rgba(255,255,255,0.15);
+      color: rgba(0,119,182,0.3);
       font-size: 1.2rem;
     }
 
     /* ─── PROBLEM SECTION ────────────────────────────────────────────── */
     #problem {
       padding: 120px 0;
-      background: #023E8A;
+      background: #F0F9FF;
     }
     .problem-header {
       margin-bottom: 64px;
@@ -555,13 +558,13 @@
       font-size: clamp(32px, 4vw, 52px);
       line-height: 1.05;
       letter-spacing: -0.03em;
-      color: var(--white);
+      color: var(--ocean-deep);
       max-width: 600px;
     }
     .problem-sub {
       margin-top: 16px;
       font-size: 1rem;
-      color: rgba(255,255,255,0.4);
+      color: rgba(3,4,94,0.6);
       max-width: 520px;
       line-height: 1.6;
     }
@@ -575,11 +578,11 @@
       overflow: hidden;
     }
     .stat-card {
-      background: #022d6b;
+      background: #FFFFFF;
       padding: 48px 40px;
       transition: background 0.3s;
     }
-    .stat-card:hover { background: #023E8A; }
+    .stat-card:hover { background: #F0F9FF; }
     .stat-card-num {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
@@ -591,16 +594,16 @@
     }
     .stat-card-desc {
       font-size: 0.95rem;
-      color: rgba(255,255,255,0.5);
+      color: rgba(3,4,94,0.6);
       line-height: 1.55;
       max-width: 240px;
     }
-    .stat-card-desc strong { color: rgba(255,255,255,0.85); font-weight: 600; }
+    .stat-card-desc strong { color: var(--ocean-deep); font-weight: 600; }
 
     /* ─── HOW IT WORKS ───────────────────────────────────────────────── */
     #how {
       padding: 120px 0;
-      background: var(--ocean-deep);
+      background: #FFFFFF;
     }
     .how-header {
       margin-bottom: 80px;
@@ -611,7 +614,7 @@
       font-size: clamp(32px, 4vw, 52px);
       line-height: 1.05;
       letter-spacing: -0.03em;
-      color: var(--white);
+      color: var(--ocean-deep);
     }
     .steps-row {
       display: grid;
@@ -624,12 +627,12 @@
       position: relative;
     }
     .step {
-      background: #020348;
+      background: #F0F9FF;
       padding: 48px 36px;
       position: relative;
       transition: background 0.3s;
     }
-    .step:hover { background: #03045E; }
+    .step:hover { background: #EBF8FF; }
     .step-num {
       font-family: 'Syne', sans-serif;
       font-size: 0.7rem;
@@ -644,7 +647,7 @@
       font-weight: 800;
       font-size: 1.2rem;
       letter-spacing: -0.01em;
-      color: var(--white);
+      color: var(--ocean-deep);
       margin-bottom: 14px;
     }
     .step-dash {
@@ -652,7 +655,7 @@
     }
     .step-desc {
       font-size: 0.9rem;
-      color: rgba(255,255,255,0.45);
+      color: rgba(3,4,94,0.6);
       line-height: 1.65;
     }
     .step-arrow {
@@ -660,7 +663,7 @@
       top: 50%; right: -16px;
       transform: translateY(-50%);
       width: 32px; height: 32px;
-      background: var(--ocean-deep);
+      background: #FFFFFF;
       border: 1px solid rgba(0,180,216,0.3);
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
@@ -672,7 +675,7 @@
     /* ─── PRICING ────────────────────────────────────────────────────── */
     #pricing {
       padding: 120px 0;
-      background: #023E8A;
+      background: #F0F9FF;
     }
     .pricing-header {
       margin-bottom: 64px;
