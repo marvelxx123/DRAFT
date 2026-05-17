@@ -12,6 +12,7 @@ import ScoutDashboard from './pages/ScoutDashboard.jsx'
 import StatsDashboard from './pages/StatsDashboard.jsx'
 import Messages       from './pages/Messages.jsx'
 import Notifications  from './pages/Notifications.jsx'
+import ScoutPro       from './pages/ScoutPro.jsx'
 import BottomNav      from './components/BottomNav.jsx'
 
 export default function App() {
@@ -69,6 +70,7 @@ export default function App() {
           <Route path="/profile"         element={<Profile session={session}/>} />
           <Route path="/profile/:userId" element={<Profile session={session}/>} />
           <Route path="/scouts"          element={<ScoutDashboard session={session}/>} />
+          <Route path="/scout-pro"       element={session ? <ScoutPro session={session}/> : <Navigate to="/login"/>} />
           <Route path="/stats"           element={session ? <StatsDashboard session={session}/> : <Navigate to="/login"/>} />
           <Route path="/messages"        element={session ? <Messages session={session}/> : <Navigate to="/login"/>} />
           <Route path="/notifications"   element={<Notifications session={session}/>} />

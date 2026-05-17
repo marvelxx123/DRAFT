@@ -178,17 +178,22 @@ serve(async (req) => {
     ])
 
     const urls: string[] = Array.isArray(frame_urls) ? frame_urls : []
-    const prompt = buildPrompt(video ?? {}, profile ?? {}, urls.length > 0)
+    // In scout_mode the video belongs to the scout, not a player profile video
+    const scoutMode = !video_id
+    const videoMeta = scoutMode ? { title: video?.title, category: "HIGHLIGHT" } : (video ?? {})
+    const prompt = buildPrompt(videoMeta, profile ?? {}, urls.length > 0)
     const report = await callClaude(prompt, urls)
 
-    await supabase.from("videos")
-      .update({ scout_score: report.overall_score, scout_report: report })
-      .eq("id", video_id)
+    if (!scoutMode) {
+      await supabase.from("videos")
+        .update({ scout_score: report.overall_score, scout_report: report })
+        .eq("id", video_id)
 
-    if (!profile?.draft_score || (report.overall_score as number) > profile.draft_score) {
-      await supabase.from("profiles")
-        .update({ draft_score: report.overall_score })
-        .eq("id", user_id)
+      if (!profile?.draft_score || (report.overall_score as number) > profile.draft_score) {
+        await supabase.from("profiles")
+          .update({ draft_score: report.overall_score })
+          .eq("id", user_id)
+      }
     }
 
     return new Response(JSON.stringify({ success: true, report }), {
