@@ -200,3 +200,65 @@ select
 from businesses b
 join calls c on c.business_id = b.id
 group by b.id, b.name, date_trunc('day', c.created_at);
+
+-- =============================================================================
+-- COMPANY AI TABLES
+-- Used by the AI marketing agents that run CALLA's own marketing operations.
+-- =============================================================================
+
+-- Weekly marketing plan created by the Marketing Manager agent
+create table if not exists weekly_plans (
+  id                    uuid primary key default gen_random_uuid(),
+  created_at            timestamptz not null default now(),
+  week_start            date not null,
+  weekly_goal           text not null,
+  content_topics        text[] not null default '{}',
+  seo_target            text,
+  outreach_segment      text,
+  outreach_daily_volume integer
+);
+
+-- Content posts created by the Content Agent
+create table if not exists content_posts (
+  id              uuid primary key default gen_random_uuid(),
+  created_at      timestamptz not null default now(),
+  topic           text not null,
+  format          text not null check (format in ('blog', 'instagram', 'twitter', 'linkedin')),
+  blog_body       text,
+  social_caption  text,
+  status          text not null default 'ready' check (status in ('ready', 'published'))
+);
+
+create index if not exists content_posts_status_idx on content_posts (status);
+create index if not exists content_posts_format_idx on content_posts (format);
+
+-- SEO reports created by the SEO Agent
+create table if not exists seo_reports (
+  id                uuid primary key default gen_random_uuid(),
+  created_at        timestamptz not null default now(),
+  target_page       text not null,
+  keyword_count     integer,
+  keywords          jsonb,   -- [{ keyword, intent, volume?, difficulty? }]
+  meta_title        text,
+  meta_description  text,
+  content_gaps      text[],
+  backlink_targets  text[],
+  hero_headline     text,
+  subheadline       text,
+  cta_text          text
+);
+
+-- Outreach queue managed by the Outreach Agent
+create table if not exists outreach_queue (
+  id              uuid primary key default gen_random_uuid(),
+  created_at      timestamptz not null default now(),
+  business_name   text not null,
+  business_type   text,
+  dm_copy         text,
+  email_subject   text,
+  email_body      text,
+  status          text not null default 'ready' check (status in ('ready', 'sent')),
+  sent_at         timestamptz
+);
+
+create index if not exists outreach_queue_status_idx on outreach_queue (status);

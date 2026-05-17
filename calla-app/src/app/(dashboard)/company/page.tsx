@@ -178,7 +178,7 @@ function AgentCard({
   outputLabel,
   outputCount,
   status,
-}: (typeof AGENTS)[number]) {
+}: Omit<(typeof AGENTS)[number], "key">) {
   return (
     <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100 flex flex-col gap-4">
       {/* Header */}
@@ -568,8 +568,8 @@ export default async function CompanyHQPage() {
             Agent Status
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {AGENTS.map((agent) => (
-              <AgentCard key={agent.key} {...agent} />
+            {AGENTS.map(({ key: agentKey, ...agent }) => (
+              <AgentCard key={agentKey} {...agent} />
             ))}
           </div>
         </section>

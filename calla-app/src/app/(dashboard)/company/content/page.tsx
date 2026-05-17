@@ -273,21 +273,22 @@ export default function ContentLibraryPage() {
       .select("*, social_versions(*)")
       .eq("id", post.id)
       .single();
-    setExpandedPost((data as FullPost) ?? (post as FullPost));
+    setExpandedPost(data != null ? (data as unknown as FullPost) : (post as unknown as FullPost));
     setLoadingDetail(false);
   }
 
   async function handleMarkPublished(id: string) {
-    await supabase
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase as any)
       .from("content_posts")
       .update({ status: "published" })
       .eq("id", id);
     // Refresh list and update expanded
     setPosts((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, status: "published" } : p))
+      prev.map((p) => (p.id === id ? { ...p, status: "published" as const } : p))
     );
     if (expandedPost?.id === id) {
-      setExpandedPost((prev) => prev ? { ...prev, status: "published" } : null);
+      setExpandedPost((prev) => prev ? { ...prev, status: "published" as const } : null);
     }
   }
 

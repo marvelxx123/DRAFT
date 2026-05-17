@@ -57,6 +57,58 @@ export interface Call {
   twilio_call_sid: string | null;
 }
 
+// ---------------------------------------------------------------------------
+// Company AI table types
+// ---------------------------------------------------------------------------
+
+export interface WeeklyPlan {
+  id: string;
+  created_at: string;
+  week_start: string;
+  weekly_goal: string;
+  content_topics: string[];
+  seo_target: string | null;
+  outreach_segment: string | null;
+  outreach_daily_volume: number | null;
+}
+
+export interface ContentPost {
+  id: string;
+  created_at: string;
+  topic: string;
+  format: "blog" | "instagram" | "twitter" | "linkedin";
+  blog_body: string | null;
+  social_caption: string | null;
+  status: "ready" | "published";
+}
+
+export interface SEOReport {
+  id: string;
+  created_at: string;
+  target_page: string;
+  keyword_count: number | null;
+  keywords: Array<{ keyword: string; intent: string; volume?: number | null; difficulty?: number | null }> | null;
+  meta_title: string | null;
+  meta_description: string | null;
+  content_gaps: string[] | null;
+  backlink_targets: string[] | null;
+  hero_headline: string | null;
+  subheadline: string | null;
+  cta_text: string | null;
+}
+
+export interface OutreachItem {
+  id: string;
+  created_at: string;
+  business_name: string;
+  business_type: string | null;
+  dm_copy: string | null;
+  email_subject: string | null;
+  email_body: string | null;
+  status: "ready" | "sent";
+  sent_at: string | null;
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -69,6 +121,26 @@ export interface Database {
         Row: Call;
         Insert: Omit<Call, "id" | "created_at">;
         Update: Partial<Omit<Call, "id" | "created_at">>;
+      };
+      weekly_plans: {
+        Row: WeeklyPlan;
+        Insert: Omit<WeeklyPlan, "id" | "created_at">;
+        Update: Partial<Omit<WeeklyPlan, "id" | "created_at">>;
+      };
+      content_posts: {
+        Row: ContentPost;
+        Insert: Omit<ContentPost, "id" | "created_at">;
+        Update: Partial<Omit<ContentPost, "id" | "created_at">>;
+      };
+      seo_reports: {
+        Row: SEOReport;
+        Insert: Omit<SEOReport, "id" | "created_at">;
+        Update: Partial<Omit<SEOReport, "id" | "created_at">>;
+      };
+      outreach_queue: {
+        Row: OutreachItem;
+        Insert: Omit<OutreachItem, "id" | "created_at">;
+        Update: Partial<Omit<OutreachItem, "id" | "created_at">>;
       };
     };
     Views: {

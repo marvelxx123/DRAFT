@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CALLA — Command Post</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --emerald:    #0D4F3C;
+    --emerald-light: #155c47;
+    --emerald-dark: #083326;
+    --gold:       #E8C547;
+    --gold-light: #F2D86A;
+    --white:      #FAFAF8;
+    --cream:      #F5F0E8;
+    --cream-dark: #EDE6D8;
+    --gray-muted: #8A8A8A;
+    --gray-light: #D0CCC4;
+    --text-main:  #1A1A1A;
+    --text-soft:  #5A5A5A;
+    --green-bg:   #E8F5F0;
+    --green-border: #2E9E6F;
+    --green-text: #1B6B4A;
+    --yellow-bg:  #FDF8E8;
+    --yellow-border: #D4A017;
+    --yellow-text: #8A6200;
+    --red-bg:     #FEF0EF;
+    --red-border: #D94F45;
+    --red-text:   #B02A22;
+    --shadow-sm:  0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md:  0 4px 16px rgba(0,0,0,0.10);
+    --shadow-lg:  0 8px 32px rgba(0,0,0,0.12);
+    --radius-sm:  8px;
+    --radius-md:  14px;
+    --radius-lg:  20px;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--cream);
+    color: var(--text-main);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── UTILITY ─────────────────────────────────────────── */
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray-muted);
+    margin-bottom: 14px;
+  }
+  .card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* ─── TOP BAR ─────────────────────────────────────────── */
+  #topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--emerald);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    height: 68px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .topbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    background: var(--gold);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 900;
+    color: var(--emerald);
+    letter-spacing: -0.5px;
+    flex-shrink: 0;
+  }
+  .logo-text {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--white);
+    letter-spacing: 0.06em;
+  }
+  .topbar-divider {
+    width: 1px;
+    height: 28px;
+    background: rgba(255,255,255,0.2);
+    margin: 0 4px;
+  }
+  .topbar-subtitle {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .topbar-center {
+    text-align: center;
+  }
+  #live-date {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }
+  #live-time {
+    display: block;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .kpi-pill {
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 100px;
+    padding: 5px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 90px;
+    cursor: default;
+    transition: background 0.2s;
+  }
+  .kpi-pill:hover { background: rgba(255,255,255,0.16); }
+  .kpi-pill-label {
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+  .kpi-pill-value {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  /* ─── MAIN LAYOUT ──────────────────────────────────────── */
+  #main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 28px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  /* ─── SECTION 2: YOUR MOVE ─────────────────────────────── */
+  #your-move-section { position: relative; }
+
+  #your-move-card {
+    border-radius: var(--radius-lg);
+    padding: 36px 44px;
+    border-left: 8px solid var(--green-border);
+    background: var(--white);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    min-height: 140px;
+    transition: border-color 0.5s ease, box-shadow 0.5s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  #your-move-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, transparent 60%, rgba(232,197,71,0.04));
+    pointer-events: none;
+  }
+  #your-move-card.state-red   { border-left-color: var(--red-border);    box-shadow: 0 4px 24px rgba(217,79,69,0.15); }
+  #your-move-card.state-yellow{ border-left-color: var(--yellow-border); box-shadow: 0 4px 24px rgba(212,160,23,0.12); }
+  #your-move-card.state-green { border-left-color: var(--green-border);  box-shadow: 0 4px 24px rgba(46,158,111,0.12); }
+
+  #your-move-inner {
+    opacity: 1;
+    transition: opacity 0.4s ease;
+  }
+  #your-move-inner.fading { opacity: 0; }
+
+  .move-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray-muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .move-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green-border);
+    animation: pulse-dot 2s infinite;
+  }
+  .state-red   .move-dot { background: var(--red-border); }
+  .state-yellow .move-dot { background: var(--yellow-border); }
+  .state-green  .move-dot { background: var(--green-border); }
+
+  @keyframes pulse-dot {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%       { transform: scale(1.4); opacity: 0.6; }
+  }
+
+  .move-text {
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.25;
+    color: var(--text-main);
+    max-width: 680px;
+  }
+  .move-text .emoji { font-size: 30px; margin-right: 8px; }
+
+  .move-action-btn {
+    flex-shrink: 0;
+    padding: 14px 32px;
+    border-radius: 100px;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+    white-space: nowrap;
+  }
+  .move-action-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .move-action-btn:active { transform: translateY(0); }
+  .btn-red    { background: var(--red-border);    color: #fff; }
+  .btn-yellow { background: var(--yellow-border); color: #fff; }
+  .btn-green  { background: var(--green-border);  color: #fff; }
+
+  .move-cycle-dots {
+    position: absolute;
+    bottom: 14px;
+    right: 44px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .cycle-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gray-light);
+    transition: background 0.3s, transform 0.3s;
+    cursor: pointer;
+  }
+  .cycle-dot.active { background: var(--emerald); transform: scale(1.3); }
+
+  /* ─── SECTION 3: AI TEAM ───────────────────────────────── */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .pod-card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 26px;
+    box-shadow: var(--shadow-sm);
+    border: 1.5px solid transparent;
+    transition: border-color 0.22s, box-shadow 0.22s, transform 0.18s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .pod-card::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 80px; height: 80px;
+    background: radial-gradient(circle at top right, rgba(232,197,71,0.07), transparent 65%);
+    pointer-events: none;
+  }
+  .pod-card:hover {
+    border-color: var(--emerald);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .pod-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .pod-identity { display: flex; align-items: center; gap: 12px; }
+  .pod-icon {
+    width: 46px; height: 46px;
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .pod-name {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.1;
+  }
+  .pod-role {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--gray-muted);
+    margin-top: 2px;
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .badge-active   { background: #E6F7EF; color: var(--green-text); }
+  .badge-scheduled{ background: #FDF8E8; color: var(--yellow-text); }
+  .badge-sleeping { background: #F0F0EE; color: #777; }
+  .badge-attention{ background: #FEF0EF; color: var(--red-text); }
+  .badge-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .badge-active .badge-dot { animation: pulse-dot 2s infinite; }
+
+  .pod-last-action {
+    font-size: 12.5px;
+    color: var(--text-soft);
+    font-weight: 400;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+  .pod-last-action strong { font-weight: 600; color: var(--text-main); }
+
+  .pod-next {
+    font-size: 11px;
+    color: var(--gray-muted);
+    font-weight: 500;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .pod-next-icon { font-size: 12px; }
+
+  .pod-progress-wrap {
+    margin-top: 2px;
+  }
+  .pod-progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--gray-muted);
+    margin-bottom: 6px;
+  }
+  .pod-progress-bar {
+    height: 6px;
+    background: var(--cream-dark);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .pod-progress-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: var(--emerald);
+    transition: width 1.2s cubic-bezier(0.22,1,0.36,1);
+  }
+  .pod-progress-fill.gold { background: var(--gold); }
+  .pod-progress-fill.gray { background: var(--gray-light); }
+
+  .pod-goal {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--emerald);
+    margin-top: 10px;
+    font-style: italic;
+  }
+
+  /* ─── SECTION 4: MONEY STRIP ───────────────────────────── */
+  .money-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .money-card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 30px 32px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+  }
+  .money-card::before {
+    content: '';
+    position: absolute;
+    bottom: -20px; right: -20px;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, rgba(13,79,60,0.05), transparent 70%);
+    pointer-events: none;
+  }
+  .money-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gray-muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .money-big {
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--emerald);
+    line-height: 1;
+    letter-spacing: -2px;
+    margin-bottom: 6px;
+  }
+  .money-trend {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green-text);
+    margin-bottom: 4px;
+  }
+  .money-trend.neutral { color: var(--gray-muted); }
+  .money-trend .arrow { font-size: 14px; }
+  .money-sub {
+    font-size: 12px;
+    color: var(--gray-muted);
+    font-weight: 400;
+  }
+
+  /* ─── SECTION 5: HAPPINESS FEED ───────────────────────── */
+  .happiness-wrap {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .feed-card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  .feed-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--cream-dark);
+  }
+  .feed-header .section-label { margin-bottom: 0; }
+  .feed-items { padding: 4px 0; }
+
+  .feed-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 24px;
+    border-left: 4px solid transparent;
+    cursor: pointer;
+    transition: background 0.15s;
+    position: relative;
+  }
+  .feed-item:hover { background: var(--cream); }
+  .feed-item.happy   { border-left-color: var(--green-border); }
+  .feed-item.neutral { border-left-color: var(--yellow-border); }
+  .feed-item.unhappy { border-left-color: var(--red-border); }
+
+  .feed-mood { font-size: 22px; flex-shrink: 0; line-height: 1; margin-top: 1px; }
+  .feed-content { flex: 1; min-width: 0; }
+  .feed-caller {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .feed-biz {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--gray-muted);
+    padding: 2px 8px;
+    background: var(--cream-dark);
+    border-radius: 100px;
+  }
+  .feed-topic {
+    font-size: 12px;
+    color: var(--text-soft);
+    margin-top: 3px;
+    line-height: 1.4;
+  }
+  .feed-time {
+    font-size: 11px;
+    color: var(--gray-light);
+    font-weight: 500;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .shield-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-top: 5px;
+  }
+  .shield-review { background: #E8F5F0; color: var(--green-text); }
+  .shield-alert  { background: #FEF0EF; color: var(--red-text); }
+
+  .feed-expand {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    background: var(--cream);
+    font-size: 12.5px;
+    color: var(--text-soft);
+    line-height: 1.6;
+    border-top: 1px solid var(--cream-dark);
+  }
+  .feed-expand-inner { padding: 12px 24px; }
+  .feed-item.open .feed-expand { max-height: 200px; }
+
+  /* Happiness score */
+  .score-card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 32px 28px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .score-big-wrap {
+    text-align: center;
+  }
+  .score-face { font-size: 52px; line-height: 1; margin-bottom: 6px; }
+  .score-number {
+    font-size: 72px;
+    font-weight: 900;
+    color: var(--emerald);
+    line-height: 1;
+    letter-spacing: -3px;
+  }
+  .score-sublabel {
+    font-size: 13px;
+    color: var(--text-soft);
+    font-weight: 400;
+    margin-top: 4px;
+    text-align: center;
+  }
+
+  .score-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-soft);
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    padding: 10px 16px;
+    width: 100%;
+  }
+  .score-stat-icon { font-size: 16px; }
+
+  .sparkline-wrap {
+    width: 100%;
+  }
+  .sparkline-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray-muted);
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  #sparkline-canvas { display: block; width: 100%; }
+
+  /* ─── SECTION 6: GROWTH SNAPSHOT ──────────────────────── */
+  .growth-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .growth-card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 28px;
+    box-shadow: var(--shadow-sm);
+  }
+  .growth-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .growth-title-icon {
+    width: 28px; height: 28px;
+    background: var(--cream);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+
+  .growth-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--cream-dark);
+  }
+  .growth-stat:last-of-type { border-bottom: none; }
+  .growth-stat-name {
+    font-size: 13px;
+    color: var(--text-soft);
+    font-weight: 400;
+  }
+  .growth-stat-val {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-main);
+  }
+  .growth-stat-val.up   { color: var(--green-text); }
+  .growth-stat-val.down { color: var(--red-text); }
+  .growth-stat-val.gold { color: #8A6200; }
+
+  .milestone-card {
+    background: var(--emerald);
+    border-radius: var(--radius-md);
+    padding: 28px;
+    box-shadow: var(--shadow-sm);
+    color: var(--white);
+  }
+  .milestone-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .milestone-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 20px;
+  }
+  .milestone-big {
+    font-size: 38px;
+    font-weight: 900;
+    color: var(--gold);
+    line-height: 1;
+    letter-spacing: -1.5px;
+    margin-bottom: 4px;
+  }
+  .milestone-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 400;
+    margin-bottom: 18px;
+    line-height: 1.4;
+  }
+  .milestone-progress-bar {
+    height: 10px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 100px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .milestone-progress-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: var(--gold);
+    transition: width 1.5s cubic-bezier(0.22,1,0.36,1);
+  }
+  .milestone-fraction {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* ─── MODAL ────────────────────────────────────────────── */
+  #modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 30, 22, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  #modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  #modal-box {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 36px 40px;
+    max-width: 560px;
+    width: 90%;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+    transform: scale(0.96) translateY(8px);
+    transition: transform 0.28s cubic-bezier(0.22,1,0.36,1);
+    max-height: 88vh;
+    overflow-y: auto;
+  }
+  #modal-overlay.open #modal-box {
+    transform: scale(1) translateY(0);
+  }
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .modal-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .modal-icon {
+    width: 48px; height: 48px;
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+  }
+  .modal-name {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-main);
+  }
+  .modal-role {
+    font-size: 12px;
+    color: var(--gray-muted);
+    font-weight: 500;
+  }
+  .modal-close {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: var(--cream-dark);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+    color: var(--text-soft);
+  }
+  .modal-close:hover { background: var(--gray-light); }
+
+  .modal-section {
+    margin-bottom: 22px;
+  }
+  .modal-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gray-muted);
+    margin-bottom: 10px;
+  }
+  .modal-output-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--cream-dark);
+    font-size: 13px;
+    color: var(--text-soft);
+    line-height: 1.5;
+  }
+  .modal-output-item:last-child { border-bottom: none; }
+  .modal-output-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--emerald);
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  /* ─── FOOTER ───────────────────────────────────────────── */
+  #footer {
+    background: var(--emerald-dark);
+    text-align: center;
+    padding: 18px;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.08em;
+  }
+
+  /* ─── RESPONSIVE ───────────────────────────────────────── */
+  @media (max-width: 900px) {
+    #topbar { padding: 0 16px; height: 60px; }
+    .kpi-pill { min-width: 72px; padding: 4px 10px; }
+    .kpi-pill-value { font-size: 13px; }
+    #main { padding: 20px 16px 40px; gap: 28px; }
+    .team-grid { grid-template-columns: 1fr; }
+    .money-grid { grid-template-columns: 1fr; }
+    .money-big { font-size: 40px; }
+    .happiness-wrap { grid-template-columns: 1fr; }
+    .growth-grid { grid-template-columns: 1fr; }
+    #your-move-card { flex-direction: column; align-items: flex-start; padding: 24px; }
+    .move-text { font-size: 22px; }
+  }
+  @media (max-width: 600px) {
+    .topbar-right { display: none; }
+    .topbar-left .topbar-subtitle { display: none; }
+    .topbar-left .topbar-divider { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════
+     SECTION 1 — TOP BAR
+═══════════════════════════════════════════════════════ -->
+<header id="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo">
+      <div class="logo-mark">CA</div>
+      <span class="logo-text">CALLA</span>
+    </div>
+    <div class="topbar-divider"></div>
+    <span class="topbar-subtitle">Command Post</span>
+  </div>
+
+  <div class="topbar-center">
+    <span id="live-date">—</span>
+    <span id="live-time">—</span>
+  </div>
+
+  <div class="topbar-right">
+    <div class="kpi-pill">
+      <span class="kpi-pill-label">MRR</span>
+      <span class="kpi-pill-value" id="pill-mrr">$0</span>
+    </div>
+    <div class="kpi-pill">
+      <span class="kpi-pill-label">Clients</span>
+      <span class="kpi-pill-value" id="pill-clients">0</span>
+    </div>
+    <div class="kpi-pill">
+      <span class="kpi-pill-label">Margin</span>
+      <span class="kpi-pill-value" id="pill-margin">0%</span>
+    </div>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════════════════ -->
+<main id="main">
+
+  <!-- ── SECTION 2: YOUR MOVE ─────────────────────────── -->
+  <div id="your-move-section">
+    <div class="section-label">Your Move</div>
+
+    <div id="your-move-card" class="state-red">
+      <div id="your-move-inner">
+        <div class="move-eyebrow">
+          <div class="move-dot"></div>
+          Needs your attention
+        </div>
+        <div class="move-text" id="move-text">
+          <span class="emoji">🔴</span>Loading…
+        </div>
+      </div>
+      <button class="move-action-btn btn-red" id="move-btn">Act Now →</button>
+      <div class="move-cycle-dots" id="cycle-dots"></div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 3: AI TEAM ────────────────────────────── -->
+  <div id="team-section">
+    <div class="section-label">Your AI Team</div>
+    <div class="team-grid" id="team-grid">
+      <!-- injected by JS -->
+    </div>
+  </div>
+
+  <!-- ── SECTION 4: MONEY STRIP ────────────────────────── -->
+  <div id="money-section">
+    <div class="section-label">The Numbers</div>
+    <div class="money-grid">
+
+      <div class="money-card">
+        <div class="money-label">💰 Monthly Recurring Revenue</div>
+        <div class="money-big" id="mrr-big">$0</div>
+        <div class="money-trend">
+          <span class="arrow">↑</span>
+          <span>+$149 added this week</span>
+        </div>
+        <div class="money-sub">First paying client onboarded</div>
+      </div>
+
+      <div class="money-card">
+        <div class="money-label">👥 Active Clients</div>
+        <div class="money-big" id="clients-big">0</div>
+        <div class="money-trend">
+          <span class="arrow">↑</span>
+          <span>Growing from 0 last month</span>
+        </div>
+        <div class="money-sub">2 on trial &nbsp;·&nbsp; 1 paying</div>
+      </div>
+
+      <div class="money-card">
+        <div class="money-label">📈 This Month's Profit</div>
+        <div class="money-big" id="profit-big">$0</div>
+        <div class="money-trend neutral">
+          <span class="arrow">→</span>
+          <span>Infrastructure costs: ~$19/mo</span>
+        </div>
+        <div class="money-sub">87% margin on paying client</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SECTION 5: HAPPINESS FEED ─────────────────────── -->
+  <div id="happiness-section">
+    <div class="section-label">Customer Happiness</div>
+    <div class="happiness-wrap">
+
+      <div class="feed-card">
+        <div class="feed-header">
+          <div class="section-label" style="margin-bottom:0;">Recent Calls</div>
+        </div>
+        <div class="feed-items" id="feed-items">
+          <!-- injected by JS -->
+        </div>
+      </div>
+
+      <div class="score-card">
+        <div class="score-big-wrap">
+          <div class="score-face">😊</div>
+          <div class="score-number" id="score-number">0%</div>
+          <div class="score-sublabel">4 of 4 customers happy this week</div>
+        </div>
+
+        <div class="score-stat">
+          <span class="score-stat-icon">⭐</span>
+          2 Google reviews prompted today
+        </div>
+
+        <div class="sparkline-wrap">
+          <div class="sparkline-label">Happiness trend — last 7 days</div>
+          <canvas id="sparkline-canvas" height="60"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SECTION 6: GROWTH SNAPSHOT ───────────────────── -->
+  <div id="growth-section">
+    <div class="section-label">Growth Snapshot</div>
+    <div class="growth-grid">
+
+      <div class="growth-card">
+        <div class="growth-title">
+          <div class="growth-title-icon">📅</div>
+          This Week
+        </div>
+        <div class="growth-stat">
+          <span class="growth-stat-name">DMs sent</span>
+          <span class="growth-stat-val up" id="g-dms">0</span>
+        </div>
+        <div class="growth-stat">
+          <span class="growth-stat-name">Demos booked</span>
+          <span class="growth-stat-val up" id="g-demos">0</span>
+        </div>
+        <div class="growth-stat">
+          <span class="growth-stat-name">Trials started</span>
+          <span class="growth-stat-val gold" id="g-trials">0</span>
+        </div>
+        <div class="growth-stat">
+          <span class="growth-stat-name">Blog posts published</span>
+          <span class="growth-stat-val" id="g-posts">0</span>
+        </div>
+      </div>
+
+      <div class="growth-card">
+        <div class="growth-title">
+          <div class="growth-title-icon">📆</div>
+          This Month
+        </div>
+        <div class="growth-stat">
+          <span class="growth-stat-name">New clients</span>
+          <span class="growth-stat-val up" id="g-newclients">0</span>
+        </div>
+        <div class="growth-stat">
+          <span class="growth-stat-name">Churned clients</span>
+          <span class="growth-stat-val" id="g-churned">0</span>
+        </div>
+        <div class="growth-stat">
+          <span class="growth-stat-name">Net new MRR</span>
+          <span class="growth-stat-val up" id="g-netmrr">$0</span>
+        </div>
+        <div class="growth-stat">
+          <span class="growth-stat-name">Calls answered by AI</span>
+          <span class="growth-stat-val" id="g-calls">0</span>
+        </div>
+      </div>
+
+      <div class="milestone-card">
+        <div class="milestone-title">
+          <span>🎯</span> Next Milestone
+        </div>
+        <div class="milestone-sub">Current trajectory: on track</div>
+        <div class="milestone-big" id="milestone-big">3/5</div>
+        <div class="milestone-desc">Clients needed to hit $745/mo MRR. Then unlock paid marketing budget.</div>
+        <div class="milestone-progress-bar">
+          <div class="milestone-progress-fill" id="milestone-fill" style="width:0%"></div>
+        </div>
+        <div class="milestone-fraction">
+          <span id="milestone-frac">3 active · 2 to go</span>
+          <span>$745 target</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- ── MODAL ──────────────────────────────────────────── -->
+<div id="modal-overlay" role="dialog" aria-modal="true">
+  <div id="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">
+        <div class="modal-icon" id="modal-icon">🧠</div>
+        <div>
+          <div class="modal-name" id="modal-name">Agent Name</div>
+          <div class="modal-role" id="modal-role">Role</div>
+        </div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<footer id="footer">CALLA Command Post &nbsp;·&nbsp; Live data refreshes automatically &nbsp;·&nbsp; Built for the CEO</footer>
+
+<!-- ════════════════════════════════════════════════════
+     VANILLA JS
+═══════════════════════════════════════════════════════ -->
+<script>
+/* ── DATA ─────────────────────────────────────────────── */
+const DATA = {
+  mrr: 149,
+  clients: 3,
+  margin: 87,
+  profit: 130,
+};
+
+const YOUR_MOVES = [
+  {
+    state: 'red',
+    eyebrow: 'Needs your attention',
+    text: '🔴 2 clients haven\'t been called back yet today. Tap to see who.',
+    btn: 'See Who →',
+    btnClass: 'btn-red',
+  },
+  {
+    state: 'yellow',
+    eyebrow: 'Awaiting your decision',
+    text: '🟡 Content Agent wrote 3 posts. Ready to schedule — or want edits first?',
+    btn: 'Review Posts →',
+    btnClass: 'btn-yellow',
+  },
+  {
+    state: 'green',
+    eyebrow: 'All systems go',
+    text: '🟢 All good. Outreach Agent sent 15 DMs today. Relax — it\'s working.',
+    btn: 'See Details →',
+    btnClass: 'btn-green',
+  },
+  {
+    state: 'red',
+    eyebrow: 'Client at risk — act now',
+    text: '🔴 A client is unhappy. SHIELD flagged them 30 min ago. Call now before they churn.',
+    btn: 'Call Now →',
+    btnClass: 'btn-red',
+  },
+  {
+    state: 'yellow',
+    eyebrow: 'Opportunity knocking',
+    text: '🟡 3 demo requests came in overnight. Outreach Agent pre-qualified 2 of them.',
+    btn: 'Follow Up →',
+    btnClass: 'btn-yellow',
+  },
+];
+
+const TEAM = [
+  {
+    icon: '🧠',
+    name: 'Marketing Manager',
+    role: 'Strategy & Campaigns',
+    status: 'active',
+    lastAction: 'Drafted Q2 positioning doc and reviewed 3 competitor campaigns',
+    lastTime: '2 hours ago',
+    next: 'Runs daily at 8am',
+    done: 3, total: 3,
+    goal: 'Own the "AI phone service" category in Google searches by June.',
+    outputs: [
+      'Competitor gap analysis: identified 2 untapped niches',
+      'Positioning doc v1 drafted — awaiting your review',
+      'Suggested 3 new outreach angles for HVAC businesses',
+      'Flagged: Rival launched a new pricing tier, may undercut us',
+    ],
+  },
+  {
+    icon: '✍️',
+    name: 'Content Agent',
+    role: 'Blog & Social Copy',
+    status: 'active',
+    lastAction: 'Wrote 2 blog posts + 1 LinkedIn article',
+    lastTime: '4 hours ago',
+    next: 'Runs Mon, Wed, Fri at 7am',
+    done: 3, total: 3,
+    goal: 'Publish 12 SEO-optimized posts in May to build organic traffic.',
+    outputs: [
+      '"Why Your Plumber Needs an AI Receptionist" — 1,200 words, ready to publish',
+      '"5 Calls Your Business Is Missing Right Now" — LinkedIn article, ready',
+      '"AI vs Human Answering Services" — comparison post, needs image',
+      'Scheduled 3 tweets for this week (engagement-focused)',
+    ],
+  },
+  {
+    icon: '🔍',
+    name: 'SEO Agent',
+    role: 'Search & Discovery',
+    status: 'scheduled',
+    lastAction: 'Updated keyword targets and submitted sitemap',
+    lastTime: '1 day ago',
+    next: 'Runs Monday 9am',
+    done: 2, total: 3,
+    goal: 'Get "AI phone answering for small business" to page 1 by July.',
+    outputs: [
+      'Keyword research update: 14 new low-competition targets found',
+      'Sitemap resubmitted to Google Search Console',
+      'On-page fixes applied to 4 existing posts',
+      'Still pending: Schema markup for homepage (runs Monday)',
+    ],
+  },
+  {
+    icon: '📬',
+    name: 'Outreach Agent',
+    role: 'DMs & Prospecting',
+    status: 'active',
+    lastAction: 'Sent 15 personalized DMs to HVAC businesses',
+    lastTime: '1 hour ago',
+    next: 'Runs daily at 10am + 3pm',
+    done: 2, total: 3,
+    goal: 'Book 5 demos this week from cold outreach — 2 booked so far.',
+    outputs: [
+      '15 DMs sent to HVAC owners in TX, FL, GA',
+      '2 positive replies — demo calls pre-booked for Wed & Thu',
+      '1 reply: "not interested" (removed from sequence)',
+      'Next batch: 15 dental practices queued for tomorrow 10am',
+    ],
+  },
+];
+
+const FEED = [
+  {
+    mood: 'happy',
+    emoji: '😊',
+    caller: 'Maria R.',
+    number: '+1 (512) 844-2201',
+    biz: 'Sunrise HVAC',
+    topic: 'Appointment booking — HVAC tune-up for Friday',
+    shield: 'review',
+    shieldLabel: '⭐ Review Prompted',
+    time: '9:14am',
+    summary: 'Maria called to schedule an annual HVAC tune-up. AI collected her address, confirmed Friday 2pm with the team, and sent a Google Review request 1 hour after booking. No issues.',
+  },
+  {
+    mood: 'happy',
+    emoji: '😊',
+    caller: 'James T.',
+    number: '+1 (832) 501-9900',
+    biz: 'BlueRidge Plumbing',
+    topic: 'Emergency leak — routed to on-call tech immediately',
+    shield: null,
+    time: '11:47am',
+    summary: 'Emergency call at 11:47am. AI identified urgency, captured address and issue description, then bridged the call to the on-call plumber within 40 seconds. Client was satisfied with response time.',
+  },
+  {
+    mood: 'neutral',
+    emoji: '😐',
+    caller: 'David W.',
+    number: '+1 (404) 229-3811',
+    biz: 'Sunrise HVAC',
+    topic: 'Asked about pricing — AI gave ranges, caller hesitated',
+    shield: null,
+    time: 'Yesterday 4:22pm',
+    summary: 'David asked about AC replacement pricing. AI gave the standard $3,500–$7,000 range. He seemed uncertain and said he\'d call back. No callback yet — may need human follow-up.',
+  },
+  {
+    mood: 'unhappy',
+    emoji: '😠',
+    caller: 'Linda K.',
+    number: '+1 (713) 988-4421',
+    biz: 'BlueRidge Plumbing',
+    topic: 'Repair still not done — third call this week',
+    shield: 'alert',
+    shieldLabel: '🛡️ SHIELD Alert Fired',
+    time: 'Yesterday 2:05pm',
+    summary: 'Linda called for the third time this week about an unresolved pipe repair. AI flagged sentiment as negative, triggered a SHIELD alert, and sent you a push notification. She expects a callback today. Priority: HIGH.',
+  },
+];
+
+/* ── LIVE CLOCK ──────────────────────────────────────── */
+function updateClock() {
+  const now = new Date();
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('live-date').textContent =
+    `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()} ${now.getFullYear()}`;
+  const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const hh = ((h % 12) || 12).toString().padStart(2, '0');
+  const mm = m.toString().padStart(2, '0');
+  const ss = s.toString().padStart(2, '0');
+  document.getElementById('live-time').textContent = `${hh}:${mm}:${ss} ${ampm}`;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+/* ── COUNT-UP ANIMATION ──────────────────────────────── */
+function countUp(el, target, prefix='', suffix='', duration=1600) {
+  const start = performance.now();
+  const isFloat = typeof target === 'number' && !Number.isInteger(target);
+  function step(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - t, 3);
+    const val = Math.round(target * ease);
+    el.textContent = prefix + val.toLocaleString() + suffix;
+    if (t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* ── YOUR MOVE CARD ──────────────────────────────────── */
+let moveIndex = 0;
+const moveCard  = document.getElementById('your-move-card');
+const moveInner = document.getElementById('your-move-inner');
+const moveText  = document.getElementById('move-text');
+const moveBtn   = document.getElementById('move-btn');
+const cycleDots = document.getElementById('cycle-dots');
+
+// Build dots
+YOUR_MOVES.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'cycle-dot' + (i === 0 ? ' active' : '');
+  d.addEventListener('click', () => setMove(i));
+  cycleDots.appendChild(d);
+});
+
+function setMove(i) {
+  const m = YOUR_MOVES[i];
+  moveInner.classList.add('fading');
+  setTimeout(() => {
+    moveCard.className = `state-${m.state}`;
+    moveText.innerHTML = m.text;
+    moveBtn.textContent = m.btn;
+    moveBtn.className = `move-action-btn ${m.btnClass}`;
+    moveInner.querySelector('.move-eyebrow').innerHTML =
+      `<div class="move-dot"></div> ${m.eyebrow}`;
+    moveInner.classList.remove('fading');
+    // dots
+    document.querySelectorAll('.cycle-dot').forEach((d, idx) => {
+      d.classList.toggle('active', idx === i);
+    });
+    moveIndex = i;
+  }, 380);
+}
+
+setMove(0);
+setInterval(() => {
+  setMove((moveIndex + 1) % YOUR_MOVES.length);
+}, 8000);
+
+/* ── BUILD AI TEAM GRID ──────────────────────────────── */
+const teamGrid = document.getElementById('team-grid');
+const statusMap = {
+  active:    ['badge-active',    'ACTIVE'],
+  scheduled: ['badge-scheduled', 'SCHEDULED'],
+  sleeping:  ['badge-sleeping',  'SLEEPING'],
+  attention: ['badge-attention', 'NEEDS ATTENTION'],
+};
+
+TEAM.forEach((worker, i) => {
+  const pct = Math.round((worker.done / worker.total) * 100);
+  const fillClass = worker.status === 'scheduled' ? 'gold' : worker.status === 'sleeping' ? 'gray' : '';
+  const [badgeClass, badgeLabel] = statusMap[worker.status];
+
+  const card = document.createElement('div');
+  card.className = 'pod-card';
+  card.dataset.idx = i;
+  card.innerHTML = `
+    <div class="pod-header">
+      <div class="pod-identity">
+        <div class="pod-icon">${worker.icon}</div>
+        <div>
+          <div class="pod-name">${worker.name}</div>
+          <div class="pod-role">${worker.role}</div>
+        </div>
+      </div>
+      <div class="status-badge ${badgeClass}">
+        <div class="badge-dot"></div>
+        ${badgeLabel}
+      </div>
+    </div>
+    <div class="pod-last-action"><strong>${worker.lastAction}</strong> — ${worker.lastTime}</div>
+    <div class="pod-next"><span class="pod-next-icon">🕒</span> ${worker.next}</div>
+    <div class="pod-progress-wrap">
+      <div class="pod-progress-label">
+        <span>This week's tasks</span>
+        <span>${worker.done}/${worker.total} done</span>
+      </div>
+      <div class="pod-progress-bar">
+        <div class="pod-progress-fill ${fillClass}" style="width:0%" data-pct="${pct}"></div>
+      </div>
+    </div>
+    <div class="pod-goal">${worker.goal}</div>
+  `;
+  card.addEventListener('click', () => openModal(i));
+  teamGrid.appendChild(card);
+});
+
+// Animate progress bars after a delay
+setTimeout(() => {
+  document.querySelectorAll('.pod-progress-fill').forEach(bar => {
+    bar.style.width = bar.dataset.pct + '%';
+  });
+}, 400);
+
+/* ── BUILD FEED ──────────────────────────────────────── */
+const feedContainer = document.getElementById('feed-items');
+FEED.forEach((item, i) => {
+  const el = document.createElement('div');
+  el.className = `feed-item ${item.mood}`;
+  el.innerHTML = `
+    <div class="feed-mood">${item.emoji}</div>
+    <div class="feed-content">
+      <div class="feed-caller">
+        ${item.caller}
+        <span class="feed-biz">${item.biz}</span>
+      </div>
+      <div class="feed-topic">${item.topic}</div>
+      ${item.shield ? `<div class="shield-tag shield-${item.shield}">${item.shieldLabel}</div>` : ''}
+    </div>
+    <div class="feed-time">${item.time}</div>
+    <div class="feed-expand"><div class="feed-expand-inner">${item.summary}</div></div>
+  `;
+  el.addEventListener('click', () => el.classList.toggle('open'));
+  feedContainer.appendChild(el);
+});
+
+/* ── SPARKLINE ───────────────────────────────────────── */
+function drawSparkline() {
+  const canvas = document.getElementById('sparkline-canvas');
+  const parent = canvas.parentElement;
+  const W = parent.offsetWidth;
+  const H = 60;
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const points = [88, 92, 85, 95, 90, 98, 98]; // 7 days of happiness %
+  const min = 80, max = 100;
+  const pad = { t: 6, b: 6, l: 4, r: 4 };
+  const gw = W - pad.l - pad.r;
+  const gh = H - pad.t - pad.b;
+
+  const xs = points.map((_, i) => pad.l + (i / (points.length - 1)) * gw);
+  const ys = points.map(v => pad.t + gh - ((v - min) / (max - min)) * gh);
+
+  // gradient fill
+  const grad = ctx.createLinearGradient(0, pad.t, 0, H);
+  grad.addColorStop(0, 'rgba(13,79,60,0.15)');
+  grad.addColorStop(1, 'rgba(13,79,60,0)');
+
+  ctx.beginPath();
+  ctx.moveTo(xs[0], ys[0]);
+  for (let i = 1; i < xs.length; i++) {
+    const cpx = (xs[i-1] + xs[i]) / 2;
+    ctx.bezierCurveTo(cpx, ys[i-1], cpx, ys[i], xs[i], ys[i]);
+  }
+  ctx.lineTo(xs[xs.length-1], H);
+  ctx.lineTo(xs[0], H);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // line
+  ctx.beginPath();
+  ctx.moveTo(xs[0], ys[0]);
+  for (let i = 1; i < xs.length; i++) {
+    const cpx = (xs[i-1] + xs[i]) / 2;
+    ctx.bezierCurveTo(cpx, ys[i-1], cpx, ys[i], xs[i], ys[i]);
+  }
+  ctx.strokeStyle = '#0D4F3C';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // dots
+  xs.forEach((x, i) => {
+    ctx.beginPath();
+    ctx.arc(x, ys[i], 3, 0, Math.PI * 2);
+    ctx.fillStyle = i === xs.length - 1 ? '#E8C547' : '#0D4F3C';
+    ctx.fill();
+  });
+
+  // day labels
+  const daysShort = ['M','T','W','T','F','S','S'];
+  ctx.font = '9px Inter, sans-serif';
+  ctx.fillStyle = '#aaa';
+  ctx.textAlign = 'center';
+  xs.forEach((x, i) => ctx.fillText(daysShort[i], x, H));
+}
+
+window.addEventListener('resize', drawSparkline);
+setTimeout(drawSparkline, 100);
+
+/* ── COUNT UP ANIMATIONS ─────────────────────────────── */
+function runCountUps() {
+  // Pill MRR
+  const pillMrr = document.getElementById('pill-mrr');
+  let mrrVal = 0;
+  const mrrTarget = DATA.mrr;
+  const mrrDur = 1800;
+  const mrrStart = performance.now();
+  function mrrStep(now) {
+    const t = Math.min((now - mrrStart) / mrrDur, 1);
+    const ease = 1 - Math.pow(1 - t, 3);
+    mrrVal = Math.round(mrrTarget * ease);
+    pillMrr.textContent = '$' + mrrVal;
+    if (t < 1) requestAnimationFrame(mrrStep);
+  }
+  requestAnimationFrame(mrrStep);
+
+  // Pill clients
+  countUp(document.getElementById('pill-clients'), DATA.clients, '', '', 1400);
+  // Pill margin
+  countUp(document.getElementById('pill-margin'), DATA.margin, '', '%', 1600);
+
+  // Money strip big numbers
+  setTimeout(() => {
+    countUp(document.getElementById('mrr-big'), DATA.mrr, '$', '', 1800);
+    countUp(document.getElementById('clients-big'), DATA.clients, '', '', 1400);
+    countUp(document.getElementById('profit-big'), DATA.profit, '$', '', 1800);
+  }, 200);
+
+  // Happiness score
+  setTimeout(() => {
+    countUp(document.getElementById('score-number'), 98, '', '%', 1600);
+  }, 300);
+
+  // Growth stats
+  const growthData = [
+    ['g-dms', 15, '', ''],
+    ['g-demos', 2, '', ''],
+    ['g-trials', 2, '', ''],
+    ['g-posts', 3, '', ''],
+    ['g-newclients', 3, '', ''],
+    ['g-churned', 0, '', ''],
+    ['g-netmrr', 149, '$', ''],
+    ['g-calls', 27, '', ''],
+  ];
+  growthData.forEach(([id, val, pre, suf]) => {
+    setTimeout(() => countUp(document.getElementById(id), val, pre, suf, 1400), 400);
+  });
+
+  // Milestone progress bar
+  setTimeout(() => {
+    document.getElementById('milestone-fill').style.width = '60%';
+    document.getElementById('milestone-big').textContent = '3/5';
+    document.getElementById('milestone-frac').textContent = '3 active · 2 to go';
+  }, 500);
+}
+
+// Run count-ups after a brief render delay
+setTimeout(runCountUps, 300);
+
+/* ── MODAL ───────────────────────────────────────────── */
+const overlay  = document.getElementById('modal-overlay');
+const closeBtn = document.getElementById('modal-close');
+
+function openModal(i) {
+  const w = TEAM[i];
+  document.getElementById('modal-icon').textContent = w.icon;
+  document.getElementById('modal-name').textContent = w.name;
+  document.getElementById('modal-role').textContent = w.role;
+
+  const [badgeClass, badgeLabel] = statusMap[w.status];
+  const pct = Math.round((w.done / w.total) * 100);
+
+  document.getElementById('modal-body').innerHTML = `
+    <div class="modal-section">
+      <div class="modal-section-title">Status</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <span class="status-badge ${badgeClass}"><div class="badge-dot"></div>${badgeLabel}</span>
+        <span style="font-size:13px;color:var(--text-soft);">Next run: ${w.next}</span>
+      </div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">This Week's Goal</div>
+      <p style="font-size:14px;color:var(--text-main);font-weight:500;line-height:1.5;">${w.goal}</p>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Produced This Week (${w.done}/${w.total} tasks)</div>
+      <div>
+        ${w.outputs.map(o => `
+          <div class="modal-output-item">
+            <div class="modal-output-dot"></div>
+            <span>${o}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Task Progress</div>
+      <div style="background:var(--cream-dark);border-radius:100px;height:10px;overflow:hidden;">
+        <div style="height:100%;width:${pct}%;background:var(--emerald);border-radius:100px;transition:width 0.8s;"></div>
+      </div>
+      <div style="font-size:12px;color:var(--gray-muted);margin-top:6px;">${w.done} of ${w.total} tasks completed</div>
+    </div>
+  `;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+closeBtn.addEventListener('click', closeModal);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* ── REDRAW SPARKLINE ON FONT LOAD ───────────────────── */
+document.fonts.ready.then(() => drawSparkline());
+</script>
+</body>
+</html>
