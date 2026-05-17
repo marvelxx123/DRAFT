@@ -3,186 +3,134 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CALLA — Every call, perfectly answered.</title>
+  <title>CALLA — Your Phone. Never Misses A Call. Ever.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    /* ─── Reset & Base ─────────────────────────────────────────── */
+    /* ─── Reset ──────────────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; font-size: 16px; }
     body {
       font-family: 'Inter', sans-serif;
-      background: #FAFAF8;
-      color: #1A2E26;
+      background: #0A0A0A;
+      color: #fff;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
-    img { max-width: 100%; display: block; }
     a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
 
-    /* ─── CSS Variables ────────────────────────────────────────── */
+    /* ─── Variables ──────────────────────────────────────────────────── */
     :root {
-      --emerald:     #0D4F3C;
-      --emerald-mid: #155E48;
-      --emerald-light: #1A7A5B;
-      --gold:        #E8C547;
-      --gold-dark:   #C9A82E;
-      --white:       #FAFAF8;
-      --cream:       #F5F0E8;
-      --cream-deep:  #EDE6D6;
-      --text-dark:   #0D2219;
-      --text-mid:    #2E5046;
-      --text-muted:  #5A7A6C;
-      --shadow-sm:   0 2px 8px rgba(13,79,60,0.08);
-      --shadow-md:   0 8px 32px rgba(13,79,60,0.12);
-      --shadow-lg:   0 24px 64px rgba(13,79,60,0.18);
-      --radius-sm:   8px;
-      --radius-md:   16px;
-      --radius-lg:   24px;
-      --radius-xl:   40px;
+      --black:        #0A0A0A;
+      --black-green:  #0D1A0F;
+      --emerald:      #0D4F3C;
+      --gold:         #E8C547;
+      --gold-dim:     #C9A82E;
+      --white:        #FFFFFF;
+      --white-dim:    rgba(255,255,255,0.6);
+      --white-faint:  rgba(255,255,255,0.08);
+      --border:       rgba(255,255,255,0.08);
+      --border-em:    rgba(13,79,60,0.5);
+      --red-alert:    #F87171;
     }
 
-    /* ─── Utility ──────────────────────────────────────────────── */
-    .container {
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-    .section-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--emerald-light);
-      background: rgba(13,79,60,0.07);
-      padding: 6px 14px;
-      border-radius: 100px;
-      margin-bottom: 20px;
-    }
-    .section-label .dot {
-      width: 6px; height: 6px;
-      background: var(--gold);
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .section-heading {
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 800;
-      line-height: 1.15;
-      color: var(--text-dark);
-      letter-spacing: -0.03em;
-    }
-    .section-heading span { color: var(--emerald); }
-    .section-sub {
-      font-size: 1.125rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-      max-width: 560px;
-    }
-
-    /* ─── Animations ───────────────────────────────────────────── */
+    /* ─── Keyframes ──────────────────────────────────────────────────── */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(28px); }
+      from { opacity: 0; transform: translateY(32px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50%       { transform: translateY(-10px); }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
     }
-    @keyframes shimmer {
-      0%   { background-position: -200% center; }
-      100% { background-position:  200% center; }
+    @keyframes goldGlow {
+      0%, 100% { text-shadow: 0 0 20px rgba(232,197,71,0.4), 0 0 60px rgba(232,197,71,0.15); }
+      50%       { text-shadow: 0 0 40px rgba(232,197,71,0.7), 0 0 100px rgba(232,197,71,0.3); }
     }
-    @keyframes pulse-ring {
-      0%   { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(232,197,71,0.5); }
-      70%  { transform: scale(1);    box-shadow: 0 0 0 18px rgba(232,197,71,0); }
-      100% { transform: scale(0.95); box-shadow: 0 0 0 0  rgba(232,197,71,0); }
+    @keyframes pulseDot {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(74,222,128,0.6); }
+      50%       { box-shadow: 0 0 0 6px rgba(74,222,128,0); }
+    }
+    @keyframes cardPulse {
+      0%, 100% { box-shadow: 0 0 0 1px rgba(232,197,71,0.15), 0 24px 64px rgba(0,0,0,0.6); }
+      50%       { box-shadow: 0 0 0 1px rgba(232,197,71,0.35), 0 24px 80px rgba(232,197,71,0.1); }
+    }
+    @keyframes wave1 {
+      0%, 100% { height: 8px;  }
+      50%       { height: 24px; }
+    }
+    @keyframes wave2 {
+      0%, 100% { height: 16px; }
+      50%       { height: 36px; }
+    }
+    @keyframes wave3 {
+      0%, 100% { height: 24px; }
+      50%       { height: 12px; }
+    }
+    @keyframes wave4 {
+      0%, 100% { height: 12px; }
+      50%       { height: 32px; }
+    }
+    @keyframes wave5 {
+      0%, 100% { height: 20px; }
+      50%       { height: 8px;  }
     }
     @keyframes ticker {
       0%   { transform: translateX(0); }
       100% { transform: translateX(-50%); }
     }
-    @keyframes gradientShift {
-      0%, 100% { background-position: 0% 50%; }
-      50%       { background-position: 100% 50%; }
+    @keyframes revealUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    .animate-fadeup {
-      animation: fadeUp 0.7s ease both;
-    }
-    .delay-1 { animation-delay: 0.1s; }
-    .delay-2 { animation-delay: 0.2s; }
-    .delay-3 { animation-delay: 0.3s; }
-    .delay-4 { animation-delay: 0.4s; }
-    .delay-5 { animation-delay: 0.55s; }
+    /* Hero load animations */
+    .hero-badge   { animation: fadeUp 0.6s ease 0.1s both; }
+    .hero-h1      { animation: fadeUp 0.7s ease 0.2s both; }
+    .hero-sub     { animation: fadeUp 0.7s ease 0.35s both; }
+    .hero-actions { animation: fadeUp 0.7s ease 0.5s both; }
+    .hero-stats   { animation: fadeUp 0.7s ease 0.65s both; }
+    .hero-card    { animation: fadeIn 0.9s ease 0.4s both; }
 
-    /* ─── Buttons ──────────────────────────────────────────────── */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 28px;
-      border-radius: 100px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      border: none;
-      transition: all 0.25s ease;
-      white-space: nowrap;
+    /* ─── Utility ────────────────────────────────────────────────────── */
+    .container {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 28px;
     }
-    .btn-primary {
-      background: var(--gold);
-      color: var(--text-dark);
-      box-shadow: 0 4px 20px rgba(232,197,71,0.4);
+    .section-label {
+      display: inline-block;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(232,197,71,0.08);
+      border: 1px solid rgba(232,197,71,0.18);
+      padding: 6px 14px;
+      border-radius: 4px;
+      margin-bottom: 24px;
     }
-    .btn-primary:hover {
-      background: var(--gold-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(232,197,71,0.5);
-    }
-    .btn-primary:active { transform: translateY(0); }
+    .gold { color: var(--gold); }
 
-    .btn-outline {
-      background: transparent;
-      color: var(--white);
-      border: 2px solid rgba(255,255,255,0.35);
-    }
-    .btn-outline:hover {
-      background: rgba(255,255,255,0.1);
-      border-color: rgba(255,255,255,0.65);
-    }
-
-    .btn-outline-dark {
-      background: transparent;
-      color: var(--emerald);
-      border: 2px solid var(--emerald);
-    }
-    .btn-outline-dark:hover {
-      background: var(--emerald);
-      color: var(--white);
-    }
-
-    .btn-lg {
-      padding: 18px 36px;
-      font-size: 1.05rem;
-    }
-
-    /* ─── NAV ──────────────────────────────────────────────────── */
+    /* ─── NAV ────────────────────────────────────────────────────────── */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 0 24px;
-      transition: background 0.3s, backdrop-filter 0.3s, box-shadow 0.3s;
+      z-index: 200;
+      padding: 0 28px;
+      transition: background 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease;
+      border-bottom: 1px solid transparent;
     }
     nav.scrolled {
-      background: rgba(250,250,248,0.92);
-      backdrop-filter: blur(16px);
-      box-shadow: 0 1px 0 rgba(13,79,60,0.08);
+      background: rgba(10,10,10,0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom-color: var(--border);
     }
     .nav-inner {
       max-width: 1160px;
@@ -190,1834 +138,1297 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 72px;
+      height: 68px;
     }
     .nav-logo {
-      font-size: 1.5rem;
-      font-weight: 900;
-      letter-spacing: -0.04em;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.35rem;
+      letter-spacing: 0.06em;
       color: var(--white);
-      transition: color 0.3s;
-    }
-    nav.scrolled .nav-logo { color: var(--emerald); }
-    .nav-logo span {
-      display: inline-block;
-      width: 8px; height: 8px;
-      background: var(--gold);
-      border-radius: 50%;
-      margin-left: 2px;
-      vertical-align: middle;
-      margin-bottom: 4px;
     }
     .nav-links {
       display: flex;
-      gap: 32px;
+      gap: 36px;
       list-style: none;
     }
     .nav-links a {
       font-size: 0.875rem;
       font-weight: 500;
-      color: rgba(255,255,255,0.8);
+      color: rgba(255,255,255,0.55);
       transition: color 0.2s;
+      letter-spacing: 0.01em;
     }
-    .nav-links a:hover { color: var(--gold); }
-    nav.scrolled .nav-links a { color: var(--text-mid); }
-    nav.scrolled .nav-links a:hover { color: var(--emerald); }
-    .nav-cta {
+    .nav-links a:hover { color: var(--white); }
+    .nav-right {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 20px;
     }
-    .nav-cta .btn { padding: 10px 22px; font-size: 0.875rem; }
-    .nav-cta .sign-in {
+    .nav-pricing-link {
       font-size: 0.875rem;
       font-weight: 500;
-      color: rgba(255,255,255,0.8);
+      color: rgba(255,255,255,0.55);
       transition: color 0.2s;
     }
-    nav.scrolled .nav-cta .sign-in { color: var(--text-mid); }
-    .nav-cta .sign-in:hover { color: var(--gold); }
-    nav.scrolled .nav-cta .sign-in:hover { color: var(--emerald); }
-
+    .nav-pricing-link:hover { color: var(--white); }
+    .nav-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold);
+      color: #000;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 0.82rem;
+      letter-spacing: 0.02em;
+      padding: 10px 20px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .nav-cta-btn:hover {
+      background: #f0d04e;
+      transform: translateY(-1px);
+    }
     .hamburger {
       display: none;
       flex-direction: column;
       gap: 5px;
       cursor: pointer;
       padding: 4px;
+      background: none;
+      border: none;
     }
     .hamburger span {
       display: block;
-      width: 24px; height: 2px;
-      background: var(--white);
+      width: 22px; height: 2px;
+      background: rgba(255,255,255,0.7);
       border-radius: 2px;
-      transition: background 0.3s;
     }
-    nav.scrolled .hamburger span { background: var(--emerald); }
 
-    /* ─── HERO ─────────────────────────────────────────────────── */
+    /* ─── HERO ───────────────────────────────────────────────────────── */
     #hero {
       min-height: 100vh;
-      background: linear-gradient(135deg, var(--emerald) 0%, #0A3D2D 50%, #072A1F 100%);
-      background-size: 200% 200%;
-      animation: gradientShift 12s ease infinite;
+      background: var(--black);
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding-top: 72px;
+      padding-top: 68px;
       position: relative;
       overflow: hidden;
     }
-    #hero::before {
-      content: '';
+    .hero-bg-glow {
+      position: absolute;
+      width: 800px; height: 600px;
+      background: radial-gradient(ellipse at center, rgba(13,79,60,0.35) 0%, transparent 70%);
+      top: -100px; right: -200px;
+      pointer-events: none;
+    }
+    .hero-bg-glow-2 {
+      position: absolute;
+      width: 500px; height: 400px;
+      background: radial-gradient(ellipse at center, rgba(232,197,71,0.06) 0%, transparent 70%);
+      bottom: 0; left: -100px;
+      pointer-events: none;
+    }
+    .hero-grid-line {
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 70% 40%, rgba(232,197,71,0.08) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 50% at 20% 80%, rgba(26,122,91,0.2) 0%, transparent 60%);
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 80px 80px;
       pointer-events: none;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
     }
-    /* Decorative rings */
-    #hero::after {
-      content: '';
-      position: absolute;
-      width: 600px; height: 600px;
-      border-radius: 50%;
-      border: 1px solid rgba(232,197,71,0.1);
-      right: -150px; top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-    }
-    .hero-ring-2 {
-      position: absolute;
-      width: 800px; height: 800px;
-      border-radius: 50%;
-      border: 1px solid rgba(232,197,71,0.06);
-      right: -250px; top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-    }
-    .hero-content {
+    .hero-inner {
       position: relative;
       z-index: 2;
       max-width: 1160px;
       margin: 0 auto;
-      padding: 80px 24px 100px;
+      padding: 80px 28px 100px;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 64px;
-      align-items: center;
-    }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(232,197,71,0.12);
-      border: 1px solid rgba(232,197,71,0.25);
-      color: var(--gold);
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      padding: 7px 16px;
-      border-radius: 100px;
-      margin-bottom: 28px;
-    }
-    .hero-badge .live-dot {
-      width: 7px; height: 7px;
-      background: #4ADE80;
-      border-radius: 50%;
-      flex-shrink: 0;
-      animation: pulse-ring 2s infinite;
-      box-shadow: 0 0 0 0 rgba(74,222,128,0.4);
-    }
-    .hero-heading {
-      font-size: clamp(2.6rem, 5.5vw, 4.2rem);
-      font-weight: 900;
-      line-height: 1.08;
-      letter-spacing: -0.04em;
-      color: var(--white);
-      margin-bottom: 24px;
-    }
-    .hero-heading .accent {
-      background: linear-gradient(135deg, var(--gold) 0%, #F0D875 50%, var(--gold) 100%);
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: shimmer 3s linear infinite;
-    }
-    .hero-sub {
-      font-size: 1.2rem;
-      color: rgba(255,255,255,0.72);
-      line-height: 1.7;
-      margin-bottom: 40px;
-      max-width: 480px;
-    }
-    .hero-actions {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .hero-trust {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 40px;
-      color: rgba(255,255,255,0.5);
-      font-size: 0.82rem;
-    }
-    .hero-trust-avatars {
-      display: flex;
-    }
-    .hero-trust-avatars span {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      border: 2px solid rgba(255,255,255,0.2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.7rem;
-      font-weight: 700;
-      margin-left: -8px;
-      background: var(--emerald-light);
-      color: var(--white);
-    }
-    .hero-trust-avatars span:first-child { margin-left: 0; }
-    .hero-trust-stars {
-      color: var(--gold);
-      font-size: 0.9rem;
-      letter-spacing: 1px;
-    }
-
-    /* Hero visual card */
-    .hero-visual {
-      position: relative;
-      animation: float 6s ease-in-out infinite;
-    }
-    .phone-mockup {
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: var(--radius-xl);
-      padding: 28px;
-      position: relative;
-    }
-    .phone-mockup::before {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      border-radius: var(--radius-xl);
-      background: linear-gradient(135deg, rgba(232,197,71,0.3), transparent 40%, rgba(26,122,91,0.2));
-      pointer-events: none;
-    }
-    .mockup-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-    .call-icon {
-      width: 40px; height: 40px;
-      background: var(--gold);
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem;
-      animation: pulse-ring 2.5s infinite;
-    }
-    .mockup-header-text { flex: 1; }
-    .mockup-header-text .caller { font-size: 0.9rem; font-weight: 600; color: var(--white); }
-    .mockup-header-text .status {
-      font-size: 0.75rem;
-      color: #4ADE80;
-      display: flex; align-items: center; gap: 5px;
-    }
-    .mockup-header-text .status::before {
-      content: '';
-      width: 6px; height: 6px;
-      background: #4ADE80;
-      border-radius: 50%;
-      display: inline-block;
-    }
-    .mockup-timer { font-size: 0.8rem; color: rgba(255,255,255,0.4); font-variant-numeric: tabular-nums; }
-
-    .chat-bubbles { display: flex; flex-direction: column; gap: 12px; }
-    .bubble {
-      padding: 12px 16px;
-      border-radius: 16px;
-      font-size: 0.875rem;
-      line-height: 1.5;
-      max-width: 88%;
-    }
-    .bubble.calla {
-      background: rgba(232,197,71,0.15);
-      border: 1px solid rgba(232,197,71,0.2);
-      color: rgba(255,255,255,0.9);
-      align-self: flex-start;
-      border-bottom-left-radius: 4px;
-    }
-    .bubble.calla .name {
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: var(--gold);
-      margin-bottom: 4px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-    .bubble.caller {
-      background: rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.75);
-      align-self: flex-end;
-      border-bottom-right-radius: 4px;
-    }
-
-    .mockup-footer {
-      margin-top: 20px;
-      padding-top: 16px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      display: flex;
-      gap: 8px;
-    }
-    .action-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 7px 14px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 100px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: rgba(255,255,255,0.7);
-    }
-    .action-chip .chip-icon { font-size: 0.85rem; }
-
-    /* Floating badge on card */
-    .floating-badge {
-      position: absolute;
-      background: var(--white);
-      border-radius: var(--radius-md);
-      padding: 12px 16px;
-      box-shadow: var(--shadow-lg);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text-dark);
-      white-space: nowrap;
-    }
-    .floating-badge .badge-icon {
-      width: 32px; height: 32px;
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem;
-    }
-    .badge-top {
-      top: -20px;
-      right: 20px;
-    }
-    .badge-top .badge-icon { background: #DCFCE7; }
-    .badge-bottom {
-      bottom: -16px;
-      left: 10px;
-    }
-    .badge-bottom .badge-icon { background: #FEF9C3; }
-
-    /* ─── TICKER ───────────────────────────────────────────────── */
-    .ticker-wrap {
-      background: var(--emerald);
-      padding: 14px 0;
-      overflow: hidden;
-    }
-    .ticker-track {
-      display: flex;
-      width: max-content;
-      animation: ticker 28s linear infinite;
-    }
-    .ticker-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 0 32px;
-      color: rgba(255,255,255,0.7);
-      font-size: 0.85rem;
-      font-weight: 500;
-      white-space: nowrap;
-    }
-    .ticker-item .star { color: var(--gold); }
-    .ticker-sep {
-      color: rgba(255,255,255,0.2);
-      font-size: 1.2rem;
-    }
-
-    /* ─── HOW IT WORKS ─────────────────────────────────────────── */
-    #how {
-      padding: 112px 0;
-      background: var(--white);
-    }
-    .how-header {
-      text-align: center;
-      margin-bottom: 72px;
-    }
-    .steps-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0;
-      position: relative;
-    }
-    .steps-grid::before {
-      content: '';
-      position: absolute;
-      top: 52px;
-      left: calc(12.5% + 24px);
-      right: calc(12.5% + 24px);
-      height: 2px;
-      background: linear-gradient(90deg, var(--gold), var(--emerald-light), var(--gold));
-      z-index: 0;
-    }
-    .step-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 0 16px;
-      position: relative;
-      z-index: 1;
-    }
-    .step-number {
-      width: 56px; height: 56px;
-      border-radius: 50%;
-      background: var(--emerald);
-      color: var(--white);
-      font-size: 1.2rem;
-      font-weight: 800;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 20px;
-      position: relative;
-      flex-shrink: 0;
-      box-shadow: 0 0 0 8px var(--white), 0 0 0 10px rgba(13,79,60,0.12);
-    }
-    .step-number.gold {
-      background: var(--gold);
-      color: var(--text-dark);
-      box-shadow: 0 0 0 8px var(--white), 0 0 0 10px rgba(232,197,71,0.25);
-    }
-    .step-icon { font-size: 1.4rem; }
-    .step-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text-dark);
-      margin-bottom: 8px;
-    }
-    .step-desc {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
-    /* ─── FEATURES ─────────────────────────────────────────────── */
-    #features {
-      padding: 112px 0;
-      background: var(--cream);
-    }
-    .features-header {
-      text-align: center;
-      margin-bottom: 72px;
-    }
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-    }
-    .feature-card {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      padding: 36px 32px;
-      border: 1px solid rgba(13,79,60,0.07);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--emerald), var(--emerald-light));
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .feature-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
-    .feature-card:hover::before { opacity: 1; }
-    .feature-card.featured {
-      background: var(--emerald);
-      color: var(--white);
-      border-color: transparent;
-    }
-    .feature-card.featured::before { opacity: 1; background: var(--gold); height: 3px; }
-    .feature-icon {
-      width: 52px; height: 52px;
-      border-radius: var(--radius-sm);
-      background: rgba(13,79,60,0.08);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem;
-      margin-bottom: 20px;
-      flex-shrink: 0;
-    }
-    .feature-card.featured .feature-icon { background: rgba(255,255,255,0.12); }
-    .feature-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text-dark);
-      margin-bottom: 10px;
-    }
-    .feature-card.featured .feature-title { color: var(--white); }
-    .feature-desc {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.65;
-    }
-    .feature-card.featured .feature-desc { color: rgba(255,255,255,0.72); }
-    .feature-tag {
-      display: inline-block;
-      margin-top: 16px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      background: rgba(13,79,60,0.07);
-      color: var(--emerald);
-      padding: 4px 10px;
-      border-radius: 100px;
-    }
-    .feature-card.featured .feature-tag {
-      background: rgba(232,197,71,0.2);
-      color: var(--gold);
-    }
-
-    /* Feature card large — spans 2 cols */
-    .feature-card.wide { grid-column: span 2; }
-
-    /* ─── CALLA SHIELD ─────────────────────────────────────────── */
-    #shield {
-      padding: 120px 0;
-      background: linear-gradient(160deg, #051F16 0%, var(--emerald) 50%, #07301F 100%);
-      position: relative;
-      overflow: hidden;
-    }
-    #shield::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 60% 70% at 80% 40%, rgba(232,197,71,0.12) 0%, transparent 55%),
-        radial-gradient(ellipse 40% 50% at 15% 70%, rgba(26,122,91,0.3) 0%, transparent 55%);
-      pointer-events: none;
-    }
-    .shield-inner {
-      position: relative;
-      z-index: 2;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1.15fr 1fr;
       gap: 80px;
       align-items: center;
     }
-    .shield-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--gold);
-      background: rgba(232,197,71,0.12);
-      border: 1px solid rgba(232,197,71,0.25);
-      padding: 6px 14px;
-      border-radius: 100px;
-      margin-bottom: 20px;
-    }
-    .shield-heading {
-      font-size: clamp(2.2rem, 4vw, 3.2rem);
-      font-weight: 900;
-      line-height: 1.1;
-      letter-spacing: -0.035em;
-      color: var(--white);
-      margin-bottom: 20px;
-    }
-    .shield-heading .gold-text { color: var(--gold); }
-    .shield-sub {
-      font-size: 1.1rem;
-      color: rgba(255,255,255,0.68);
-      line-height: 1.7;
-      margin-bottom: 36px;
-    }
-    .shield-free-badge {
+    .hero-left {}
+    .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      background: var(--gold);
-      color: var(--text-dark);
-      font-size: 0.9rem;
-      font-weight: 800;
-      padding: 10px 20px;
-      border-radius: 100px;
-      margin-bottom: 40px;
-    }
-    .shield-features {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-    .shield-feature {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-    }
-    .shield-check {
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      background: rgba(232,197,71,0.15);
-      border: 1px solid rgba(232,197,71,0.3);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-    .shield-feature-text strong {
-      display: block;
-      color: var(--white);
-      font-size: 0.95rem;
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
-    .shield-feature-text span {
-      color: rgba(255,255,255,0.55);
-      font-size: 0.85rem;
-      line-height: 1.5;
-    }
-
-    /* Shield Visual */
-    .shield-visual {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .shield-card {
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: var(--radius-md);
-      padding: 20px 24px;
-      transition: transform 0.3s;
-    }
-    .shield-card:hover { transform: translateX(6px); }
-    .shield-card-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    .shield-card-icon {
-      width: 36px; height: 36px;
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem;
-    }
-    .icon-green  { background: rgba(74,222,128,0.15); }
-    .icon-red    { background: rgba(248,113,113,0.15); }
-    .icon-gold   { background: rgba(232,197,71,0.15); }
-    .icon-blue   { background: rgba(96,165,250,0.15); }
-    .shield-card-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--white);
-    }
-    .shield-card-sub {
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.45);
-    }
-    .shield-card-body {
-      font-size: 0.82rem;
-      color: rgba(255,255,255,0.65);
-      line-height: 1.55;
-    }
-    .sms-preview {
-      background: rgba(255,255,255,0.05);
-      border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.7);
-      border-left: 2px solid var(--gold);
-      margin-top: 10px;
-      font-style: italic;
-    }
-    .sentiment-bar {
-      display: flex;
-      gap: 6px;
-      margin-top: 10px;
-    }
-    .sentiment-pill {
-      padding: 4px 12px;
-      border-radius: 100px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-    .pill-happy { background: rgba(74,222,128,0.18); color: #4ADE80; }
-    .pill-neutral { background: rgba(148,163,184,0.18); color: #94A3B8; }
-    .pill-frustrated { background: rgba(248,113,113,0.18); color: #F87171; }
-
-    .alert-box {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(248,113,113,0.1);
-      border: 1px solid rgba(248,113,113,0.2);
-      border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      margin-top: 10px;
-      font-size: 0.8rem;
-      color: #FCA5A5;
-    }
-    .review-prompt {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(232,197,71,0.1);
+      background: rgba(232,197,71,0.08);
       border: 1px solid rgba(232,197,71,0.2);
-      border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      margin-top: 10px;
-      font-size: 0.8rem;
-      color: var(--gold);
-    }
-
-    /* ─── PRICING ──────────────────────────────────────────────── */
-    #pricing {
-      padding: 112px 0;
-      background: var(--white);
-    }
-    .pricing-header {
-      text-align: center;
-      margin-bottom: 16px;
-    }
-    .pricing-guarantee {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      margin-bottom: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      align-items: start;
-    }
-    .pricing-card {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      padding: 40px 36px;
-      border: 2px solid rgba(13,79,60,0.1);
-      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
-      position: relative;
-    }
-    .pricing-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
-    .pricing-card.popular {
-      border-color: var(--emerald);
-      background: var(--emerald);
-      color: var(--white);
-      transform: scale(1.04);
-      box-shadow: var(--shadow-lg);
-    }
-    .pricing-card.popular:hover { transform: scale(1.04) translateY(-6px); }
-    .popular-badge {
-      position: absolute;
-      top: -14px;
-      left: 50%; transform: translateX(-50%);
-      background: var(--gold);
-      color: var(--text-dark);
-      font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 5px 16px;
-      border-radius: 100px;
-      white-space: nowrap;
-    }
-    .pricing-plan-name {
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-    .pricing-card.popular .pricing-plan-name { color: rgba(255,255,255,0.6); }
-    .pricing-amount {
-      font-size: 3rem;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      color: var(--text-dark);
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-    .pricing-card.popular .pricing-amount { color: var(--white); }
-    .pricing-amount sup {
-      font-size: 1.2rem;
-      font-weight: 700;
-      vertical-align: top;
-      margin-top: 10px;
-      display: inline-block;
-    }
-    .pricing-period {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 24px;
-    }
-    .pricing-card.popular .pricing-period { color: rgba(255,255,255,0.55); }
-    .pricing-desc {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-      margin-bottom: 28px;
-      padding-bottom: 28px;
-      border-bottom: 1px solid rgba(13,79,60,0.1);
-    }
-    .pricing-card.popular .pricing-desc {
-      color: rgba(255,255,255,0.65);
-      border-bottom-color: rgba(255,255,255,0.12);
-    }
-    .pricing-features {
-      list-style: none;
-      margin-bottom: 32px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .pricing-features li {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 0.875rem;
-      color: var(--text-mid);
-      line-height: 1.4;
-    }
-    .pricing-card.popular .pricing-features li { color: rgba(255,255,255,0.8); }
-    .pf-check {
-      width: 18px; height: 18px;
-      border-radius: 50%;
-      background: rgba(13,79,60,0.1);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.65rem;
-      flex-shrink: 0;
-      margin-top: 1px;
-      color: var(--emerald);
-    }
-    .pricing-card.popular .pf-check {
-      background: rgba(232,197,71,0.2);
-      color: var(--gold);
-    }
-    .shield-included {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(232,197,71,0.1);
-      border: 1px solid rgba(232,197,71,0.25);
-      border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--gold-dark);
-      margin-bottom: 24px;
-    }
-    .pricing-card.popular .shield-included {
-      background: rgba(232,197,71,0.15);
-      border-color: rgba(232,197,71,0.3);
-      color: var(--gold);
-    }
-    .btn-pricing {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 15px;
-      border-radius: 100px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      border: none;
-      transition: all 0.25s;
-    }
-    .btn-pricing-outline {
-      background: transparent;
-      border: 2px solid rgba(13,79,60,0.2);
-      color: var(--text-dark);
-    }
-    .btn-pricing-outline:hover {
-      border-color: var(--emerald);
-      background: rgba(13,79,60,0.04);
-    }
-    .btn-pricing-solid {
-      background: var(--gold);
-      color: var(--text-dark);
-      box-shadow: 0 4px 20px rgba(232,197,71,0.35);
-    }
-    .btn-pricing-solid:hover {
-      background: var(--gold-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(232,197,71,0.45);
-    }
-
-    /* ─── TESTIMONIALS ─────────────────────────────────────────── */
-    #testimonials {
-      padding: 112px 0;
-      background: var(--cream);
-    }
-    .testimonials-header {
-      text-align: center;
-      margin-bottom: 64px;
-    }
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-    }
-    .testimonial-card {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      padding: 36px 32px;
-      border: 1px solid rgba(13,79,60,0.07);
-      transition: transform 0.3s, box-shadow 0.3s;
-      position: relative;
-    }
-    .testimonial-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
-    .testimonial-quote {
-      font-size: 2.5rem;
-      line-height: 1;
-      color: var(--gold);
-      font-family: Georgia, serif;
-      margin-bottom: 16px;
-    }
-    .testimonial-stars {
-      color: var(--gold);
-      font-size: 0.9rem;
-      letter-spacing: 2px;
-      margin-bottom: 16px;
-    }
-    .testimonial-text {
-      font-size: 0.95rem;
-      color: var(--text-mid);
-      line-height: 1.7;
-      margin-bottom: 24px;
-    }
-    .testimonial-author {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .author-avatar {
-      width: 44px; height: 44px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--white);
-      flex-shrink: 0;
-    }
-    .avatar-green { background: linear-gradient(135deg, var(--emerald), var(--emerald-light)); }
-    .avatar-gold  { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--text-dark); }
-    .avatar-teal  { background: linear-gradient(135deg, #0F766E, #14B8A6); }
-    .author-name {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--text-dark);
-    }
-    .author-biz {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    /* Stats bar */
-    .stats-bar {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: rgba(13,79,60,0.08);
-      margin-top: 80px;
-      border-radius: var(--radius-md);
-      overflow: hidden;
-    }
-    .stat-item {
-      background: var(--white);
-      padding: 36px 24px;
-      text-align: center;
-    }
-    .stat-value {
-      font-size: 2.6rem;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      color: var(--emerald);
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-    .stat-label {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-
-    /* ─── CTA FOOTER ───────────────────────────────────────────── */
-    #cta {
-      padding: 120px 0;
-      background: linear-gradient(135deg, var(--text-dark) 0%, var(--emerald) 60%, #0A3D2D 100%);
-      position: relative;
-      overflow: hidden;
-    }
-    #cta::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 70% 70% at 60% 50%, rgba(232,197,71,0.1) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    .cta-inner {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      max-width: 720px;
-      margin: 0 auto;
-    }
-    .cta-heading {
-      font-size: clamp(2.2rem, 4.5vw, 3.6rem);
-      font-weight: 900;
-      line-height: 1.1;
-      letter-spacing: -0.04em;
-      color: var(--white);
-      margin-bottom: 20px;
-    }
-    .cta-heading .gold { color: var(--gold); }
-    .cta-sub {
-      font-size: 1.1rem;
-      color: rgba(255,255,255,0.65);
-      line-height: 1.7;
-      margin-bottom: 44px;
-    }
-    .cta-actions {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .cta-note {
-      margin-top: 20px;
-      font-size: 0.82rem;
-      color: rgba(255,255,255,0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-    }
-    .cta-note span { display: flex; align-items: center; gap: 5px; }
-
-    /* ─── FOOTER ───────────────────────────────────────────────── */
-    footer {
-      background: var(--text-dark);
-      padding: 60px 0 32px;
-      border-top: 1px solid rgba(255,255,255,0.05);
-    }
-    .footer-inner {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 48px;
-      margin-bottom: 48px;
-    }
-    .footer-brand .logo {
-      font-size: 1.5rem;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      color: var(--white);
-      margin-bottom: 14px;
-    }
-    .footer-brand .logo span {
-      display: inline-block;
-      width: 7px; height: 7px;
-      background: var(--gold);
-      border-radius: 50%;
-      margin-left: 1px;
-      vertical-align: middle;
-      margin-bottom: 3px;
-    }
-    .footer-brand p {
-      font-size: 0.875rem;
-      color: rgba(255,255,255,0.45);
-      line-height: 1.65;
-      max-width: 260px;
-    }
-    .footer-col h4 {
+      padding: 8px 16px;
+      border-radius: 4px;
+      margin-bottom: 36px;
       font-size: 0.78rem;
       font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
+      color: var(--gold);
+    }
+    .live-dot {
+      width: 8px; height: 8px;
+      background: #4ADE80;
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: pulseDot 1.8s ease-in-out infinite;
+    }
+    .hero-h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(56px, 8vw, 96px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--white);
+      margin-bottom: 32px;
+    }
+    .hero-h1 .ever {
+      color: var(--gold);
+      animation: goldGlow 3s ease-in-out infinite;
+      display: inline-block;
+    }
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 400;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.65;
+      max-width: 520px;
+      margin-bottom: 44px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 56px;
+    }
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold);
+      color: #000;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 16px 32px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.01em;
+    }
+    .btn-gold:hover {
+      background: #f0d04e;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(232,197,71,0.35);
+    }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--white);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 15px 32px;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+    .btn-ghost:hover {
+      border-color: rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.05);
+      transform: translateY(-2px);
+    }
+    .hero-stats {
+      display: flex;
+      gap: 0;
+      border-top: 1px solid var(--border);
+      padding-top: 32px;
+    }
+    .hero-stat {
+      padding-right: 32px;
+      margin-right: 32px;
+      border-right: 1px solid var(--border);
+      font-size: 0.8rem;
       color: rgba(255,255,255,0.4);
+      white-space: nowrap;
+    }
+    .hero-stat:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+    .hero-stat strong {
+      display: block;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 2px;
+    }
+
+    /* Hero phone card */
+    .hero-card {
+      background: #111;
+      border: 1px solid rgba(232,197,71,0.15);
+      border-radius: 4px;
+      padding: 0;
+      animation: cardPulse 4s ease-in-out infinite;
+      overflow: hidden;
+    }
+    .card-top-bar {
+      background: #161616;
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .card-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .card-dot-r { background: #FF5F57; }
+    .card-dot-y { background: #FFBD2E; }
+    .card-dot-g { background: #28C840; }
+    .card-title-bar {
+      flex: 1;
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.05em;
+    }
+    .card-body { padding: 20px; }
+    .call-incoming {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: rgba(13,79,60,0.25);
+      border: 1px solid rgba(13,79,60,0.5);
+      border-radius: 4px;
       margin-bottom: 16px;
     }
-    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .footer-col ul li a {
+    .call-icon-circle {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--emerald);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      animation: pulseDot 2s ease-in-out infinite;
+      box-shadow: 0 0 0 0 rgba(13,79,60,0.8);
+    }
+    .call-info-name {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .call-info-sub {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.4);
+    }
+    .aria-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .aria-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .waveform {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 36px;
+    }
+    .wave-bar {
+      width: 3px;
+      background: var(--gold);
+      border-radius: 2px;
+      opacity: 0.8;
+    }
+    .wave-bar:nth-child(1) { animation: wave1 0.8s ease-in-out infinite; }
+    .wave-bar:nth-child(2) { animation: wave2 0.8s ease-in-out 0.1s infinite; }
+    .wave-bar:nth-child(3) { animation: wave3 0.8s ease-in-out 0.2s infinite; }
+    .wave-bar:nth-child(4) { animation: wave4 0.8s ease-in-out 0.3s infinite; }
+    .wave-bar:nth-child(5) { animation: wave5 0.8s ease-in-out 0.4s infinite; }
+    .shield-alert {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      background: rgba(248,113,113,0.08);
+      border: 1px solid rgba(248,113,113,0.25);
+      border-radius: 4px;
+      font-size: 0.78rem;
+      color: #FCA5A5;
+      line-height: 1.5;
+    }
+    .shield-alert-icon { font-size: 0.85rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* ─── STATS STRIP ────────────────────────────────────────────────── */
+    .stats-strip {
+      background: #0D1A0F;
+      border-top: 1px solid rgba(13,79,60,0.4);
+      border-bottom: 1px solid rgba(13,79,60,0.4);
+      padding: 20px 28px;
+    }
+    .stats-strip-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+    .strip-stat {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.45);
+      white-space: nowrap;
+    }
+    .strip-stat strong { color: rgba(255,255,255,0.85); font-weight: 700; }
+    .strip-sep {
+      color: rgba(255,255,255,0.15);
+      font-size: 1.2rem;
+    }
+
+    /* ─── PROBLEM SECTION ────────────────────────────────────────────── */
+    #problem {
+      padding: 120px 0;
+      background: var(--black-green);
+    }
+    .problem-header {
+      margin-bottom: 64px;
+    }
+    .problem-h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(32px, 4vw, 52px);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--white);
+      max-width: 600px;
+    }
+    .problem-sub {
+      margin-top: 16px;
+      font-size: 1rem;
+      color: rgba(255,255,255,0.4);
+      max-width: 520px;
+      line-height: 1.6;
+    }
+    .stat-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .stat-card {
+      background: #0E0E0E;
+      padding: 48px 40px;
+      transition: background 0.3s;
+    }
+    .stat-card:hover { background: #111; }
+    .stat-card-num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(52px, 6vw, 80px);
+      line-height: 1;
+      color: var(--gold);
+      letter-spacing: -0.04em;
+      margin-bottom: 16px;
+    }
+    .stat-card-desc {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.55;
+      max-width: 240px;
+    }
+    .stat-card-desc strong { color: rgba(255,255,255,0.85); font-weight: 600; }
+
+    /* ─── HOW IT WORKS ───────────────────────────────────────────────── */
+    #how {
+      padding: 120px 0;
+      background: var(--black);
+    }
+    .how-header {
+      margin-bottom: 80px;
+    }
+    .how-h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(32px, 4vw, 52px);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--white);
+    }
+    .steps-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .step {
+      background: #0C0C0C;
+      padding: 48px 36px;
+      position: relative;
+      transition: background 0.3s;
+    }
+    .step:hover { background: #111; }
+    .step-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      color: rgba(232,197,71,0.5);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .step-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: -0.01em;
+      color: var(--white);
+      margin-bottom: 14px;
+    }
+    .step-dash {
+      color: var(--gold);
+    }
+    .step-desc {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.65;
+    }
+    .step-arrow {
+      position: absolute;
+      top: 50%; right: -16px;
+      transform: translateY(-50%);
+      width: 32px; height: 32px;
+      background: var(--black);
+      border: 1px solid rgba(232,197,71,0.3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold);
+      font-size: 0.8rem;
+      z-index: 2;
+    }
+
+    /* ─── PRICING ────────────────────────────────────────────────────── */
+    #pricing {
+      padding: 120px 0;
+      background: var(--black-green);
+    }
+    .pricing-header {
+      margin-bottom: 64px;
+    }
+    .pricing-h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(32px, 4vw, 52px);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--white);
+      max-width: 560px;
+    }
+    .pricing-fine {
+      margin-top: 14px;
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.35);
+    }
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .plan {
+      background: #0C0C0C;
+      padding: 48px 36px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: background 0.3s;
+    }
+    .plan:hover { background: #111; }
+    .plan.popular {
+      background: #0A150C;
+      border: 1px solid rgba(232,197,71,0.35);
+      margin: -1px;
+      z-index: 1;
+    }
+    .popular-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--gold);
+      color: #000;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+      align-self: flex-start;
+    }
+    .plan-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 12px;
+    }
+    .plan-price {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 3.5rem;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .plan-price sup {
+      font-size: 1.4rem;
+      vertical-align: top;
+      margin-top: 10px;
+      display: inline-block;
+      font-weight: 700;
+    }
+    .plan-per {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 28px;
+    }
+    .plan-divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 28px;
+    }
+    .plan-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 36px;
+      flex: 1;
+    }
+    .plan-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
       font-size: 0.875rem;
       color: rgba(255,255,255,0.55);
+      line-height: 1.45;
+    }
+    .plan-check {
+      color: var(--gold);
+      flex-shrink: 0;
+      margin-top: 1px;
+      font-size: 0.75rem;
+    }
+    .plan-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.875rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      letter-spacing: 0.01em;
+    }
+    .plan-cta-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .plan-cta-outline:hover {
+      border-color: rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.04);
+    }
+    .plan-cta-gold {
+      background: var(--gold);
+      color: #000;
+    }
+    .plan-cta-gold:hover {
+      background: #f0d04e;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(232,197,71,0.35);
+    }
+    .plan-fine {
+      text-align: center;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.2);
+      margin-top: 12px;
+    }
+
+    /* ─── SOCIAL PROOF ───────────────────────────────────────────────── */
+    #proof {
+      padding: 120px 0;
+      background: var(--black);
+    }
+    .proof-header {
+      margin-bottom: 64px;
+    }
+    .proof-h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(32px, 4vw, 52px);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--white);
+    }
+    .quotes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .quote-card {
+      background: #0C0C0C;
+      padding: 48px 36px;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.3s;
+    }
+    .quote-card:hover { background: #111; }
+    .quote-stars {
+      color: var(--gold);
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+    }
+    .quote-text {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.7;
+      margin-bottom: 28px;
+      flex: 1;
+    }
+    .quote-text::before {
+      content: '\201C';
+      font-size: 1.8rem;
+      line-height: 0.5;
+      vertical-align: -0.4em;
+      color: var(--gold);
+      opacity: 0.6;
+      margin-right: 4px;
+    }
+    .quote-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .author-initials {
+      width: 40px; height: 40px;
+      border-radius: 4px;
+      background: var(--emerald);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 0.8rem;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+    .author-name {
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--white);
+    }
+    .author-biz {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.35);
+      margin-top: 2px;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────────────────── */
+    footer {
+      background: #060606;
+      border-top: 1px solid var(--border);
+      padding: 64px 28px 40px;
+    }
+    .footer-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+    .footer-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 56px;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.35rem;
+      letter-spacing: 0.06em;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .footer-tagline {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.3);
+      max-width: 240px;
+      line-height: 1.5;
+    }
+    .footer-links {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .footer-links a {
+      font-size: 0.825rem;
+      color: rgba(255,255,255,0.35);
       transition: color 0.2s;
     }
-    .footer-col ul li a:hover { color: var(--gold); }
+    .footer-links a:hover { color: var(--white); }
     .footer-bottom {
-      padding-top: 28px;
-      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 16px;
-    }
-    .footer-bottom p {
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.3);
-    }
-    .footer-socials {
-      display: flex;
       gap: 12px;
     }
-    .social-btn {
-      width: 34px; height: 34px;
-      border-radius: 8px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.5);
-      transition: all 0.2s;
+    .footer-copy {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.2);
     }
-    .social-btn:hover {
-      background: rgba(232,197,71,0.12);
-      border-color: rgba(232,197,71,0.3);
-      color: var(--gold);
+    .footer-ai-badge {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.2);
+      font-style: italic;
     }
 
-    /* ─── RESPONSIVE ───────────────────────────────────────────── */
+    /* ─── MODAL ──────────────────────────────────────────────────────── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: #111;
+      border: 1px solid rgba(232,197,71,0.25);
+      border-radius: 4px;
+      padding: 52px 48px;
+      max-width: 480px;
+      width: 90%;
+      text-align: center;
+      animation: fadeUp 0.3s ease both;
+    }
+    .modal-icon {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    .modal-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      margin-bottom: 14px;
+    }
+    .modal-body {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.65;
+      margin-bottom: 8px;
+    }
+    .modal-phone {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.6rem;
+      letter-spacing: 0.04em;
+      color: var(--gold);
+      margin: 20px 0;
+      animation: goldGlow 3s ease-in-out infinite;
+    }
+    .modal-note {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 28px;
+    }
+    .modal-close {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border);
+      color: rgba(255,255,255,0.55);
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 12px 28px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .modal-close:hover {
+      background: rgba(255,255,255,0.12);
+      color: var(--white);
+    }
+
+    /* ─── SCROLL REVEAL (JS sets initial state) ──────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────────────── */
     @media (max-width: 1024px) {
-      .features-grid { grid-template-columns: repeat(2, 1fr); }
-      .feature-card.wide { grid-column: span 1; }
-      .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
-      .stats-bar { grid-template-columns: repeat(2, 1fr); }
-      .footer-inner { grid-template-columns: 1fr 1fr; }
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 60px;
+        padding-bottom: 80px;
+      }
+      .hero-h1 { font-size: clamp(48px, 9vw, 72px); }
+      .stat-cards,
+      .steps-row,
+      .plans-grid,
+      .quotes-grid { grid-template-columns: 1fr; }
+      .step-arrow { display: none; }
     }
 
     @media (max-width: 768px) {
-      .nav-links, .nav-cta .sign-in { display: none; }
+      .nav-links { display: none; }
+      .nav-pricing-link { display: none; }
       .hamburger { display: flex; }
 
-      .hero-content {
-        grid-template-columns: 1fr;
-        padding: 60px 24px 80px;
-        text-align: center;
-      }
-      .hero-sub { max-width: 100%; }
-      .hero-actions { justify-content: center; }
-      .hero-trust { justify-content: center; }
-      .hero-visual { display: none; }
+      .hero-inner { padding: 60px 28px 80px; }
+      .hero-h1 { font-size: clamp(42px, 11vw, 60px); }
+      .hero-stats { flex-direction: column; gap: 16px; }
+      .hero-stat { border-right: none; margin-right: 0; padding-right: 0; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+      .hero-stat:last-child { border-bottom: none; padding-bottom: 0; }
 
-      .steps-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 32px;
-      }
-      .steps-grid::before { display: none; }
+      .stats-strip-inner { flex-direction: column; gap: 12px; text-align: center; }
+      .strip-sep { display: none; }
 
-      .features-grid { grid-template-columns: 1fr; }
-      .feature-card.wide { grid-column: span 1; }
+      .stat-cards,
+      .steps-row,
+      .plans-grid,
+      .quotes-grid { grid-template-columns: 1fr; }
 
-      .shield-inner { grid-template-columns: 1fr; }
+      .footer-top { flex-direction: column; gap: 32px; }
+      .footer-links { gap: 20px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
 
-      .pricing-grid { grid-template-columns: 1fr; }
-      .pricing-card.popular { transform: scale(1); }
-      .pricing-card.popular:hover { transform: translateY(-6px); }
-
-      .testimonials-grid { grid-template-columns: 1fr; }
-
-      .stats-bar { grid-template-columns: repeat(2, 1fr); }
-
-      .footer-inner { grid-template-columns: 1fr 1fr; }
-      .footer-brand { grid-column: span 2; }
+      .modal-box { padding: 36px 24px; }
     }
 
     @media (max-width: 480px) {
-      .steps-grid { grid-template-columns: 1fr; }
-      .stats-bar { grid-template-columns: 1fr 1fr; }
-      .footer-inner { grid-template-columns: 1fr; }
-      .footer-brand { grid-column: span 1; }
+      .hero-actions { flex-direction: column; align-items: flex-start; }
+      .btn-gold, .btn-ghost { width: 100%; justify-content: center; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ─── NAV ─────────────────────────────────────────────────── -->
+  <!-- ─── NAV ──────────────────────────────────────────────────────── -->
   <nav id="navbar">
     <div class="nav-inner">
-      <a href="#" class="nav-logo">CALLA<span></span></a>
+      <a href="#" class="nav-logo">CALLA</a>
       <ul class="nav-links">
+        <li><a href="#problem">The Problem</a></li>
         <li><a href="#how">How It Works</a></li>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#shield">CALLA Shield</a></li>
         <li><a href="#pricing">Pricing</a></li>
-        <li><a href="#testimonials">Reviews</a></li>
+        <li><a href="#proof">Reviews</a></li>
       </ul>
-      <div class="nav-cta">
-        <a href="#" class="sign-in">Sign in</a>
-        <a href="#pricing" class="btn btn-primary">Start Free Trial</a>
+      <div class="nav-right">
+        <a href="#pricing" class="nav-pricing-link">Pricing</a>
+        <a href="#pricing" class="nav-cta-btn">Start Free Trial</a>
       </div>
-      <div class="hamburger" onclick="toggleMenu()">
+      <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
         <span></span><span></span><span></span>
-      </div>
+      </button>
     </div>
   </nav>
 
-  <!-- ─── HERO ─────────────────────────────────────────────────── -->
+  <!-- ─── HERO ─────────────────────────────────────────────────────── -->
   <section id="hero">
-    <div class="hero-ring-2"></div>
-    <div class="hero-content">
+    <div class="hero-bg-glow"></div>
+    <div class="hero-bg-glow-2"></div>
+    <div class="hero-grid-line"></div>
+    <div class="hero-inner">
+
       <!-- Left -->
-      <div>
-        <div class="hero-badge animate-fadeup">
+      <div class="hero-left">
+        <div class="hero-badge">
           <span class="live-dot"></span>
-          Now answering calls for 1,200+ local businesses
+          ARIA IS LIVE
         </div>
-        <h1 class="hero-heading animate-fadeup delay-1">
-          Every call,<br>
-          <span class="accent">perfectly answered.</span>
+        <h1 class="hero-h1">
+          YOUR PHONE.<br>
+          NEVER MISSES<br>
+          A CALL. <span class="ever">EVER.</span>
         </h1>
-        <p class="hero-sub animate-fadeup delay-2">
-          CALLA picks up on the first ring — 24 hours a day, 365 days a year.
-          Natural conversation. Real bookings. Zero missed opportunities.
+        <p class="hero-sub">
+          ARIA answers every call, books appointments, and sends you a real-time alert when a customer is upset — before they leave a bad review.
         </p>
-        <div class="hero-actions animate-fadeup delay-3">
-          <a href="#pricing" class="btn btn-primary btn-lg">
-            Start Free Trial
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <a href="#how" class="btn btn-outline btn-lg">See how it works</a>
+        <div class="hero-actions">
+          <a href="#pricing" class="btn-gold">Start Free Trial</a>
+          <button class="btn-ghost" onclick="openModal()">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M6 5.5l5 2.5-5 2.5V5.5z" fill="currentColor"/></svg>
+            Hear ARIA Now
+          </button>
         </div>
-        <div class="hero-trust animate-fadeup delay-4">
-          <div class="hero-trust-avatars">
-            <span>MR</span><span>JL</span><span>ST</span><span>AB</span><span>+</span>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <strong>847</strong>calls answered this week
           </div>
-          <div>
-            <div class="hero-trust-stars">★★★★★</div>
-            <div>Loved by 1,200+ small businesses</div>
+          <div class="hero-stat">
+            <strong>$0</strong>missed revenue
+          </div>
+          <div class="hero-stat">
+            <strong>4.9★</strong>avg Google rating
           </div>
         </div>
       </div>
 
-      <!-- Right — Phone mockup -->
-      <div class="hero-visual animate-fadeup delay-5">
-        <div class="floating-badge badge-top">
-          <div class="badge-icon">📅</div>
-          Appointment booked for Tuesday 2 PM
+      <!-- Right — phone call card -->
+      <div class="hero-card">
+        <div class="card-top-bar">
+          <span class="card-dot card-dot-r"></span>
+          <span class="card-dot card-dot-y"></span>
+          <span class="card-dot card-dot-g"></span>
+          <span class="card-title-bar">ARIA — Live Call</span>
         </div>
-        <div class="phone-mockup">
-          <div class="mockup-header">
-            <div class="call-icon">📞</div>
-            <div class="mockup-header-text">
-              <div class="caller">Incoming Call</div>
-              <div class="status">CALLA answering now</div>
-            </div>
-            <div class="mockup-timer">0:42</div>
-          </div>
-          <div class="chat-bubbles">
-            <div class="bubble calla">
-              <div class="name">CALLA</div>
-              Thanks for calling Bloom Hair Studio! This is Calla. Are you looking to schedule an appointment today?
-            </div>
-            <div class="bubble caller">
-              Hi yes, I need a cut and color — do you have anything this Saturday?
-            </div>
-            <div class="bubble calla">
-              <div class="name">CALLA</div>
-              Absolutely! I have 10 AM or 2 PM available this Saturday with Sarah. Which works better for you?
-            </div>
-            <div class="bubble caller">
-              2 PM is perfect!
-            </div>
-            <div class="bubble calla">
-              <div class="name">CALLA</div>
-              Done! I've booked you with Sarah at 2 PM Saturday. You'll get a confirmation text shortly.
+        <div class="card-body">
+          <div class="call-incoming">
+            <div class="call-icon-circle">📞</div>
+            <div>
+              <div class="call-info-name">Maria G. — Hair Appointment</div>
+              <div class="call-info-sub">Incoming · 0:38</div>
             </div>
           </div>
-          <div class="mockup-footer">
-            <div class="action-chip"><span class="chip-icon">📋</span> Summary sent</div>
-            <div class="action-chip"><span class="chip-icon">💬</span> SMS follow-up</div>
+          <div class="aria-status">
+            <span class="aria-label">ARIA</span>
+            <div class="waveform">
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+            </div>
+            <span style="font-size:0.72rem; color:rgba(255,255,255,0.3); margin-left:auto; white-space:nowrap;">Answering...</span>
           </div>
-        </div>
-        <div class="floating-badge badge-bottom">
-          <div class="badge-icon">⭐</div>
-          Review request sent automatically
+          <div class="shield-alert">
+            <span class="shield-alert-icon">📲</span>
+            <span><strong style="color:#FCA5A5;">SHIELD Alert:</strong> Unhappy caller detected — owner notified before call ends</span>
+          </div>
         </div>
       </div>
+
     </div>
   </section>
 
-  <!-- ─── TICKER ────────────────────────────────────────────────── -->
-  <div class="ticker-wrap">
-    <div class="ticker-track">
-      <!-- Duplicated for seamless loop -->
-      <span class="ticker-item"><span class="star">★</span> Hair Salons</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> Medical Clinics</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> Law Firms</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> HVAC Companies</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> Real Estate Offices</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> Dental Practices</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> Auto Repair Shops</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> Plumbing Services</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> Veterinary Clinics</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> Accounting Firms</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> Hair Salons</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> Medical Clinics</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> Law Firms</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> HVAC Companies</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> Real Estate Offices</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> Dental Practices</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> Auto Repair Shops</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> Plumbing Services</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> Veterinary Clinics</span><span class="ticker-sep">·</span>
-      <span class="ticker-item"><span class="star">★</span> Accounting Firms</span><span class="ticker-sep">·</span>
+  <!-- ─── STATS STRIP ───────────────────────────────────────────────── -->
+  <div class="stats-strip">
+    <div class="stats-strip-inner">
+      <span class="strip-stat"><strong>847</strong> calls answered this week</span>
+      <span class="strip-sep">·</span>
+      <span class="strip-stat"><strong>$0</strong> missed revenue</span>
+      <span class="strip-sep">·</span>
+      <span class="strip-stat"><strong>4.9★</strong> avg Google rating</span>
+      <span class="strip-sep">·</span>
+      <span class="strip-stat"><strong>1,200+</strong> businesses protected</span>
     </div>
   </div>
 
-  <!-- ─── HOW IT WORKS ──────────────────────────────────────────── -->
+  <!-- ─── THE PROBLEM ───────────────────────────────────────────────── -->
+  <section id="problem">
+    <div class="container">
+      <div class="problem-header reveal">
+        <div class="section-label">THE PROBLEM</div>
+        <h2 class="problem-h2">Every missed call is a<br>customer walking out the door.</h2>
+        <p class="problem-sub">The numbers don't lie. Unanswered phones are the silent killer of small business revenue.</p>
+      </div>
+      <div class="stat-cards reveal">
+        <div class="stat-card">
+          <div class="stat-card-num">62%</div>
+          <p class="stat-card-desc">of callers who reach voicemail <strong>never call back</strong>. They call your competitor instead.</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-num">1 in 3</div>
+          <p class="stat-card-desc">small businesses <strong>lose clients to missed calls every week</strong> — without ever knowing it happened.</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-num">$12K</div>
+          <p class="stat-card-desc">average annual revenue <strong>lost to unanswered phones</strong> for a typical local business.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── HOW IT WORKS ──────────────────────────────────────────────── -->
   <section id="how">
     <div class="container">
-      <div class="how-header">
-        <div class="section-label"><span class="dot"></span>Simple Setup</div>
-        <h2 class="section-heading">Up and running in <span>under 10 minutes</span></h2>
-        <p class="section-sub" style="margin: 16px auto 0;">
-          No IT department needed. No complex integrations. CALLA connects to your existing number and starts answering immediately.
-        </p>
+      <div class="how-header reveal">
+        <div class="section-label">HOW IT WORKS</div>
+        <h2 class="how-h2">Three steps.<br>Zero missed calls.</h2>
       </div>
-      <div class="steps-grid">
-        <div class="step-item">
-          <div class="step-number"><span class="step-icon">📱</span></div>
-          <div class="step-title">Forward Your Number</div>
-          <p class="step-desc">Forward calls from your existing business number to CALLA — takes about 60 seconds with any carrier.</p>
-        </div>
-        <div class="step-item">
-          <div class="step-number"><span class="step-icon">🎙️</span></div>
-          <div class="step-title">Train Your Assistant</div>
-          <p class="step-desc">Tell CALLA about your business, services, hours, and FAQs. She learns your voice and tone.</p>
-        </div>
-        <div class="step-item">
-          <div class="step-number gold"><span class="step-icon">🔗</span></div>
-          <div class="step-title">Connect Your Calendar</div>
-          <p class="step-desc">Link Google Calendar or Calendly. CALLA books appointments in real-time with zero double-bookings.</p>
-        </div>
-        <div class="step-item">
-          <div class="step-number gold"><span class="step-icon">🚀</span></div>
-          <div class="step-title">Go Live</div>
-          <p class="step-desc">Every call answered, every lead captured, every customer delighted — while you focus on your work.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+      <div class="steps-row reveal">
 
-  <!-- ─── FEATURES ─────────────────────────────────────────────── -->
-  <section id="features">
-    <div class="container">
-      <div class="features-header">
-        <div class="section-label"><span class="dot"></span>What CALLA Does</div>
-        <h2 class="section-heading">Everything your front desk does,<br><span>done better</span></h2>
-        <p class="section-sub" style="margin: 16px auto 0;">
-          CALLA isn't just an answering service. She's a full-time team member who never calls in sick, never puts a customer on hold, and never misses a lead.
-        </p>
-      </div>
-      <div class="features-grid">
-
-        <div class="feature-card wide">
-          <div class="feature-icon">🌙</div>
-          <div class="feature-title">24/7 AI Answering — First Ring, Every Time</div>
-          <p class="feature-desc">
-            CALLA answers before your customers even think about leaving a voicemail. Powered by advanced conversational AI, she sounds warm, natural, and genuinely helpful — not like a robot reading a script. Nights, weekends, holidays — covered.
-          </p>
-          <span class="feature-tag">Core Feature</span>
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-title"><span class="step-dash">—</span> ARIA ANSWERS</div>
+          <p class="step-desc">Every call, every time, 24/7. ARIA books appointments, answers FAQs, and captures leads in real time — sounding natural, never robotic.</p>
+          <div class="step-arrow">→</div>
         </div>
 
-        <div class="feature-card">
-          <div class="feature-icon">📅</div>
-          <div class="feature-title">Smart Appointment Booking</div>
-          <p class="feature-desc">
-            Real-time integration with Google Calendar and Calendly. CALLA sees your availability, offers time slots, and books instantly — no back and forth.
-          </p>
-          <span class="feature-tag">Booking</span>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-title"><span class="step-dash">—</span> SHIELD WATCHES</div>
+          <p class="step-desc">After every call, ARIA detects if the caller was happy or frustrated. You only hear about problems — before they turn into public bad reviews.</p>
+          <div class="step-arrow">→</div>
         </div>
 
-        <div class="feature-card">
-          <div class="feature-icon">🎯</div>
-          <div class="feature-title">Automatic Lead Capture</div>
-          <p class="feature-desc">
-            Every caller's name, number, and intent is captured and logged automatically. Integrates with your CRM so hot leads never fall through the cracks.
-          </p>
-          <span class="feature-tag">Lead Gen</span>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">📋</div>
-          <div class="feature-title">Call Summaries Delivered to You</div>
-          <p class="feature-desc">
-            After every call, you get a crisp SMS or email summary: who called, what they needed, what CALLA did. Stay informed without being interrupted.
-          </p>
-          <span class="feature-tag">Summaries</span>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">🤝</div>
-          <div class="feature-title">Human Escalation, Seamlessly</div>
-          <p class="feature-desc">
-            When a caller needs a real person, CALLA transfers them instantly — with a full context briefing so your team is never starting from zero.
-          </p>
-          <span class="feature-tag">Escalation</span>
-        </div>
-
-        <div class="feature-card featured">
-          <div class="feature-icon">🛡️</div>
-          <div class="feature-title">CALLA Shield — Included Free</div>
-          <p class="feature-desc">
-            The feature no competitor offers. After every call: personalized SMS follow-up, sentiment detection, owner alerts for frustrated callers, and automatic Google review prompts for happy ones.
-          </p>
-          <span class="feature-tag">Exclusive — Free</span>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-title"><span class="step-dash">—</span> YOU GET PAID</div>
+          <p class="step-desc">Happy callers get a Google review request automatically. You get 5-star reviews and booked appointments while you sleep.</p>
         </div>
 
       </div>
     </div>
   </section>
 
-  <!-- ─── CALLA SHIELD ──────────────────────────────────────────── -->
-  <section id="shield">
-    <div class="container">
-      <div class="shield-inner">
-        <!-- Left -->
-        <div>
-          <div class="shield-label">🛡️ Exclusive Feature</div>
-          <h2 class="shield-heading">
-            Meet <span class="gold-text">CALLA Shield</span> —<br>
-            the follow-up that<br>closes the loop.
-          </h2>
-          <p class="shield-sub">
-            No other AI answering service does what happens <em>after</em> the call. CALLA Shield turns every conversation into a relationship — and protects your reputation automatically.
-          </p>
-          <div class="shield-free-badge">
-            ✦ FREE on every plan — no add-ons, no upsells
-          </div>
-          <div class="shield-features">
-            <div class="shield-feature">
-              <div class="shield-check">💬</div>
-              <div class="shield-feature-text">
-                <strong>Personalized Post-Call SMS</strong>
-                <span>Every caller receives a warm, branded follow-up text within seconds of hanging up — name, service discussed, next steps.</span>
-              </div>
-            </div>
-            <div class="shield-feature">
-              <div class="shield-check">🔍</div>
-              <div class="shield-feature-text">
-                <strong>Sentiment Detection</strong>
-                <span>CALLA reads the tone of every conversation to classify callers as happy, neutral, or frustrated in real time.</span>
-              </div>
-            </div>
-            <div class="shield-feature">
-              <div class="shield-check">🚨</div>
-              <div class="shield-feature-text">
-                <strong>Frustrated Caller Alerts</strong>
-                <span>If someone hangs up unhappy, you're notified immediately — before they post a bad review or call a competitor.</span>
-              </div>
-            </div>
-            <div class="shield-feature">
-              <div class="shield-check">⭐</div>
-              <div class="shield-feature-text">
-                <strong>Google Review Prompts</strong>
-                <span>Happy callers automatically receive a Google review request. Watch your 5-star ratings climb on autopilot.</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right — Shield cards -->
-        <div class="shield-visual">
-          <div class="shield-card">
-            <div class="shield-card-header">
-              <div class="shield-card-icon icon-blue">💬</div>
-              <div>
-                <div class="shield-card-title">Post-Call SMS Sent</div>
-                <div class="shield-card-sub">Just now · to Maria Chen</div>
-              </div>
-            </div>
-            <div class="sms-preview">
-              "Hi Maria! Thanks for calling Bloom Hair Studio. Your appointment with Sarah is confirmed for Saturday at 2 PM. We can't wait to see you! — The Bloom Team"
-            </div>
-          </div>
-
-          <div class="shield-card">
-            <div class="shield-card-header">
-              <div class="shield-card-icon icon-green">🔍</div>
-              <div>
-                <div class="shield-card-title">Sentiment Analysis</div>
-                <div class="shield-card-sub">Last 5 calls today</div>
-              </div>
-            </div>
-            <div class="sentiment-bar">
-              <span class="sentiment-pill pill-happy">😊 Happy ×3</span>
-              <span class="sentiment-pill pill-neutral">😐 Neutral ×1</span>
-              <span class="sentiment-pill pill-frustrated">😤 Frustrated ×1</span>
-            </div>
-          </div>
-
-          <div class="shield-card">
-            <div class="shield-card-header">
-              <div class="shield-card-icon icon-red">🚨</div>
-              <div>
-                <div class="shield-card-title">Owner Alert</div>
-                <div class="shield-card-sub">12 minutes ago</div>
-              </div>
-            </div>
-            <div class="alert-box">
-              ⚠️ Frustrated caller detected — James T. called about a billing issue. He seemed dissatisfied. Recommend a personal follow-up call.
-            </div>
-          </div>
-
-          <div class="shield-card">
-            <div class="shield-card-header">
-              <div class="shield-card-icon icon-gold">⭐</div>
-              <div>
-                <div class="shield-card-title">Review Request Sent</div>
-                <div class="shield-card-sub">4 requests sent today</div>
-              </div>
-            </div>
-            <div class="review-prompt">
-              ⭐ "Hi Maria! Glad your visit went well. Would you mind leaving us a quick Google review? It means the world to us: [link]"
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── PRICING ───────────────────────────────────────────────── -->
+  <!-- ─── PRICING ───────────────────────────────────────────────────── -->
   <section id="pricing">
     <div class="container">
-      <div class="pricing-header">
-        <div class="section-label" style="display:inline-flex; margin-bottom:20px;"><span class="dot"></span>Simple Pricing</div>
-        <h2 class="section-heading">One decision. <span>No surprises.</span></h2>
+      <div class="pricing-header reveal">
+        <div class="section-label">PRICING</div>
+        <h2 class="pricing-h2">Transparent pricing.<br>No surprises. No contracts.</h2>
+        <p class="pricing-fine">No credit card required to start. Cancel anytime.</p>
       </div>
-      <p class="pricing-guarantee">
-        <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d="M8 1l1.8 3.6L14 5.6l-3 2.9.7 4.1L8 10.5l-3.7 2.1.7-4.1-3-2.9 4.2-.9L8 1z" fill="#E8C547"/></svg>
-        14-day free trial · No credit card required · Cancel anytime
-      </p>
-      <div class="pricing-grid">
+      <div class="plans-grid reveal">
 
-        <!-- Starter -->
-        <div class="pricing-card">
-          <div class="pricing-plan-name">Starter</div>
-          <div class="pricing-amount"><sup>$</sup>99</div>
-          <div class="pricing-period">per month</div>
-          <div class="pricing-desc">Perfect for solo operators and micro-businesses getting started with AI answering.</div>
-          <div class="shield-included">🛡️ CALLA Shield included free</div>
-          <ul class="pricing-features">
-            <li><span class="pf-check">✓</span> Up to 100 calls/month</li>
-            <li><span class="pf-check">✓</span> 24/7 AI answering</li>
-            <li><span class="pf-check">✓</span> Custom FAQ responses</li>
-            <li><span class="pf-check">✓</span> SMS & email summaries</li>
-            <li><span class="pf-check">✓</span> CALLA Shield (post-call SMS, sentiment, alerts, reviews)</li>
-            <li><span class="pf-check">✓</span> Human escalation</li>
+        <!-- CALLA Lite -->
+        <div class="plan">
+          <div class="plan-name">CALLA Lite</div>
+          <div class="plan-price"><sup>$</sup>79</div>
+          <div class="plan-per">per month</div>
+          <div class="plan-divider"></div>
+          <ul class="plan-features">
+            <li><span class="plan-check">✦</span>100 minutes / month</li>
+            <li><span class="plan-check">✦</span>24/7 AI answering</li>
+            <li><span class="plan-check">✦</span>Call summaries via SMS/email</li>
+            <li><span class="plan-check">✦</span>SHIELD sentiment detection</li>
+            <li><span class="plan-check">✦</span>Owner alerts for unhappy callers</li>
           </ul>
-          <button class="btn-pricing btn-pricing-outline" onclick="location.href='#cta'">Start Free Trial</button>
+          <button class="plan-cta plan-cta-outline" onclick="location.href='#'">Start 7-Day Free Trial</button>
+          <p class="plan-fine">No credit card required</p>
         </div>
 
-        <!-- Growth (Popular) -->
-        <div class="pricing-card popular">
-          <div class="popular-badge">Most Popular</div>
-          <div class="pricing-plan-name">Growth</div>
-          <div class="pricing-amount"><sup>$</sup>199</div>
-          <div class="pricing-period">per month</div>
-          <div class="pricing-desc">For growing businesses that need booking, lead capture, and deeper integrations.</div>
-          <div class="shield-included">🛡️ CALLA Shield included free</div>
-          <ul class="pricing-features">
-            <li><span class="pf-check">✓</span> Up to 300 calls/month</li>
-            <li><span class="pf-check">✓</span> Everything in Starter</li>
-            <li><span class="pf-check">✓</span> Appointment booking (Google Cal + Calendly)</li>
-            <li><span class="pf-check">✓</span> Lead qualification & capture</li>
-            <li><span class="pf-check">✓</span> CRM integration</li>
-            <li><span class="pf-check">✓</span> Priority email support</li>
+        <!-- CALLA Pro -->
+        <div class="plan popular">
+          <div class="popular-badge">MOST POPULAR</div>
+          <div class="plan-name">CALLA Pro</div>
+          <div class="plan-price"><sup>$</sup>149</div>
+          <div class="plan-per">per month</div>
+          <div class="plan-divider"></div>
+          <ul class="plan-features">
+            <li><span class="plan-check">✦</span>300 minutes / month</li>
+            <li><span class="plan-check">✦</span>Everything in Lite</li>
+            <li><span class="plan-check">✦</span>Appointment booking</li>
+            <li><span class="plan-check">✦</span>Lead capture &amp; qualification</li>
+            <li><span class="plan-check">✦</span>CRM sync</li>
+            <li><span class="plan-check">✦</span>Automatic Google review prompts</li>
           </ul>
-          <button class="btn-pricing btn-pricing-solid" onclick="location.href='#cta'">Start Free Trial</button>
+          <button class="plan-cta plan-cta-gold" onclick="location.href='#'">Start 7-Day Free Trial</button>
+          <p class="plan-fine">No credit card required</p>
         </div>
 
-        <!-- Pro -->
-        <div class="pricing-card">
-          <div class="pricing-plan-name">Pro</div>
-          <div class="pricing-amount"><sup>$</sup>399</div>
-          <div class="pricing-period">per month</div>
-          <div class="pricing-desc">For high-volume businesses that need a fully customized, always-on front office solution.</div>
-          <div class="shield-included">🛡️ CALLA Shield included free</div>
-          <ul class="pricing-features">
-            <li><span class="pf-check">✓</span> Unlimited calls</li>
-            <li><span class="pf-check">✓</span> Everything in Growth</li>
-            <li><span class="pf-check">✓</span> Custom conversation scripts</li>
-            <li><span class="pf-check">✓</span> Advanced call analytics</li>
-            <li><span class="pf-check">✓</span> Multi-location support</li>
-            <li><span class="pf-check">✓</span> Dedicated account manager</li>
+        <!-- CALLA Business -->
+        <div class="plan">
+          <div class="plan-name">CALLA Business</div>
+          <div class="plan-price"><sup>$</sup>249</div>
+          <div class="plan-per">per month</div>
+          <div class="plan-divider"></div>
+          <ul class="plan-features">
+            <li><span class="plan-check">✦</span>700 minutes / month</li>
+            <li><span class="plan-check">✦</span>Everything in Pro</li>
+            <li><span class="plan-check">✦</span>Full suite &amp; custom scripts</li>
+            <li><span class="plan-check">✦</span>Multi-location support</li>
+            <li><span class="plan-check">✦</span>Priority support</li>
+            <li><span class="plan-check">✦</span>Dedicated account manager</li>
           </ul>
-          <button class="btn-pricing btn-pricing-outline" onclick="location.href='#cta'">Start Free Trial</button>
+          <button class="plan-cta plan-cta-outline" onclick="location.href='#'">Start 7-Day Free Trial</button>
+          <p class="plan-fine">No credit card required</p>
         </div>
 
       </div>
     </div>
   </section>
 
-  <!-- ─── TESTIMONIALS ──────────────────────────────────────────── -->
-  <section id="testimonials">
+  <!-- ─── SOCIAL PROOF ──────────────────────────────────────────────── -->
+  <section id="proof">
     <div class="container">
-      <div class="testimonials-header">
-        <div class="section-label"><span class="dot"></span>Real Customers</div>
-        <h2 class="section-heading">They stopped missing calls.<br><span>Now you can too.</span></h2>
-        <p class="section-sub" style="margin: 16px auto 0;">
-          From hair salons to HVAC companies — CALLA is working 24/7 for businesses just like yours.
-        </p>
+      <div class="proof-header reveal">
+        <div class="section-label">WHAT OWNERS SAY</div>
+        <h2 class="proof-h2">Real businesses.<br>Real results.</h2>
       </div>
-      <div class="testimonials-grid">
+      <div class="quotes-grid reveal">
 
-        <div class="testimonial-card">
-          <div class="testimonial-quote">"</div>
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-text">
-            I used to miss 6–8 calls a day while I was with clients. With CALLA, every single one gets answered and booked. My revenue went up over $2,000 in the first month alone. The Shield feature is incredible — I got five new Google reviews in one week.
-          </p>
-          <div class="testimonial-author">
-            <div class="author-avatar avatar-green">SR</div>
+        <div class="quote-card">
+          <div class="quote-stars">★★★★★</div>
+          <p class="quote-text">I used to lose 6 calls a day while I was with clients. ARIA answers every single one now. My revenue went up $2,400 in the first month. The SHIELD alert literally saved me from a one-star review — I called the customer back and she became a regular.</p>
+          <div class="quote-author">
+            <div class="author-initials">SR</div>
             <div>
               <div class="author-name">Sofia Ramirez</div>
-              <div class="author-biz">Bloom Hair Studio, Austin TX</div>
+              <div class="author-biz">Bloom Hair Studio · Austin, TX</div>
             </div>
           </div>
         </div>
 
-        <div class="testimonial-card">
-          <div class="testimonial-quote">"</div>
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-text">
-            Our front desk was overwhelmed during peak season. CALLA handled 200+ HVAC inquiry calls last July without a single complaint. The frustrated-caller alerts saved us two bad reviews I know of. Worth every penny.
-          </p>
-          <div class="testimonial-author">
-            <div class="author-avatar avatar-teal">DM</div>
+        <div class="quote-card">
+          <div class="quote-stars">★★★★★</div>
+          <p class="quote-text">We run a dental practice. Before CALLA, after-hours calls just disappeared. Now ARIA books appointments at 2am and I wake up to a full schedule. The Google review prompts alone have added 40+ five-star reviews in three months.</p>
+          <div class="quote-author">
+            <div class="author-initials">DK</div>
             <div>
-              <div class="author-name">Dave Marchetti</div>
-              <div class="author-biz">Arctic Air HVAC, Phoenix AZ</div>
+              <div class="author-name">Dr. David Kim</div>
+              <div class="author-biz">Lakeside Dental Group · Chicago, IL</div>
             </div>
           </div>
         </div>
 
-        <div class="testimonial-card">
-          <div class="testimonial-quote">"</div>
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-text">
-            As a solo family law attorney, I can't always pick up. CALLA qualifies every lead, books consultations, and sends me a summary before I call back. It's like having a $50,000/year receptionist for $199 a month.
-          </p>
-          <div class="testimonial-author">
-            <div class="author-avatar avatar-gold">JL</div>
+        <div class="quote-card">
+          <div class="quote-stars">★★★★★</div>
+          <p class="quote-text">Plumbing is emergency business — people hang up if they hit voicemail. Since switching to CALLA we have not missed a single emergency call. The SHIELD feature flagged a frustrated caller last Tuesday. We followed up, won the job, and got a 5-star review.</p>
+          <div class="quote-author">
+            <div class="author-initials">TM</div>
             <div>
-              <div class="author-name">Jessica Lin</div>
-              <div class="author-biz">Lin Family Law, Chicago IL</div>
+              <div class="author-name">Tom Marchetti</div>
+              <div class="author-biz">Marchetti Plumbing · Phoenix, AZ</div>
             </div>
           </div>
         </div>
 
-      </div>
-
-      <!-- Stats bar -->
-      <div class="stats-bar">
-        <div class="stat-item">
-          <div class="stat-value">1.2M+</div>
-          <div class="stat-label">Calls answered this year</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value">98%</div>
-          <div class="stat-label">First-ring answer rate</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value">4.9★</div>
-          <div class="stat-label">Average customer rating</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value">$3.2M</div>
-          <div class="stat-label">Revenue recovered for clients</div>
-        </div>
       </div>
     </div>
   </section>
 
-  <!-- ─── CTA FOOTER ────────────────────────────────────────────── -->
-  <section id="cta">
-    <div class="container">
-      <div class="cta-inner">
-        <div class="section-label" style="display:inline-flex; background: rgba(232,197,71,0.12); color: var(--gold); border: 1px solid rgba(232,197,71,0.25); margin-bottom: 24px;">
-          <span class="dot" style="background: var(--gold);"></span>Start Today
-        </div>
-        <h2 class="cta-heading">
-          Your next customer<br>is calling <span class="gold">right now.</span>
-        </h2>
-        <p class="cta-sub">
-          Start your 14-day free trial and hear the difference CALLA makes — from the very first ring. No contracts, no setup fees, cancel anytime.
-        </p>
-        <div class="cta-actions">
-          <a href="#pricing" class="btn btn-primary btn-lg">
-            Start Free Trial — No Card Needed
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <a href="tel:+18005550100" class="btn btn-outline btn-lg">Talk to a Human</a>
-        </div>
-        <div class="cta-note">
-          <span>✓ 14-day free trial</span>
-          <span>✓ No credit card required</span>
-          <span>✓ Setup in 10 minutes</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── FOOTER ────────────────────────────────────────────────── -->
+  <!-- ─── FOOTER ────────────────────────────────────────────────────── -->
   <footer>
-    <div class="container">
-      <div class="footer-inner">
-        <div class="footer-brand">
-          <div class="logo">CALLA<span></span></div>
-          <p>Every call, perfectly answered. AI-powered phone answering for local businesses — 24/7, natural, and built around your customers.</p>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-logo">CALLA</div>
+          <p class="footer-tagline">Your phone. Never misses a call. Ever. AI-powered for local businesses.</p>
         </div>
-        <div class="footer-col">
-          <h4>Product</h4>
-          <ul>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#shield">CALLA Shield</a></li>
-            <li><a href="#pricing">Pricing</a></li>
-            <li><a href="#">Integrations</a></li>
-            <li><a href="#">API Docs</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Company</h4>
-          <ul>
-            <li><a href="#">About Us</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Press</a></li>
-            <li><a href="#">Contact</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Support</h4>
-          <ul>
-            <li><a href="#">Help Center</a></li>
-            <li><a href="#">System Status</a></li>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="#">Security</a></li>
-          </ul>
+        <div class="footer-links">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Contact</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#">Blog</a>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>© 2026 CALLA Technologies Inc. All rights reserved.</p>
-        <div class="footer-socials">
-          <a href="#" class="social-btn" aria-label="Twitter">𝕏</a>
-          <a href="#" class="social-btn" aria-label="LinkedIn">in</a>
-          <a href="#" class="social-btn" aria-label="Facebook">f</a>
-          <a href="#" class="social-btn" aria-label="Instagram">◻</a>
-        </div>
+        <p class="footer-copy">© 2025 CALLA. All rights reserved.</p>
+        <p class="footer-ai-badge">Powered by AI. Built for humans.</p>
       </div>
     </div>
   </footer>
 
-  <!-- ─── SCRIPTS ───────────────────────────────────────────────── -->
+  <!-- ─── MODAL ─────────────────────────────────────────────────────── -->
+  <div class="modal-overlay" id="ariaModal" onclick="closeModalOnOverlay(event)">
+    <div class="modal-box">
+      <div class="modal-icon">📞</div>
+      <div class="modal-title">Hear ARIA Live</div>
+      <p class="modal-body">Call this number right now and ARIA will answer — just like she does for 1,200+ businesses every day.</p>
+      <div class="modal-phone">+1 (844) 518-0906</div>
+      <p class="modal-note">Free to call. No sales pitch. Just ARIA doing her thing.</p>
+      <button class="modal-close" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <!-- ─── SCRIPTS ───────────────────────────────────────────────────── -->
   <script>
-    // Sticky nav scroll behavior
-    const navbar = document.getElementById('navbar');
+    // Sticky nav
+    const nav = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
-      if (window.scrollY > 40) {
-        navbar.classList.add('scrolled');
-      } else {
-        navbar.classList.remove('scrolled');
-      }
+      nav.classList.toggle('scrolled', window.scrollY > 40);
     }, { passive: true });
 
-    // Mobile menu toggle (simple)
-    let menuOpen = false;
-    function toggleMenu() {
-      menuOpen = !menuOpen;
-      const links = document.querySelector('.nav-links');
-      const navCta = document.querySelector('.nav-cta .sign-in');
-      if (menuOpen) {
-        // Inject mobile menu if not exists
-        let mobileMenu = document.getElementById('mobile-menu');
-        if (!mobileMenu) {
-          mobileMenu = document.createElement('div');
-          mobileMenu.id = 'mobile-menu';
-          mobileMenu.style.cssText = `
-            position: fixed; top: 72px; left: 0; right: 0;
-            background: rgba(250,250,248,0.97);
-            backdrop-filter: blur(20px);
-            padding: 24px;
-            border-top: 1px solid rgba(13,79,60,0.08);
-            box-shadow: 0 8px 32px rgba(13,79,60,0.12);
-            z-index: 99;
-            display: flex; flex-direction: column; gap: 0;
-          `;
-          const items = ['How It Works|#how','Features|#features','CALLA Shield|#shield','Pricing|#pricing','Reviews|#testimonials'];
-          items.forEach(item => {
-            const [text, href] = item.split('|');
-            const a = document.createElement('a');
-            a.href = href;
-            a.textContent = text;
-            a.style.cssText = `display:block; padding:14px 0; font-size:1rem; font-weight:600; color:#0D2219; border-bottom: 1px solid rgba(13,79,60,0.07);`;
-            a.addEventListener('click', () => { mobileMenu.remove(); menuOpen = false; });
-            mobileMenu.appendChild(a);
-          });
-          const cta = document.createElement('a');
-          cta.href = '#pricing';
-          cta.textContent = 'Start Free Trial';
-          cta.style.cssText = `display:block; margin-top:16px; background:#E8C547; color:#0D2219; text-align:center; padding:14px; border-radius:100px; font-weight:700; font-size:1rem;`;
-          cta.addEventListener('click', () => { mobileMenu.remove(); menuOpen = false; });
-          mobileMenu.appendChild(cta);
-          document.body.appendChild(mobileMenu);
-        } else {
-          mobileMenu.style.display = 'flex';
-        }
-      } else {
-        const mobileMenu = document.getElementById('mobile-menu');
-        if (mobileMenu) mobileMenu.style.display = 'none';
-      }
-    }
+    // Modal
+    function openModal()  { document.getElementById('ariaModal').classList.add('open'); }
+    function closeModal() { document.getElementById('ariaModal').classList.remove('open'); }
+    function closeModalOnOverlay(e) { if (e.target === e.currentTarget) closeModal(); }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-    // Intersection Observer for reveal animations on scroll
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'translateY(0)';
-          observer.unobserve(entry.target);
-        }
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Mobile menu
+    let mobileMenuEl = null;
+    function toggleMobileMenu() {
+      if (mobileMenuEl) { mobileMenuEl.remove(); mobileMenuEl = null; return; }
+      mobileMenuEl = document.createElement('div');
+      mobileMenuEl.style.cssText = 'position:fixed;top:68px;left:0;right:0;background:rgba(10,10,10,0.97);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.08);padding:24px 28px;z-index:199;display:flex;flex-direction:column;gap:0;';
+      [['The Problem','#problem'],['How It Works','#how'],['Pricing','#pricing'],['Reviews','#proof']].forEach(([t,h]) => {
+        const a = document.createElement('a');
+        a.href = h; a.textContent = t;
+        a.style.cssText = 'display:block;padding:16px 0;font-size:1rem;font-weight:600;color:rgba(255,255,255,0.7);border-bottom:1px solid rgba(255,255,255,0.07);';
+        a.addEventListener('click', () => { mobileMenuEl.remove(); mobileMenuEl = null; });
+        mobileMenuEl.appendChild(a);
       });
-    }, { threshold: 0.12 });
-
-    document.querySelectorAll('.feature-card, .step-item, .pricing-card, .testimonial-card, .shield-card, .stat-item').forEach(el => {
-      el.style.opacity = '0';
-      el.style.transform = 'translateY(24px)';
-      el.style.transition = 'opacity 0.55s ease, transform 0.55s ease';
-      observer.observe(el);
-    });
+      const cta = document.createElement('a');
+      cta.href = '#pricing'; cta.textContent = 'Start Free Trial';
+      cta.style.cssText = 'display:block;margin-top:20px;background:#E8C547;color:#000;text-align:center;padding:15px;border-radius:4px;font-weight:700;font-size:0.95rem;';
+      cta.addEventListener('click', () => { mobileMenuEl.remove(); mobileMenuEl = null; });
+      mobileMenuEl.appendChild(cta);
+      document.body.appendChild(mobileMenuEl);
+    }
   </script>
 
 </body>
