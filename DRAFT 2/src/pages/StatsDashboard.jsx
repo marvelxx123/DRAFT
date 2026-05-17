@@ -5,7 +5,7 @@ import { supabase, updateProfile } from '../lib/supabase.js'
 
 /* ── COLORS ── */
 
-const POS_COLOR = { PG:T.lime, SG:T.crimson, SF:T.scoutBlue, PF:'#30D158', C:'#BF5AF2' }
+const POS_COLOR = { PG:T.electric, SG:T.gold, SF:T.lime, PF:T.crimson, C:'#9D4EDD' }
 
 /* ── HS vs College stat definitions ── */
 const HS_STATS = [

@@ -4,14 +4,13 @@ import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase.js'
 
 const C = {
-  bg:'#000', surface:'#0D0D0D', card:'#161616', card2:'#1F1F1F',
-  border:'#2A2A2A', border2:'#383838',
-  text:'#FFFFFF', text2:'#CCCCCC', sub:'#888', muted:'#555',
-  accent:'#C8FF00', pink:'#FF2D78', blue:'#00C2FF',
-  green:'#00E676', purple:'#9B5CFF', orange:'#FF6B00',
+  bg:'#000', surface:'#080808', card:'#101010', card2:'#181818',
+  border:'#1E1E1E', border2:'#2A2A2A',
+  text:'#FFFFFF', text2:'#A09080', sub:'#5C5040', muted:'#2A2018',
+  accent:T.electric, gold:T.gold,
 }
 
-const ACC = { PG:T.lime, SG:T.crimson, SF:T.scoutBlue, PF:'#30D158', C:'#BF5AF2' }
+const ACC = { PG:T.electric, SG:T.gold, SF:T.lime, PF:T.crimson, C:'#9D4EDD' }
 
 const POSITIONS = ['All','PG','SG','SF','PF','C']
 const LEVELS    = ['All','High School','College']
