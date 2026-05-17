@@ -228,7 +228,35 @@ footer { background: var(--navy); padding: 48px 0 32px; }
 .footer-tagline { font-size: .75rem; color: rgba(255,255,255,.2); }
 .footer-copy { text-align: center; font-size: .75rem; color: rgba(255,255,255,.15); }
 
-/* Modal */
+/* Audio demo */
+.demo-section { background: var(--navy); padding: 96px 0; }
+.demo-wrap { max-width: 780px; margin: 0 auto; padding: 0 24px; text-align: center; }
+.demo-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(28px,4vw,44px); color: #fff; margin-bottom: 12px; }
+.demo-sub { color: rgba(255,255,255,.45); font-size: 1rem; margin-bottom: 40px; }
+.demo-player { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 20px; padding: 32px 28px; text-align: left; }
+.demo-chat { display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px; min-height: 180px; }
+.bubble { display: flex; gap: 10px; align-items: flex-start; opacity: .3; transition: opacity .4s; }
+.bubble.active { opacity: 1; }
+.bubble.aria { flex-direction: row; }
+.bubble.customer { flex-direction: row-reverse; }
+.bub-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .7rem; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+.bubble.aria .bub-avatar { background: var(--blue); color: #fff; }
+.bubble.customer .bub-avatar { background: rgba(255,255,255,.15); color: rgba(255,255,255,.7); }
+.bub-text { background: rgba(255,255,255,.08); border-radius: 14px; padding: 10px 14px; font-size: .875rem; color: rgba(255,255,255,.85); line-height: 1.5; max-width: 80%; }
+.bubble.aria .bub-text { background: rgba(0,150,199,.2); border-bottom-left-radius: 4px; }
+.bubble.customer .bub-text { background: rgba(255,255,255,.1); border-bottom-right-radius: 4px; }
+.demo-controls { display: flex; align-items: center; gap: 16px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.08); }
+.play-btn { width: 48px; height: 48px; border-radius: 50%; background: var(--blue); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .2s, transform .15s; }
+.play-btn:hover { background: var(--blue2); transform: scale(1.05); }
+.play-btn svg { width: 18px; height: 18px; fill: #fff; }
+.demo-wave { display: flex; align-items: center; gap: 3px; height: 32px; flex: 1; }
+.demo-wave span { display: block; width: 3px; border-radius: 3px; background: rgba(255,255,255,.2); height: 6px; transition: height .1s; }
+.demo-wave.playing span:nth-child(odd)  { animation: w1 .8s ease-in-out infinite; background: var(--blue); }
+.demo-wave.playing span:nth-child(even) { animation: w2 .8s ease-in-out infinite .2s; background: var(--blue); }
+.demo-label { font-size: .8rem; color: rgba(255,255,255,.35); white-space: nowrap; }
+.demo-cta { margin-top: 32px; }
+.demo-cta p { color: rgba(255,255,255,.4); font-size: .875rem; margin-bottom: 16px; }
+
 #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 200; align-items: center; justify-content: center; padding: 24px; }
 #modal.open { display: flex; }
 .modal-box { background: #fff; border-radius: 20px; padding: 48px 36px; max-width: 360px; width: 100%; text-align: center; position: relative; }
@@ -398,15 +426,62 @@ footer { background: var(--navy); padding: 48px 0 32px; }
   </div>
 </section>
 
-<!-- HEAR ARIA -->
-<section id="aria" class="sec-navy center">
-  <div class="wrap">
-    <div class="chip" style="color:#0096C7;background:rgba(0,150,199,.12);border-color:rgba(0,150,199,.3)">Hear ARIA Right Now</div>
-    <h2 style="color:#fff">Want to hear ARIA answer?</h2>
-    <p style="color:rgba(255,255,255,.45);font-size:1.05rem;margin-bottom:0">Call this number from your phone. ARIA will answer.</p>
-    <a href="tel:+19046643560" class="aria-num">+1 (904) 664-3560</a>
-    <p class="aria-hint">Try asking: "What are your hours?" or "I'd like to book an appointment"</p>
-    <button class="btn-outline" style="border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.7)" onclick="document.getElementById('modal').classList.add('open')">Show me the number</button>
+<!-- HEAR ARIA DEMO -->
+<section id="aria" class="demo-section">
+  <div class="demo-wrap">
+    <div class="chip" style="color:#0096C7;background:rgba(0,150,199,.12);border-color:rgba(0,150,199,.3);margin-bottom:20px">Hear ARIA Live</div>
+    <h2 class="demo-title">Listen to a real ARIA call</h2>
+    <p class="demo-sub">Press play and hear exactly what your customers will hear when they call.</p>
+
+    <div class="demo-player">
+      <div class="demo-chat" id="demoChat">
+        <div class="bubble aria active" id="b0">
+          <div class="bub-avatar">AR</div>
+          <div class="bub-text">Thank you for calling! This is ARIA — how can I help you today?</div>
+        </div>
+        <div class="bubble customer" id="b1">
+          <div class="bub-avatar">👤</div>
+          <div class="bub-text">Hi, I'd like to book a haircut for Saturday.</div>
+        </div>
+        <div class="bubble aria" id="b2">
+          <div class="bub-avatar">AR</div>
+          <div class="bub-text">Of course! We have openings at 10am, 1pm, and 3pm on Saturday. Which works best for you?</div>
+        </div>
+        <div class="bubble customer" id="b3">
+          <div class="bub-avatar">👤</div>
+          <div class="bub-text">1pm would be perfect.</div>
+        </div>
+        <div class="bubble aria" id="b4">
+          <div class="bub-avatar">AR</div>
+          <div class="bub-text">Wonderful! Can I get your name to hold the appointment?</div>
+        </div>
+        <div class="bubble customer" id="b5">
+          <div class="bub-avatar">👤</div>
+          <div class="bub-text">It's Maria.</div>
+        </div>
+        <div class="bubble aria" id="b6">
+          <div class="bub-avatar">AR</div>
+          <div class="bub-text">You're all set, Maria! Saturday at 1pm. We'll send you a reminder the day before. Is there anything else I can help you with?</div>
+        </div>
+      </div>
+
+      <div class="demo-controls">
+        <button class="play-btn" id="playBtn" onclick="playDemo()">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <div class="demo-wave" id="demoWave">
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <span class="demo-label" id="demoLabel">Press play</span>
+      </div>
+    </div>
+
+    <div class="demo-cta">
+      <p>Want to talk to ARIA yourself?</p>
+      <a href="tel:+19046643560" class="btn-solid" style="display:inline-block">📞 Call +1 (904) 664-3560</a>
+    </div>
   </div>
 </section>
 
@@ -534,21 +609,116 @@ footer { background: var(--navy); padding: 48px 0 32px; }
 </div>
 
 <script>
+  // Nav shadow
   window.addEventListener('scroll', () => {
     document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
   });
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      document.getElementById('modal').classList.remove('open');
-      document.getElementById('mob-menu').classList.remove('open');
-    }
-  });
+
+  // Hamburger — simple toggle
+  var menuOpen = false;
   function toggleMenu() {
+    menuOpen = !menuOpen;
     var m = document.getElementById('mob-menu');
-    m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+    m.style.cssText = menuOpen
+      ? 'display:flex;flex-direction:column;gap:4px;'
+      : 'display:none;';
   }
   function closeMenu() {
+    menuOpen = false;
     document.getElementById('mob-menu').style.display = 'none';
+  }
+
+  // ESC key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.getElementById('modal').classList.remove('open');
+      closeMenu();
+    }
+  });
+
+  // Audio demo using Web Speech API
+  var demoPlaying = false;
+  var demoUtterance = null;
+  var script = [
+    { id:'b0', speaker:'aria',     text:'Thank you for calling! This is ARIA — how can I help you today?' },
+    { id:'b1', speaker:'customer', text:'Hi, I\'d like to book a haircut for Saturday.' },
+    { id:'b2', speaker:'aria',     text:'Of course! We have openings at 10am, 1 pm, and 3 pm on Saturday. Which works best for you?' },
+    { id:'b3', speaker:'customer', text:'1 pm would be perfect.' },
+    { id:'b4', speaker:'aria',     text:'Wonderful! Can I get your name to hold the appointment?' },
+    { id:'b5', speaker:'customer', text:'It\'s Maria.' },
+    { id:'b6', speaker:'aria',     text:'You\'re all set, Maria! Saturday at 1 pm. We\'ll send you a reminder the day before. Is there anything else I can help you with?' },
+  ];
+
+  function resetBubbles() {
+    script.forEach(function(s, i) {
+      var el = document.getElementById(s.id);
+      el.style.opacity = i === 0 ? '1' : '0.2';
+    });
+  }
+
+  function playDemo() {
+    if (!window.speechSynthesis) {
+      document.getElementById('demoLabel').textContent = 'Call +1 (904) 664-3560 to hear ARIA!';
+      return;
+    }
+    if (demoPlaying) {
+      window.speechSynthesis.cancel();
+      demoPlaying = false;
+      document.getElementById('demoWave').classList.remove('playing');
+      document.getElementById('demoLabel').textContent = 'Press play';
+      document.getElementById('playBtn').innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#fff"/></svg>';
+      resetBubbles();
+      return;
+    }
+
+    demoPlaying = true;
+    document.getElementById('demoWave').classList.add('playing');
+    document.getElementById('demoLabel').textContent = 'ARIA is speaking...';
+    document.getElementById('playBtn').innerHTML = '<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#fff"/><rect x="14" y="5" width="4" height="14" fill="#fff"/></svg>';
+    resetBubbles();
+
+    var voices = window.speechSynthesis.getVoices();
+    var idx = 0;
+
+    function speakNext() {
+      if (idx >= script.length || !demoPlaying) {
+        demoPlaying = false;
+        document.getElementById('demoWave').classList.remove('playing');
+        document.getElementById('demoLabel').textContent = 'Press play to replay';
+        document.getElementById('playBtn').innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#fff"/></svg>';
+        return;
+      }
+      var line = script[idx];
+      var el = document.getElementById(line.id);
+      script.forEach(function(s) { document.getElementById(s.id).style.opacity = '0.2'; });
+      el.style.opacity = '1';
+      el.scrollIntoView({ behavior:'smooth', block:'nearest' });
+
+      var utt = new SpeechSynthesisUtterance(line.text);
+      voices = window.speechSynthesis.getVoices();
+
+      if (line.speaker === 'aria') {
+        var femaleVoice = voices.find(function(v){ return v.name.includes('Samantha') || v.name.includes('Karen') || v.name.includes('Moira') || (v.lang === 'en-US' && v.name.includes('Female')); });
+        if (femaleVoice) utt.voice = femaleVoice;
+        utt.pitch = 1.15;
+        utt.rate = 0.95;
+        document.getElementById('demoLabel').textContent = 'ARIA is speaking...';
+      } else {
+        utt.pitch = 0.9;
+        utt.rate = 1.0;
+        document.getElementById('demoLabel').textContent = 'Customer speaking...';
+      }
+
+      utt.onend = function() { idx++; setTimeout(speakNext, 400); };
+      window.speechSynthesis.speak(utt);
+    }
+
+    // Load voices first (needed on some browsers)
+    if (window.speechSynthesis.getVoices().length === 0) {
+      window.speechSynthesis.onvoiceschanged = function() { speakNext(); };
+    } else {
+      speakNext();
+    }
   }
 </script>
 </body>
