@@ -1,6 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { inngest } from "@/lib/inngest";
-import { createAdminClient } from "@/lib/supabase";
+import { createAgentAdminClient } from "@/lib/supabase";
 import { format } from "date-fns";
 
 // ---------------------------------------------------------------------------
@@ -63,7 +63,7 @@ Do not include any text outside the JSON object.`;
 // ---------------------------------------------------------------------------
 
 async function fetchMarketingContext() {
-  const supabase = createAdminClient();
+  const supabase = createAgentAdminClient();
 
   // Total active clients
   const { count: clientCount } = await supabase
@@ -100,7 +100,7 @@ export const marketingManagerFunction = inngest.createFunction(
     triggers: [{ cron: "0 9 * * 1" }],
   },
   async ({ step }) => {
-    const supabase = createAdminClient();
+    const supabase = createAgentAdminClient();
     const anthropic = new Anthropic();
 
     // Step 1: Gather context

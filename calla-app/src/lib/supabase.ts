@@ -136,41 +136,57 @@ export interface Database {
         Row: Business;
         Insert: Omit<Business, "id" | "created_at" | "updated_at">;
         Update: Partial<Omit<Business, "id" | "created_at">>;
+        Relationships: [];
       };
       calls: {
         Row: Call;
         Insert: Omit<Call, "id" | "created_at">;
         Update: Partial<Omit<Call, "id" | "created_at">>;
+        Relationships: [];
       };
       weekly_plans: {
         Row: WeeklyPlanRow;
         Insert: Omit<WeeklyPlanRow, "id" | "created_at">;
         Update: Partial<Omit<WeeklyPlanRow, "id" | "created_at">>;
+        Relationships: [];
       };
       content_posts: {
         Row: ContentPostRow;
         Insert: Omit<ContentPostRow, "id" | "created_at">;
         Update: Partial<Omit<ContentPostRow, "id" | "created_at">>;
+        Relationships: [];
       };
       seo_reports: {
         Row: SEOReportRow;
         Insert: Omit<SEOReportRow, "id" | "created_at">;
         Update: Partial<Omit<SEOReportRow, "id" | "created_at">>;
+        Relationships: [];
       };
       prospects: {
         Row: ProspectRow;
         Insert: Omit<ProspectRow, "id" | "created_at">;
         Update: Partial<Omit<ProspectRow, "id" | "created_at">>;
+        Relationships: [];
       };
       outreach_queue: {
         Row: OutreachQueueRow;
         Insert: Omit<OutreachQueueRow, "id" | "created_at">;
         Update: Partial<Omit<OutreachQueueRow, "id" | "created_at">>;
+        Relationships: [
+          {
+            foreignKeyName: "outreach_queue_prospect_id_fkey";
+            columns: ["prospect_id"];
+            isOneToOne: false;
+            referencedRelation: "prospects";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       copy_suggestions: {
         Row: CopySuggestionRow;
         Insert: Omit<CopySuggestionRow, "id" | "created_at">;
         Update: Partial<Omit<CopySuggestionRow, "id" | "created_at">>;
+        Relationships: [];
       };
     };
     Views: {
@@ -186,8 +202,11 @@ export interface Database {
           shield_smses_sent: number;
           avg_duration_seconds: number;
         };
+        Relationships: [];
       };
     };
+    Functions: Record<string, never>;
+    Enums: Record<string, never>;
   };
 }
 
@@ -265,4 +284,37 @@ export function createAdminClient() {
     }
   );
   return _adminClient;
+}
+
+// ---------------------------------------------------------------------------
+// Agent admin client — returns the admin client cast to `any` for use in
+// Inngest agent functions. Row types are applied via explicit type assertions
+// at the query call sites. This avoids TS 5.9+ generic resolution issues with
+// Supabase v2's deeply nested schema generics.
+// NEVER use this in user-facing code — use createAdminClient() there.
+// ---------------------------------------------------------------------------
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnySupabaseClient = ReturnType<typeof createClient<any>>;
+
+let _agentAdminClient: AnySupabaseClient | null = null;
+
+/**
+ * Use inside Inngest functions only.
+ * Returns the service-role Supabase client typed as `any` so that agent code
+ * can apply explicit row-type assertions without fighting TS 5.9 generic bugs.
+ */
+export function createAgentAdminClient(): AnySupabaseClient {
+  if (_agentAdminClient) return _agentAdminClient;
+  _agentAdminClient = createClient<any>(
+    getSupabaseUrl(),
+    getSupabaseServiceRoleKey(),
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    }
+  );
+  return _agentAdminClient;
 }

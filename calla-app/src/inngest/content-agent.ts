@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { GetStepTools } from "inngest";
 import { inngest } from "@/lib/inngest";
-import { createAdminClient } from "@/lib/supabase";
+import { createAgentAdminClient } from "@/lib/supabase";
 import type { ContentAssignment } from "./marketing-manager";
 
 // ---------------------------------------------------------------------------
@@ -112,7 +112,7 @@ export const contentAgentScheduled = inngest.createFunction(
     triggers: [{ cron: "0 10 * * 2,4" }],
   },
   async ({ step }) => {
-    const supabase = createAdminClient();
+    const supabase = createAgentAdminClient();
 
     // Fetch latest active weekly plan for context
     const latestPlan = await step.run("fetch-latest-plan", async () => {
@@ -170,7 +170,7 @@ async function runContentGeneration(
   assignments: ContentAssignment[],
   keyMessage: string
 ) {
-  const supabase = createAdminClient();
+  const supabase = createAgentAdminClient();
   const anthropic = new Anthropic();
   const createdIds: string[] = [];
 

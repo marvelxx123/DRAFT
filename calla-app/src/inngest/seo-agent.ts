@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { GetStepTools } from "inngest";
 import { inngest } from "@/lib/inngest";
-import { createAdminClient } from "@/lib/supabase";
+import { createAgentAdminClient } from "@/lib/supabase";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -183,10 +183,10 @@ export const seoAgentScheduled = inngest.createFunction(
   {
     id: "seo-agent-scheduled",
     name: "AI SEO Expert — Weekly Optimization",
+    triggers: [{ cron: "0 11 * * 1" }],
   },
-  { cron: "0 11 * * 1" },
   async ({ step }) => {
-    const supabase = createAdminClient();
+    const supabase = createAgentAdminClient();
 
     const latestPlan = await step.run("fetch-latest-plan", async () => {
       const { data, error } = await supabase
@@ -208,7 +208,7 @@ export const seoAgentScheduled = inngest.createFunction(
     const planJson = latestPlan.plan_json as {
       seo_target_page?: string;
       key_message_this_week?: string;
-    };
+    } | null;
 
     const targetPage = planJson?.seo_target_page ?? "homepage";
     const keyMessage = planJson?.key_message_this_week ?? "CALLA helps small businesses never miss a call.";
@@ -221,8 +221,8 @@ export const seoAgentTriggered = inngest.createFunction(
   {
     id: "seo-agent-triggered",
     name: "AI SEO Expert — Triggered by Marketing Manager",
+    triggers: [{ event: "calla/seo-agent.triggered" }],
   },
-  { event: "calla/seo-agent.triggered" },
   async ({ event, step }) => {
     const { target_page, key_message } = event.data as {
       weekly_plan_id: string;
@@ -243,7 +243,7 @@ async function runSEOOptimization(
   targetPage: string,
   keyMessage: string
 ) {
-  const supabase = createAdminClient();
+  const supabase = createAgentAdminClient();
   const anthropic = new Anthropic();
 
   // Generate SEO report

@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { GetStepTools } from "inngest";
 import { inngest } from "@/lib/inngest";
-import { createAdminClient } from "@/lib/supabase";
+import { createAgentAdminClient } from "@/lib/supabase";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -9,8 +9,8 @@ import { createAdminClient } from "@/lib/supabase";
 
 interface Prospect {
   id: string;
-  business_name: string;
-  business_type: string;
+  business_name: string | null;
+  business_type: string | null;
   instagram_handle: string | null;
   email: string | null;
   city: string | null;
@@ -66,7 +66,7 @@ async function generateOutreachCopy(
 Write personalized cold outreach for this business:
 
 Business: ${businessDescription}
-Business type: ${prospect.business_type}
+Business type: ${prospect.business_type ?? "small business"}
 Instagram handle: ${prospect.instagram_handle ?? "not available"}
 This week's key message: ${keyMessage}
 Target segment context: ${segment}
@@ -105,6 +105,7 @@ export const outreachAgentScheduled = inngest.createFunction(
   {
     id: "outreach-agent-scheduled",
     name: "AI Outreach Agent — Daily Prospecting",
+    triggers: [{ cron: "0 8 * * 1-5" }],
     // Throttle to avoid hitting Claude rate limits if volume is high
     throttle: {
       limit: 1,
@@ -112,9 +113,8 @@ export const outreachAgentScheduled = inngest.createFunction(
       key: "event.data.segment",
     },
   },
-  { cron: "0 8 * * 1-5" },
   async ({ step }) => {
-    const supabase = createAdminClient();
+    const supabase = createAgentAdminClient();
 
     // Fetch the latest active weekly plan
     const latestPlan = await step.run("fetch-latest-plan", async () => {
@@ -138,7 +138,7 @@ export const outreachAgentScheduled = inngest.createFunction(
       outreach_segment?: string;
       outreach_daily_volume?: number;
       key_message_this_week?: string;
-    };
+    } | null;
 
     const segment = planJson?.outreach_segment ?? "hair salons";
     const dailyVolume = planJson?.outreach_daily_volume ?? 25;
@@ -152,8 +152,8 @@ export const outreachAgentTriggered = inngest.createFunction(
   {
     id: "outreach-agent-triggered",
     name: "AI Outreach Agent — Triggered by Marketing Manager",
+    triggers: [{ event: "calla/outreach-agent.triggered" }],
   },
-  { event: "calla/outreach-agent.triggered" },
   async ({ event, step }) => {
     const { segment, daily_volume } = event.data as {
       weekly_plan_id: string;
@@ -161,9 +161,9 @@ export const outreachAgentTriggered = inngest.createFunction(
       daily_volume: number;
     };
 
-    const supabase = createAdminClient();
+    const supabase = createAgentAdminClient();
 
-    const planJson = await step.run("fetch-key-message", async () => {
+    const keyMessage = await step.run("fetch-key-message", async () => {
       const { data } = await supabase
         .from("weekly_plans")
         .select("plan_json")
@@ -176,7 +176,7 @@ export const outreachAgentTriggered = inngest.createFunction(
       return json?.key_message_this_week ?? "CALLA helps small businesses never miss a call.";
     });
 
-    return runOutreachGeneration(step, segment, daily_volume, planJson);
+    return runOutreachGeneration(step, segment, daily_volume, keyMessage);
   }
 );
 
@@ -190,7 +190,7 @@ async function runOutreachGeneration(
   dailyVolume: number,
   keyMessage: string
 ) {
-  const supabase = createAdminClient();
+  const supabase = createAgentAdminClient();
   const anthropic = new Anthropic();
 
   // Fetch prospects not yet contacted, filtered by segment
