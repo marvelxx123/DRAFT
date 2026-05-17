@@ -1051,17 +1051,8 @@
 
     /* ─── SCROLL REVEAL (JS sets initial state) ──────────────────────── */
     .reveal {
-      opacity: 0;
-      transform: translateY(36px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .reveal.visible {
       opacity: 1;
-      transform: translateY(0);
-    }
-    /* Fallback: if JS fails, show everything */
-    @media (prefers-reduced-motion: reduce) {
-      .reveal { opacity: 1; transform: none; }
+      transform: none;
     }
 
     /* ─── RESPONSIVE ─────────────────────────────────────────────────── */
@@ -1456,13 +1447,7 @@
     function closeModalOnOverlay(e) { if (e.target === e.currentTarget) closeModal(); }
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-    // Scroll reveal — threshold 0 fires as soon as 1px enters viewport
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-    }, { threshold: 0, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-    // Safety: show all after 2s in case observer never fires
-    setTimeout(() => { document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible')); }, 2000);
+    // No scroll reveal — all sections always visible
   </script>
 
 </body>
