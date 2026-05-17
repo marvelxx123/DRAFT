@@ -8,311 +8,256 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    /* ─── Reset ──────────────────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; font-size: 16px; }
+    /* ─── RESET ──────────────────────────────────────────────────────────── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
     body {
       font-family: 'Inter', sans-serif;
       background: #FFFFFF;
       color: #03045E;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
     }
-    a { text-decoration: none; color: inherit; }
-    img { max-width: 100%; display: block; }
-
-    /* ─── Variables ──────────────────────────────────────────────────── */
-    :root {
-      --ocean-deep:   #03045E;
-      --ocean-mid:    #0077B6;
-      --ocean-bright: #00B4D8;
-      --ocean-light:  #90E0EF;
-      --ocean-pale:   #CAF0F8;
-      --white:        #FFFFFF;
-      --off-white:    #F0F9FF;
-      --accent:       #00B4D8;
-      --white-dim:    rgba(255,255,255,0.6);
-      --white-faint:  rgba(255,255,255,0.08);
-      --border:       rgba(0,180,216,0.15);
-      --red-alert:    #F87171;
-      --text-dark:    #03045E;
-      --text-mid:     #0077B6;
-      --text-muted:   #4A90A4;
+    a {
+      text-decoration: none;
+      color: inherit;
     }
 
-    /* ─── Keyframes ──────────────────────────────────────────────────── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(32px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-    @keyframes goldGlow {
-      0%, 100% { text-shadow: 0 0 20px rgba(0,180,216,0.4), 0 0 60px rgba(0,180,216,0.15); }
-      50%       { text-shadow: 0 0 40px rgba(0,180,216,0.7), 0 0 100px rgba(0,180,216,0.3); }
-    }
+    /* ─── KEYFRAMES ──────────────────────────────────────────────────────── */
     @keyframes pulseDot {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(74,222,128,0.6); }
-      50%       { box-shadow: 0 0 0 6px rgba(74,222,128,0); }
-    }
-    @keyframes cardPulse {
-      0%, 100% { box-shadow: 0 0 0 1px rgba(0,180,216,0.15), 0 24px 64px rgba(0,0,0,0.6); }
-      50%       { box-shadow: 0 0 0 1px rgba(0,180,216,0.35), 0 24px 80px rgba(0,180,216,0.1); }
+      0%, 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+      50%       { box-shadow: 0 0 0 8px rgba(74, 222, 128, 0); }
     }
     @keyframes wave1 {
-      0%, 100% { height: 8px;  }
-      50%       { height: 24px; }
+      0%, 100% { height: 6px;  }
+      50%       { height: 28px; }
     }
     @keyframes wave2 {
-      0%, 100% { height: 16px; }
-      50%       { height: 36px; }
+      0%, 100% { height: 18px; }
+      50%       { height: 38px; }
     }
     @keyframes wave3 {
-      0%, 100% { height: 24px; }
-      50%       { height: 12px; }
+      0%, 100% { height: 28px; }
+      50%       { height: 10px; }
     }
     @keyframes wave4 {
-      0%, 100% { height: 12px; }
-      50%       { height: 32px; }
+      0%, 100% { height: 10px; }
+      50%       { height: 34px; }
     }
     @keyframes wave5 {
-      0%, 100% { height: 20px; }
-      50%       { height: 8px;  }
+      0%, 100% { height: 22px; }
+      50%       { height: 6px;  }
     }
-    @keyframes ticker {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
+    @keyframes blueGlow {
+      0%, 100% { text-shadow: 0 0 24px rgba(0, 150, 199, 0.5); }
+      50%       { text-shadow: 0 0 48px rgba(0, 150, 199, 0.9), 0 0 80px rgba(0, 150, 199, 0.4); }
     }
-    @keyframes revealUp {
-      from { opacity: 0; transform: translateY(40px); }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+    @keyframes phoneGlow {
+      0%, 100% { box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 150, 199, 0.15); }
+      50%       { box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 150, 199, 0.4), 0 0 40px rgba(0, 150, 199, 0.08); }
+    }
 
-    /* Hero load animations */
-    .hero-badge   { animation: fadeUp 0.6s ease 0.1s both; }
-    .hero-h1      { animation: fadeUp 0.7s ease 0.2s both; }
-    .hero-sub     { animation: fadeUp 0.7s ease 0.35s both; }
-    .hero-actions { animation: fadeUp 0.7s ease 0.5s both; }
-    .hero-stats   { animation: fadeUp 0.7s ease 0.65s both; }
-    .hero-card    { animation: fadeIn 0.9s ease 0.4s both; }
-
-    /* ─── Utility ────────────────────────────────────────────────────── */
+    /* ─── LAYOUT UTILITY ─────────────────────────────────────────────────── */
     .container {
       max-width: 1160px;
       margin: 0 auto;
-      padding: 0 28px;
+      padding: 0 32px;
     }
-    .section-label {
+    .section-chip {
       display: inline-block;
       font-family: 'Syne', sans-serif;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 800;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--ocean-bright);
-      background: rgba(0,180,216,0.08);
-      border: 1px solid rgba(0,180,216,0.18);
+      color: #0096C7;
+      background: rgba(0, 150, 199, 0.08);
+      border: 1px solid rgba(0, 150, 199, 0.22);
       padding: 6px 14px;
       border-radius: 4px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
-    .gold { color: var(--ocean-bright); }
 
-    /* ─── NAV ────────────────────────────────────────────────────────── */
-    nav {
+    /* ─── NAV ────────────────────────────────────────────────────────────── */
+    #navbar {
       position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 200;
-      padding: 0 28px;
-      transition: background 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease;
-      border-bottom: 1px solid transparent;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 500;
+      background: #FFFFFF;
+      border-bottom: 1px solid rgba(3, 4, 94, 0.08);
+      transition: box-shadow 0.25s ease;
     }
-    nav.scrolled {
-      background: rgba(255,255,255,0.95);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom-color: var(--border);
+    #navbar.scrolled {
+      box-shadow: 0 4px 24px rgba(3, 4, 94, 0.08);
     }
     .nav-inner {
       max-width: 1160px;
       margin: 0 auto;
+      padding: 0 32px;
+      height: 68px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 68px;
     }
     .nav-logo {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: 1.35rem;
-      letter-spacing: 0.06em;
-      color: var(--ocean-deep);
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
+      color: #03045E;
     }
-    .nav-links {
+    .nav-center {
       display: flex;
+      align-items: center;
       gap: 36px;
       list-style: none;
     }
-    .nav-links a {
+    .nav-center a {
       font-size: 0.875rem;
       font-weight: 500;
-      color: rgba(3,4,94,0.55);
-      transition: color 0.2s;
-      letter-spacing: 0.01em;
-    }
-    .nav-links a:hover { color: var(--ocean-deep); }
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-    .nav-pricing-link {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: rgba(3,4,94,0.55);
+      color: rgba(3, 4, 94, 0.55);
       transition: color 0.2s;
     }
-    .nav-pricing-link:hover { color: var(--ocean-deep); }
-    .nav-cta-btn {
+    .nav-center a:hover {
+      color: #03045E;
+    }
+    .nav-cta {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: var(--ocean-mid);
-      color: #fff;
+      background: #0096C7;
+      color: #FFFFFF;
       font-family: 'Inter', sans-serif;
       font-weight: 700;
-      font-size: 0.82rem;
-      letter-spacing: 0.02em;
-      padding: 10px 20px;
-      border-radius: 4px;
+      font-size: 0.85rem;
+      letter-spacing: 0.01em;
+      padding: 11px 22px;
+      border-radius: 6px;
       border: none;
       cursor: pointer;
       transition: background 0.2s, transform 0.2s;
     }
-    .nav-cta-btn:hover {
-      background: #0090d4;
+    .nav-cta:hover {
+      background: #0077B6;
       transform: translateY(-1px);
     }
-    .hamburger {
+    .hamburger-btn {
       display: none;
       flex-direction: column;
+      justify-content: center;
       gap: 5px;
-      cursor: pointer;
-      padding: 4px;
+      width: 36px;
+      height: 36px;
       background: none;
       border: none;
+      cursor: pointer;
+      padding: 4px;
     }
-    .hamburger span {
+    .hamburger-btn span {
       display: block;
-      width: 22px; height: 2px;
-      background: rgba(3,4,94,0.7);
+      width: 22px;
+      height: 2px;
+      background: rgba(3, 4, 94, 0.75);
       border-radius: 2px;
+      transition: transform 0.2s, opacity 0.2s;
     }
 
-    /* ─── MOBILE NAV ─────────────────────────────────────────────────── */
+    /* ─── MOBILE NAV ─────────────────────────────────────────────────────── */
     #mobileNav {
       display: none;
       position: fixed;
-      top: 68px; left: 0; right: 0;
-      background: rgba(255,255,255,0.97);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(0,180,216,0.2);
-      padding: 24px 28px;
-      z-index: 199;
+      top: 68px;
+      left: 0;
+      right: 0;
+      z-index: 499;
+      background: #FFFFFF;
+      border-bottom: 1px solid rgba(0, 150, 199, 0.15);
+      padding: 16px 32px 24px;
       flex-direction: column;
       gap: 0;
     }
-    #mobileNav.open { display: flex; }
-    #mobileNav a.mobile-nav-link {
+    #mobileNav.open {
+      display: flex;
+    }
+    .mob-link {
       display: block;
-      padding: 16px 0;
+      padding: 14px 0;
       font-size: 1rem;
       font-weight: 600;
-      color: rgba(3,4,94,0.7);
-      border-bottom: 1px solid rgba(0,180,216,0.1);
+      color: rgba(3, 4, 94, 0.65);
+      border-bottom: 1px solid rgba(3, 4, 94, 0.07);
     }
-    #mobileNav a.mobile-nav-link:hover { color: var(--ocean-deep); }
-    #mobileNav a.mobile-nav-cta {
+    .mob-link:hover {
+      color: #03045E;
+    }
+    .mob-cta {
       display: block;
-      margin-top: 20px;
-      background: var(--ocean-mid);
-      color: #fff;
+      margin-top: 18px;
+      background: #0096C7;
+      color: #FFFFFF;
       text-align: center;
-      padding: 15px;
-      border-radius: 4px;
+      padding: 14px;
+      border-radius: 6px;
       font-weight: 700;
       font-size: 0.95rem;
     }
-    #mobileNav a.mobile-nav-cta:hover { background: #0090d4; }
+    .mob-cta:hover {
+      background: #0077B6;
+    }
 
-    /* ─── HERO ───────────────────────────────────────────────────────── */
+    /* ─── HERO ───────────────────────────────────────────────────────────── */
     #hero {
       min-height: 100vh;
+      padding-top: 68px;
       background: #FFFFFF;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding-top: 68px;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-bg-glow {
-      position: absolute;
-      width: 800px; height: 600px;
-      background: radial-gradient(ellipse at center, rgba(0,119,182,0.35) 0%, transparent 70%);
-      top: -100px; right: -200px;
-      pointer-events: none;
-    }
-    .hero-bg-glow-2 {
-      position: absolute;
-      width: 500px; height: 400px;
-      background: radial-gradient(ellipse at center, rgba(0,180,216,0.06) 0%, transparent 70%);
-      bottom: 0; left: -100px;
-      pointer-events: none;
-    }
-    .hero-grid-line {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(0,119,182,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,119,182,0.06) 1px, transparent 1px);
-      background-size: 80px 80px;
-      pointer-events: none;
-      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
-    }
-    .hero-inner {
-      position: relative;
-      z-index: 2;
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 80px 28px 100px;
-      display: grid;
-      grid-template-columns: 1.15fr 1fr;
-      gap: 80px;
       align-items: center;
     }
-    .hero-left {}
+    .hero-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 80px 32px 100px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 72px;
+      align-items: center;
+      width: 100%;
+    }
+
+    /* Left column */
     .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      background: rgba(0,180,216,0.08);
-      border: 1px solid rgba(0,180,216,0.2);
+      background: rgba(74, 222, 128, 0.1);
+      border: 1px solid rgba(74, 222, 128, 0.3);
       padding: 8px 16px;
-      border-radius: 4px;
-      margin-bottom: 36px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
+      border-radius: 100px;
+      margin-bottom: 32px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--ocean-bright);
+      color: #16a34a;
     }
     .live-dot {
-      width: 8px; height: 8px;
+      width: 8px;
+      height: 8px;
       background: #4ADE80;
       border-radius: 50%;
       flex-shrink: 0;
@@ -321,460 +266,509 @@
     .hero-h1 {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: clamp(56px, 8vw, 96px);
-      line-height: 0.95;
-      letter-spacing: -0.03em;
-      color: var(--ocean-deep);
-      margin-bottom: 32px;
+      font-size: clamp(52px, 7.5vw, 88px);
+      line-height: 0.93;
+      letter-spacing: -0.035em;
+      color: #03045E;
+      margin-bottom: 28px;
     }
-    .hero-h1 .ever {
-      color: var(--ocean-bright);
-      animation: goldGlow 3s ease-in-out infinite;
-      display: inline-block;
+    .hero-h1 .blue {
+      color: #0096C7;
     }
     .hero-sub {
-      font-size: clamp(16px, 2vw, 20px);
+      font-size: clamp(16px, 1.8vw, 20px);
       font-weight: 400;
-      color: rgba(3,4,94,0.6);
+      color: rgba(3, 4, 94, 0.6);
       line-height: 1.65;
-      max-width: 520px;
-      margin-bottom: 44px;
+      max-width: 500px;
+      margin-bottom: 40px;
     }
-    .hero-actions {
+    .hero-buttons {
       display: flex;
-      gap: 14px;
       flex-wrap: wrap;
-      margin-bottom: 56px;
+      gap: 14px;
     }
-    .btn-gold {
+    .btn-primary {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: var(--ocean-mid);
-      color: #fff;
+      background: #0096C7;
+      color: #FFFFFF;
       font-weight: 700;
       font-size: 0.95rem;
-      padding: 16px 32px;
-      border-radius: 4px;
+      padding: 16px 30px;
+      border-radius: 8px;
       border: none;
       cursor: pointer;
       transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-      letter-spacing: 0.01em;
+      white-space: nowrap;
     }
-    .btn-gold:hover {
-      background: #0090d4;
+    .btn-primary:hover {
+      background: #0077B6;
       transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(0,180,216,0.35);
+      box-shadow: 0 10px 32px rgba(0, 150, 199, 0.35);
     }
-    .btn-ghost {
+    .btn-outline {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       background: transparent;
-      color: var(--ocean-deep);
+      color: #03045E;
       font-weight: 600;
       font-size: 0.95rem;
-      padding: 15px 32px;
-      border-radius: 4px;
-      border: 1px solid rgba(0,180,216,0.4);
+      padding: 15px 30px;
+      border-radius: 8px;
+      border: 1.5px solid rgba(3, 4, 94, 0.18);
       cursor: pointer;
       transition: border-color 0.2s, background 0.2s, transform 0.2s;
-    }
-    .btn-ghost:hover {
-      border-color: var(--ocean-bright);
-      background: rgba(0,180,216,0.08);
-      transform: translateY(-2px);
-    }
-    .hero-stats {
-      display: flex;
-      gap: 0;
-      border-top: 1px solid var(--border);
-      padding-top: 32px;
-    }
-    .hero-stat {
-      padding-right: 32px;
-      margin-right: 32px;
-      border-right: 1px solid var(--border);
-      font-size: 0.8rem;
-      color: rgba(3,4,94,0.5);
       white-space: nowrap;
     }
-    .hero-stat:last-child { border-right: none; margin-right: 0; padding-right: 0; }
-    .hero-stat strong {
-      display: block;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--ocean-deep);
-      margin-bottom: 2px;
+    .btn-outline:hover {
+      border-color: #0096C7;
+      background: rgba(0, 150, 199, 0.05);
+      transform: translateY(-2px);
     }
 
-    /* Hero phone card */
-    .hero-card {
-      background: #023E8A;
-      border: 1px solid rgba(0,180,216,0.2);
-      border-radius: 4px;
-      padding: 0;
-      animation: cardPulse 4s ease-in-out infinite;
+    /* Right column — phone card */
+    .phone-card {
+      background: #03045E;
+      border-radius: 20px;
       overflow: hidden;
+      animation: phoneGlow 4s ease-in-out infinite;
     }
-    .card-top-bar {
-      background: #022d6b;
-      border-bottom: 1px solid rgba(0,180,216,0.15);
+    .phone-card-bar {
+      background: #020347;
       padding: 14px 20px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
     }
-    .card-dot { width: 10px; height: 10px; border-radius: 50%; }
-    .card-dot-r { background: #FF5F57; }
-    .card-dot-y { background: #FFBD2E; }
-    .card-dot-g { background: #28C840; }
-    .card-title-bar {
+    .dot-r { width: 11px; height: 11px; background: #FF5F57; border-radius: 50%; }
+    .dot-y { width: 11px; height: 11px; background: #FEBC2E; border-radius: 50%; }
+    .dot-g { width: 11px; height: 11px; background: #28C840; border-radius: 50%; }
+    .bar-title {
       flex: 1;
       text-align: center;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 600;
-      color: rgba(255,255,255,0.3);
-      letter-spacing: 0.05em;
+      color: rgba(255, 255, 255, 0.25);
+      letter-spacing: 0.06em;
+      margin-left: -30px;
     }
-    .card-body { padding: 20px; }
-    .call-incoming {
+    .phone-card-body {
+      padding: 22px 20px 20px;
+    }
+    .caller-row {
       display: flex;
       align-items: center;
       gap: 14px;
+      background: rgba(0, 150, 199, 0.12);
+      border: 1px solid rgba(0, 150, 199, 0.25);
+      border-radius: 10px;
       padding: 14px 16px;
-      background: rgba(0,119,182,0.25);
-      border: 1px solid rgba(0,119,182,0.4);
-      border-radius: 4px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
-    .call-icon-circle {
-      width: 40px; height: 40px;
+    .caller-icon {
+      width: 42px;
+      height: 42px;
+      background: #0096C7;
       border-radius: 50%;
-      background: var(--ocean-mid);
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 1.1rem;
       flex-shrink: 0;
-      animation: pulseDot 2s ease-in-out infinite;
-      box-shadow: 0 0 0 0 rgba(0,119,182,0.8);
     }
-    .call-info-name {
+    .caller-name {
       font-size: 0.9rem;
       font-weight: 700;
-      color: var(--white);
+      color: #FFFFFF;
+      margin-bottom: 2px;
     }
-    .call-info-sub {
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.4);
+    .caller-sub {
+      font-size: 0.73rem;
+      color: rgba(255, 255, 255, 0.4);
     }
-    .aria-status {
+    .aria-row {
       display: flex;
       align-items: center;
       gap: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(0, 150, 199, 0.18);
+      border-radius: 10px;
       padding: 12px 16px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(0,180,216,0.15);
-      border-radius: 4px;
-      margin-bottom: 8px;
+      margin-bottom: 14px;
     }
-    .aria-label {
-      font-size: 0.72rem;
-      font-weight: 700;
+    .aria-tag {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 800;
       letter-spacing: 0.1em;
-      color: var(--ocean-bright);
       text-transform: uppercase;
+      color: #0096C7;
       white-space: nowrap;
     }
     .waveform {
       display: flex;
       align-items: center;
       gap: 3px;
-      height: 36px;
+      height: 40px;
     }
-    .wave-bar {
+    .wbar {
       width: 3px;
-      background: var(--ocean-bright);
       border-radius: 2px;
-      opacity: 0.8;
+      background: #0096C7;
     }
-    .wave-bar:nth-child(1) { animation: wave1 0.8s ease-in-out infinite; }
-    .wave-bar:nth-child(2) { animation: wave2 0.8s ease-in-out 0.1s infinite; }
-    .wave-bar:nth-child(3) { animation: wave3 0.8s ease-in-out 0.2s infinite; }
-    .wave-bar:nth-child(4) { animation: wave4 0.8s ease-in-out 0.3s infinite; }
-    .wave-bar:nth-child(5) { animation: wave5 0.8s ease-in-out 0.4s infinite; }
-    .shield-alert {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
+    .wbar:nth-child(1) { animation: wave1 0.85s ease-in-out infinite; }
+    .wbar:nth-child(2) { animation: wave2 0.85s ease-in-out 0.12s infinite; }
+    .wbar:nth-child(3) { animation: wave3 0.85s ease-in-out 0.24s infinite; }
+    .wbar:nth-child(4) { animation: wave4 0.85s ease-in-out 0.36s infinite; }
+    .wbar:nth-child(5) { animation: wave5 0.85s ease-in-out 0.48s infinite; }
+    .answering-label {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.28);
+      margin-left: auto;
+      white-space: nowrap;
+    }
+    .shield-box {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.28);
+      border-radius: 10px;
       padding: 12px 14px;
-      background: rgba(248,113,113,0.08);
-      border: 1px solid rgba(248,113,113,0.25);
-      border-radius: 4px;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       color: #FCA5A5;
       line-height: 1.5;
     }
-    .shield-alert-icon { font-size: 0.85rem; flex-shrink: 0; margin-top: 1px; }
+    .shield-box strong {
+      color: #F87171;
+    }
 
-    /* ─── STATS STRIP ────────────────────────────────────────────────── */
+    /* ─── STATS STRIP ────────────────────────────────────────────────────── */
     .stats-strip {
-      background: #F0F9FF;
-      border-top: 1px solid rgba(0,180,216,0.2);
-      border-bottom: 1px solid rgba(0,180,216,0.2);
-      padding: 20px 28px;
+      background: #E8F4FD;
+      border-top: 1px solid rgba(0, 150, 199, 0.18);
+      border-bottom: 1px solid rgba(0, 150, 199, 0.18);
+      padding: 0 32px;
     }
     .stats-strip-inner {
       max-width: 1160px;
       margin: 0 auto;
       display: flex;
+      align-items: stretch;
+      justify-content: space-around;
+    }
+    .stat-item {
+      display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 48px;
-      flex-wrap: wrap;
+      padding: 32px 24px;
+      text-align: center;
+      flex: 1;
+      border-right: 1px solid rgba(0, 150, 199, 0.15);
     }
-    .strip-stat {
+    .stat-item:last-child {
+      border-right: none;
+    }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 2.2rem;
+      color: #03045E;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+    }
+    .stat-label {
       font-size: 0.82rem;
+      color: rgba(3, 4, 94, 0.55);
       font-weight: 500;
-      color: var(--ocean-mid);
-      white-space: nowrap;
-    }
-    .strip-stat strong { color: var(--ocean-bright); font-weight: 700; }
-    .strip-sep {
-      color: rgba(0,119,182,0.3);
-      font-size: 1.2rem;
+      line-height: 1.4;
     }
 
-    /* ─── PROBLEM SECTION ────────────────────────────────────────────── */
+    /* ─── THE PROBLEM ────────────────────────────────────────────────────── */
     #problem {
       padding: 120px 0;
-      background: #F0F9FF;
-    }
-    .problem-header {
-      margin-bottom: 64px;
-    }
-    .problem-h2 {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: clamp(32px, 4vw, 52px);
-      line-height: 1.05;
-      letter-spacing: -0.03em;
-      color: var(--ocean-deep);
-      max-width: 600px;
-    }
-    .problem-sub {
-      margin-top: 16px;
-      font-size: 1rem;
-      color: rgba(3,4,94,0.6);
-      max-width: 520px;
-      line-height: 1.6;
-    }
-    .stat-cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    .stat-card {
-      background: #FFFFFF;
-      padding: 48px 40px;
-      transition: background 0.3s;
-    }
-    .stat-card:hover { background: #F0F9FF; }
-    .stat-card-num {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: clamp(52px, 6vw, 80px);
-      line-height: 1;
-      color: var(--ocean-bright);
-      letter-spacing: -0.04em;
-      margin-bottom: 16px;
-    }
-    .stat-card-desc {
-      font-size: 0.95rem;
-      color: rgba(3,4,94,0.6);
-      line-height: 1.55;
-      max-width: 240px;
-    }
-    .stat-card-desc strong { color: var(--ocean-deep); font-weight: 600; }
-
-    /* ─── HOW IT WORKS ───────────────────────────────────────────────── */
-    #how {
-      padding: 120px 0;
       background: #FFFFFF;
     }
-    .how-header {
-      margin-bottom: 80px;
-    }
-    .how-h2 {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: clamp(32px, 4vw, 52px);
-      line-height: 1.05;
-      letter-spacing: -0.03em;
-      color: var(--ocean-deep);
-    }
-    .steps-row {
+    .problem-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      overflow: hidden;
-      position: relative;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
     }
-    .step {
-      background: #F0F9FF;
-      padding: 48px 36px;
-      position: relative;
-      transition: background 0.3s;
-    }
-    .step:hover { background: #EBF8FF; }
-    .step-num {
+    .problem-left h2 {
       font-family: 'Syne', sans-serif;
-      font-size: 0.7rem;
       font-weight: 800;
-      letter-spacing: 0.15em;
-      color: rgba(0,180,216,0.5);
-      text-transform: uppercase;
+      font-size: clamp(30px, 3.5vw, 48px);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: #03045E;
       margin-bottom: 20px;
     }
-    .step-title {
+    .problem-left p {
+      font-size: 1rem;
+      color: rgba(3, 4, 94, 0.6);
+      line-height: 1.65;
+      max-width: 440px;
+    }
+    .prob-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .prob-card {
+      background: #F0F8FF;
+      border-left: 4px solid #0096C7;
+      border-radius: 0 8px 8px 0;
+      padding: 22px 24px;
+    }
+    .prob-card-num {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: 1.2rem;
-      letter-spacing: -0.01em;
-      color: var(--ocean-deep);
-      margin-bottom: 14px;
+      font-size: 2rem;
+      color: #0096C7;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 8px;
     }
-    .step-dash {
-      color: var(--ocean-bright);
+    .prob-card-text {
+      font-size: 0.875rem;
+      color: rgba(3, 4, 94, 0.65);
+      line-height: 1.55;
     }
-    .step-desc {
-      font-size: 0.9rem;
-      color: rgba(3,4,94,0.6);
-      line-height: 1.65;
-    }
-    .step-arrow {
-      position: absolute;
-      top: 50%; right: -16px;
-      transform: translateY(-50%);
-      width: 32px; height: 32px;
-      background: #FFFFFF;
-      border: 1px solid rgba(0,180,216,0.3);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--ocean-bright);
-      font-size: 0.8rem;
-      z-index: 2;
+    .prob-card-text strong {
+      color: #03045E;
+      font-weight: 600;
     }
 
-    /* ─── PRICING ────────────────────────────────────────────────────── */
-    #pricing {
+    /* ─── HOW IT WORKS ───────────────────────────────────────────────────── */
+    #how {
       padding: 120px 0;
-      background: #F0F9FF;
+      background: #F0F8FF;
     }
-    .pricing-header {
+    .how-header {
+      text-align: center;
       margin-bottom: 64px;
     }
-    .pricing-h2 {
+    .how-header h2 {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: clamp(32px, 4vw, 52px);
-      line-height: 1.05;
+      font-size: clamp(30px, 3.5vw, 48px);
+      line-height: 1.08;
       letter-spacing: -0.03em;
-      color: var(--ocean-deep);
-      max-width: 560px;
+      color: #03045E;
     }
-    .pricing-fine {
-      margin-top: 14px;
+    .how-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .how-card {
+      background: #FFFFFF;
+      border-top: 4px solid #0096C7;
+      border-radius: 0 0 12px 12px;
+      padding: 36px 30px 40px;
+    }
+    .how-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(0, 150, 199, 0.5);
+      margin-bottom: 16px;
+    }
+    .how-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: #03045E;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+    }
+    .how-desc {
+      font-size: 0.9rem;
+      color: rgba(3, 4, 94, 0.6);
+      line-height: 1.65;
+    }
+
+    /* ─── HEAR ARIA CTA ──────────────────────────────────────────────────── */
+    #hear {
+      background: #03045E;
+      padding: 100px 32px;
+      text-align: center;
+    }
+    .hear-inner {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .hear-label {
+      display: inline-block;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(0, 150, 199, 0.8);
+      border: 1px solid rgba(0, 150, 199, 0.3);
+      padding: 6px 14px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+    }
+    .hear-h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(28px, 3.5vw, 44px);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: #FFFFFF;
+      margin-bottom: 16px;
+    }
+    .hear-sub {
+      font-size: 1.05rem;
+      color: rgba(255, 255, 255, 0.55);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .hear-number {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(40px, 6vw, 72px);
+      letter-spacing: 0.02em;
+      color: #0096C7;
+      line-height: 1;
+      margin-bottom: 20px;
+      animation: blueGlow 3s ease-in-out infinite;
+    }
+    .hear-hint {
       font-size: 0.875rem;
-      color: rgba(3,4,94,0.45);
+      color: rgba(255, 255, 255, 0.35);
+      margin-bottom: 36px;
+      font-style: italic;
+    }
+    .hear-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 150, 199, 0.15);
+      border: 1.5px solid rgba(0, 150, 199, 0.4);
+      color: #FFFFFF;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 14px 28px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .hear-btn:hover {
+      background: rgba(0, 150, 199, 0.28);
+      border-color: rgba(0, 150, 199, 0.7);
+    }
+
+    /* ─── PRICING ────────────────────────────────────────────────────────── */
+    #pricing {
+      padding: 120px 0;
+      background: #FFFFFF;
+    }
+    .pricing-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .pricing-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(30px, 3.5vw, 48px);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: #03045E;
+      margin-bottom: 10px;
+    }
+    .pricing-header p {
+      font-size: 0.9rem;
+      color: rgba(3, 4, 94, 0.45);
     }
     .plans-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      overflow: hidden;
+      gap: 24px;
+      align-items: start;
     }
-    .plan {
+    .plan-card {
       background: #FFFFFF;
-      padding: 48px 36px;
+      border: 1.5px solid rgba(3, 4, 94, 0.1);
+      border-radius: 12px;
+      padding: 40px 32px;
       display: flex;
       flex-direction: column;
       position: relative;
-      transition: background 0.3s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .plan:hover { background: #F0F9FF; }
-    .plan.popular {
-      background: #EBF8FF;
-      border: 1px solid rgba(0,180,216,0.35);
-      margin: -1px;
-      z-index: 1;
+    .plan-card:hover {
+      border-color: rgba(0, 150, 199, 0.3);
+      box-shadow: 0 8px 40px rgba(0, 150, 199, 0.1);
+    }
+    .plan-card.featured {
+      border: 2px solid #0096C7;
+      box-shadow: 0 12px 48px rgba(0, 150, 199, 0.18);
     }
     .popular-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--ocean-bright);
-      color: #fff;
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0096C7;
+      color: #FFFFFF;
       font-family: 'Syne', sans-serif;
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       font-weight: 800;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      padding: 5px 12px;
-      border-radius: 4px;
-      margin-bottom: 24px;
-      align-self: flex-start;
+      padding: 5px 14px;
+      border-radius: 100px;
+      white-space: nowrap;
     }
     .plan-name {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: 0.75rem;
-      letter-spacing: 0.12em;
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: rgba(3,4,94,0.45);
-      margin-bottom: 12px;
+      color: rgba(3, 4, 94, 0.4);
+      margin-bottom: 16px;
     }
     .plan-price {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: 3.5rem;
-      letter-spacing: -0.05em;
+      font-size: 3.8rem;
       line-height: 1;
-      color: var(--ocean-deep);
+      letter-spacing: -0.05em;
+      color: #03045E;
       margin-bottom: 4px;
     }
     .plan-price sup {
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       vertical-align: top;
-      margin-top: 10px;
+      margin-top: 8px;
       display: inline-block;
       font-weight: 700;
     }
     .plan-per {
       font-size: 0.8rem;
-      color: rgba(3,4,94,0.4);
+      color: rgba(3, 4, 94, 0.4);
       margin-bottom: 28px;
     }
     .plan-divider {
       height: 1px;
-      background: var(--border);
-      margin-bottom: 28px;
+      background: rgba(3, 4, 94, 0.08);
+      margin-bottom: 24px;
     }
     .plan-features {
       list-style: none;
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-bottom: 36px;
+      margin-bottom: 32px;
       flex: 1;
     }
     .plan-features li {
@@ -782,184 +776,172 @@
       align-items: flex-start;
       gap: 10px;
       font-size: 0.875rem;
-      color: rgba(3,4,94,0.7);
+      color: rgba(3, 4, 94, 0.7);
       line-height: 1.45;
     }
-    .plan-check {
-      color: var(--ocean-bright);
+    .check {
+      color: #0096C7;
+      font-size: 0.85rem;
       flex-shrink: 0;
       margin-top: 1px;
-      font-size: 0.75rem;
+      font-weight: 700;
     }
-    .plan-cta {
+    .plan-btn {
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 14px;
-      border-radius: 4px;
+      border-radius: 8px;
       font-weight: 700;
       font-size: 0.875rem;
       cursor: pointer;
       border: none;
       transition: all 0.2s;
       letter-spacing: 0.01em;
+      width: 100%;
     }
-    .plan-cta-outline {
+    .plan-btn-outline {
       background: transparent;
-      color: var(--ocean-deep);
-      border: 1px solid rgba(0,180,216,0.3);
+      color: #03045E;
+      border: 1.5px solid rgba(3, 4, 94, 0.18);
     }
-    .plan-cta-outline:hover {
-      border-color: var(--ocean-bright);
-      background: rgba(0,180,216,0.08);
+    .plan-btn-outline:hover {
+      border-color: #0096C7;
+      color: #0096C7;
+      background: rgba(0, 150, 199, 0.04);
     }
-    .plan-cta-gold {
-      background: var(--ocean-mid);
-      color: #fff;
+    .plan-btn-fill {
+      background: #0096C7;
+      color: #FFFFFF;
     }
-    .plan-cta-gold:hover {
-      background: #0090d4;
+    .plan-btn-fill:hover {
+      background: #0077B6;
+      box-shadow: 0 6px 24px rgba(0, 150, 199, 0.38);
       transform: translateY(-1px);
-      box-shadow: 0 6px 24px rgba(0,180,216,0.35);
-    }
-    .plan-fine {
-      text-align: center;
-      font-size: 0.72rem;
-      color: rgba(3,4,94,0.3);
-      margin-top: 12px;
     }
 
-    /* ─── SOCIAL PROOF ───────────────────────────────────────────────── */
-    #proof {
+    /* ─── TESTIMONIALS ───────────────────────────────────────────────────── */
+    #testimonials {
       padding: 120px 0;
-      background: #FFFFFF;
+      background: #F0F8FF;
     }
-    .proof-header {
-      margin-bottom: 64px;
+    .test-header {
+      text-align: center;
+      margin-bottom: 60px;
     }
-    .proof-h2 {
+    .test-header h2 {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: clamp(32px, 4vw, 52px);
-      line-height: 1.05;
+      font-size: clamp(30px, 3.5vw, 48px);
+      line-height: 1.08;
       letter-spacing: -0.03em;
-      color: var(--ocean-deep);
+      color: #03045E;
     }
-    .quotes-grid {
+    .test-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      overflow: hidden;
+      gap: 24px;
     }
-    .quote-card {
-      background: #F0F9FF;
-      padding: 48px 36px;
+    .test-card {
+      background: #FFFFFF;
+      border-radius: 12px;
+      padding: 36px 30px;
       display: flex;
       flex-direction: column;
-      transition: background 0.3s;
+      box-shadow: 0 2px 12px rgba(3, 4, 94, 0.06);
     }
-    .quote-card:hover { background: #EBF8FF; }
-    .quote-stars {
-      color: var(--ocean-bright);
-      font-size: 0.85rem;
-      letter-spacing: 2px;
-      margin-bottom: 20px;
+    .test-stars {
+      font-size: 0.9rem;
+      color: #0096C7;
+      letter-spacing: 3px;
+      margin-bottom: 18px;
     }
-    .quote-text {
-      font-size: 0.95rem;
-      color: rgba(3,4,94,0.75);
+    .test-quote {
+      font-size: 0.9rem;
+      color: rgba(3, 4, 94, 0.72);
       line-height: 1.7;
-      margin-bottom: 28px;
       flex: 1;
+      margin-bottom: 24px;
     }
-    .quote-text::before {
-      content: '\201C';
-      font-size: 1.8rem;
-      line-height: 0.5;
-      vertical-align: -0.4em;
-      color: var(--ocean-bright);
-      opacity: 0.6;
-      margin-right: 4px;
-    }
-    .quote-author {
+    .test-author {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border);
+      padding-top: 20px;
+      border-top: 1px solid rgba(3, 4, 94, 0.08);
     }
-    .author-initials {
-      width: 40px; height: 40px;
-      border-radius: 4px;
-      background: var(--ocean-mid);
-      display: flex; align-items: center; justify-content: center;
+    .author-avatar {
+      width: 42px;
+      height: 42px;
+      background: #0096C7;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-family: 'Syne', sans-serif;
       font-weight: 800;
       font-size: 0.8rem;
-      color: var(--white);
+      color: #FFFFFF;
       flex-shrink: 0;
     }
     .author-name {
-      font-weight: 600;
+      font-weight: 700;
       font-size: 0.875rem;
-      color: var(--ocean-deep);
+      color: #03045E;
+      margin-bottom: 2px;
     }
     .author-biz {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-top: 2px;
+      font-size: 0.77rem;
+      color: rgba(3, 4, 94, 0.45);
     }
 
-    /* ─── FOOTER ─────────────────────────────────────────────────────── */
+    /* ─── FOOTER ─────────────────────────────────────────────────────────── */
     footer {
       background: #03045E;
-      border-top: 1px solid var(--border);
-      padding: 64px 28px 40px;
+      padding: 56px 32px 36px;
     }
     .footer-inner {
       max-width: 1160px;
       margin: 0 auto;
     }
-    .footer-top {
+    .footer-main {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-between;
-      margin-bottom: 56px;
-      gap: 48px;
       flex-wrap: wrap;
+      gap: 32px;
+      margin-bottom: 40px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
     .footer-logo {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: 1.35rem;
-      letter-spacing: 0.06em;
-      color: var(--white);
-      margin-bottom: 12px;
-    }
-    .footer-tagline {
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.3);
-      max-width: 240px;
-      line-height: 1.5;
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
+      color: #FFFFFF;
     }
     .footer-links {
       display: flex;
-      gap: 32px;
-      flex-wrap: wrap;
       align-items: center;
+      gap: 28px;
+      flex-wrap: wrap;
+      list-style: none;
     }
     .footer-links a {
-      font-size: 0.825rem;
-      color: rgba(255,255,255,0.35);
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.35);
       transition: color 0.2s;
     }
-    .footer-links a:hover { color: var(--white); }
+    .footer-links a:hover {
+      color: #FFFFFF;
+    }
+    .footer-tagline {
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.3);
+      font-style: italic;
+    }
     .footer-bottom {
-      padding-top: 32px;
-      border-top: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -968,241 +950,281 @@
     }
     .footer-copy {
       font-size: 0.78rem;
-      color: rgba(255,255,255,0.2);
+      color: rgba(255, 255, 255, 0.2);
     }
-    .footer-ai-badge {
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.2);
-      font-style: italic;
+    .footer-ai {
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.2);
     }
 
-    /* ─── MODAL ──────────────────────────────────────────────────────── */
+    /* ─── MODAL ──────────────────────────────────────────────────────────── */
     .modal-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.85);
+      background: rgba(3, 4, 94, 0.75);
       z-index: 1000;
       align-items: center;
       justify-content: center;
       backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
     }
-    .modal-overlay.open { display: flex; }
+    .modal-overlay.open {
+      display: flex;
+    }
     .modal-box {
       background: #FFFFFF;
-      border: 1px solid rgba(0,180,216,0.25);
-      border-radius: 4px;
-      padding: 52px 48px;
+      border-radius: 16px;
+      padding: 56px 48px 48px;
       max-width: 480px;
-      width: 90%;
+      width: 92%;
       text-align: center;
-      animation: fadeUp 0.3s ease both;
+      position: relative;
+      animation: slideUp 0.28s ease both;
+      box-shadow: 0 32px 80px rgba(3, 4, 94, 0.25);
     }
-    .modal-icon {
-      font-size: 2.5rem;
-      margin-bottom: 20px;
+    .modal-x {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 32px;
+      height: 32px;
+      background: rgba(3, 4, 94, 0.06);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.1rem;
+      color: rgba(3, 4, 94, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: background 0.2s, color 0.2s;
     }
-    .modal-title {
+    .modal-x:hover {
+      background: rgba(3, 4, 94, 0.12);
+      color: #03045E;
+    }
+    .modal-heading {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       letter-spacing: -0.02em;
-      color: var(--ocean-deep);
-      margin-bottom: 14px;
+      color: #03045E;
+      margin-bottom: 12px;
     }
-    .modal-body {
+    .modal-desc {
       font-size: 0.95rem;
-      color: rgba(3,4,94,0.6);
+      color: rgba(3, 4, 94, 0.55);
       line-height: 1.65;
-      margin-bottom: 8px;
+      margin-bottom: 28px;
     }
     .modal-phone {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: 1.6rem;
+      font-size: 2rem;
       letter-spacing: 0.04em;
-      color: var(--ocean-bright);
-      margin: 20px 0;
-      animation: goldGlow 3s ease-in-out infinite;
+      color: #0096C7;
+      margin-bottom: 16px;
     }
     .modal-note {
-      font-size: 0.78rem;
-      color: rgba(3,4,94,0.35);
-      margin-bottom: 28px;
+      font-size: 0.82rem;
+      color: rgba(3, 4, 94, 0.35);
+      margin-bottom: 32px;
     }
-    .modal-close {
+    .modal-close-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: rgba(3,4,94,0.05);
-      border: 1px solid var(--border);
-      color: rgba(3,4,94,0.55);
+      background: rgba(3, 4, 94, 0.05);
+      border: 1.5px solid rgba(3, 4, 94, 0.12);
+      color: rgba(3, 4, 94, 0.6);
       font-size: 0.875rem;
       font-weight: 600;
-      padding: 12px 28px;
-      border-radius: 4px;
+      padding: 12px 30px;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s;
     }
-    .modal-close:hover {
-      background: rgba(3,4,94,0.09);
-      color: var(--ocean-deep);
+    .modal-close-btn:hover {
+      background: rgba(3, 4, 94, 0.09);
+      color: #03045E;
+      border-color: rgba(3, 4, 94, 0.2);
     }
 
-    /* ─── SCROLL REVEAL (JS sets initial state) ──────────────────────── */
-    .reveal {
-      opacity: 1;
-      transform: none;
-    }
-
-    /* ─── RESPONSIVE ─────────────────────────────────────────────────── */
+    /* ─── RESPONSIVE ─────────────────────────────────────────────────────── */
     @media (max-width: 1024px) {
       .hero-inner {
         grid-template-columns: 1fr;
-        gap: 60px;
+        gap: 56px;
         padding-bottom: 80px;
       }
-      .hero-h1 { font-size: clamp(48px, 9vw, 72px); }
-      .stat-cards,
-      .steps-row,
-      .plans-grid,
-      .quotes-grid { grid-template-columns: 1fr; }
-      .step-arrow { display: none; }
+      .problem-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+      .how-cards {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .plans-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .test-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
     }
 
     @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .nav-pricing-link { display: none; }
-      .hamburger { display: flex; }
+      .nav-center { display: none; }
+      .hamburger-btn { display: flex; }
+      .nav-cta { display: none; }
 
-      .hero-inner { padding: 60px 28px 80px; }
-      .hero-h1 { font-size: clamp(42px, 11vw, 60px); }
-      .hero-stats { flex-direction: column; gap: 16px; }
-      .hero-stat { border-right: none; margin-right: 0; padding-right: 0; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
-      .hero-stat:last-child { border-bottom: none; padding-bottom: 0; }
+      .hero-inner {
+        padding: 56px 0 72px;
+      }
+      .hero-h1 {
+        font-size: clamp(44px, 12vw, 64px);
+      }
+      .hero-buttons {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .btn-primary, .btn-outline {
+        width: 100%;
+        justify-content: center;
+      }
 
-      .stats-strip-inner { flex-direction: column; gap: 12px; text-align: center; }
-      .strip-sep { display: none; }
+      .stats-strip-inner {
+        flex-wrap: wrap;
+      }
+      .stat-item {
+        flex: 1 1 45%;
+        border-right: none;
+        border-bottom: 1px solid rgba(0, 150, 199, 0.12);
+        padding: 24px 16px;
+      }
+      .stat-item:nth-child(odd) {
+        border-right: 1px solid rgba(0, 150, 199, 0.12);
+      }
+      .stat-item:nth-last-child(-n+2) {
+        border-bottom: none;
+      }
 
-      .stat-cards,
-      .steps-row,
-      .plans-grid,
-      .quotes-grid { grid-template-columns: 1fr; }
+      #problem { padding: 80px 0; }
+      #how { padding: 80px 0; }
+      #hear { padding: 72px 24px; }
+      #pricing { padding: 80px 0; }
+      #testimonials { padding: 80px 0; }
 
-      .footer-top { flex-direction: column; gap: 32px; }
-      .footer-links { gap: 20px; }
-      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .footer-main {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+      }
+      .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+      }
 
-      .modal-box { padding: 36px 24px; }
+      .modal-box {
+        padding: 48px 28px 36px;
+      }
+      .modal-phone {
+        font-size: 1.6rem;
+      }
     }
 
     @media (max-width: 480px) {
-      .hero-actions { flex-direction: column; align-items: flex-start; }
-      .btn-gold, .btn-ghost { width: 100%; justify-content: center; }
+      .hero-badge { font-size: 0.65rem; }
+      .hear-number { font-size: clamp(32px, 9vw, 52px); }
+      .stat-item { flex: 1 1 100%; border-right: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ─── NAV ──────────────────────────────────────────────────────── -->
+  <!-- NAV -->
   <nav id="navbar">
     <div class="nav-inner">
       <a href="#" class="nav-logo">CALLA</a>
-      <ul class="nav-links">
-        <li><a href="#problem">The Problem</a></li>
-        <li><a href="#how">How It Works</a></li>
+      <ul class="nav-center">
         <li><a href="#pricing">Pricing</a></li>
-        <li><a href="#proof">Reviews</a></li>
+        <li><a href="#how">How It Works</a></li>
       </ul>
-      <div class="nav-right">
-        <a href="#pricing" class="nav-pricing-link">Pricing</a>
-        <a href="#pricing" class="nav-cta-btn">Start Free Trial</a>
-      </div>
-      <button class="hamburger" onclick="document.getElementById('mobileNav').classList.toggle('open')" aria-label="Menu">
-        <span></span><span></span><span></span>
+      <a href="#pricing" class="nav-cta">Start Free Trial</a>
+      <button class="hamburger-btn" id="hamburger" aria-label="Open menu" onclick="document.getElementById('mobileNav').classList.toggle('open')">
+        <span></span>
+        <span></span>
+        <span></span>
       </button>
     </div>
   </nav>
 
-  <!-- ─── MOBILE NAV ────────────────────────────────────────────────── -->
+  <!-- MOBILE NAV -->
   <div id="mobileNav">
-    <a href="#pricing" class="mobile-nav-link" onclick="document.getElementById('mobileNav').classList.remove('open')">Pricing</a>
-    <a href="#how" class="mobile-nav-link" onclick="document.getElementById('mobileNav').classList.remove('open')">Features</a>
-    <a href="#proof" class="mobile-nav-link" onclick="document.getElementById('mobileNav').classList.remove('open')">Contact</a>
-    <a href="#pricing" class="mobile-nav-cta" onclick="document.getElementById('mobileNav').classList.remove('open')">Start Free Trial</a>
+    <a href="#pricing" class="mob-link" onclick="document.getElementById('mobileNav').classList.remove('open')">Pricing</a>
+    <a href="#how" class="mob-link" onclick="document.getElementById('mobileNav').classList.remove('open')">How It Works</a>
+    <a href="#pricing" class="mob-cta" onclick="document.getElementById('mobileNav').classList.remove('open')">Start Free Trial</a>
   </div>
 
-  <!-- ─── HERO ─────────────────────────────────────────────────────── -->
+  <!-- HERO -->
   <section id="hero">
-    <div class="hero-bg-glow"></div>
-    <div class="hero-bg-glow-2"></div>
-    <div class="hero-grid-line"></div>
-    <div class="hero-inner">
+    <div class="hero-inner container">
 
       <!-- Left -->
       <div class="hero-left">
         <div class="hero-badge">
           <span class="live-dot"></span>
-          ARIA IS LIVE
+          ARIA IS LIVE NOW
         </div>
         <h1 class="hero-h1">
           YOUR PHONE.<br>
           NEVER MISSES<br>
-          A CALL. <span class="ever">EVER.</span>
+          A CALL. <span class="blue">EVER.</span>
         </h1>
         <p class="hero-sub">
-          ARIA answers every call, books appointments, and sends you a real-time alert when a customer is upset — before they leave a bad review.
+          ARIA answers every call, books appointments, and sends you a real-time alert the second a customer is upset.
         </p>
-        <div class="hero-actions">
-          <a href="#pricing" class="btn-gold">Start Free Trial</a>
-          <button class="btn-ghost" onclick="openModal()">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M6 5.5l5 2.5-5 2.5V5.5z" fill="currentColor"/></svg>
-            Hear ARIA Now
+        <div class="hero-buttons">
+          <a href="#pricing" class="btn-primary">Start Free Trial</a>
+          <button class="btn-outline" onclick="openModal()">
+            📞 Call ARIA Now — +1 (844) 518-0906
           </button>
-        </div>
-        <div class="hero-stats">
-          <div class="hero-stat">
-            <strong>847</strong>calls answered this week
-          </div>
-          <div class="hero-stat">
-            <strong>$0</strong>missed revenue
-          </div>
-          <div class="hero-stat">
-            <strong>4.9★</strong>avg Google rating
-          </div>
         </div>
       </div>
 
-      <!-- Right — phone call card -->
-      <div class="hero-card">
-        <div class="card-top-bar">
-          <span class="card-dot card-dot-r"></span>
-          <span class="card-dot card-dot-y"></span>
-          <span class="card-dot card-dot-g"></span>
-          <span class="card-title-bar">ARIA — Live Call</span>
+      <!-- Right — phone card -->
+      <div class="phone-card">
+        <div class="phone-card-bar">
+          <span class="dot-r"></span>
+          <span class="dot-y"></span>
+          <span class="dot-g"></span>
+          <span class="bar-title">ARIA — Live Call</span>
         </div>
-        <div class="card-body">
-          <div class="call-incoming">
-            <div class="call-icon-circle">📞</div>
+        <div class="phone-card-body">
+          <div class="caller-row">
+            <div class="caller-icon">📞</div>
             <div>
-              <div class="call-info-name">Maria G. — Hair Appointment</div>
-              <div class="call-info-sub">Incoming · 0:38</div>
+              <div class="caller-name">Maria G. — Hair Appointment</div>
+              <div class="caller-sub">· 0:38</div>
             </div>
           </div>
-          <div class="aria-status">
-            <span class="aria-label">ARIA</span>
+          <div class="aria-row">
+            <span class="aria-tag">ARIA</span>
             <div class="waveform">
-              <div class="wave-bar"></div>
-              <div class="wave-bar"></div>
-              <div class="wave-bar"></div>
-              <div class="wave-bar"></div>
-              <div class="wave-bar"></div>
+              <div class="wbar"></div>
+              <div class="wbar"></div>
+              <div class="wbar"></div>
+              <div class="wbar"></div>
+              <div class="wbar"></div>
             </div>
-            <span style="font-size:0.72rem; color:rgba(255,255,255,0.3); margin-left:auto; white-space:nowrap;">Answering...</span>
+            <span class="answering-label">Answering...</span>
           </div>
-          <div class="shield-alert">
-            <span class="shield-alert-icon">📲</span>
-            <span><strong style="color:#FCA5A5;">SHIELD Alert:</strong> Unhappy caller detected — owner notified before call ends</span>
+          <div class="shield-box">
+            📲 <strong>SHIELD:</strong> Unhappy caller detected — owner notified
           </div>
         </div>
       </div>
@@ -1210,159 +1232,173 @@
     </div>
   </section>
 
-  <!-- ─── STATS STRIP ───────────────────────────────────────────────── -->
+  <!-- STATS STRIP -->
   <div class="stats-strip">
     <div class="stats-strip-inner">
-      <span class="strip-stat"><strong>847</strong> calls answered this week</span>
-      <span class="strip-sep">·</span>
-      <span class="strip-stat"><strong>$0</strong> missed revenue</span>
-      <span class="strip-sep">·</span>
-      <span class="strip-stat"><strong>4.9★</strong> avg Google rating</span>
-      <span class="strip-sep">·</span>
-      <span class="strip-stat"><strong>1,200+</strong> businesses protected</span>
+      <div class="stat-item">
+        <div class="stat-num">847</div>
+        <div class="stat-label">calls answered this week</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">$0</div>
+        <div class="stat-label">missed revenue</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4.9★</div>
+        <div class="stat-label">average Google rating</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">1,200+</div>
+        <div class="stat-label">businesses protected</div>
+      </div>
     </div>
   </div>
 
-  <!-- ─── THE PROBLEM ───────────────────────────────────────────────── -->
+  <!-- THE PROBLEM -->
   <section id="problem">
     <div class="container">
-      <div class="problem-header reveal">
-        <div class="section-label">THE PROBLEM</div>
-        <h2 class="problem-h2">Every missed call is a<br>customer walking out the door.</h2>
-        <p class="problem-sub">The numbers don't lie. Unanswered phones are the silent killer of small business revenue.</p>
-      </div>
-      <div class="stat-cards reveal">
-        <div class="stat-card">
-          <div class="stat-card-num">62%</div>
-          <p class="stat-card-desc">of callers who reach voicemail <strong>never call back</strong>. They call your competitor instead.</p>
+      <div class="problem-grid">
+        <div class="problem-left">
+          <div class="section-chip">THE PROBLEM</div>
+          <h2>Every missed call is a customer walking out the door.</h2>
+          <p>The numbers are brutal. Unanswered phones are the silent killer of small business revenue.</p>
         </div>
-        <div class="stat-card">
-          <div class="stat-card-num">1 in 3</div>
-          <p class="stat-card-desc">small businesses <strong>lose clients to missed calls every week</strong> — without ever knowing it happened.</p>
-        </div>
-        <div class="stat-card">
-          <div class="stat-card-num">$12K</div>
-          <p class="stat-card-desc">average annual revenue <strong>lost to unanswered phones</strong> for a typical local business.</p>
+        <div class="prob-cards">
+          <div class="prob-card">
+            <div class="prob-card-num">62%</div>
+            <p class="prob-card-text">of callers who reach voicemail <strong>never call back.</strong></p>
+          </div>
+          <div class="prob-card">
+            <div class="prob-card-num">1 in 3</div>
+            <p class="prob-card-text">small businesses <strong>lose clients to missed calls</strong> every week.</p>
+          </div>
+          <div class="prob-card">
+            <div class="prob-card-num">$12K</div>
+            <p class="prob-card-text"><strong>average annual revenue lost</strong> to unanswered phones.</p>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ─── HOW IT WORKS ──────────────────────────────────────────────── -->
+  <!-- HOW IT WORKS -->
   <section id="how">
     <div class="container">
-      <div class="how-header reveal">
-        <div class="section-label">HOW IT WORKS</div>
-        <h2 class="how-h2">Three steps.<br>Zero missed calls.</h2>
+      <div class="how-header">
+        <div class="section-chip">HOW IT WORKS</div>
+        <h2>Three steps. Zero missed calls.</h2>
       </div>
-      <div class="steps-row reveal">
-
-        <div class="step">
-          <div class="step-num">01</div>
-          <div class="step-title"><span class="step-dash">—</span> ARIA ANSWERS</div>
-          <p class="step-desc">Every call, every time, 24/7. ARIA books appointments, answers FAQs, and captures leads in real time — sounding natural, never robotic.</p>
-          <div class="step-arrow">→</div>
+      <div class="how-cards">
+        <div class="how-card">
+          <div class="how-num">01</div>
+          <div class="how-title">ARIA ANSWERS</div>
+          <p class="how-desc">Every call, every time, 24/7. ARIA books appointments, answers questions, and captures leads in real time — sounding natural, never robotic.</p>
         </div>
-
-        <div class="step">
-          <div class="step-num">02</div>
-          <div class="step-title"><span class="step-dash">—</span> SHIELD WATCHES</div>
-          <p class="step-desc">After every call, ARIA detects if the caller was happy or frustrated. You only hear about problems — before they turn into public bad reviews.</p>
-          <div class="step-arrow">→</div>
+        <div class="how-card">
+          <div class="how-num">02</div>
+          <div class="how-title">SHIELD WATCHES</div>
+          <p class="how-desc">After every call, ARIA detects whether the caller was happy or upset. You get alerted instantly — before a bad review ever goes live.</p>
         </div>
-
-        <div class="step">
-          <div class="step-num">03</div>
-          <div class="step-title"><span class="step-dash">—</span> YOU GET PAID</div>
-          <p class="step-desc">Happy callers get a Google review request automatically. You get 5-star reviews and booked appointments while you sleep.</p>
+        <div class="how-card">
+          <div class="how-num">03</div>
+          <div class="how-title">YOU GET PAID</div>
+          <p class="how-desc">Happy callers get a Google review request automatically. You collect five-star reviews and booked appointments while you sleep.</p>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- ─── PRICING ───────────────────────────────────────────────────── -->
+  <!-- HEAR ARIA -->
+  <section id="hear">
+    <div class="hear-inner">
+      <div class="hear-label">HEAR ARIA LIVE</div>
+      <h2 class="hear-h2">Want to hear ARIA right now?</h2>
+      <p class="hear-sub">Call this number from your phone. ARIA will answer.</p>
+      <div class="hear-number">+1 (844) 518-0906</div>
+      <p class="hear-hint">Try asking: "What are your hours?" or "I want to book an appointment"</p>
+      <button class="hear-btn" onclick="openModal()">Or click to see how it works &rarr;</button>
+    </div>
+  </section>
+
+  <!-- PRICING -->
   <section id="pricing">
     <div class="container">
-      <div class="pricing-header reveal">
-        <div class="section-label">PRICING</div>
-        <h2 class="pricing-h2">Transparent pricing.<br>No surprises. No contracts.</h2>
-        <p class="pricing-fine">No credit card required to start. Cancel anytime.</p>
+      <div class="pricing-header">
+        <div class="section-chip">PRICING</div>
+        <h2>Simple, transparent pricing.</h2>
+        <p>No credit card required. Cancel anytime. No contracts.</p>
       </div>
-      <div class="plans-grid reveal">
+      <div class="plans-grid">
 
         <!-- CALLA Lite -->
-        <div class="plan">
+        <div class="plan-card">
           <div class="plan-name">CALLA Lite</div>
           <div class="plan-price"><sup>$</sup>79</div>
           <div class="plan-per">per month</div>
           <div class="plan-divider"></div>
           <ul class="plan-features">
-            <li><span class="plan-check">✦</span>100 minutes / month</li>
-            <li><span class="plan-check">✦</span>24/7 AI answering</li>
-            <li><span class="plan-check">✦</span>Call summaries via SMS/email</li>
-            <li><span class="plan-check">✦</span>SHIELD sentiment detection</li>
-            <li><span class="plan-check">✦</span>Owner alerts for unhappy callers</li>
+            <li><span class="check">✓</span> 100 minutes / month</li>
+            <li><span class="check">✓</span> 24/7 AI answering</li>
+            <li><span class="check">✓</span> Call summaries via SMS &amp; email</li>
+            <li><span class="check">✓</span> SHIELD sentiment detection</li>
+            <li><span class="check">✓</span> Owner alerts for unhappy callers</li>
           </ul>
-          <button class="plan-cta plan-cta-outline" onclick="location.href='#'">Start 7-Day Free Trial</button>
-          <p class="plan-fine">No credit card required</p>
+          <button class="plan-btn plan-btn-outline">Start Free Trial</button>
         </div>
 
         <!-- CALLA Pro -->
-        <div class="plan popular">
+        <div class="plan-card featured">
           <div class="popular-badge">MOST POPULAR</div>
           <div class="plan-name">CALLA Pro</div>
           <div class="plan-price"><sup>$</sup>149</div>
           <div class="plan-per">per month</div>
           <div class="plan-divider"></div>
           <ul class="plan-features">
-            <li><span class="plan-check">✦</span>300 minutes / month</li>
-            <li><span class="plan-check">✦</span>Everything in Lite</li>
-            <li><span class="plan-check">✦</span>Appointment booking</li>
-            <li><span class="plan-check">✦</span>Lead capture &amp; qualification</li>
-            <li><span class="plan-check">✦</span>CRM sync</li>
-            <li><span class="plan-check">✦</span>Automatic Google review prompts</li>
+            <li><span class="check">✓</span> 300 minutes / month</li>
+            <li><span class="check">✓</span> Everything in Lite</li>
+            <li><span class="check">✓</span> Appointment booking</li>
+            <li><span class="check">✓</span> Lead capture &amp; qualification</li>
+            <li><span class="check">✓</span> CRM sync</li>
+            <li><span class="check">✓</span> Automatic Google review prompts</li>
           </ul>
-          <button class="plan-cta plan-cta-gold" onclick="location.href='#'">Start 7-Day Free Trial</button>
-          <p class="plan-fine">No credit card required</p>
+          <button class="plan-btn plan-btn-fill">Start Free Trial</button>
         </div>
 
         <!-- CALLA Business -->
-        <div class="plan">
+        <div class="plan-card">
           <div class="plan-name">CALLA Business</div>
           <div class="plan-price"><sup>$</sup>249</div>
           <div class="plan-per">per month</div>
           <div class="plan-divider"></div>
           <ul class="plan-features">
-            <li><span class="plan-check">✦</span>700 minutes / month</li>
-            <li><span class="plan-check">✦</span>Everything in Pro</li>
-            <li><span class="plan-check">✦</span>Full suite &amp; custom scripts</li>
-            <li><span class="plan-check">✦</span>Multi-location support</li>
-            <li><span class="plan-check">✦</span>Priority support</li>
-            <li><span class="plan-check">✦</span>Dedicated account manager</li>
+            <li><span class="check">✓</span> 700 minutes / month</li>
+            <li><span class="check">✓</span> Everything in Pro</li>
+            <li><span class="check">✓</span> Full suite &amp; custom scripts</li>
+            <li><span class="check">✓</span> Multi-location support</li>
+            <li><span class="check">✓</span> Priority support</li>
+            <li><span class="check">✓</span> Dedicated account manager</li>
           </ul>
-          <button class="plan-cta plan-cta-outline" onclick="location.href='#'">Start 7-Day Free Trial</button>
-          <p class="plan-fine">No credit card required</p>
+          <button class="plan-btn plan-btn-outline">Start Free Trial</button>
         </div>
 
       </div>
     </div>
   </section>
 
-  <!-- ─── SOCIAL PROOF ──────────────────────────────────────────────── -->
-  <section id="proof">
+  <!-- TESTIMONIALS -->
+  <section id="testimonials">
     <div class="container">
-      <div class="proof-header reveal">
-        <div class="section-label">WHAT OWNERS SAY</div>
-        <h2 class="proof-h2">Real businesses.<br>Real results.</h2>
+      <div class="test-header">
+        <div class="section-chip">TESTIMONIALS</div>
+        <h2>Real businesses. Real results.</h2>
       </div>
-      <div class="quotes-grid reveal">
+      <div class="test-grid">
 
-        <div class="quote-card">
-          <div class="quote-stars">★★★★★</div>
-          <p class="quote-text">I used to lose 6 calls a day while I was with clients. ARIA answers every single one now. My revenue went up $2,400 in the first month. The SHIELD alert literally saved me from a one-star review — I called the customer back and she became a regular.</p>
-          <div class="quote-author">
-            <div class="author-initials">SR</div>
+        <div class="test-card">
+          <div class="test-stars">★★★★★</div>
+          <p class="test-quote">I used to lose calls every day while with clients. ARIA answers every single one now. My revenue went up $2,400 in the first month. The SHIELD alert literally saved me from a one-star review — I called the customer back and she became a regular.</p>
+          <div class="test-author">
+            <div class="author-avatar">SR</div>
             <div>
               <div class="author-name">Sofia Ramirez</div>
               <div class="author-biz">Bloom Hair Studio · Austin, TX</div>
@@ -1370,23 +1406,23 @@
           </div>
         </div>
 
-        <div class="quote-card">
-          <div class="quote-stars">★★★★★</div>
-          <p class="quote-text">We run a dental practice. Before CALLA, after-hours calls just disappeared. Now ARIA books appointments at 2am and I wake up to a full schedule. The Google review prompts alone have added 40+ five-star reviews in three months.</p>
-          <div class="quote-author">
-            <div class="author-initials">DK</div>
+        <div class="test-card">
+          <div class="test-stars">★★★★★</div>
+          <p class="test-quote">We run a dental practice. Before CALLA, after-hours calls disappeared. Now ARIA books appointments at 2am and I wake up to a full schedule. The Google review prompts alone added 40+ five-star reviews in three months.</p>
+          <div class="test-author">
+            <div class="author-avatar">DK</div>
             <div>
               <div class="author-name">Dr. David Kim</div>
-              <div class="author-biz">Lakeside Dental Group · Chicago, IL</div>
+              <div class="author-biz">Lakeside Dental · Chicago, IL</div>
             </div>
           </div>
         </div>
 
-        <div class="quote-card">
-          <div class="quote-stars">★★★★★</div>
-          <p class="quote-text">Plumbing is emergency business — people hang up if they hit voicemail. Since switching to CALLA we have not missed a single emergency call. The SHIELD feature flagged a frustrated caller last Tuesday. We followed up, won the job, and got a 5-star review.</p>
-          <div class="quote-author">
-            <div class="author-initials">TM</div>
+        <div class="test-card">
+          <div class="test-stars">★★★★★</div>
+          <p class="test-quote">Plumbing is emergency business — people hang up if they hit voicemail. Since switching to CALLA we haven't missed a single emergency call. Zero missed emergency calls. Zero lost jobs.</p>
+          <div class="test-author">
+            <div class="author-avatar">TM</div>
             <div>
               <div class="author-name">Tom Marchetti</div>
               <div class="author-biz">Marchetti Plumbing · Phoenix, AZ</div>
@@ -1398,56 +1434,62 @@
     </div>
   </section>
 
-  <!-- ─── FOOTER ────────────────────────────────────────────────────── -->
+  <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
-      <div class="footer-top">
-        <div>
-          <div class="footer-logo">CALLA</div>
-          <p class="footer-tagline">Your phone. Never misses a call. Ever. AI-powered for local businesses.</p>
-        </div>
-        <div class="footer-links">
-          <a href="#">Privacy</a>
-          <a href="#">Terms</a>
-          <a href="#">Contact</a>
-          <a href="#pricing">Pricing</a>
-          <a href="#">Blog</a>
-        </div>
+      <div class="footer-main">
+        <div class="footer-logo">CALLA</div>
+        <ul class="footer-links">
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">How It Works</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+        <div class="footer-tagline">Powered by AI. Built for humans.</div>
       </div>
       <div class="footer-bottom">
-        <p class="footer-copy">© 2025 CALLA. All rights reserved.</p>
-        <p class="footer-ai-badge">Powered by AI. Built for humans.</p>
+        <span class="footer-copy">© 2026 CALLA. All rights reserved.</span>
+        <span class="footer-ai">Powered by AI. Built for humans.</span>
       </div>
     </div>
   </footer>
 
-  <!-- ─── MODAL ─────────────────────────────────────────────────────── -->
-  <div class="modal-overlay" id="ariaModal" onclick="closeModalOnOverlay(event)">
+  <!-- MODAL -->
+  <div class="modal-overlay" id="ariaModal" onclick="closeOnOverlay(event)">
     <div class="modal-box">
-      <div class="modal-icon">📞</div>
-      <div class="modal-title">Hear ARIA Live</div>
-      <p class="modal-body">Call this number right now and ARIA will answer — just like she does for 1,200+ businesses every day.</p>
+      <button class="modal-x" onclick="closeModal()" aria-label="Close">&times;</button>
+      <div class="modal-heading">Call ARIA Now</div>
+      <p class="modal-desc">ARIA will answer. Ask her anything — hours, pricing, how to book.</p>
       <div class="modal-phone">+1 (844) 518-0906</div>
-      <p class="modal-note">Free to call. No sales pitch. Just ARIA doing her thing.</p>
-      <button class="modal-close" onclick="closeModal()">Close</button>
+      <p class="modal-note">ARIA answers every call. No sales pitch. No hold music.</p>
+      <button class="modal-close-btn" onclick="closeModal()">Close</button>
     </div>
   </div>
 
-  <!-- ─── SCRIPTS ───────────────────────────────────────────────────── -->
+  <!-- SCRIPTS -->
   <script>
-    // Sticky nav
-    const nav = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      nav.classList.toggle('scrolled', window.scrollY > 40);
+    // Sticky nav scroll class
+    var nav = document.getElementById('navbar');
+    window.addEventListener('scroll', function() {
+      nav.classList.toggle('scrolled', window.scrollY > 48);
     }, { passive: true });
 
     // Modal
-    function openModal()  { document.getElementById('ariaModal').classList.add('open'); }
-    function closeModal() { document.getElementById('ariaModal').classList.remove('open'); }
-    function closeModalOnOverlay(e) { if (e.target === e.currentTarget) closeModal(); }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-    // No scroll reveal — all sections always visible
+    function openModal() {
+      document.getElementById('ariaModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      document.getElementById('ariaModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function closeOnOverlay(e) {
+      if (e.target === e.currentTarget) closeModal();
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
   </script>
 
 </body>
