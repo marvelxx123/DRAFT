@@ -36,7 +36,7 @@ function ChatView({ userId, other, onBack }) {
     const ch = supabase.channel(`chat_${[userId,other.id].sort().join('_')}`)
       .on('postgres_changes', { event:'INSERT', schema:'public', table:'messages' }, ({ new:msg }) => {
         if ((msg.sender_id===userId&&msg.receiver_id===other.id)||(msg.sender_id===other.id&&msg.receiver_id===userId)) {
-          setMessages(p=>[...p,msg])
+          setMessages(p => p.some(m => m.id === msg.id) ? p : [...p, msg])
           setTimeout(() => endRef.current?.scrollIntoView({ behavior:'smooth' }), 80)
         }
       }).subscribe()
@@ -45,10 +45,18 @@ function ChatView({ userId, other, onBack }) {
 
   const send = async () => {
     if (!text.trim() || sending) return
+    const msgText = text.trim()
     setSend(true)
-    await sendMessage(userId, other.id, text.trim())
-    await createNotification(other.id, userId, 'message', `${myProfile?.full_name||'Someone'} sent you a message`, `/messages`)
-    setText(''); setSend(false)
+    setText('')
+    // Optimistic update — show immediately without waiting for realtime
+    const tempId = `tmp_${Date.now()}`
+    const optimistic = { id:tempId, sender_id:userId, receiver_id:other.id, text:msgText, created_at:new Date().toISOString(), read:false }
+    setMessages(p => [...p, optimistic])
+    setTimeout(() => endRef.current?.scrollIntoView({ behavior:'smooth' }), 50)
+    const { data } = await sendMessage(userId, other.id, msgText)
+    if (data) setMessages(p => p.map(m => m.id === tempId ? data : m))
+    createNotification(other.id, userId, 'message', `${myProfile?.full_name||'Someone'} sent you a message`, '/messages')
+    setSend(false)
   }
 
   return (

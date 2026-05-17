@@ -34,7 +34,7 @@ function ScoutReportPanel({ report }) {
         </div>
         <div>
           <div style={{ fontSize:11, fontWeight:800, color:T.gold, letterSpacing:1.5 }}>AI DRAFT SCORE</div>
-          <div style={{ fontSize:11, color:T.sub, marginTop:3 }}>Powered by Gemini AI</div>
+          <div style={{ fontSize:11, color:T.sub, marginTop:3 }}>Powered by Claude AI</div>
         </div>
       </div>
 
@@ -94,7 +94,7 @@ export default function Profile({ session }) {
   const [saving, setSaving]  = useState(false)
   const [uplAv, setUplAv]    = useState(false)
   const [editForm, setEF]    = useState({})
-  const [expandedReport, setExpandedReport] = useState(null)
+  const [selectedVideo, setSV] = useState(null)
   const avatarRef            = useRef()
 
   const targetId = userId || session?.user?.id
@@ -302,48 +302,43 @@ export default function Profile({ session }) {
         </div>
       </div>
 
-      {/* Videos tab */}
+      {/* Videos tab — Instagram 3-col reels grid */}
       {tab==='videos' && (
         <div style={{ maxWidth:560, margin:'0 auto' }}>
-          {videos.length===0 && (
+          {videos.length===0 ? (
             <div style={{ padding:'48px 20px', textAlign:'center', color:T.sub }}>
               <div style={{ fontSize:44, marginBottom:12 }}>🎬</div>
               <p style={{ fontSize:15, marginBottom:16 }}>No videos yet</p>
               {isOwn && <Link to="/upload" style={{ background:T.white, color:'#000', borderRadius:10, padding:'11px 24px', fontWeight:800, fontSize:14, textDecoration:'none', display:'inline-block', fontFamily:"'Space Grotesk',sans-serif" }}>Upload First Video</Link>}
             </div>
-          )}
-          {videos.map(v => (
-            <div key={v.id}>
-              <div style={{ padding:'14px 18px', borderBottom: expandedReport === v.id && v.scout_report ? 'none' : `1px solid ${T.border}`, display:'flex', gap:13, alignItems:'center' }}>
-                <div style={{ width:60, height:60, borderRadius:10, background:T.card2, border:`1px solid ${T.border}`, flexShrink:0, overflow:'hidden', position:'relative' }}>
-                  <video src={v.video_url} style={{ width:'100%', height:'100%', objectFit:'cover' }} muted playsInline/>
-                  <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center', background:'rgba(0,0,0,.35)' }}>
-                    <svg width="14" height="16" viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          ) : (
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:2 }}>
+              {videos.map(v => (
+                <div key={v.id} onClick={()=>setSV(v)}
+                  style={{ position:'relative', aspectRatio:'9/16', overflow:'hidden', background:T.card2, cursor:'pointer' }}>
+                  {v.thumbnail_url
+                    ? <img src={v.thumbnail_url} style={{ width:'100%', height:'100%', objectFit:'cover' }} alt=""/>
+                    : <video src={v.video_url} style={{ width:'100%', height:'100%', objectFit:'cover' }} muted playsInline preload="metadata"/>
+                  }
+                  <div style={{ position:'absolute', inset:0, background:'linear-gradient(to bottom, transparent 45%, rgba(0,0,0,.7))' }}/>
+                  {v.scout_score != null && (
+                    <div style={{ position:'absolute', top:6, left:6, background:'rgba(0,0,0,.78)', borderRadius:5, padding:'2px 7px' }}>
+                      <span style={{ fontSize:11, fontWeight:800, color:T.gold }}>★ {v.scout_score}</span>
+                    </div>
+                  )}
+                  {v.scout_score == null && (
+                    <div style={{ position:'absolute', top:6, left:6 }}>
+                      <span style={{ fontSize:11 }}>🤖</span>
+                    </div>
+                  )}
+                  <div style={{ position:'absolute', bottom:6, right:7, display:'flex', alignItems:'center', gap:3 }}>
+                    <svg width="9" height="10" viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    <span style={{ fontSize:10, color:'#fff', fontWeight:700 }}>{fmt(v.views_count)}</span>
                   </div>
                 </div>
-                <div style={{ flex:1, minWidth:0 }}>
-                  <div style={{ fontSize:14, fontWeight:700, marginBottom:3, color:T.text, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{v.title}</div>
-                  <div style={{ fontSize:11, color:T.sub }}>{fmt(v.views_count)} views · {v.category} · {timeAgo(v.created_at)}</div>
-                  {v.scout_score != null ? (
-                    <button onClick={() => setExpandedReport(expandedReport === v.id ? null : v.id)}
-                      style={{ marginTop:5, background:'none', border:'none', padding:0, display:'flex', alignItems:'center', gap:5, cursor:'pointer' }}>
-                      <span style={{ fontSize:11, fontWeight:800, color:T.gold }}>AI Scout: {v.scout_score}</span>
-                      <span style={{ fontSize:10, color:T.sub }}>{expandedReport === v.id ? '▲' : '▼'} Report</span>
-                    </button>
-                  ) : (
-                    <span style={{ fontSize:11, color:T.sub, marginTop:4, display:'block' }}>🤖 Analyzing…</span>
-                  )}
-                </div>
-                <div style={{ display:'flex', alignItems:'center', gap:4, flexShrink:0 }}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill={T.crimson}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                  <span style={{ fontSize:12, color:T.sub, fontWeight:600 }}>{fmt(v.likes_count)}</span>
-                </div>
-              </div>
-              {expandedReport === v.id && v.scout_report && (
-                <ScoutReportPanel report={v.scout_report}/>
-              )}
+              ))}
             </div>
-          ))}
+          )}
         </div>
       )}
 
@@ -360,6 +355,47 @@ export default function Profile({ session }) {
       )}
 
       <div style={{ height:48 }}/>
+
+      {/* Video detail overlay — tap a grid cell to open */}
+      {selectedVideo && (
+        <div style={{ position:'fixed', inset:0, background:'#000', zIndex:200, display:'flex', flexDirection:'column', overflowY:'auto', WebkitOverflowScrolling:'touch' }} onClick={e=>{if(e.target===e.currentTarget)setSV(null)}}>
+          <div style={{ position:'relative', width:'100%', flexShrink:0, background:'#000' }}>
+            <video src={selectedVideo.video_url} controls autoPlay playsInline style={{ width:'100%', maxHeight:'58vh', objectFit:'contain', display:'block' }}/>
+            <button onClick={()=>setSV(null)}
+              style={{ position:'absolute', top:12, left:12, background:'rgba(0,0,0,.65)', border:'none', borderRadius:'50%', width:36, height:36, display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', zIndex:1 }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+
+          <div style={{ padding:'16px 18px', flex:1 }}>
+            <div style={{ display:'flex', gap:12, alignItems:'center', marginBottom:14 }}>
+              <Av profile={profile} size={36}/>
+              <div style={{ flex:1 }}>
+                <div style={{ fontWeight:700, fontSize:14, color:T.text }}>{profile?.full_name||profile?.username}</div>
+                <div style={{ fontSize:11, color:T.sub }}>{selectedVideo.category} · {timeAgo(selectedVideo.created_at)}</div>
+              </div>
+              <div style={{ display:'flex', gap:14 }}>
+                <div style={{ textAlign:'center' }}>
+                  <div style={{ fontSize:13, fontWeight:800, color:T.text }}>{fmt(selectedVideo.views_count)}</div>
+                  <div style={{ fontSize:10, color:T.sub }}>Views</div>
+                </div>
+                <div style={{ textAlign:'center' }}>
+                  <div style={{ fontSize:13, fontWeight:800, color:T.crimson }}>{fmt(selectedVideo.likes_count)}</div>
+                  <div style={{ fontSize:10, color:T.sub }}>Likes</div>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ fontSize:16, fontWeight:700, color:T.text, marginBottom:12 }}>{selectedVideo.title}</div>
+
+            {selectedVideo.scout_report
+              ? <ScoutReportPanel report={selectedVideo.scout_report}/>
+              : <div style={{ padding:'16px', background:T.card, borderRadius:12, textAlign:'center', color:T.sub, fontSize:13 }}>🤖 AI analysis in progress…</div>
+            }
+          </div>
+          <div style={{ height:32 }}/>
+        </div>
+      )}
     </div>
   )
 }
