@@ -239,7 +239,7 @@ export const seoAgentTriggered = inngest.createFunction(
 // ---------------------------------------------------------------------------
 
 async function runSEOOptimization(
-  step: Parameters<Parameters<typeof inngest.createFunction>[2]>[0]["step"],
+  step: GetStepTools<typeof inngest>,
   targetPage: string,
   keyMessage: string
 ) {
