@@ -109,8 +109,8 @@ export const contentAgentScheduled = inngest.createFunction(
   {
     id: "content-agent-scheduled",
     name: "AI Content Agent — Scheduled Posts",
+    triggers: [{ cron: "0 10 * * 2,4" }],
   },
-  { cron: "0 10 * * 2,4" },
   async ({ step }) => {
     const supabase = createAdminClient();
 
@@ -135,7 +135,7 @@ export const contentAgentScheduled = inngest.createFunction(
     const planJson = latestPlan.plan_json as {
       content_assignments?: ContentAssignment[];
       key_message_this_week?: string;
-    };
+    } | null;
 
     const assignments: ContentAssignment[] = planJson?.content_assignments ?? [];
     const keyMessage: string = planJson?.key_message_this_week ?? "CALLA helps small businesses never miss a call.";
@@ -148,8 +148,8 @@ export const contentAgentTriggered = inngest.createFunction(
   {
     id: "content-agent-triggered",
     name: "AI Content Agent — Triggered by Marketing Manager",
+    triggers: [{ event: "calla/content-agent.triggered" }],
   },
-  { event: "calla/content-agent.triggered" },
   async ({ event, step }) => {
     const { assignments, key_message } = event.data as {
       weekly_plan_id: string;

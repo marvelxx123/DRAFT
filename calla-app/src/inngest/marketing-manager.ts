@@ -80,7 +80,12 @@ async function fetchMarketingContext() {
 
   return {
     clientCount: clientCount ?? 0,
-    recentPosts: recentPosts ?? [],
+    recentPosts: (recentPosts ?? []) as Array<{
+      topic: string | null;
+      status: string;
+      created_at: string;
+      published_at: string | null;
+    }>,
   };
 }
 
@@ -92,8 +97,8 @@ export const marketingManagerFunction = inngest.createFunction(
   {
     id: "marketing-manager-weekly",
     name: "AI Marketing Manager — Weekly Planning",
+    triggers: [{ cron: "0 9 * * 1" }],
   },
-  { cron: "0 9 * * 1" },
   async ({ step }) => {
     const supabase = createAdminClient();
     const anthropic = new Anthropic();
@@ -119,7 +124,7 @@ ${
     ? context.recentPosts
         .map(
           (p) =>
-            `- Topic: ${p.topic || "untitled"} | Status: ${p.status} | Created: ${p.created_at}`
+            `- Topic: ${p.topic ?? "untitled"} | Status: ${p.status} | Created: ${p.created_at}`
         )
         .join("\n")
     : "No posts yet — we are just getting started."
@@ -146,7 +151,10 @@ Set the week_of field to: ${weekOf}
         throw new Error("Claude returned no text content");
       }
 
-      const plan: WeeklyPlan = JSON.parse(textBlock.text);
+      const raw = textBlock.text
+        .replace(/^```(?:json)?\n?/, "")
+        .replace(/\n?```$/, "");
+      const plan: WeeklyPlan = JSON.parse(raw);
       return plan;
     });
 

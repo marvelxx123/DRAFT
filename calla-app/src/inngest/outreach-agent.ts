@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import type { GetStepTools } from "inngest";
 import { inngest } from "@/lib/inngest";
 import { createAdminClient } from "@/lib/supabase";
 
@@ -184,7 +185,7 @@ export const outreachAgentTriggered = inngest.createFunction(
 // ---------------------------------------------------------------------------
 
 async function runOutreachGeneration(
-  step: Parameters<Parameters<typeof inngest.createFunction>[2]>[0]["step"],
+  step: GetStepTools<typeof inngest>,
   segment: string,
   dailyVolume: number,
   keyMessage: string
