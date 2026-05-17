@@ -86,7 +86,7 @@ export const getMessages = (userId, otherId) =>
     .order('created_at', { ascending:true })
 
 export const sendMessage = (senderId, receiverId, text) =>
-  supabase.from('messages').insert({ sender_id:senderId, receiver_id:receiverId, text, read:false })
+  supabase.from('messages').insert({ sender_id:senderId, receiver_id:receiverId, text, read:false }).select().single()
 
 export const markRead = (userId, otherId) =>
   supabase.from('messages').update({ read:true }).eq('receiver_id', userId).eq('sender_id', otherId)
