@@ -86,7 +86,6 @@ img { max-width: 100%; display: block; }
   background: #fff; border-bottom: 1px solid var(--pale);
   padding: 16px 24px 24px; flex-direction: column; gap: 4px;
 }
-#mob-menu.open { display: flex; }
 #mob-menu a { display: block; padding: 12px 0; font-weight: 600; color: var(--muted); border-bottom: 1px solid rgba(3,4,94,.06); }
 #mob-menu a:last-child { margin-top: 12px; background: var(--blue); color: #fff; text-align: center; padding: 13px; border-radius: 8px; border: none; }
 
@@ -274,7 +273,7 @@ footer { background: var(--navy); padding: 48px 0 32px; }
       <li><a href="#aria">Hear ARIA</a></li>
     </ul>
     <a href="#pricing" class="nav-cta">Start Free Trial</a>
-    <button class="hamburger" onclick="document.getElementById('mob-menu').classList.toggle('open')" aria-label="Menu">
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -282,10 +281,10 @@ footer { background: var(--navy); padding: 48px 0 32px; }
 
 <!-- MOBILE MENU -->
 <div id="mob-menu">
-  <a href="#how"     onclick="document.getElementById('mob-menu').classList.remove('open')">How It Works</a>
-  <a href="#pricing" onclick="document.getElementById('mob-menu').classList.remove('open')">Pricing</a>
-  <a href="#aria"    onclick="document.getElementById('mob-menu').classList.remove('open')">Hear ARIA</a>
-  <a href="#pricing" onclick="document.getElementById('mob-menu').classList.remove('open')">Start Free Trial</a>
+  <a href="#how"     onclick="closeMenu()">How It Works</a>
+  <a href="#pricing" onclick="closeMenu()">Pricing</a>
+  <a href="#aria"    onclick="closeMenu()">Hear ARIA</a>
+  <a href="#pricing" onclick="closeMenu()">Start Free Trial</a>
 </div>
 
 <!-- HERO -->
@@ -539,8 +538,18 @@ footer { background: var(--navy); padding: 48px 0 32px; }
     document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
   });
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') document.getElementById('modal').classList.remove('open');
+    if (e.key === 'Escape') {
+      document.getElementById('modal').classList.remove('open');
+      document.getElementById('mob-menu').classList.remove('open');
+    }
   });
+  function toggleMenu() {
+    var m = document.getElementById('mob-menu');
+    m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+  }
+  function closeMenu() {
+    document.getElementById('mob-menu').style.display = 'none';
+  }
 </script>
 </body>
 </html>
