@@ -2,9 +2,9 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 // Set these in Supabase Dashboard > Edge Functions > Secrets:
-//   GEMINI_API_KEY  — from aistudio.google.com
-const GEMINI_KEY         = Deno.env.get("GEMINI_API_KEY") ?? ""
-const SUPABASE_URL        = Deno.env.get("SUPABASE_URL") ?? ""
+//   ANTHROPIC_API_KEY — from console.anthropic.com
+const ANTHROPIC_KEY        = Deno.env.get("ANTHROPIC_API_KEY") ?? ""
+const SUPABASE_URL         = Deno.env.get("SUPABASE_URL") ?? ""
 const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
 
 const cors = {
@@ -12,76 +12,105 @@ const cors = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 }
 
-async function uploadToGemini(bytes: ArrayBuffer, mime: string, videoId: string) {
-  const boundary = `boundary_${Date.now()}`
-  const meta = JSON.stringify({ file: { display_name: `draft_${videoId}` } })
-  const enc  = new TextEncoder()
-  const head = enc.encode(
-    `--${boundary}\r\nContent-Type: application/json\r\n\r\n${meta}\r\n` +
-    `--${boundary}\r\nContent-Type: ${mime}\r\n\r\n`
-  )
-  const tail = enc.encode(`\r\n--${boundary}--`)
-  const body = new Uint8Array(head.byteLength + bytes.byteLength + tail.byteLength)
-  body.set(head, 0)
-  body.set(new Uint8Array(bytes), head.byteLength)
-  body.set(tail, head.byteLength + bytes.byteLength)
+function buildPrompt(video: Record<string, unknown>, profile: Record<string, unknown>): string {
+  const lines: string[] = [
+    "You are an expert basketball scout with 20 years of experience evaluating players for college and pro teams.",
+    "",
+    "A player has submitted a video highlight. Based on the information below, provide a professional scouting report.",
+    "",
+    "=== PLAYER INFO ===",
+  ]
 
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/upload/v1beta/files?key=${GEMINI_KEY}`,
-    { method: "POST", headers: { "Content-Type": `multipart/related; boundary=${boundary}` }, body }
-  )
-  if (!res.ok) throw new Error(`Gemini upload failed: ${await res.text()}`)
-  return (await res.json()).file
-}
+  if (profile?.full_name)  lines.push(`Name: ${profile.full_name}`)
+  if (profile?.position)   lines.push(`Position: ${profile.position}`)
+  if (profile?.school)     lines.push(`School: ${profile.school}`)
+  if (profile?.year)       lines.push(`Year: ${profile.year}`)
+  if (profile?.height)     lines.push(`Height: ${profile.height}`)
+  if (profile?.wingspan)   lines.push(`Wingspan: ${profile.wingspan}`)
 
-async function waitForActive(fileName: string) {
-  const fileId = fileName.split("/").pop()
-  for (let i = 0; i < 30; i++) {
-    const res  = await fetch(`https://generativelanguage.googleapis.com/v1beta/files/${fileId}?key=${GEMINI_KEY}`)
-    const file = await res.json()
-    if (file.state === "ACTIVE") return file
-    if (file.state === "FAILED") throw new Error("Gemini file processing failed")
-    await new Promise(r => setTimeout(r, 3000))
+  if (lines[lines.length - 1] === "=== PLAYER INFO ===") {
+    lines.push("Player information not provided")
   }
-  throw new Error("Gemini file processing timeout")
-}
 
-async function scout(fileUri: string, mime: string) {
-  const prompt = `You are an expert basketball scout with 20 years of experience evaluating players for college and pro teams.
+  lines.push("", "=== SEASON STATS ===")
+  const stats: string[] = []
+  if (profile?.ppg != null) stats.push(`PPG: ${profile.ppg}`)
+  if (profile?.apg != null) stats.push(`APG: ${profile.apg}`)
+  if (profile?.rpg != null) stats.push(`RPG: ${profile.rpg}`)
+  if (profile?.spg != null) stats.push(`SPG: ${profile.spg}`)
+  if (profile?.bpg != null) stats.push(`BPG: ${profile.bpg}`)
+  if (profile?.fgp != null) stats.push(`FG%: ${profile.fgp}`)
+  if (profile?.tpp != null) stats.push(`3P%: ${profile.tpp}`)
+  if (profile?.ftp != null) stats.push(`FT%: ${profile.ftp}`)
+  lines.push(stats.length > 0 ? stats.join(", ") : "No season stats provided")
 
-Watch this video and provide a scouting report. Respond in this exact JSON format only — no extra text:
-{
-  "overall_score": <integer 0-100>,
-  "categories": {
-    "athleticism": <integer 1-10>,
-    "shooting": <integer 1-10>,
-    "ball_handling": <integer 1-10>,
-    "court_vision": <integer 1-10>,
-    "defense": <integer 1-10>,
-    "physicality": <integer 1-10>
-  },
-  "scouting_report": "<2-3 sentence professional scouting report written like a real scout>",
-  "strengths": ["<strength>", "<strength>"],
-  "areas_to_improve": ["<area>"]
-}
+  lines.push("", "=== VIDEO SUBMISSION ===")
+  if (video?.title)       lines.push(`Title: ${video.title}`)
+  if (video?.category)    lines.push(`Category: ${video.category}`)
+  if (video?.description) lines.push(`Description: ${video.description}`)
 
-Score guide: 0-59 = developing, 60-69 = varsity level, 70-79 = college prospect, 80-89 = high-level prospect, 90-100 = elite/pro prospect.
-If basketball gameplay is not clearly visible, set overall_score to 0 and explain in the report.`
+  if (!video?.title && !video?.category && !video?.description) {
+    lines.push("No video metadata provided")
+  }
 
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ fileData: { mimeType: mime, fileUri } }, { text: prompt }] }],
-        generationConfig: { responseMimeType: "application/json", temperature: 0.2 }
-      })
-    }
+  lines.push(
+    "",
+    'Respond in this exact JSON format only — no extra text:',
+    '{',
+    '  "overall_score": <integer 0-100>,',
+    '  "categories": {',
+    '    "athleticism": <integer 1-10>,',
+    '    "shooting": <integer 1-10>,',
+    '    "ball_handling": <integer 1-10>,',
+    '    "court_vision": <integer 1-10>,',
+    '    "defense": <integer 1-10>,',
+    '    "physicality": <integer 1-10>',
+    '  },',
+    '  "scouting_report": "<2-3 sentence professional scouting report written like a real scout>",',
+    '  "strengths": ["<strength>", "<strength>"],',
+    '  "areas_to_improve": ["<area>"]',
+    '}',
+    "",
+    "Score guide: 0-59 = developing, 60-69 = varsity level, 70-79 = college prospect, 80-89 = high-level prospect, 90-100 = elite/pro prospect.",
   )
-  if (!res.ok) throw new Error(`Gemini analysis failed: ${await res.text()}`)
+
+  return lines.join("\n")
+}
+
+async function callClaude(prompt: string): Promise<Record<string, unknown>> {
+  // Guard: Claude API rejects empty text content blocks
+  const safePrompt = prompt.trim()
+  if (!safePrompt) throw new Error("Prompt must not be empty")
+
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": ANTHROPIC_KEY,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: "claude-opus-4-7",
+      max_tokens: 1024,
+      messages: [
+        { role: "user", content: safePrompt },
+      ],
+    }),
+  })
+
+  if (!res.ok) {
+    const errText = await res.text()
+    throw new Error(`Claude API error: ${errText}`)
+  }
+
   const data = await res.json()
-  return JSON.parse(data.candidates?.[0]?.content?.parts?.[0]?.text)
+  const text = data?.content?.[0]?.text ?? ""
+  if (!text.trim()) throw new Error("Empty response from Claude")
+
+  // Extract JSON even if Claude wraps it in markdown fences
+  const jsonMatch = text.match(/\{[\s\S]*\}/)
+  if (!jsonMatch) throw new Error("Claude did not return valid JSON")
+  return JSON.parse(jsonMatch[0])
 }
 
 serve(async (req) => {
@@ -89,47 +118,45 @@ serve(async (req) => {
 
   try {
     const { video_id, video_url, user_id } = await req.json()
-    if (!GEMINI_KEY) throw new Error("GEMINI_API_KEY secret not set")
+    if (!ANTHROPIC_KEY) throw new Error("ANTHROPIC_API_KEY secret not set")
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
-    // Fetch video (50 MB cap to stay within edge function limits)
-    const videoRes = await fetch(video_url)
-    if (!videoRes.ok) throw new Error("Failed to fetch video")
-    const size = parseInt(videoRes.headers.get("content-length") ?? "0")
-    if (size > 50 * 1024 * 1024) {
-      return new Response(JSON.stringify({ error: "Video over 50 MB — skipping AI analysis" }), {
-        status: 400, headers: { ...cors, "Content-Type": "application/json" }
-      })
-    }
-    const mime  = videoRes.headers.get("content-type") ?? "video/mp4"
-    const bytes = await videoRes.arrayBuffer()
+    // Fetch video metadata and player profile in parallel
+    const [{ data: video }, { data: profile }] = await Promise.all([
+      supabase.from("videos")
+        .select("title, category, description")
+        .eq("id", video_id)
+        .single(),
+      supabase.from("profiles")
+        .select("full_name, position, school, year, ppg, apg, rpg, spg, bpg, fgp, tpp, ftp, height, wingspan, draft_score")
+        .eq("id", user_id)
+        .single(),
+    ])
 
-    // Upload to Gemini Files API, wait for it to be ready, then analyze
-    const uploaded   = await uploadToGemini(bytes, mime, video_id)
-    const activeFile = await waitForActive(uploaded.name)
-    const report     = await scout(activeFile.uri, mime)
+    const prompt = buildPrompt(video ?? {}, profile ?? {})
+    const report = await callClaude(prompt)
 
     // Persist results
-    await supabase.from("videos").update({ scout_score: report.overall_score, scout_report: report }).eq("id", video_id)
+    await supabase.from("videos")
+      .update({ scout_score: report.overall_score, scout_report: report })
+      .eq("id", video_id)
 
     // Update player's draft_score if this is their personal best
-    const { data: profile } = await supabase.from("profiles").select("draft_score").eq("id", user_id).single()
-    if (!profile?.draft_score || report.overall_score > profile.draft_score) {
-      await supabase.from("profiles").update({ draft_score: report.overall_score }).eq("id", user_id)
+    if (!profile?.draft_score || (report.overall_score as number) > profile.draft_score) {
+      await supabase.from("profiles")
+        .update({ draft_score: report.overall_score })
+        .eq("id", user_id)
     }
 
-    // Clean up Gemini file
-    const fileId = uploaded.name.split("/").pop()
-    await fetch(`https://generativelanguage.googleapis.com/v1beta/files/${fileId}?key=${GEMINI_KEY}`, { method: "DELETE" }).catch(() => {})
-
     return new Response(JSON.stringify({ success: true, report }), {
-      headers: { ...cors, "Content-Type": "application/json" }
+      headers: { ...cors, "Content-Type": "application/json" },
     })
   } catch (e) {
     console.error(e)
     return new Response(JSON.stringify({ error: (e as Error).message }), {
-      status: 500, headers: { ...cors, "Content-Type": "application/json" }
+      status: 500,
+      headers: { ...cors, "Content-Type": "application/json" },
     })
   }
 })

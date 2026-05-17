@@ -24,11 +24,16 @@ export default function App() {
   }, [])
 
   if (session === undefined) return (
-    <div style={{ height:'100vh', display:'flex', alignItems:'center', justifyContent:'center', background:'#000' }}>
-      <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:20 }}>
-        <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:48, fontWeight:700, letterSpacing:-3, color:T.electric, lineHeight:.9 }}>DRAFT</div>
-        <div style={{ width:36, height:2.5, background:`linear-gradient(90deg, ${T.electric}, ${T.lime})`, borderRadius:2 }}/>
-        <div className="spin" style={{ width:22, height:22, borderRadius:'50%', border:`2.5px solid ${T.electric}`, borderTopColor:'transparent', marginTop:4 }}/>
+    <div style={{ height:'100vh', display:'flex', alignItems:'center', justifyContent:'center', background:'#000', flexDirection:'column', gap:0 }}>
+      <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:14 }}>
+        <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:88, fontWeight:400, letterSpacing:12, color:'#F5F0E8', lineHeight:1, textAlign:'center' }} className="flicker">
+          DRAFT
+        </div>
+        <div style={{ width:'100%', height:2, background:`linear-gradient(90deg, transparent, ${T.electric}, ${T.gold}, transparent)` }}/>
+        <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:11, fontWeight:600, letterSpacing:5, color:T.sub, textTransform:'uppercase' }}>
+          Get Discovered
+        </div>
+        <div className="spin" style={{ width:18, height:18, borderRadius:'50%', border:`2px solid ${T.electric}`, borderTopColor:'transparent', marginTop:8 }}/>
       </div>
     </div>
   )
