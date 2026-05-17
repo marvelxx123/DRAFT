@@ -420,15 +420,42 @@ function toggleCart() {
   document.body.style.overflow = !isOpen ? 'hidden' : '';
 }
 
-function checkout() {
+async function checkout() {
   if (state.cart.length === 0) return;
-  showToast('🚀 Redirecting to checkout...');
-  setTimeout(() => {
-    showToast('✓ Order placed! (Demo mode)');
-    state.cart = [];
-    renderCart();
-    toggleCart();
-  }, 1800);
+
+  const btn = document.querySelector('.btn-checkout');
+  if (btn) { btn.disabled = true; btn.textContent = 'Processing...'; }
+  showToast('Connecting to checkout...');
+
+  try {
+    const payload = state.cart.map(item => ({
+      product:    item.product,
+      qty:        item.qty,
+      color:      item.color,
+      colorName:  item.colorName,
+      size:       item.size || null,
+      text:       item.text || null,
+      designUrl:  null, // data URLs are too large for metadata; extend with upload endpoint
+    }));
+
+    const res = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: payload }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'Checkout failed');
+    }
+
+    const { url } = await res.json();
+    window.location.href = url;
+  } catch (err) {
+    console.error('[checkout]', err);
+    showToast('Could not start checkout — ' + err.message);
+    if (btn) { btn.disabled = false; btn.textContent = 'Checkout →'; }
+  }
 }
 
 function animateCartBtn() {
