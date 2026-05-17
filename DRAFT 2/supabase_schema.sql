@@ -137,14 +137,33 @@ create policy "notifs_update" on notifications for update using (auth.uid() = us
 -- Auto-create profile on signup
 create or replace function handle_new_user()
 returns trigger as $$
+declare
+  base_un text;
+  final_un text;
+  n        int := 0;
 begin
-  insert into profiles (id, username, full_name)
+  base_un  := lower(regexp_replace(split_part(new.email, '@', 1), '[^a-z0-9_]', '', 'g'));
+  final_un := base_un;
+
+  -- Guarantee uniqueness by appending a counter if needed
+  loop
+    exit when not exists (select 1 from public.profiles where username = final_un);
+    n        := n + 1;
+    final_un := base_un || n::text;
+  end loop;
+
+  insert into public.profiles (id, username, full_name)
   values (
     new.id,
-    split_part(new.email, '@', 1),
-    coalesce(new.raw_user_meta_data->>'full_name', split_part(new.email, '@', 1))
-  );
+    final_un,
+    coalesce(new.raw_user_meta_data->>'full_name', final_un)
+  )
+  on conflict (id) do nothing;
+
   return new;
+exception
+  when others then
+    return new; -- never block auth even if profile creation fails
 end;
 $$ language plpgsql security definer;
 

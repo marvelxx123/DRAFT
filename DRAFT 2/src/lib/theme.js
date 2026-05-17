@@ -14,15 +14,15 @@ export const T = {
   border2: '#262626',
   border3: '#323232',
 
-  // Text — warm, not sterile
-  text:    '#F5F0E8',
-  text2:   '#9A8C7A',
-  sub:     '#665848',
-  muted:   '#352E26',
+  // Text — clean white on black
+  text:    '#FFFFFF',
+  text2:   '#A09080',
+  sub:     '#5C5040',
+  muted:   '#2A2018',
 
   // Accents
-  white:   '#F5F0E8',
-  electric:'#FF4500',  // FIRE — main CTA, energy, the ball
+  white:   '#FFFFFF',
+  electric:'#FFE600',  // WU-TANG YELLOW — main CTA, energy
   gold:    '#FFB700',  // GOLD — championship, DRAFT score
   crimson: '#FF1744',  // RED — likes, heat, intensity
   lime:    '#C8FF00',  // VOLT — contrast pop
@@ -32,7 +32,7 @@ export const T = {
 }
 
 export const POS = {
-  PG: '#FF4500',   // fire — the engine
+  PG: '#FFE600',   // yellow — the engine
   SG: '#FFB700',   // gold — the scorer
   SF: '#C8FF00',   // volt — the versatile
   PF: '#FF1744',   // red — the enforcer
@@ -40,7 +40,7 @@ export const POS = {
 }
 
 export const CAT = {
-  GAME:       '#FF4500',
+  GAME:       '#FFE600',
   HIGHLIGHT:  '#FFB700',
   DEFENSE:    '#FF1744',
   TRAINING:   '#C8FF00',
@@ -83,10 +83,14 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes heartPop{0%{transform:translate(-50%,-50%) scale(0);opacity:1}50%{transform:translate(-50%,-50%) scale(2)}100%{transform:translate(-50%,-50%) scale(1.5);opacity:0}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-@keyframes glow{0%,100%{box-shadow:0 0 10px rgba(255,69,0,.4)}50%{box-shadow:0 0 28px rgba(255,69,0,.7)}}
+@keyframes glow{0%,100%{box-shadow:0 0 10px rgba(255,230,0,.4)}50%{box-shadow:0 0 28px rgba(255,230,0,.7)}}
 @keyframes scaleIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
 @keyframes counter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes flicker{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.85}94%{opacity:1}97%{opacity:.9}98%{opacity:1}}
+@keyframes logoReveal{0%{opacity:0;filter:blur(24px);transform:scale(1.1)}55%{opacity:1;filter:blur(2px);transform:scale(1.01)}100%{opacity:1;filter:blur(0);transform:scale(1)}}
+@keyframes lineReveal{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
+@keyframes tagReveal{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes bgGlow{0%{opacity:0}40%{opacity:1}100%{opacity:.35}}
 .fadeUp{animation:fadeUp .3s cubic-bezier(.16,1,.3,1) forwards;}
 .fadeIn{animation:fadeIn .25s ease forwards;}
 .slideUp{animation:slideUp .3s cubic-bezier(.32,.72,0,1);}
