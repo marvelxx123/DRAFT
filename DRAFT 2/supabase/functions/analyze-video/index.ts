@@ -1,8 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
-// Set these in Supabase Dashboard > Edge Functions > Secrets:
-//   ANTHROPIC_API_KEY — from console.anthropic.com
 const ANTHROPIC_KEY        = Deno.env.get("ANTHROPIC_API_KEY") ?? ""
 const SUPABASE_URL         = Deno.env.get("SUPABASE_URL") ?? ""
 const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
@@ -12,21 +10,37 @@ const cors = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 }
 
-function buildPrompt(video: Record<string, unknown>, profile: Record<string, unknown>): string {
+function arrayBufferToBase64(buffer: ArrayBuffer): string {
+  const bytes = new Uint8Array(buffer)
+  let binary = ""
+  const chunk = 8192
+  for (let i = 0; i < bytes.length; i += chunk) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunk))
+  }
+  return btoa(binary)
+}
+
+function buildPrompt(
+  video: Record<string, unknown>,
+  profile: Record<string, unknown>,
+  hasFrames: boolean,
+): string {
   const lines: string[] = [
     "You are an expert basketball scout with 20 years of experience evaluating players for college and pro teams.",
     "",
-    "A player has submitted a video highlight. Based on the information below, provide a professional scouting report.",
+    hasFrames
+      ? "I am sending you frames extracted from the player's basketball video at different timestamps. Study each frame carefully — look at body mechanics, footwork, athleticism, court positioning, shooting form, and ball-handling. Base your scouting report primarily on what you observe in the footage, supplemented by the stats below."
+      : "A player has submitted a video highlight. Based on the information below, provide a professional scouting report.",
     "",
     "=== PLAYER INFO ===",
   ]
 
-  if (profile?.full_name)  lines.push(`Name: ${profile.full_name}`)
-  if (profile?.position)   lines.push(`Position: ${profile.position}`)
-  if (profile?.school)     lines.push(`School: ${profile.school}`)
-  if (profile?.year)       lines.push(`Year: ${profile.year}`)
-  if (profile?.height)     lines.push(`Height: ${profile.height}`)
-  if (profile?.wingspan)   lines.push(`Wingspan: ${profile.wingspan}`)
+  if (profile?.full_name) lines.push(`Name: ${profile.full_name}`)
+  if (profile?.position)  lines.push(`Position: ${profile.position}`)
+  if (profile?.school)    lines.push(`School: ${profile.school}`)
+  if (profile?.year)      lines.push(`Year: ${profile.year}`)
+  if (profile?.height)    lines.push(`Height: ${profile.height}`)
+  if (profile?.wingspan)  lines.push(`Wingspan: ${profile.wingspan}`)
 
   if (lines[lines.length - 1] === "=== PLAYER INFO ===") {
     lines.push("Player information not provided")
@@ -48,7 +62,6 @@ function buildPrompt(video: Record<string, unknown>, profile: Record<string, unk
   if (video?.title)       lines.push(`Title: ${video.title}`)
   if (video?.category)    lines.push(`Category: ${video.category}`)
   if (video?.description) lines.push(`Description: ${video.description}`)
-
   if (!video?.title && !video?.category && !video?.description) {
     lines.push("No video metadata provided")
   }
@@ -77,10 +90,43 @@ function buildPrompt(video: Record<string, unknown>, profile: Record<string, unk
   return lines.join("\n")
 }
 
-async function callClaude(prompt: string): Promise<Record<string, unknown>> {
-  // Guard: Claude API rejects empty text content blocks
+async function callClaude(
+  prompt: string,
+  frameUrls: string[],
+): Promise<Record<string, unknown>> {
   const safePrompt = prompt.trim()
   if (!safePrompt) throw new Error("Prompt must not be empty")
+
+  type ContentBlock = {
+    type: string
+    text?: string
+    source?: { type: string; media_type: string; data: string }
+  }
+  const content: ContentBlock[] = []
+
+  // Images first so Claude sees the footage before reading scouting context
+  if (frameUrls.length > 0) {
+    content.push({
+      type: "text",
+      text: `Here are ${frameUrls.length} frames captured from the player's video at different timestamps. Study them carefully before reading the scouting context below.`,
+    })
+
+    for (const url of frameUrls) {
+      try {
+        const res = await fetch(url)
+        if (!res.ok) { console.warn("Could not fetch frame:", url); continue }
+        const base64 = arrayBufferToBase64(await res.arrayBuffer())
+        content.push({
+          type: "image",
+          source: { type: "base64", media_type: "image/jpeg", data: base64 },
+        })
+      } catch (e) {
+        console.error("Frame fetch error:", url, e)
+      }
+    }
+  }
+
+  content.push({ type: "text", text: safePrompt })
 
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -92,9 +138,7 @@ async function callClaude(prompt: string): Promise<Record<string, unknown>> {
     body: JSON.stringify({
       model: "claude-opus-4-7",
       max_tokens: 1024,
-      messages: [
-        { role: "user", content: safePrompt },
-      ],
+      messages: [{ role: "user", content }],
     }),
   })
 
@@ -104,10 +148,10 @@ async function callClaude(prompt: string): Promise<Record<string, unknown>> {
   }
 
   const data = await res.json()
-  const text = data?.content?.[0]?.text ?? ""
+  const text =
+    (data?.content ?? []).find((b: { type: string }) => b.type === "text")?.text ?? ""
   if (!text.trim()) throw new Error("Empty response from Claude")
 
-  // Extract JSON even if Claude wraps it in markdown fences
   const jsonMatch = text.match(/\{[\s\S]*\}/)
   if (!jsonMatch) throw new Error("Claude did not return valid JSON")
   return JSON.parse(jsonMatch[0])
@@ -117,12 +161,11 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: cors })
 
   try {
-    const { video_id, video_url, user_id } = await req.json()
+    const { video_id, video_url, user_id, frame_urls } = await req.json()
     if (!ANTHROPIC_KEY) throw new Error("ANTHROPIC_API_KEY secret not set")
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
-    // Fetch video metadata and player profile in parallel
     const [{ data: video }, { data: profile }] = await Promise.all([
       supabase.from("videos")
         .select("title, category, description")
@@ -134,15 +177,14 @@ serve(async (req) => {
         .single(),
     ])
 
-    const prompt = buildPrompt(video ?? {}, profile ?? {})
-    const report = await callClaude(prompt)
+    const urls: string[] = Array.isArray(frame_urls) ? frame_urls : []
+    const prompt = buildPrompt(video ?? {}, profile ?? {}, urls.length > 0)
+    const report = await callClaude(prompt, urls)
 
-    // Persist results
     await supabase.from("videos")
       .update({ scout_score: report.overall_score, scout_report: report })
       .eq("id", video_id)
 
-    // Update player's draft_score if this is their personal best
     if (!profile?.draft_score || (report.overall_score as number) > profile.draft_score) {
       await supabase.from("profiles")
         .update({ draft_score: report.overall_score })

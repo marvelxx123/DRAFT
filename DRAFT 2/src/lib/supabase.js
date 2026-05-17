@@ -44,9 +44,9 @@ export const uploadVideo = async (userId, file, meta) => {
 }
 
 // ── AI SCOUTING ─────────────────────────────────────────
-export const analyzeVideo = (videoId, videoUrl, userId) =>
+export const analyzeVideo = (videoId, videoUrl, userId, frameUrls = []) =>
   supabase.functions.invoke('analyze-video', {
-    body: { video_id: videoId, video_url: videoUrl, user_id: userId }
+    body: { video_id: videoId, video_url: videoUrl, user_id: userId, frame_urls: frameUrls }
   })
 
 // ── LIKES ─────────────────────────────────────────────────

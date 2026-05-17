@@ -1,7 +1,35 @@
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { uploadVideo, analyzeVideo } from '../lib/supabase.js'
+import { uploadVideo, analyzeVideo, supabase } from '../lib/supabase.js'
 import { T, CAT } from '../lib/theme.js'
+
+// Extract 4 JPEG frames from a local video blob URL using HTML5 Canvas
+const captureFrames = (src) => new Promise(resolve => {
+  const vid = document.createElement('video')
+  vid.src = src
+  vid.muted = true
+  vid.playsInline = true
+  const TIMES = [0.15, 0.35, 0.55, 0.75]
+  const blobs = []
+  let i = 0
+
+  const grab = () => {
+    if (i >= TIMES.length) { resolve(blobs); return }
+    const onSeeked = () => {
+      const c = document.createElement('canvas')
+      c.width = 640
+      c.height = Math.max(1, Math.round(640 * (vid.videoHeight / (vid.videoWidth || 640))))
+      c.getContext('2d')?.drawImage(vid, 0, 0, c.width, c.height)
+      c.toBlob(b => { if (b) blobs.push(b); i++; grab() }, 'image/jpeg', 0.78)
+    }
+    vid.addEventListener('seeked', onSeeked, { once: true })
+    vid.currentTime = vid.duration * TIMES[i]
+  }
+
+  vid.addEventListener('loadedmetadata', grab, { once: true })
+  vid.addEventListener('error', () => resolve([]))
+  vid.load()
+})
 
 const CATS = ['GAME','TRAINING','HIGHLIGHT','DEFENSE','TOURNAMENT','CAMP']
 
@@ -33,7 +61,22 @@ export default function Upload({ session }) {
     try {
       const video = await uploadVideo(session.user.id, file, { title:form.title.trim(), category:form.category, description:form.description||null })
       clearInterval(interval); setProg(100); setDone(true)
-      analyzeVideo(video.id, video.video_url, session.user.id).catch(() => {})
+
+      // Extract frames and upload so Claude can actually watch the footage
+      const frameUrls = []
+      try {
+        const blobs = await captureFrames(preview)
+        for (let fi = 0; fi < blobs.length; fi++) {
+          const path = `frames/${video.id}/${fi}.jpg`
+          const { error: fe } = await supabase.storage.from('videos').upload(path, blobs[fi], { contentType:'image/jpeg', upsert:true, cacheControl:'3600' })
+          if (!fe) {
+            const { data:{ publicUrl } } = supabase.storage.from('videos').getPublicUrl(path)
+            frameUrls.push(publicUrl)
+          }
+        }
+      } catch(fe) { console.warn('Frame extraction failed, falling back to text analysis', fe) }
+
+      analyzeVideo(video.id, video.video_url, session.user.id, frameUrls).catch(() => {})
       setTimeout(() => navigate('/profile'), 1800)
     } catch(e) {
       clearInterval(interval); setErr(e.message); setStep(2)
