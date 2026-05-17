@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 import { getStripe } from "@/lib/stripe";
-import { createAdminClient } from "@/lib/supabase";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -10,6 +10,20 @@ interface CheckoutRequestBody {
   businessId?: string;
   priceId?: string;
   planName?: string;
+}
+
+interface BusinessRow {
+  id: string;
+  name: string;
+  stripe_customer_id: string | null;
+  user_id: string;
+}
+
+function getSupabaseAdmin() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) throw new Error("Missing Supabase env vars");
+  return createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } });
 }
 
 // ---------------------------------------------------------------------------
@@ -52,41 +66,30 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const supabase = createAdminClient();
+  const supabase = getSupabaseAdmin();
   const stripe = getStripe();
 
   try {
     // -----------------------------------------------------------------------
     // 2. Fetch the business record from Supabase
     // -----------------------------------------------------------------------
-    const { data: business, error: bizError } = await supabase
-      .from("businesses")
-      .select("id, name, stripe_customer_id")
-      .eq("id", businessId)
-      .single();
-
-    if (bizError || !business) {
-      console.error("[Stripe/Checkout] Business not found:", businessId, bizError?.message);
-      return NextResponse.json({ error: "Business not found" }, { status: 404 });
-    }
-
-    // We need the owner's email — fetch via auth.users through the business's user_id
-    const { data: businessWithUser, error: userError } = await supabase
+    const { data: rawBusiness, error: bizError } = await supabase
       .from("businesses")
       .select("id, name, stripe_customer_id, user_id")
       .eq("id", businessId)
       .single();
 
-    if (userError || !businessWithUser) {
+    if (bizError || !rawBusiness) {
+      console.error("[Stripe/Checkout] Business not found:", businessId, bizError?.message);
       return NextResponse.json({ error: "Business not found" }, { status: 404 });
     }
 
-    // Resolve email via the admin API
+    const business = rawBusiness as unknown as BusinessRow;
+
+    // Resolve email via the Supabase Admin Auth API
     let ownerEmail: string | undefined;
     try {
-      const { data: userData } = await supabase.auth.admin.getUserById(
-        businessWithUser.user_id
-      );
+      const { data: userData } = await supabase.auth.admin.getUserById(business.user_id);
       ownerEmail = userData?.user?.email ?? undefined;
     } catch (err) {
       // Non-fatal — proceed without email; Stripe will prompt for it at checkout

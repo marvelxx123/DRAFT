@@ -1,11 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 import { getStripe } from "@/lib/stripe";
-import { createAdminClient } from "@/lib/supabase";
 import twilio from "twilio";
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+interface BusinessRow {
+  id: string;
+  name: string;
+  original_number: string | null;
+  phone_number: string | null;
+}
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+
+function getSupabaseAdmin() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) throw new Error("Missing Supabase env vars");
+  return createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } });
+}
 
 function getTwilioClient() {
   const sid = process.env.TWILIO_ACCOUNT_SID;
@@ -101,7 +119,7 @@ export async function GET(request: NextRequest) {
   }
 
   const stripe = getStripe();
-  const supabase = createAdminClient();
+  const supabase = getSupabaseAdmin();
 
   try {
     // -----------------------------------------------------------------------
@@ -163,7 +181,7 @@ export async function GET(request: NextRequest) {
       updatePayload.stripe_subscription_id = subscriptionId;
     }
 
-    const { data: updatedBusiness, error: updateError } = await supabase
+    const { data: rawUpdated, error: updateError } = await supabase
       .from("businesses")
       .update(updatePayload)
       .eq("id", businessId)
@@ -175,6 +193,7 @@ export async function GET(request: NextRequest) {
       // Non-fatal: continue so provisioning still runs
     }
 
+    const updatedBusiness = rawUpdated as unknown as BusinessRow | null;
     const businessName = updatedBusiness?.name ?? "your business";
 
     console.log(

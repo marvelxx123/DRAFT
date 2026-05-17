@@ -728,13 +728,14 @@ export default function OnboardingPage() {
       } = await supabase.auth.getSession();
       if (!session || cancelled) return;
 
-      const { data: biz } = await supabase
+      const { data: rawBiz } = await supabase
         .from("businesses")
         .select("id, name")
         .eq("user_id", session.user.id)
         .single();
 
-      if (!biz || cancelled) return;
+      if (!rawBiz || cancelled) return;
+      const biz = rawBiz as unknown as { id: string; name: string };
       setBusinessId(biz.id);
       setData((prev) => ({ ...prev, businessName: biz.name ?? prev.businessName }));
     })();
@@ -781,19 +782,19 @@ export default function OnboardingPage() {
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const { error: updateError } = await supabase
-      .from("businesses")
-      .update({
-        name: data.businessName.trim(),
-        address: data.cityZip.trim(),
-        services: servicesArray,
-        business_hours: data.hours as unknown as Record<
-          string,
-          { open: string; close: string; closed: boolean }
-        >,
-        original_number: data.currentPhone.trim() || null,
-        calendar_url: data.googleReviewLink.trim() || null,
-      })
+    const updatePayload: Record<string, unknown> = {
+      name: data.businessName.trim(),
+      address: data.cityZip.trim(),
+      services: servicesArray,
+      business_hours: data.hours,
+      original_number: data.currentPhone.trim() || null,
+      calendar_url: data.googleReviewLink.trim() || null,
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const table = (supabase as any).from("businesses");
+    const { error: updateError } = await table
+      .update(updatePayload)
       .eq("id", businessId);
 
     if (updateError) {
