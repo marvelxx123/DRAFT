@@ -21,11 +21,13 @@ export async function GET(): Promise<NextResponse> {
     );
   }
 
-  const { data: business, error } = await supabase
+  const { data: businessData, error } = await supabase
     .from("businesses")
     .select("stripe_customer_id")
     .eq("user_id", session.user.id)
     .single();
+
+  const business = businessData as { stripe_customer_id: string | null } | null;
 
   if (error || !business?.stripe_customer_id) {
     return NextResponse.json(

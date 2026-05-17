@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { createServerClient } from "@supabase/auth-helpers-nextjs";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
 // ---------------------------------------------------------------------------
@@ -58,16 +58,8 @@ function getSupabaseAdmin() {
 
 function getSupabaseServer() {
   const cookieStore = cookies();
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-      },
-    }
+  return createRouteHandlerClient(
+    { cookies: () => cookieStore }
   );
 }
 
@@ -135,7 +127,7 @@ export async function GET(_request: NextRequest) {
       return NextResponse.json({ error: "Business not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ business: business as BusinessSettings });
+    return NextResponse.json({ business: business as unknown as BusinessSettings });
   } catch (err) {
     console.error("[Businesses] GET error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -219,7 +211,7 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "Update failed" }, { status: 500 });
     }
 
-    return NextResponse.json({ business: updated as BusinessSettings });
+    return NextResponse.json({ business: updated as unknown as BusinessSettings });
   } catch (err) {
     console.error("[Businesses] PATCH error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
