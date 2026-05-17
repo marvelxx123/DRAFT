@@ -640,89 +640,81 @@ footer { background: var(--navy); padding: 48px 0 32px; }
     }
   });
 
-  // Audio demo using Web Speech API
+  // Audio demo
   var demoPlaying = false;
-  var demoUtterance = null;
-  var script = [
+  var demoIdx = 0;
+  var lines = [
     { id:'b0', speaker:'aria',     text:'Thank you for calling! This is ARIA — how can I help you today?' },
-    { id:'b1', speaker:'customer', text:'Hi, I\'d like to book a haircut for Saturday.' },
-    { id:'b2', speaker:'aria',     text:'Of course! We have openings at 10am, 1 pm, and 3 pm on Saturday. Which works best for you?' },
-    { id:'b3', speaker:'customer', text:'1 pm would be perfect.' },
+    { id:'b1', speaker:'customer', text:'Hi, I would like to book a haircut for Saturday.' },
+    { id:'b2', speaker:'aria',     text:'Of course! We have openings at 10 AM, 1 PM, and 3 PM on Saturday. Which works best for you?' },
+    { id:'b3', speaker:'customer', text:'1 PM would be perfect.' },
     { id:'b4', speaker:'aria',     text:'Wonderful! Can I get your name to hold the appointment?' },
-    { id:'b5', speaker:'customer', text:'It\'s Maria.' },
-    { id:'b6', speaker:'aria',     text:'You\'re all set, Maria! Saturday at 1 pm. We\'ll send you a reminder the day before. Is there anything else I can help you with?' },
+    { id:'b5', speaker:'customer', text:'Its Maria.' },
+    { id:'b6', speaker:'aria',     text:'You are all set, Maria! Saturday at 1 PM. We will text you a reminder the day before. Is there anything else I can help you with?' },
   ];
 
-  function resetBubbles() {
-    script.forEach(function(s, i) {
-      var el = document.getElementById(s.id);
-      el.style.opacity = i === 0 ? '1' : '0.2';
-    });
+  function setBtn(playing) {
+    var b = document.getElementById('playBtn');
+    b.innerHTML = playing
+      ? '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="#fff"/><rect x="14" y="4" width="4" height="16" fill="#fff"/></svg>'
+      : '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#fff"/></svg>';
+  }
+
+  function stopDemo() {
+    window.speechSynthesis.cancel();
+    demoPlaying = false;
+    demoIdx = 0;
+    document.getElementById('demoWave').classList.remove('playing');
+    document.getElementById('demoLabel').textContent = 'Press play';
+    setBtn(false);
+    lines.forEach(function(l,i){ document.getElementById(l.id).style.opacity = i===0?'1':'0.2'; });
+  }
+
+  function speakLine() {
+    if (!demoPlaying || demoIdx >= lines.length) { stopDemo(); return; }
+    var line = lines[demoIdx];
+    lines.forEach(function(l){ document.getElementById(l.id).style.opacity='0.2'; });
+    document.getElementById(line.id).style.opacity = '1';
+    document.getElementById('demoLabel').textContent = line.speaker==='aria' ? 'ARIA speaking...' : 'Customer speaking...';
+
+    var utt = new SpeechSynthesisUtterance(line.text);
+    var voices = window.speechSynthesis.getVoices();
+    if (line.speaker === 'aria') {
+      var v = voices.find(function(v){ return /samantha|karen|moira|zira|victoria/i.test(v.name); })
+             || voices.find(function(v){ return v.lang==='en-US' && v.name.toLowerCase().includes('female'); })
+             || voices.find(function(v){ return v.lang==='en-US'; });
+      if (v) utt.voice = v;
+      utt.pitch = 1.2; utt.rate = 0.92;
+    } else {
+      utt.pitch = 0.85; utt.rate = 1.0;
+    }
+    utt.onend = function(){ demoIdx++; setTimeout(speakLine, 500); };
+    utt.onerror = function(){ demoIdx++; setTimeout(speakLine, 300); };
+    window.speechSynthesis.speak(utt);
   }
 
   function playDemo() {
+    // Must call cancel() synchronously inside click for iOS unlock
+    window.speechSynthesis.cancel();
+
+    if (demoPlaying) { stopDemo(); return; }
+
     if (!window.speechSynthesis) {
-      document.getElementById('demoLabel').textContent = 'Call +1 (904) 664-3560 to hear ARIA!';
-      return;
-    }
-    if (demoPlaying) {
-      window.speechSynthesis.cancel();
-      demoPlaying = false;
-      document.getElementById('demoWave').classList.remove('playing');
-      document.getElementById('demoLabel').textContent = 'Press play';
-      document.getElementById('playBtn').innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#fff"/></svg>';
-      resetBubbles();
+      alert('Your browser doesn\'t support audio. Call +1 (904) 664-3560 to hear ARIA live!');
       return;
     }
 
     demoPlaying = true;
+    demoIdx = 0;
     document.getElementById('demoWave').classList.add('playing');
-    document.getElementById('demoLabel').textContent = 'ARIA is speaking...';
-    document.getElementById('playBtn').innerHTML = '<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="#fff"/><rect x="14" y="5" width="4" height="14" fill="#fff"/></svg>';
-    resetBubbles();
+    setBtn(true);
+    lines.forEach(function(l,i){ document.getElementById(l.id).style.opacity=i===0?'1':'0.2'; });
 
-    var voices = window.speechSynthesis.getVoices();
-    var idx = 0;
-
-    function speakNext() {
-      if (idx >= script.length || !demoPlaying) {
-        demoPlaying = false;
-        document.getElementById('demoWave').classList.remove('playing');
-        document.getElementById('demoLabel').textContent = 'Press play to replay';
-        document.getElementById('playBtn').innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#fff"/></svg>';
-        return;
-      }
-      var line = script[idx];
-      var el = document.getElementById(line.id);
-      script.forEach(function(s) { document.getElementById(s.id).style.opacity = '0.2'; });
-      el.style.opacity = '1';
-      el.scrollIntoView({ behavior:'smooth', block:'nearest' });
-
-      var utt = new SpeechSynthesisUtterance(line.text);
-      voices = window.speechSynthesis.getVoices();
-
-      if (line.speaker === 'aria') {
-        var femaleVoice = voices.find(function(v){ return v.name.includes('Samantha') || v.name.includes('Karen') || v.name.includes('Moira') || (v.lang === 'en-US' && v.name.includes('Female')); });
-        if (femaleVoice) utt.voice = femaleVoice;
-        utt.pitch = 1.15;
-        utt.rate = 0.95;
-        document.getElementById('demoLabel').textContent = 'ARIA is speaking...';
-      } else {
-        utt.pitch = 0.9;
-        utt.rate = 1.0;
-        document.getElementById('demoLabel').textContent = 'Customer speaking...';
-      }
-
-      utt.onend = function() { idx++; setTimeout(speakNext, 400); };
-      window.speechSynthesis.speak(utt);
-    }
-
-    // Load voices first (needed on some browsers)
-    if (window.speechSynthesis.getVoices().length === 0) {
-      window.speechSynthesis.onvoiceschanged = function() { speakNext(); };
-    } else {
-      speakNext();
-    }
+    // iOS unlock: speak a silent utterance first, then proceed
+    var unlock = new SpeechSynthesisUtterance('');
+    unlock.volume = 0.01;
+    unlock.onend = speakLine;
+    window.speechSynthesis.speak(unlock);
   }
 </script>
 </body>
