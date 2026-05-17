@@ -10,350 +10,416 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Dancing+Script:wght@400;700&family=Inter:wght@400;600;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700;900&family=Nunito:wght@400;700&family=Open+Sans:wght@400;700&family=Oswald:wght@400;700&family=Pacifico&family=Playfair+Display:wght@400;700&family=Poppins:wght@400;600;700&family=Raleway:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
 
+  <link rel="stylesheet" href="css/editor.css" />
+
   <!-- Fabric.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
-
-  <!-- Editor CSS -->
-  <link rel="stylesheet" href="css/editor.css" />
 </head>
-<body class="editor-body">
+<body class="tool-select">
 
-<!-- ═══════════════════════════════════════════════════
-     TOP BAR
-═══════════════════════════════════════════════════ -->
-<header class="topbar">
+<div id="app">
 
-  <!-- Logo -->
-  <a href="/" class="topbar-logo">WEAR<span>IT</span></a>
+  <!-- ══════════════════════════════════════════════════════
+       TOP BAR
+  ═══════════════════════════════════════════════════════════ -->
+  <header id="topbar">
 
-  <div class="topbar-divider"></div>
+    <!-- Logo -->
+    <a href="/" class="tb-logo">WEAR<span>IT</span></a>
 
-  <!-- Product Picker -->
-  <div class="product-picker" id="productPicker">
-    <button class="product-picker-btn" id="productPickerBtn" aria-expanded="false">
-      <span class="product-picker-emoji" id="pickerEmoji">👕</span>
-      <span class="product-picker-name" id="pickerName">T-Shirt</span>
-      <svg class="picker-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-    </button>
-    <!-- Dropdown -->
-    <div class="product-dropdown" id="productDropdown">
-      <div class="product-dropdown-grid" id="productDropdownGrid">
+    <div class="tb-divider"></div>
+
+    <!-- Product picker -->
+    <div class="tb-product-picker">
+      <button id="productPickerBtn" onclick="toggleProductDropdown()">
+        <span id="productPickerEmoji">👕</span>
+        <span id="productPickerName">T-Shirt</span>
+        <span class="chevron">▾</span>
+      </button>
+      <div class="product-dropdown" id="productDropdown">
         <!-- Populated by JS -->
       </div>
     </div>
-  </div>
 
-  <!-- Surface Tabs -->
-  <div class="surface-tabs" id="surfaceTabs">
-    <!-- Populated by JS -->
-  </div>
-
-  <div class="topbar-spacer"></div>
-
-  <!-- Undo / Redo -->
-  <div class="topbar-group">
-    <button class="topbar-btn" id="undoBtn" title="Undo (Ctrl+Z)" disabled>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg>
-    </button>
-    <button class="topbar-btn" id="redoBtn" title="Redo (Ctrl+Y)" disabled>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016 2.3L21 13"/></svg>
-    </button>
-  </div>
-
-  <div class="topbar-divider"></div>
-
-  <!-- Zoom Controls -->
-  <div class="topbar-group">
-    <button class="topbar-btn" id="zoomOutBtn" title="Zoom Out">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-    </button>
-    <button class="topbar-btn zoom-label" id="zoomLabel" title="Click to reset zoom">100%</button>
-    <button class="topbar-btn" id="zoomInBtn" title="Zoom In">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-    </button>
-    <button class="topbar-btn" id="zoomFitBtn" title="Fit to screen">Fit</button>
-  </div>
-
-  <div class="topbar-divider"></div>
-
-  <!-- Download -->
-  <button class="topbar-btn topbar-download" id="downloadBtn" title="Download PNG">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-    Download
-  </button>
-
-  <!-- Add to Cart -->
-  <button class="topbar-btn topbar-cart" id="addToCartBtn">
-    Add to Cart · <span id="cartPrice">$24.99</span>
-  </button>
-
-</header>
-
-<!-- ═══════════════════════════════════════════════════
-     MAIN LAYOUT
-═══════════════════════════════════════════════════ -->
-<div class="editor-layout">
-
-  <!-- ── LEFT TOOLBAR ───────────────────────────────── -->
-  <aside class="toolbar" id="toolbar">
-
-    <button class="tool-btn active" data-tool="select" id="tool-select" title="Select (V)">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-7 1-3 7z"/></svg>
-    </button>
-
-    <button class="tool-btn" data-tool="text" id="tool-text" title="Text (T)">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
-    </button>
-
-    <button class="tool-btn" data-tool="rect" id="tool-rect" title="Rectangle (R)">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
-    </button>
-
-    <button class="tool-btn" data-tool="circle" id="tool-circle" title="Circle (C)">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
-    </button>
-
-    <button class="tool-btn" data-tool="triangle" id="tool-triangle" title="Triangle">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 3 22 21 2 21"/></svg>
-    </button>
-
-    <button class="tool-btn" data-tool="star" id="tool-star" title="Star">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-    </button>
-
-    <button class="tool-btn" data-tool="line" id="tool-line" title="Line">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="19" x2="19" y2="5"/></svg>
-    </button>
-
-    <button class="tool-btn" data-tool="image" id="tool-image" title="Upload Image">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-    </button>
-    <input type="file" id="imageFileInput" accept="image/*" style="display:none" />
-
-    <button class="tool-btn" data-tool="draw" id="tool-draw" title="Freehand Draw (D)">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-    </button>
-
-    <div class="toolbar-sep"></div>
-
-    <button class="tool-btn panel-trigger" data-panel="templates" id="tool-templates" title="Templates">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-    </button>
-
-    <button class="tool-btn panel-trigger" data-panel="clipart" id="tool-clipart" title="Clipart">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-    </button>
-
-  </aside>
-
-  <!-- ── SLIDE-OUT PANELS ────────────────────────────── -->
-  <div class="slide-panel" id="panel-templates">
-    <div class="slide-panel-header">
-      <span>Templates</span>
-      <button class="slide-panel-close" data-panel="templates">✕</button>
-    </div>
-    <div class="slide-panel-content" id="templatesGrid">
+    <!-- Surface tabs -->
+    <div class="tb-surface-tabs" id="surfaceTabs">
       <!-- Populated by JS -->
     </div>
-  </div>
 
-  <div class="slide-panel" id="panel-clipart">
-    <div class="slide-panel-header">
-      <span>Clipart</span>
-      <button class="slide-panel-close" data-panel="clipart">✕</button>
-    </div>
-    <div class="slide-panel-content" id="clipartContent">
-      <!-- Populated by JS -->
-    </div>
-  </div>
+    <div class="tb-spacer"></div>
 
-  <!-- ── STAGE ──────────────────────────────────────── -->
-  <main class="stage" id="stage">
-    <div class="stage-inner" id="stageInner">
-      <!-- Product mockup + canvas wrapper inserted by JS -->
-      <div class="mockup-container" id="mockupContainer">
-        <div class="product-mockup" id="productMockup">
-          <!-- CSS product shape -->
-        </div>
-        <div class="canvas-wrapper" id="canvasWrapper">
-          <canvas id="fabricCanvas"></canvas>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- ── PROPERTIES PANEL ───────────────────────────── -->
-  <aside class="props-panel" id="propsPanel">
-
-    <!-- NO SELECTION: Product Color -->
-    <div class="props-section" id="propNoSelection">
-
-      <div class="props-group">
-        <div class="props-label">Product Color</div>
-        <div class="color-swatches-grid" id="productColorSwatches">
-          <!-- Populated by JS -->
-        </div>
-        <label class="custom-color-row">
-          <span>Custom</span>
-          <input type="color" id="productColorPicker" value="#ffffff" />
-        </label>
-      </div>
-
-      <div class="props-group">
-        <div class="props-label">Canvas Background</div>
-        <div class="btn-row">
-          <button class="prop-btn active" id="bgTransparentBtn">Transparent</button>
-          <button class="prop-btn" id="bgWhiteBtn">White</button>
-        </div>
-        <input type="color" id="bgColorPicker" value="#ffffff" style="display:none;width:100%;margin-top:8px;" />
-      </div>
-
+    <!-- Undo / Redo -->
+    <div class="tb-group">
+      <button class="tb-btn" id="undoBtn" onclick="undo()" title="Undo (Ctrl+Z)" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
+        </svg>
+      </button>
+      <button class="tb-btn" id="redoBtn" onclick="redo()" title="Redo (Ctrl+Y)" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/>
+        </svg>
+      </button>
     </div>
 
-    <!-- SELECTION: Object Properties -->
-    <div class="props-section hidden" id="propSelection">
+    <div class="tb-divider"></div>
 
-      <!-- Position & Size -->
-      <div class="props-group">
-        <div class="props-label">Position &amp; Size</div>
-        <div class="input-grid-2">
-          <label class="prop-input-label">X<input type="number" id="propX" class="prop-input" /></label>
-          <label class="prop-input-label">Y<input type="number" id="propY" class="prop-input" /></label>
-          <label class="prop-input-label">W<input type="number" id="propW" class="prop-input" /></label>
-          <label class="prop-input-label">H<input type="number" id="propH" class="prop-input" /></label>
-        </div>
-        <label class="prop-input-label" style="margin-top:6px">
-          Rotation
-          <input type="number" id="propRot" class="prop-input" min="-360" max="360" />
-        </label>
-      </div>
-
-      <!-- Fill -->
-      <div class="props-group" id="propFillGroup">
-        <div class="props-label">Fill</div>
-        <div class="btn-row">
-          <input type="color" id="propFill" value="#6366f1" class="color-swatch-input" />
-          <button class="prop-btn" id="propNoFill">No Fill</button>
-        </div>
-      </div>
-
-      <!-- Stroke -->
-      <div class="props-group" id="propStrokeGroup">
-        <div class="props-label">Stroke</div>
-        <div class="btn-row">
-          <input type="color" id="propStroke" value="#000000" class="color-swatch-input" />
-          <span class="slider-label">Width</span>
-          <input type="range" id="propStrokeWidth" min="0" max="20" value="0" class="prop-range" />
-          <span class="range-val" id="propStrokeWidthVal">0</span>
-        </div>
-      </div>
-
-      <!-- Opacity -->
-      <div class="props-group">
-        <div class="props-label">Opacity</div>
-        <div class="slider-row-full">
-          <input type="range" id="propOpacity" min="0" max="100" value="100" class="prop-range" />
-          <span class="range-val" id="propOpacityVal">100%</span>
-        </div>
-      </div>
-
-      <!-- Text Properties -->
-      <div class="props-group hidden" id="propTextGroup">
-        <div class="props-label">Text</div>
-        <select id="propFontFamily" class="prop-select">
-          <option value="Inter" style="font-family:Inter">Inter</option>
-          <option value="Roboto" style="font-family:Roboto">Roboto</option>
-          <option value="Open Sans" style="font-family:'Open Sans'">Open Sans</option>
-          <option value="Poppins" style="font-family:Poppins">Poppins</option>
-          <option value="Montserrat" style="font-family:Montserrat">Montserrat</option>
-          <option value="Lato" style="font-family:Lato">Lato</option>
-          <option value="Nunito" style="font-family:Nunito">Nunito</option>
-          <option value="Oswald" style="font-family:Oswald">Oswald</option>
-          <option value="Raleway" style="font-family:Raleway">Raleway</option>
-          <option value="Playfair Display" style="font-family:'Playfair Display'">Playfair Display</option>
-          <option value="Anton" style="font-family:Anton">Anton</option>
-          <option value="Bebas Neue" style="font-family:'Bebas Neue'">Bebas Neue</option>
-          <option value="Pacifico" style="font-family:Pacifico">Pacifico</option>
-          <option value="Dancing Script" style="font-family:'Dancing Script'">Dancing Script</option>
-          <option value="Georgia" style="font-family:Georgia">Georgia</option>
-          <option value="Impact" style="font-family:Impact">Impact</option>
-          <option value="Courier New" style="font-family:'Courier New'">Courier New</option>
-          <option value="Arial Black" style="font-family:'Arial Black'">Arial Black</option>
-          <option value="Arial" style="font-family:Arial">Arial</option>
-          <option value="Verdana" style="font-family:Verdana">Verdana</option>
-          <option value="Trebuchet MS" style="font-family:'Trebuchet MS'">Trebuchet MS</option>
-        </select>
-        <div class="btn-row" style="margin-top:8px">
-          <label class="prop-input-label">Size<input type="number" id="propFontSize" class="prop-input" min="6" max="400" value="32" /></label>
-          <input type="color" id="propTextColor" value="#000000" class="color-swatch-input" />
-        </div>
-        <div class="text-style-btns" style="margin-top:8px">
-          <button class="style-btn" id="btnBold" title="Bold"><b>B</b></button>
-          <button class="style-btn" id="btnItalic" title="Italic"><i>I</i></button>
-          <button class="style-btn" id="btnUnderline" title="Underline"><u>U</u></button>
-          <button class="style-btn" id="btnAlignLeft" title="Align Left">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
-          </button>
-          <button class="style-btn" id="btnAlignCenter" title="Align Center">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
-          </button>
-          <button class="style-btn" id="btnAlignRight" title="Align Right">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="6" y1="18" x2="21" y2="18"/></svg>
-          </button>
-        </div>
-        <div class="props-label" style="margin-top:10px">Line Height</div>
-        <div class="slider-row-full">
-          <input type="range" id="propLineHeight" min="80" max="300" value="120" class="prop-range" />
-          <span class="range-val" id="propLineHeightVal">1.2</span>
-        </div>
-        <div class="props-label">Letter Spacing</div>
-        <div class="slider-row-full">
-          <input type="range" id="propLetterSpacing" min="-500" max="3000" value="0" class="prop-range" />
-          <span class="range-val" id="propLetterSpacingVal">0</span>
-        </div>
-      </div>
-
-      <!-- Layer Order -->
-      <div class="props-group">
-        <div class="props-label">Layer</div>
-        <div class="btn-row-4">
-          <button class="prop-btn sm" id="layerFront" title="Bring to Front">↑↑</button>
-          <button class="prop-btn sm" id="layerForward" title="Forward">↑</button>
-          <button class="prop-btn sm" id="layerBackward" title="Backward">↓</button>
-          <button class="prop-btn sm" id="layerBack" title="Send to Back">↓↓</button>
-        </div>
-      </div>
-
-      <!-- Align to Canvas -->
-      <div class="props-group">
-        <div class="props-label">Align to Canvas</div>
-        <div class="align-grid">
-          <button class="prop-btn sm" id="alignLeft" title="Align Left">⬅</button>
-          <button class="prop-btn sm" id="alignHCenter" title="Center Horizontal">↔</button>
-          <button class="prop-btn sm" id="alignRight" title="Align Right">➡</button>
-          <button class="prop-btn sm" id="alignTop" title="Align Top">⬆</button>
-          <button class="prop-btn sm" id="alignVCenter" title="Center Vertical">↕</button>
-          <button class="prop-btn sm" id="alignBottom" title="Align Bottom">⬇</button>
-        </div>
-      </div>
-
-      <!-- Actions -->
-      <div class="props-group">
-        <div class="props-label">Actions</div>
-        <div class="btn-row">
-          <button class="prop-btn danger" id="deleteObjBtn">Delete</button>
-          <button class="prop-btn" id="duplicateObjBtn">Duplicate</button>
-        </div>
-      </div>
-
+    <!-- Zoom -->
+    <div class="tb-group zoom-display">
+      <button class="tb-btn" onclick="zoomOut()" title="Zoom Out">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+      <span id="zoomLabel">100%</span>
+      <button class="tb-btn" onclick="zoomIn()" title="Zoom In">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+      <button class="tb-btn" onclick="fitZoom()" title="Fit to screen" style="font-size:11px;font-weight:700;color:#94a3b8;width:auto;padding:0 6px;">FIT</button>
     </div>
 
-  </aside>
+    <div class="tb-divider"></div>
 
-</div><!-- /.editor-layout -->
+    <!-- Download -->
+    <button class="tb-action tb-download" onclick="downloadPNG()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download
+    </button>
 
-<!-- ── TOAST ──────────────────────────────────────────── -->
-<div class="editor-toast" id="editorToast"></div>
+    <!-- Add to Cart -->
+    <button class="tb-action tb-cart" id="cartBtn" onclick="addToCart()">
+      Add to Cart &middot; <span id="cartPrice">$24.99</span>
+    </button>
+
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════
+       MAIN AREA
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="main">
+
+    <!-- ── LEFT TOOLBAR ──────────────────────────────────── -->
+    <nav id="toolbar">
+
+      <button class="tool-btn active" data-tool="select" data-tip="Select (V)" onclick="setTool('select')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 2l16 8.5-8 2-3 8z"/></svg>
+        <span class="tool-label">Select</span>
+      </button>
+
+      <button class="tool-btn" data-tool="text" data-tip="Text (T)" onclick="setTool('text')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="12" y1="6" x2="12" y2="20"/></svg>
+        <span class="tool-label">Text</span>
+      </button>
+
+      <div class="tool-sep"></div>
+
+      <button class="tool-btn" data-tool="rect" data-tip="Rectangle (R)" onclick="setTool('rect')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="1"/></svg>
+        <span class="tool-label">Rect</span>
+      </button>
+
+      <button class="tool-btn" data-tool="circle" data-tip="Circle (C)" onclick="setTool('circle')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+        <span class="tool-label">Circle</span>
+      </button>
+
+      <button class="tool-btn" data-tool="triangle" data-tip="Triangle" onclick="setTool('triangle')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3L22 20H2L12 3z"/></svg>
+        <span class="tool-label">Tri</span>
+      </button>
+
+      <button class="tool-btn" data-tool="star" data-tip="Star" onclick="setTool('star')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.8.6-5 4.7 1.5 6.8L12 17l-6.2 3.4 1.5-6.8-5-4.7 6.8-.6z"/></svg>
+        <span class="tool-label">Star</span>
+      </button>
+
+      <button class="tool-btn" data-tool="line" data-tip="Line" onclick="setTool('line')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="21" x2="21" y2="3"/></svg>
+        <span class="tool-label">Line</span>
+      </button>
+
+      <div class="tool-sep"></div>
+
+      <button class="tool-btn" data-tool="image" data-tip="Upload Image" onclick="triggerImageUpload()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <span class="tool-label">Image</span>
+      </button>
+
+      <button class="tool-btn" data-tool="draw" data-tip="Freehand Draw (D)" onclick="setTool('draw')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 17l6-6 4 4 6-8 4 5"/></svg>
+        <span class="tool-label">Draw</span>
+      </button>
+
+      <div class="tool-sep"></div>
+
+      <button class="tool-btn" data-tool="templates" data-tip="Templates" onclick="openPanel('templates')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span class="tool-label">Tmplt</span>
+      </button>
+
+      <button class="tool-btn" data-tool="clipart" data-tip="Clipart" onclick="openPanel('clipart')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9 9c0-1.7 1.3-3 3-3s3 1.3 3 3-1.3 3-3 3"/><line x1="12" y1="15" x2="12" y2="17"/></svg>
+        <span class="tool-label">Art</span>
+      </button>
+
+    </nav>
+
+    <!-- ── SLIDE PANEL ───────────────────────────────────── -->
+    <div id="slidePanel">
+      <div class="sp-header">
+        <h3 id="slidePanelTitle">Templates</h3>
+        <button class="sp-close" onclick="closePanel()">&#10005;</button>
+      </div>
+      <div class="sp-body" id="slidePanelBody">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- ── STAGE ─────────────────────────────────────────── -->
+    <div id="stage">
+      <div id="canvasWrapper">
+        <div id="mockupShape"></div>
+        <canvas id="designCanvas"></canvas>
+      </div>
+    </div>
+
+    <!-- ── PROPERTIES PANEL ──────────────────────────────── -->
+    <aside id="propPanel">
+      <div class="pp-scroll" id="ppScroll">
+
+        <!-- === NO SELECTION: Product props === -->
+        <div id="ppNoSelection">
+
+          <!-- Product Color -->
+          <div class="pp-section">
+            <div class="pp-section-head" onclick="toggleSection(this)">
+              Product Color <span class="pp-chevron">&#9660;</span>
+            </div>
+            <div class="pp-body">
+              <div class="swatch-grid" id="productSwatches"></div>
+              <div class="pp-row">
+                <label class="pp-label pp-label-wide">Custom</label>
+                <input type="color" class="pp-color" id="productColorCustom" value="#ffffff" oninput="setProductColor(this.value); document.getElementById('productColorHex').value=this.value" />
+                <input type="text" class="pp-input" id="productColorHex" value="#ffffff" style="width:80px;flex:none" onchange="setProductColor(this.value); document.getElementById('productColorCustom').value=this.value" maxlength="7" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Canvas Background -->
+          <div class="pp-section">
+            <div class="pp-section-head" onclick="toggleSection(this)">
+              Canvas Background <span class="pp-chevron">&#9660;</span>
+            </div>
+            <div class="pp-body">
+              <div class="pp-row">
+                <label class="pp-label pp-label-wide">Color</label>
+                <input type="color" class="pp-color" id="canvasBgColor" value="#ffffff" oninput="setCanvasBg(this.value)" />
+                <button class="pp-btn" onclick="setCanvasBg('transparent')" style="font-size:11px">Transparent</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- === SELECTION: Object props === -->
+        <div id="ppSelection" style="display:none">
+
+          <!-- Position & Size -->
+          <div class="pp-section">
+            <div class="pp-section-head" onclick="toggleSection(this)">
+              Position &amp; Size <span class="pp-chevron">&#9660;</span>
+            </div>
+            <div class="pp-body">
+              <div class="pp-row">
+                <span class="pp-label">X</span>
+                <input type="number" class="pp-input pp-input-sm" id="ppX" oninput="applyTransform()" />
+                <span class="pp-label" style="margin-left:4px">Y</span>
+                <input type="number" class="pp-input pp-input-sm" id="ppY" oninput="applyTransform()" />
+              </div>
+              <div class="pp-row">
+                <span class="pp-label">W</span>
+                <input type="number" class="pp-input pp-input-sm" id="ppW" oninput="applyTransform()" />
+                <span class="pp-label" style="margin-left:4px">H</span>
+                <input type="number" class="pp-input pp-input-sm" id="ppH" oninput="applyTransform()" />
+              </div>
+              <div class="pp-row">
+                <span class="pp-label">Rot</span>
+                <input type="number" class="pp-input" id="ppRot" oninput="applyTransform()" />
+                <span class="pp-val">&#176;</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fill -->
+          <div class="pp-section">
+            <div class="pp-section-head" onclick="toggleSection(this)">
+              Fill <span class="pp-chevron">&#9660;</span>
+            </div>
+            <div class="pp-body">
+              <div class="pp-row">
+                <div class="pp-color-wrap">
+                  <input type="color" class="pp-color" id="ppFill" oninput="applyFill(); document.getElementById('ppFillHex').value=this.value" />
+                  <input type="text" class="pp-input" id="ppFillHex" style="max-width:90px" onchange="syncColorFromHex('ppFill','ppFillHex'); applyFill();" maxlength="7" />
+                </div>
+                <button class="pp-btn" onclick="applyNoFill()">No Fill</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stroke -->
+          <div class="pp-section">
+            <div class="pp-section-head" onclick="toggleSection(this)">
+              Stroke <span class="pp-chevron">&#9660;</span>
+            </div>
+            <div class="pp-body">
+              <div class="pp-row">
+                <input type="color" class="pp-color" id="ppStroke" oninput="applyStroke(); document.getElementById('ppStrokeHex').value=this.value" />
+                <input type="text" class="pp-input" id="ppStrokeHex" style="max-width:90px" onchange="syncColorFromHex('ppStroke','ppStrokeHex'); applyStroke();" maxlength="7" />
+              </div>
+              <div class="pp-row">
+                <span class="pp-label pp-label-wide">Width</span>
+                <input type="range" class="pp-slider" id="ppStrokeW" min="0" max="20" value="0" oninput="applyStroke(); document.getElementById('ppStrokeWVal').textContent=this.value+'px'" />
+                <span class="pp-val" id="ppStrokeWVal">0px</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Opacity -->
+          <div class="pp-section">
+            <div class="pp-section-head" onclick="toggleSection(this)">
+              Opacity <span class="pp-chevron">&#9660;</span>
+            </div>
+            <div class="pp-body">
+              <div class="pp-row">
+                <input type="range" class="pp-slider" id="ppOpacity" min="0" max="100" value="100" oninput="applyOpacity(); document.getElementById('ppOpacityVal').textContent=this.value+'%'" />
+                <span class="pp-val" id="ppOpacityVal">100%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Text (shown only for text objects) -->
+          <div class="pp-section" id="ppTextSection" style="display:none">
+            <div class="pp-section-head" onclick="toggleSection(this)">
+              Text <span class="pp-chevron">&#9660;</span>
+            </div>
+            <div class="pp-body">
+              <div class="pp-row">
+                <select class="pp-select" id="ppFontFamily" onchange="applyTextProps()">
+                  <option value="Inter" style="font-family:Inter">Inter</option>
+                  <option value="Roboto" style="font-family:Roboto">Roboto</option>
+                  <option value="Open Sans" style="font-family:'Open Sans'">Open Sans</option>
+                  <option value="Poppins" style="font-family:Poppins">Poppins</option>
+                  <option value="Montserrat" style="font-family:Montserrat">Montserrat</option>
+                  <option value="Lato" style="font-family:Lato">Lato</option>
+                  <option value="Nunito" style="font-family:Nunito">Nunito</option>
+                  <option value="Oswald" style="font-family:Oswald">Oswald</option>
+                  <option value="Raleway" style="font-family:Raleway">Raleway</option>
+                  <option value="Playfair Display" style="font-family:'Playfair Display'">Playfair Display</option>
+                  <option value="Anton" style="font-family:Anton">Anton</option>
+                  <option value="Bebas Neue" style="font-family:'Bebas Neue'">Bebas Neue</option>
+                  <option value="Pacifico" style="font-family:Pacifico">Pacifico</option>
+                  <option value="Dancing Script" style="font-family:'Dancing Script'">Dancing Script</option>
+                  <option value="Georgia" style="font-family:Georgia">Georgia</option>
+                  <option value="Impact" style="font-family:Impact">Impact</option>
+                  <option value="Courier New" style="font-family:'Courier New'">Courier New</option>
+                  <option value="Arial Black" style="font-family:'Arial Black'">Arial Black</option>
+                  <option value="Arial" style="font-family:Arial">Arial</option>
+                  <option value="Verdana" style="font-family:Verdana">Verdana</option>
+                  <option value="Trebuchet MS" style="font-family:'Trebuchet MS'">Trebuchet MS</option>
+                </select>
+              </div>
+              <div class="pp-row">
+                <span class="pp-label pp-label-wide">Size</span>
+                <input type="number" class="pp-input" id="ppFontSize" min="6" max="400" oninput="applyTextProps()" />
+                <span class="pp-val">px</span>
+              </div>
+              <div class="pp-row">
+                <span class="pp-label pp-label-wide">Color</span>
+                <input type="color" class="pp-color" id="ppTextColor" oninput="applyTextColor()" />
+              </div>
+              <div class="pp-row">
+                <div class="pp-btn-group" style="width:100%">
+                  <button class="pp-btn" id="ppBold" onclick="toggleTextStyle('bold')"><b>B</b></button>
+                  <button class="pp-btn" id="ppItalic" onclick="toggleTextStyle('italic')"><i>I</i></button>
+                  <button class="pp-btn" id="ppUnderline" onclick="toggleTextStyle('underline')"><u>U</u></button>
+                </div>
+              </div>
+              <div class="pp-row">
+                <div class="pp-btn-group" style="width:100%">
+                  <button class="pp-btn" id="ppAlignLeft" onclick="applyTextAlign('left')">&#8676; L</button>
+                  <button class="pp-btn" id="ppAlignCenter" onclick="applyTextAlign('center')">&#8677; C</button>
+                  <button class="pp-btn" id="ppAlignRight" onclick="applyTextAlign('right')">R &#8677;</button>
+                </div>
+              </div>
+              <div class="pp-row">
+                <span class="pp-label pp-label-wide">Line H</span>
+                <input type="range" class="pp-slider" id="ppLineH" min="80" max="300" value="120" oninput="applyTextProps(); document.getElementById('ppLineHVal').textContent=(this.value/100).toFixed(1)" />
+                <span class="pp-val" id="ppLineHVal">1.2</span>
+              </div>
+              <div class="pp-row">
+                <span class="pp-label pp-label-wide">Spacing</span>
+                <input type="range" class="pp-slider" id="ppLetterS" min="-50" max="300" value="0" oninput="applyTextProps(); document.getElementById('ppLetterSVal').textContent=(this.value/10).toFixed(1)" />
+                <span class="pp-val" id="ppLetterSVal">0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Layer Order -->
+          <div class="pp-section">
+            <div class="pp-section-head" onclick="toggleSection(this)">
+              Layer Order <span class="pp-chevron">&#9660;</span>
+            </div>
+            <div class="pp-body">
+              <div class="pp-btn-group">
+                <button class="pp-btn" onclick="layerOp('front')" title="Bring to Front">&#8679;&#8679;</button>
+                <button class="pp-btn" onclick="layerOp('up')" title="Forward">&#8679;</button>
+                <button class="pp-btn" onclick="layerOp('down')" title="Backward">&#8681;</button>
+                <button class="pp-btn" onclick="layerOp('back')" title="Send to Back">&#8681;&#8681;</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Align to Canvas -->
+          <div class="pp-section">
+            <div class="pp-section-head" onclick="toggleSection(this)">
+              Align to Canvas <span class="pp-chevron">&#9660;</span>
+            </div>
+            <div class="pp-body">
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px">
+                <button class="pp-btn" onclick="alignObj('left')">&#8592; L</button>
+                <button class="pp-btn" onclick="alignObj('hcenter')">&#8596; H</button>
+                <button class="pp-btn" onclick="alignObj('right')">R &#8594;</button>
+                <button class="pp-btn" onclick="alignObj('top')">&#8593; T</button>
+                <button class="pp-btn" onclick="alignObj('vcenter')">&#8597; V</button>
+                <button class="pp-btn" onclick="alignObj('bottom')">B &#8595;</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="pp-section">
+            <div class="pp-section-head" onclick="toggleSection(this)">
+              Actions <span class="pp-chevron">&#9660;</span>
+            </div>
+            <div class="pp-body">
+              <div class="pp-btn-group">
+                <button class="pp-btn" onclick="duplicateSelected()">Duplicate</button>
+                <button class="pp-btn danger" onclick="deleteSelected()">Delete</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </aside>
+
+  </div><!-- /#main -->
+
+</div><!-- /#app -->
+
+<!-- Hidden image upload input -->
+<input type="file" id="imageUploadInput" accept="image/*" style="display:none" onchange="onImageUpload(event)" />
+
+<!-- Toast -->
+<div id="toast"></div>
 
 <script src="js/editor.js"></script>
 </body>
