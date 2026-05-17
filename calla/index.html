@@ -228,6 +228,13 @@ footer { background: var(--navy); padding: 48px 0 32px; }
 .footer-tagline { font-size: .75rem; color: rgba(255,255,255,.2); }
 .footer-copy { text-align: center; font-size: .75rem; color: rgba(255,255,255,.15); }
 
+/* Typing indicator */
+@keyframes typing { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+.typing-dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.5); animation:typing 1.2s ease-in-out infinite; }
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+.typing-indicator { display:none; gap:4px; padding:10px 14px; background:rgba(0,150,199,.2); border-radius:14px; border-bottom-left-radius:4px; width:fit-content; }
+.typing-indicator.show { display:flex; }
 /* Audio demo */
 .demo-section { background: var(--navy); padding: 96px 0; }
 .demo-wrap { max-width: 780px; margin: 0 auto; padding: 0 24px; text-align: center; }
@@ -439,46 +446,25 @@ footer { background: var(--navy); padding: 48px 0 32px; }
 
     <div class="demo-player">
       <div class="demo-chat" id="demoChat">
-        <div class="bubble aria active" id="b0">
-          <div class="bub-avatar">AR</div>
-          <div class="bub-text">Thank you for calling! This is ARIA — how can I help you today?</div>
-        </div>
-        <div class="bubble customer" id="b1">
-          <div class="bub-avatar">👤</div>
-          <div class="bub-text">Hi, I'd like to book a haircut for Saturday.</div>
-        </div>
-        <div class="bubble aria" id="b2">
-          <div class="bub-avatar">AR</div>
-          <div class="bub-text">Of course! We have openings at 10am, 1pm, and 3pm on Saturday. Which works best for you?</div>
-        </div>
-        <div class="bubble customer" id="b3">
-          <div class="bub-avatar">👤</div>
-          <div class="bub-text">1pm would be perfect.</div>
-        </div>
-        <div class="bubble aria" id="b4">
-          <div class="bub-avatar">AR</div>
-          <div class="bub-text">Wonderful! Can I get your name to hold the appointment?</div>
-        </div>
-        <div class="bubble customer" id="b5">
-          <div class="bub-avatar">👤</div>
-          <div class="bub-text">It's Maria.</div>
-        </div>
-        <div class="bubble aria" id="b6">
-          <div class="bub-avatar">AR</div>
-          <div class="bub-text">You're all set, Maria! Saturday at 1pm. We'll send you a reminder the day before. Is there anything else I can help you with?</div>
+        <!-- bubbles injected by JS -->
+      </div>
+      <div class="bubble aria" id="typingRow" style="margin-top:4px">
+        <div class="bub-avatar">AR</div>
+        <div class="typing-indicator" id="typingDots">
+          <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
         </div>
       </div>
 
       <div class="demo-controls">
         <button class="play-btn" id="playBtn" onclick="playDemo()">
-          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#fff"/></svg>
         </button>
         <div class="demo-wave" id="demoWave">
           <span></span><span></span><span></span><span></span><span></span>
           <span></span><span></span><span></span><span></span><span></span>
           <span></span><span></span><span></span><span></span><span></span>
         </div>
-        <span class="demo-label" id="demoLabel">Press play</span>
+        <span class="demo-label" id="demoLabel">Press play to preview</span>
       </div>
     </div>
 
@@ -640,81 +626,76 @@ footer { background: var(--navy); padding: 48px 0 32px; }
     }
   });
 
-  // Audio demo
+  // Animated conversation demo — works on every device, no audio needed
   var demoPlaying = false;
-  var demoIdx = 0;
-  var lines = [
-    { id:'b0', speaker:'aria',     text:'Thank you for calling! This is ARIA — how can I help you today?' },
-    { id:'b1', speaker:'customer', text:'Hi, I would like to book a haircut for Saturday.' },
-    { id:'b2', speaker:'aria',     text:'Of course! We have openings at 10 AM, 1 PM, and 3 PM on Saturday. Which works best for you?' },
-    { id:'b3', speaker:'customer', text:'1 PM would be perfect.' },
-    { id:'b4', speaker:'aria',     text:'Wonderful! Can I get your name to hold the appointment?' },
-    { id:'b5', speaker:'customer', text:'Its Maria.' },
-    { id:'b6', speaker:'aria',     text:'You are all set, Maria! Saturday at 1 PM. We will text you a reminder the day before. Is there anything else I can help you with?' },
+  var demoTimer = null;
+  var script = [
+    { speaker:'aria',     text:'Thank you for calling! This is ARIA — how can I help you today?',               delay:600  },
+    { speaker:'customer', text:'Hi, I\'d like to book a haircut for Saturday.',                                   delay:2200 },
+    { speaker:'aria',     text:'Of course! We have openings at 10am, 1pm, and 3pm on Saturday. Which works?',   delay:2000 },
+    { speaker:'customer', text:'1pm would be perfect.',                                                           delay:2400 },
+    { speaker:'aria',     text:'Wonderful! Can I get your name to hold the appointment?',                        delay:1600 },
+    { speaker:'customer', text:'It\'s Maria.',                                                                    delay:2000 },
+    { speaker:'aria',     text:'You\'re all set, Maria! Saturday at 1pm. We\'ll text a reminder the day before.',delay:1400 },
   ];
 
-  function setBtn(playing) {
-    var b = document.getElementById('playBtn');
-    b.innerHTML = playing
-      ? '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="#fff"/><rect x="14" y="4" width="4" height="16" fill="#fff"/></svg>'
-      : '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#fff"/></svg>';
-  }
-
-  function stopDemo() {
-    window.speechSynthesis.cancel();
+  function resetDemo() {
+    clearTimeout(demoTimer);
     demoPlaying = false;
-    demoIdx = 0;
+    document.getElementById('demoChat').innerHTML = '';
+    document.getElementById('typingDots').classList.remove('show');
     document.getElementById('demoWave').classList.remove('playing');
-    document.getElementById('demoLabel').textContent = 'Press play';
-    setBtn(false);
-    lines.forEach(function(l,i){ document.getElementById(l.id).style.opacity = i===0?'1':'0.2'; });
+    document.getElementById('demoLabel').textContent = 'Press play to preview';
+    document.getElementById('playBtn').innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#fff"/></svg>';
   }
 
-  function speakLine() {
-    if (!demoPlaying || demoIdx >= lines.length) { stopDemo(); return; }
-    var line = lines[demoIdx];
-    lines.forEach(function(l){ document.getElementById(l.id).style.opacity='0.2'; });
-    document.getElementById(line.id).style.opacity = '1';
-    document.getElementById('demoLabel').textContent = line.speaker==='aria' ? 'ARIA speaking...' : 'Customer speaking...';
+  function addBubble(line) {
+    var chat = document.getElementById('demoChat');
+    var div = document.createElement('div');
+    div.className = 'bubble ' + line.speaker;
+    div.style.opacity = '0';
+    div.style.transition = 'opacity 0.3s';
+    div.innerHTML = line.speaker === 'aria'
+      ? '<div class="bub-avatar">AR</div><div class="bub-text">' + line.text + '</div>'
+      : '<div class="bub-avatar">👤</div><div class="bub-text">' + line.text + '</div>';
+    chat.appendChild(div);
+    setTimeout(function(){ div.style.opacity = '1'; }, 30);
+    div.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }
 
-    var utt = new SpeechSynthesisUtterance(line.text);
-    var voices = window.speechSynthesis.getVoices();
-    if (line.speaker === 'aria') {
-      var v = voices.find(function(v){ return /samantha|karen|moira|zira|victoria/i.test(v.name); })
-             || voices.find(function(v){ return v.lang==='en-US' && v.name.toLowerCase().includes('female'); })
-             || voices.find(function(v){ return v.lang==='en-US'; });
-      if (v) utt.voice = v;
-      utt.pitch = 1.2; utt.rate = 0.92;
-    } else {
-      utt.pitch = 0.85; utt.rate = 1.0;
+  function runStep(idx) {
+    if (!demoPlaying || idx >= script.length) {
+      document.getElementById('typingDots').classList.remove('show');
+      document.getElementById('demoWave').classList.remove('playing');
+      document.getElementById('demoLabel').textContent = 'Tap to replay';
+      document.getElementById('playBtn').innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#fff"/></svg>';
+      demoPlaying = false;
+      return;
     }
-    utt.onend = function(){ demoIdx++; setTimeout(speakLine, 500); };
-    utt.onerror = function(){ demoIdx++; setTimeout(speakLine, 300); };
-    window.speechSynthesis.speak(utt);
+    var line = script[idx];
+    // Show typing indicator for ARIA lines
+    if (line.speaker === 'aria') {
+      document.getElementById('typingDots').classList.add('show');
+      document.getElementById('demoLabel').textContent = 'ARIA is typing...';
+    } else {
+      document.getElementById('typingDots').classList.remove('show');
+      document.getElementById('demoLabel').textContent = 'Customer responding...';
+    }
+    demoTimer = setTimeout(function() {
+      document.getElementById('typingDots').classList.remove('show');
+      addBubble(line);
+      demoTimer = setTimeout(function(){ runStep(idx + 1); }, line.delay);
+    }, line.speaker === 'aria' ? 900 : 400);
   }
 
   function playDemo() {
-    // Must call cancel() synchronously inside click for iOS unlock
-    window.speechSynthesis.cancel();
-
-    if (demoPlaying) { stopDemo(); return; }
-
-    if (!window.speechSynthesis) {
-      alert('Your browser doesn\'t support audio. Call +1 (904) 664-3560 to hear ARIA live!');
-      return;
-    }
-
+    if (demoPlaying) { resetDemo(); return; }
+    resetDemo();
     demoPlaying = true;
-    demoIdx = 0;
     document.getElementById('demoWave').classList.add('playing');
-    setBtn(true);
-    lines.forEach(function(l,i){ document.getElementById(l.id).style.opacity=i===0?'1':'0.2'; });
-
-    // iOS unlock: speak a silent utterance first, then proceed
-    var unlock = new SpeechSynthesisUtterance('');
-    unlock.volume = 0.01;
-    unlock.onend = speakLine;
-    window.speechSynthesis.speak(unlock);
+    document.getElementById('playBtn').innerHTML = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="#fff"/><rect x="14" y="4" width="4" height="16" fill="#fff"/></svg>';
+    document.getElementById('demoLabel').textContent = 'Live conversation...';
+    runStep(0);
   }
 </script>
 </body>
