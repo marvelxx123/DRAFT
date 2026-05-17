@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import type { GetStepTools } from "inngest";
 import { inngest } from "@/lib/inngest";
 import { createAdminClient } from "@/lib/supabase";
 import type { ContentAssignment } from "./marketing-manager";
@@ -165,7 +166,7 @@ export const contentAgentTriggered = inngest.createFunction(
 // ---------------------------------------------------------------------------
 
 async function runContentGeneration(
-  step: Parameters<Parameters<typeof inngest.createFunction>[2]>[0]["step"],
+  step: GetStepTools<typeof inngest>,
   assignments: ContentAssignment[],
   keyMessage: string
 ) {

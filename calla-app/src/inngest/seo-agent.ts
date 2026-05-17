@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import type { GetStepTools } from "inngest";
 import { inngest } from "@/lib/inngest";
 import { createAdminClient } from "@/lib/supabase";
 

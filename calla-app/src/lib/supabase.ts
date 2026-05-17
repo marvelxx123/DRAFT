@@ -58,55 +58,75 @@ export interface Call {
 }
 
 // ---------------------------------------------------------------------------
-// Company AI table types
+// Agent table types — mirrors schema-agents.sql
 // ---------------------------------------------------------------------------
 
-export interface WeeklyPlan {
+export interface WeeklyPlanRow {
   id: string;
   created_at: string;
-  week_start: string;
-  weekly_goal: string;
-  content_topics: string[];
-  seo_target: string | null;
-  outreach_segment: string | null;
-  outreach_daily_volume: number | null;
+  week_of: string;
+  goal: string | null;
+  plan_json: Record<string, unknown> | null;
+  status: "active" | "archived" | "superseded";
 }
 
-export interface ContentPost {
+export interface ContentPostRow {
   id: string;
   created_at: string;
-  topic: string;
-  format: "blog" | "instagram" | "twitter" | "linkedin";
-  blog_body: string | null;
-  social_caption: string | null;
-  status: "ready" | "published";
+  topic: string | null;
+  blog_post: string | null;
+  instagram_caption: string | null;
+  twitter_thread: Record<string, unknown> | null;
+  linkedin_post: string | null;
+  meta_title: string | null;
+  meta_description: string | null;
+  status: "ready" | "published" | "archived";
+  published_at: string | null;
 }
 
-export interface SEOReport {
+export interface SEOReportRow {
   id: string;
   created_at: string;
   target_page: string;
-  keyword_count: number | null;
-  keywords: Array<{ keyword: string; intent: string; volume?: number | null; difficulty?: number | null }> | null;
+  keywords: Record<string, unknown>[] | null;
   meta_title: string | null;
   meta_description: string | null;
-  content_gaps: string[] | null;
-  backlink_targets: string[] | null;
-  hero_headline: string | null;
-  subheadline: string | null;
-  cta_text: string | null;
+  content_gaps: Record<string, unknown>[] | null;
+  backlink_targets: Record<string, unknown>[] | null;
+  status: "new" | "reviewed" | "implemented" | "archived";
 }
 
-export interface OutreachItem {
+export interface ProspectRow {
   id: string;
   created_at: string;
-  business_name: string;
+  business_name: string | null;
   business_type: string | null;
+  instagram_handle: string | null;
+  email: string | null;
+  city: string | null;
+  status: "new" | "contacted" | "responded" | "converted" | "disqualified";
+}
+
+export interface OutreachQueueRow {
+  id: string;
+  created_at: string;
+  prospect_id: string;
   dm_copy: string | null;
   email_subject: string | null;
   email_body: string | null;
-  status: "ready" | "sent";
+  channel: "instagram" | "email" | "both";
+  status: "ready" | "sent" | "failed" | "skipped";
   sent_at: string | null;
+}
+
+export interface CopySuggestionRow {
+  id: string;
+  created_at: string;
+  page: string;
+  hero_headline: string | null;
+  hero_subheadline: string | null;
+  cta_text: string | null;
+  status: "pending" | "approved" | "rejected" | "deployed";
 }
 
 export interface Database {
@@ -123,24 +143,34 @@ export interface Database {
         Update: Partial<Omit<Call, "id" | "created_at">>;
       };
       weekly_plans: {
-        Row: WeeklyPlan;
-        Insert: Omit<WeeklyPlan, "id" | "created_at">;
-        Update: Partial<Omit<WeeklyPlan, "id" | "created_at">>;
+        Row: WeeklyPlanRow;
+        Insert: Omit<WeeklyPlanRow, "id" | "created_at">;
+        Update: Partial<Omit<WeeklyPlanRow, "id" | "created_at">>;
       };
       content_posts: {
-        Row: ContentPost;
-        Insert: Omit<ContentPost, "id" | "created_at">;
-        Update: Partial<Omit<ContentPost, "id" | "created_at">>;
+        Row: ContentPostRow;
+        Insert: Omit<ContentPostRow, "id" | "created_at">;
+        Update: Partial<Omit<ContentPostRow, "id" | "created_at">>;
       };
       seo_reports: {
-        Row: SEOReport;
-        Insert: Omit<SEOReport, "id" | "created_at">;
-        Update: Partial<Omit<SEOReport, "id" | "created_at">>;
+        Row: SEOReportRow;
+        Insert: Omit<SEOReportRow, "id" | "created_at">;
+        Update: Partial<Omit<SEOReportRow, "id" | "created_at">>;
+      };
+      prospects: {
+        Row: ProspectRow;
+        Insert: Omit<ProspectRow, "id" | "created_at">;
+        Update: Partial<Omit<ProspectRow, "id" | "created_at">>;
       };
       outreach_queue: {
-        Row: OutreachItem;
-        Insert: Omit<OutreachItem, "id" | "created_at">;
-        Update: Partial<Omit<OutreachItem, "id" | "created_at">>;
+        Row: OutreachQueueRow;
+        Insert: Omit<OutreachQueueRow, "id" | "created_at">;
+        Update: Partial<Omit<OutreachQueueRow, "id" | "created_at">>;
+      };
+      copy_suggestions: {
+        Row: CopySuggestionRow;
+        Insert: Omit<CopySuggestionRow, "id" | "created_at">;
+        Update: Partial<Omit<CopySuggestionRow, "id" | "created_at">>;
       };
     };
     Views: {
