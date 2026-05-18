@@ -358,6 +358,19 @@ export default function ScoutDashboard({ session }) {
         </div>
         <p style={{ fontSize:13, color:T.sub, marginBottom:18, paddingLeft:30 }}>Find your next player. Save time. Make better decisions.</p>
 
+        {/* Scout Pro CTA */}
+        <button onClick={()=>navigate('/scout-pro')}
+          style={{ width:'100%', padding:'14px 18px', background:`linear-gradient(135deg, ${T.electric}15, ${T.gold}08)`, border:`1px solid ${T.electric}44`, borderRadius:14, display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14, cursor:'pointer' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+            <span style={{ fontSize:22 }}>🤖</span>
+            <div style={{ textAlign:'left' }}>
+              <div style={{ fontSize:13, fontWeight:800, color:T.electric }}>Scout Pro — AI Analysis</div>
+              <div style={{ fontSize:11, color:T.sub }}>Upload footage · Claude watches · PDF report</div>
+            </div>
+          </div>
+          <span style={{ fontSize:18, color:T.electric }}>›</span>
+        </button>
+
         {/* Stats bar */}
         <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:10, marginBottom:18 }}>
           {[[saved.length,'Saved Players'],[boards.length,'My Boards'],[Object.keys(notes).length,'Notes']].map(([v,k])=>(

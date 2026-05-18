@@ -4,182 +4,306 @@ const path = require('path');
 const { log } = require('./logger');
 
 const AGENT_ID = 'googleads';
-const SCRIPT_FILE = path.join(__dirname, '../../data/google-ads-script.js');
-const COPY_FILE   = path.join(__dirname, '../../data/google-ads-copy.json');
+const SCRIPT_FILE   = path.join(__dirname, '../../data/google-ads-script.js');
+const HEADLINES_FILE = path.join(__dirname, '../../data/google-ads-headlines.json');
 
-async function callClaude(prompt) {
+// Run interval: 48 hours (registered in agentRunner)
+const INTERVAL_MS = 48 * 60 * 60 * 1000;
+
+const AD_GROUPS = [
+  { name: 'T-Shirts',   product: 'T-Shirt',   keyword: 't-shirt' },
+  { name: 'Hoodies',    product: 'Hoodie',     keyword: 'hoodie' },
+  { name: 'Glasses',    product: 'Glasses',    keyword: 'glasses' },
+  { name: 'Mugs',       product: 'Mug',        keyword: 'mug' },
+  { name: 'Caps',       product: 'Cap',        keyword: 'cap' },
+  { name: 'Tote Bags',  product: 'Tote Bag',   keyword: 'tote bag' },
+];
+
+async function callClaude(prompt, maxTokens = 1200) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
+
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-    body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 1500,
-      messages: [{ role: 'user', content: prompt }] }),
+    headers: {
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: maxTokens,
+      messages: [{ role: 'user', content: prompt }],
+    }),
   });
-  if (!res.ok) throw new Error(`Claude API ${res.status}`);
-  return (await res.json()).content[0].text.trim();
+  if (!res.ok) throw new Error(`Claude API error: ${res.status}`);
+  const data = await res.json();
+  return data.content[0].text.trim();
+}
+
+/**
+ * Ask Claude to generate ad copy for a single product ad group.
+ * Returns { headlines: string[], descriptions: string[] }
+ */
+async function generateAdCopy(product) {
+  const raw = await callClaude(
+    `You are an expert Google Ads copywriter for WEARIT, a bold streetwear custom print-on-demand brand.\n` +
+    `Generate ad copy for the product: custom ${product}.\n\n` +
+    `Rules:\n` +
+    `- 10 headlines, each STRICTLY under 30 characters (including spaces). Count carefully.\n` +
+    `- 4 descriptions, each STRICTLY under 90 characters (including spaces). Count carefully.\n` +
+    `- Tone: bold, streetwear, personalization-focused. Use power words.\n` +
+    `- Do NOT use punctuation that Google Ads disallows (!, ?, @ etc. in headlines — one ! per description max).\n` +
+    `- No trademark names.\n\n` +
+    `Output EXACTLY in this format — nothing else:\n` +
+    `HEADLINES:\n` +
+    `H1: [headline]\n` +
+    `H2: [headline]\n` +
+    `H3: [headline]\n` +
+    `H4: [headline]\n` +
+    `H5: [headline]\n` +
+    `H6: [headline]\n` +
+    `H7: [headline]\n` +
+    `H8: [headline]\n` +
+    `H9: [headline]\n` +
+    `H10: [headline]\n` +
+    `DESCRIPTIONS:\n` +
+    `D1: [description]\n` +
+    `D2: [description]\n` +
+    `D3: [description]\n` +
+    `D4: [description]`,
+    800
+  );
+
+  const headlines = [];
+  const descriptions = [];
+
+  const hMatches = raw.match(/H\d+:\s*(.+)/g) || [];
+  const dMatches = raw.match(/D\d+:\s*(.+)/g) || [];
+
+  for (const m of hMatches) {
+    const text = m.replace(/^H\d+:\s*/, '').trim().slice(0, 30);
+    headlines.push(text);
+  }
+  for (const m of dMatches) {
+    const text = m.replace(/^D\d+:\s*/, '').trim().slice(0, 90);
+    descriptions.push(text);
+  }
+
+  // Pad if Claude returned fewer than expected
+  while (headlines.length < 10) headlines.push(`Custom ${product} - WEARIT`.slice(0, 30));
+  while (descriptions.length < 4)  descriptions.push(`Design your own ${product} at WEARIT. Quality print on demand.`.slice(0, 90));
+
+  return { headlines: headlines.slice(0, 10), descriptions: descriptions.slice(0, 4) };
+}
+
+/**
+ * Build the complete Google Ads Script JS string.
+ * adGroups: [{ name, product, keyword, headlines, descriptions }]
+ */
+function buildGoogleAdsScript(adGroups) {
+  const groupCode = adGroups.map(group => {
+    const hLines = group.headlines.map((h, i) => `    headlines[${i}] = adGroup.newAd().expandedTextAdBuilder().withHeadlinePart1("${h.replace(/"/g, '\\"')}");`).join('\n');
+    const hArray = group.headlines.map(h => `"${h.replace(/"/g, '\\"')}"`).join(', ');
+    const dArray = group.descriptions.map(d => `"${d.replace(/"/g, '\\"')}"`).join(', ');
+    const kwBase = group.keyword;
+
+    return `
+  // ── Ad Group: ${group.name} ────────────────────────────────────
+  (function() {
+    var groupName = "${group.name}";
+    var headlines    = [${hArray}];
+    var descriptions = [${dArray}];
+    var keywords = [
+      "custom ${kwBase}",
+      "personalized ${kwBase}",
+      "print on demand ${kwBase}",
+      "+custom +${kwBase}",
+      "+personalized +${kwBase}",
+    ];
+
+    // Find or create ad group
+    var agIterator = campaign.adGroups().withCondition('Name = "' + groupName + '"').get();
+    var adGroup;
+    if (agIterator.hasNext()) {
+      adGroup = agIterator.next();
+      Logger.log("  Found existing ad group: " + groupName);
+    } else {
+      adGroup = campaign.newAdGroupBuilder()
+        .withName(groupName)
+        .withStatus("ENABLED")
+        .withCpc(1.50)
+        .build()
+        .getResult();
+      Logger.log("  Created ad group: " + groupName);
+    }
+
+    // Add keywords (skip if already present)
+    var existingKwSet = {};
+    var kwIter = adGroup.keywords().get();
+    while (kwIter.hasNext()) {
+      var kw = kwIter.next();
+      existingKwSet[kw.getText()] = true;
+    }
+    keywords.forEach(function(kw) {
+      var isPhrase = kw.indexOf('"') !== -1;
+      var isBMM    = kw.indexOf('+') !== -1;
+      var cleanKw  = kw.replace(/["+]/g, '').trim();
+      if (!existingKwSet[kw] && !existingKwSet['"' + cleanKw + '"']) {
+        try {
+          if (isBMM) {
+            adGroup.newKeywordBuilder().withText(kw).withMatchType("BROAD").build();
+          } else {
+            adGroup.newKeywordBuilder().withText('"' + cleanKw + '"').withMatchType("PHRASE").build();
+          }
+          Logger.log("    Added keyword: " + kw);
+        } catch(e) {
+          Logger.log("    Keyword add error: " + kw + " — " + e.message);
+        }
+      }
+    });
+
+    // Create responsive search ad if none exists
+    var adIter = adGroup.ads().withCondition("Type = RESPONSIVE_SEARCH_AD").get();
+    if (!adIter.hasNext()) {
+      try {
+        var adBuilder = adGroup.newAd().responsiveSearchAdBuilder();
+        headlines.forEach(function(h) { adBuilder.addHeadline(h); });
+        descriptions.forEach(function(d) { adBuilder.addDescription(d); });
+        adBuilder
+          .withFinalUrl("https://wearit.com/editor.html?product=${group.keyword.replace(/ /g, '_')}")
+          .withPath1("Custom")
+          .withPath2("${group.product.replace(/ /g, '')}")
+          .build();
+        Logger.log("  Created responsive search ad for: " + groupName);
+      } catch(e) {
+        Logger.log("  Ad creation error for " + groupName + ": " + e.message);
+      }
+    } else {
+      Logger.log("  Ad already exists for: " + groupName);
+    }
+  })();
+`;
+  }).join('\n');
+
+  return `/**
+ * WEARIT — Google Ads Automation Script
+ * Generated: ${new Date().toISOString()}
+ * Generated by: WEARIT Google Ads Agent (AI-powered)
+ *
+ * HOW TO USE:
+ * 1. In Google Ads, go to Tools & Settings → Bulk Actions → Scripts
+ * 2. Click the + button to create a new script
+ * 3. Paste this entire file into the editor
+ * 4. Click "Authorize" and grant access
+ * 5. Click "Preview" to test without making changes
+ * 6. Click "Run" when ready to apply
+ *
+ * This script:
+ * - Creates (or finds) a Search campaign called "WEARIT — Custom Products"
+ * - Creates ad groups for: ${adGroups.map(g => g.name).join(', ')}
+ * - Adds responsive search ads with AI-generated copy
+ * - Adds broad match modifier + phrase match keywords for each product
+ * - Sets daily budget to $20 USD
+ * - Uses Target CPA bidding (set to $15 — adjust to your historical CPA)
+ */
+
+function main() {
+  Logger.log("=== WEARIT Google Ads Script Starting ===");
+  Logger.log("Timestamp: " + new Date().toISOString());
+
+  var CAMPAIGN_NAME = "WEARIT — Custom Products";
+  var DAILY_BUDGET_USD = 20.00;
+  var TARGET_CPA_USD   = 15.00;
+  var FINAL_URL        = "https://wearit.com";
+
+  // ── Find or create campaign ──────────────────────────────────────
+  var campaign;
+  var campaignIterator = AdsApp.campaigns()
+    .withCondition('Name = "' + CAMPAIGN_NAME + '"')
+    .withCondition('Status != REMOVED')
+    .get();
+
+  if (campaignIterator.hasNext()) {
+    campaign = campaignIterator.next();
+    Logger.log("Found existing campaign: " + CAMPAIGN_NAME);
+  } else {
+    Logger.log("Creating new campaign: " + CAMPAIGN_NAME);
+    try {
+      var campaignBuilder = AdsApp.newCampaignBuilder()
+        .withName(CAMPAIGN_NAME)
+        .withStatus("PAUSED")            // Start paused — review before enabling
+        .withAdvertisingChannelType("SEARCH")
+        .withDailyBudget(DAILY_BUDGET_USD)
+        .withBiddingStrategy("TARGET_CPA")
+        .withTargetCpa(TARGET_CPA_USD);
+
+      // Network settings: search only (no display network)
+      campaignBuilder
+        .withSearchNetwork(true)
+        .withContentNetwork(false)
+        .withSearchPartners(false);
+
+      campaign = campaignBuilder.build().getResult();
+      Logger.log("Campaign created successfully (status: PAUSED — review and enable manually).");
+    } catch(e) {
+      Logger.log("Campaign creation error: " + e.message);
+      return;
+    }
+  }
+
+  Logger.log("Processing " + ${adGroups.length} + " ad groups…");
+
+${groupCode}
+
+  Logger.log("=== WEARIT Google Ads Script Complete ===");
+  Logger.log("Summary: ${adGroups.length} ad groups processed.");
+  Logger.log("Review campaign in Google Ads and set status to ENABLED when ready.");
+}
+`;
 }
 
 async function run() {
-  log(AGENT_ID, 'info', 'Google Ads agent starting — generating campaign scripts & copy…');
-  const copy = {};
+  log(AGENT_ID, 'info', 'Google Ads agent starting run…');
+
+  // Ensure data directory exists
+  const dataDir = path.join(__dirname, '../../data');
+  if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 
   try {
-    // 1. Generate ad copy for each product category
-    const categories = [
-      { id: 'tshirts',  name: 'Custom T-Shirts' },
-      { id: 'hoodies',  name: 'Custom Hoodies' },
-      { id: 'glasses',  name: 'Custom Sunglasses' },
-      { id: 'mugs',     name: 'Custom Mugs' },
-      { id: 'caps',     name: 'Custom Caps' },
-      { id: 'tote',     name: 'Custom Tote Bags' },
-    ];
+    const headlinesData = {
+      generatedAt: new Date().toISOString(),
+      campaignName: 'WEARIT — Custom Products',
+      adGroups: [],
+    };
 
-    for (const cat of categories) {
-      const raw = await callClaude(
-        `Generate Google Ads responsive search ad copy for "${cat.name}" sold on WEARIT (custom print-on-demand store).
-Return ONLY valid JSON in this exact format:
-{
-  "headlines": ["headline1","headline2","headline3","headline4","headline5"],
-  "descriptions": ["desc1","desc2","desc3"]
-}
-Rules: headlines max 30 chars each. Descriptions max 90 chars each. Focus on: custom, personalized, fast shipping, quality, your design. No emoji. No exclamation more than once.`
-      );
-      try {
-        const jsonStart = raw.indexOf('{');
-        const jsonEnd = raw.lastIndexOf('}') + 1;
-        copy[cat.id] = JSON.parse(raw.slice(jsonStart, jsonEnd));
-        log(AGENT_ID, 'success', `Ad copy generated: ${cat.name}`);
-      } catch {
-        copy[cat.id] = { headlines: [`Custom ${cat.name}`, 'Design Your Own', 'Ships in 48 Hours', 'No Minimums', 'Premium Quality'], descriptions: [`Create your own ${cat.name.toLowerCase()} with WEARIT. Upload your design, we handle the rest.`, 'Print on demand with no minimums. Free worldwide shipping on orders over $50.', 'Your design printed on premium products. 30-day quality guarantee.'] };
-        log(AGENT_ID, 'warn', `Used fallback copy for ${cat.name}`);
-      }
+    // Generate ad copy for each ad group
+    for (const group of AD_GROUPS) {
+      log(AGENT_ID, 'info', `Generating ad copy for: ${group.name}…`);
+      const copy = await generateAdCopy(group.product);
+      headlinesData.adGroups.push({
+        name: group.name,
+        product: group.product,
+        keyword: group.keyword,
+        headlines: copy.headlines,
+        descriptions: copy.descriptions,
+      });
+      log(AGENT_ID, 'success', `Ad copy ready: ${group.name} — ${copy.headlines.length} headlines, ${copy.descriptions.length} descriptions`);
     }
 
-    fs.writeFileSync(COPY_FILE, JSON.stringify({ generated: new Date().toISOString(), categories: copy }, null, 2));
-    log(AGENT_ID, 'success', 'Ad copy saved to data/google-ads-copy.json');
+    // Build and save the full Google Ads Script
+    const scriptContent = buildGoogleAdsScript(headlinesData.adGroups);
+    fs.writeFileSync(SCRIPT_FILE, scriptContent, 'utf8');
+    log(AGENT_ID, 'success', `Google Ads script saved → data/google-ads-script.js (${scriptContent.length} chars)`);
 
-    // 2. Generate the Google Ads Script
-    const headlines = Object.entries(copy).map(([id, c]) =>
-      `  // ${id}\n  ${c.headlines.map(h => `'${h.replace(/'/g, "\\'")}'`).join(', ')}`
-    ).join(',\n');
+    // Save the headlines JSON for reference
+    fs.writeFileSync(HEADLINES_FILE, JSON.stringify(headlinesData, null, 2), 'utf8');
+    log(AGENT_ID, 'success', `Ad headlines saved → data/google-ads-headlines.json`);
 
-    const script = `/**
- * WEARIT — Google Ads Script
- * Auto-generated by WEARIT Ad Agent on ${new Date().toLocaleDateString()}
- *
- * HOW TO USE:
- * 1. Go to your Google Ads account
- * 2. Click Tools & Settings → Scripts
- * 3. Click + (New Script)
- * 4. Paste this entire file
- * 5. Click Preview, then Save and Run
- *
- * This script creates search campaigns for your top product categories.
- * Re-paste the updated version from /admin.html every time it regenerates.
- */
-
-var CAMPAIGN_NAME = 'WEARIT — Custom Products';
-var DAILY_BUDGET_USD = 20;
-var FINAL_URL = 'https://wearit.com/editor.html';
-
-var PRODUCT_GROUPS = [
-  {
-    name: 'Custom T-Shirts',
-    keywords: ['custom t-shirts', 'personalized t-shirts', 'print on demand shirts', 'design your own t-shirt', 'custom tee printing'],
-    headlines: ${JSON.stringify(copy.tshirts?.headlines || ['Custom T-Shirts', 'Design Your Own Tee', 'Ships in 48 Hours', 'No Minimums', 'Premium Quality Print'])},
-    descriptions: ${JSON.stringify(copy.tshirts?.descriptions || ['Create custom t-shirts with your design. Premium quality, fast shipping worldwide.', 'Upload your artwork and get custom printed t-shirts. No minimum order quantity.'])}
-  },
-  {
-    name: 'Custom Hoodies',
-    keywords: ['custom hoodies', 'personalized hoodies', 'print on demand hoodies', 'design your own hoodie'],
-    headlines: ${JSON.stringify(copy.hoodies?.headlines || ['Custom Hoodies', 'Design Your Hoodie', 'Premium Print Quality', 'Fast Worldwide Ship', 'No Minimums'])},
-    descriptions: ${JSON.stringify(copy.hoodies?.descriptions || ['Design custom hoodies with your logo or artwork. Premium quality, ships in 48 hours.', 'Print on demand hoodies with no minimum orders. Your design, your brand.'])}
-  },
-  {
-    name: 'Custom Sunglasses',
-    keywords: ['custom sunglasses', 'personalized glasses', 'custom eyewear', 'branded sunglasses'],
-    headlines: ${JSON.stringify(copy.glasses?.headlines || ['Custom Sunglasses', 'Your Logo On Shades', 'UV400 Protection', 'Ships Worldwide', 'Stand Out'])},
-    descriptions: ${JSON.stringify(copy.glasses?.descriptions || ['Custom printed sunglasses with UV400 protection. Add your logo or artwork to premium frames.', 'Personalized eyewear for brands, events, and individuals. No minimum order.'])}
-  },
-  {
-    name: 'Custom Mugs',
-    keywords: ['custom mugs', 'personalized mugs', 'photo mugs', 'custom coffee mug', 'branded mugs'],
-    headlines: ${JSON.stringify(copy.mugs?.headlines || ['Custom Mugs', 'Personalized Gifts', 'Full Wrap Print', 'Dishwasher Safe', 'Ships in 48 Hours'])},
-    descriptions: ${JSON.stringify(copy.mugs?.descriptions || ['Custom printed mugs, perfect for gifts or branding. Full wrap print, dishwasher safe.', 'Design your own mug with photos, logos, or artwork. From $14.99. Ships worldwide.'])}
-  },
-];
-
-function main() {
-  Logger.log('WEARIT Google Ads Script starting…');
-  var campaign = getOrCreateCampaign();
-  Logger.log('Campaign: ' + campaign.getName());
-
-  PRODUCT_GROUPS.forEach(function(group) {
-    var adGroup = getOrCreateAdGroup(campaign, group.name);
-    addKeywords(adGroup, group.keywords);
-    addResponsiveSearchAd(adGroup, group.headlines, group.descriptions);
-    Logger.log('Processed ad group: ' + group.name);
-  });
-
-  Logger.log('WEARIT script complete. Check your campaigns dashboard.');
-}
-
-function getOrCreateCampaign() {
-  var iter = AdsApp.campaigns().withCondition('Name = "' + CAMPAIGN_NAME + '"').get();
-  if (iter.hasNext()) return iter.next();
-
-  var op = AdsApp.newCampaignBuilder()
-    .withName(CAMPAIGN_NAME)
-    .withStatus('PAUSED')
-    .withBudget(DAILY_BUDGET_USD)
-    .withBiddingStrategy('TARGET_CPA')
-    .build();
-
-  var campaign = op.getResult();
-  Logger.log('Created new campaign: ' + CAMPAIGN_NAME + ' (status: PAUSED — review before enabling)');
-  return campaign;
-}
-
-function getOrCreateAdGroup(campaign, name) {
-  var iter = campaign.adGroups().withCondition('Name = "' + name + '"').get();
-  if (iter.hasNext()) return iter.next();
-
-  var op = campaign.newAdGroupBuilder()
-    .withName(name)
-    .withStatus('ENABLED')
-    .withCpc(1.5)
-    .build();
-
-  return op.getResult();
-}
-
-function addKeywords(adGroup, keywords) {
-  keywords.forEach(function(kw) {
-    try {
-      adGroup.newKeywordBuilder().withText(kw).withMatchType('PHRASE').build();
-      adGroup.newKeywordBuilder().withText('[' + kw + ']').withMatchType('EXACT').build();
-    } catch(e) { Logger.log('Keyword already exists or error: ' + kw); }
-  });
-}
-
-function addResponsiveSearchAd(adGroup, headlines, descriptions) {
-  try {
-    adGroup.newAd().responsiveSearchAdBuilder()
-      .withHeadlines(headlines.map(function(h) { return { text: h }; }))
-      .withDescriptions(descriptions.map(function(d) { return { text: d }; }))
-      .withFinalUrl(FINAL_URL)
-      .build();
-  } catch(e) { Logger.log('Ad may already exist: ' + e.message); }
-}
-`;
-
-    fs.writeFileSync(SCRIPT_FILE, script);
-    log(AGENT_ID, 'success', 'Google Ads script saved to data/google-ads-script.js — paste into Google Ads → Tools → Scripts');
-    log(AGENT_ID, 'success', 'Google Ads agent run complete.');
+    log(AGENT_ID, 'success', 'Google Ads agent run complete. Paste data/google-ads-script.js into Google Ads → Tools → Scripts.');
   } catch (err) {
     log(AGENT_ID, 'error', `Google Ads agent error: ${err.message}`);
   }
 }
 
-module.exports = { run, AGENT_ID };
+module.exports = { run, AGENT_ID, INTERVAL_MS };

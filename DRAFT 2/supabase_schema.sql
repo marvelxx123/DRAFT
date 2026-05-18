@@ -230,3 +230,21 @@ create trigger on_follow_change
 -- Public: true
 -- Max file size: 500MB
 -- Allowed MIME types: video/mp4, video/quicktime, video/webm
+
+-- ── SCOUT PRO TIER ──────────────────────────────────────────
+-- Run this after the main schema to add paid scout features
+alter table profiles add column if not exists scout_pro boolean default false;
+
+create table if not exists scout_analyses (
+  id uuid default gen_random_uuid() primary key,
+  scout_id uuid references profiles(id) on delete cascade not null,
+  player_name text,
+  video_url text,
+  frame_urls jsonb default '[]',
+  report jsonb,
+  overall_score int,
+  created_at timestamptz default now()
+);
+
+alter table scout_analyses enable row level security;
+create policy "scout_analyses_own" on scout_analyses for all using (auth.uid() = scout_id);
