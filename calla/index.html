@@ -3,296 +3,403 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CALLA — Your Phone Never Misses A Call</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>CALLA — Never Miss A Call. Ever.</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
-/* ── RESET ─────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { font-family: 'Inter', sans-serif; background: #fff; color: #03045E; line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
-a { text-decoration: none; color: inherit; }
-img { max-width: 100%; display: block; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Space Grotesk',sans-serif;background:#080808;color:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
 
-/* ── VARS ──────────────────────────────────────────── */
-:root {
-  --navy:  #03045E;
-  --blue:  #0096C7;
-  --blue2: #0077B6;
-  --pale:  #E8F4FD;
-  --pale2: #F0F8FF;
-  --muted: rgba(3,4,94,0.5);
+/* ── PALETTE ── */
+:root{
+  --bg:#080808;
+  --bg2:#0F0F0F;
+  --bg3:#141414;
+  --lime:#C8FF00;
+  --lime2:#AADD00;
+  --white:#FFFFFF;
+  --muted:rgba(255,255,255,0.45);
+  --border:rgba(255,255,255,0.08);
+  --radius:12px;
 }
 
-/* ── ANIMATIONS ────────────────────────────────────── */
-@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.7)} 50%{box-shadow:0 0 0 8px rgba(74,222,128,0)} }
-@keyframes w1 { 0%,100%{height:6px}  50%{height:28px} }
-@keyframes w2 { 0%,100%{height:18px} 50%{height:38px} }
-@keyframes w3 { 0%,100%{height:28px} 50%{height:10px} }
-@keyframes w4 { 0%,100%{height:10px} 50%{height:34px} }
-@keyframes w5 { 0%,100%{height:22px} 50%{height:6px}  }
+/* ── KEYFRAMES ── */
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(200,255,0,.7)}50%{box-shadow:0 0 0 10px rgba(200,255,0,0)}}
+@keyframes w1{0%,100%{height:4px}50%{height:24px}}
+@keyframes w2{0%,100%{height:14px}50%{height:32px}}
+@keyframes w3{0%,100%{height:22px}50%{height:8px}}
+@keyframes w4{0%,100%{height:8px}50%{height:28px}}
+@keyframes w5{0%,100%{height:18px}50%{height:6px}}
+@keyframes typing{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+@keyframes floatUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes borderPulse{0%,100%{box-shadow:0 0 0 0 rgba(200,255,0,.4)}50%{box-shadow:0 0 30px rgba(200,255,0,.15)}}
 
-/* ── UTILITY ───────────────────────────────────────── */
-.wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
-.chip {
-  display: inline-block;
-  font-family: 'Syne', sans-serif; font-weight: 800;
-  font-size: 0.65rem; letter-spacing: .2em; text-transform: uppercase;
-  color: var(--blue); background: var(--pale);
-  border: 1px solid rgba(0,150,199,.25);
-  padding: 5px 12px; border-radius: 4px; margin-bottom: 20px;
+/* ── NAV ── */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:999;
+  background:rgba(8,8,8,0.92);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  transition:border-color .3s;
 }
-.btn-solid {
-  display: inline-block; background: var(--blue); color: #fff;
-  font-weight: 700; font-size: 1rem; padding: 14px 32px;
-  border-radius: 8px; border: none; cursor: pointer;
-  transition: background .2s, transform .15s;
+.nav-inner{
+  max-width:1120px;margin:0 auto;padding:0 24px;
+  height:68px;display:flex;align-items:center;justify-content:space-between;
 }
-.btn-solid:hover { background: var(--blue2); transform: translateY(-1px); }
-.btn-outline {
-  display: inline-block; background: transparent; color: var(--navy);
-  font-weight: 600; font-size: 1rem; padding: 13px 32px;
-  border-radius: 8px; border: 2px solid rgba(0,150,199,.4); cursor: pointer;
-  transition: border-color .2s, background .2s;
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;letter-spacing:.12em;color:var(--white)}
+.logo span{color:var(--lime)}
+.nav-links{display:flex;align-items:center;gap:32px;list-style:none}
+.nav-links a{font-size:.875rem;font-weight:500;color:var(--muted);transition:color .2s}
+.nav-links a:hover{color:#fff}
+.nav-cta{
+  background:var(--lime);color:#080808;
+  font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;
+  letter-spacing:.04em;padding:10px 22px;border-radius:6px;
+  border:none;cursor:pointer;transition:background .2s,transform .15s;
 }
-.btn-outline:hover { border-color: var(--blue); background: var(--pale); }
+.nav-cta:hover{background:var(--lime2);transform:translateY(-1px)}
 
-/* ── NAV ───────────────────────────────────────────── */
-#nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: #fff; border-bottom: 1px solid rgba(3,4,94,.08);
-  transition: box-shadow .25s;
+/* ── PURE CSS HAMBURGER ── */
+#menu-toggle{display:none}
+.hamburger{
+  display:none;flex-direction:column;gap:5px;
+  cursor:pointer;padding:6px;border:none;background:none;
 }
-#nav.scrolled { box-shadow: 0 4px 20px rgba(3,4,94,.08); }
-.nav-inner {
-  max-width: 1100px; margin: 0 auto; padding: 0 24px;
-  height: 64px; display: flex; align-items: center; justify-content: space-between;
+.hamburger span{
+  display:block;width:24px;height:2px;
+  background:#fff;border-radius:2px;
+  transition:transform .3s,opacity .3s;
 }
-.logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem; letter-spacing: .1em; color: var(--navy); }
-.nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
-.nav-links a { font-size: .875rem; font-weight: 500; color: var(--muted); transition: color .2s; }
-.nav-links a:hover { color: var(--navy); }
-.nav-cta {
-  background: var(--blue); color: #fff; font-weight: 700;
-  font-size: .85rem; padding: 10px 20px; border-radius: 8px;
-  border: none; cursor: pointer; transition: background .2s;
+#menu-toggle:checked ~ .hamburger span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+#menu-toggle:checked ~ .hamburger span:nth-child(2){opacity:0}
+#menu-toggle:checked ~ .hamburger span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+
+#mob-nav{
+  display:none;
+  position:fixed;top:68px;left:0;right:0;z-index:998;
+  background:rgba(10,10,10,0.98);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:20px 24px 28px;flex-direction:column;gap:4px;
 }
-.nav-cta:hover { background: var(--blue2); }
-.hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
-.hamburger span { display: block; width: 22px; height: 2px; background: var(--navy); border-radius: 2px; }
-
-/* ── MOBILE MENU ───────────────────────────────────── */
-#mob-menu {
-  display: none; position: fixed; top: 64px; left: 0; right: 0; z-index: 99;
-  background: #fff; border-bottom: 1px solid var(--pale);
-  padding: 16px 24px 24px; flex-direction: column; gap: 4px;
+#menu-toggle:checked ~ #mob-nav{display:flex}
+#mob-nav a{
+  display:block;padding:14px 0;font-size:1rem;font-weight:600;
+  color:rgba(255,255,255,.6);border-bottom:1px solid var(--border);
+  transition:color .2s;
 }
-#mob-menu a { display: block; padding: 12px 0; font-weight: 600; color: var(--muted); border-bottom: 1px solid rgba(3,4,94,.06); }
-#mob-menu a:last-child { margin-top: 12px; background: var(--blue); color: #fff; text-align: center; padding: 13px; border-radius: 8px; border: none; }
-
-/* ── HERO ──────────────────────────────────────────── */
-#hero {
-  min-height: 100vh; padding-top: 64px; background: #fff;
-  display: flex; align-items: center;
+#mob-nav a:hover{color:#fff}
+#mob-nav a.mob-cta{
+  margin-top:16px;background:var(--lime);color:#080808;
+  text-align:center;padding:14px;border-radius:8px;
+  font-family:'Syne',sans-serif;font-weight:700;border:none;
 }
-.hero-grid {
-  display: grid; grid-template-columns: 1.15fr 1fr;
-  gap: 64px; align-items: center;
-  padding: 80px 24px 100px; max-width: 1100px; margin: 0 auto; width: 100%;
+
+/* ── HERO ── */
+#hero{
+  min-height:100vh;padding-top:68px;
+  background:var(--bg);
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;
 }
-.badge {
-  display: inline-flex; align-items: center; gap: 10px;
-  background: rgba(74,222,128,.1); border: 1px solid rgba(74,222,128,.35);
-  padding: 8px 16px; border-radius: 100px; margin-bottom: 28px;
-  font-family: 'Syne', sans-serif; font-weight: 800;
-  font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: #15803d;
+.hero-glow{
+  position:absolute;width:600px;height:600px;
+  background:radial-gradient(circle,rgba(200,255,0,.12) 0%,transparent 70%);
+  top:-100px;right:-100px;pointer-events:none;
 }
-.dot { width: 8px; height: 8px; background: #4ADE80; border-radius: 50%; flex-shrink: 0; animation: pulse 1.8s ease-in-out infinite; }
-h1 {
-  font-family: 'Syne', sans-serif; font-weight: 800;
-  font-size: clamp(44px, 7vw, 82px); line-height: .95;
-  letter-spacing: -.03em; color: var(--navy); margin-bottom: 24px;
+.hero-glow2{
+  position:absolute;width:400px;height:400px;
+  background:radial-gradient(circle,rgba(200,255,0,.06) 0%,transparent 70%);
+  bottom:-50px;left:-50px;pointer-events:none;
 }
-h1 .accent { color: var(--blue); }
-.hero-sub { font-size: 1.1rem; color: var(--muted); line-height: 1.65; max-width: 480px; margin-bottom: 36px; }
-.hero-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 40px; }
-.mini-stats { display: flex; flex-wrap: wrap; gap: 24px; padding-top: 24px; border-top: 1px solid rgba(3,4,94,.1); }
-.mini-stat strong { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--blue); }
-.mini-stat span { font-size: .8rem; color: var(--muted); margin-left: 6px; }
-
-/* Phone card */
-.phone-card { background: var(--navy); border-radius: 20px; overflow: hidden; box-shadow: 0 32px 80px rgba(3,4,94,.25); }
-.card-bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: #020347; border-bottom: 1px solid rgba(255,255,255,.08); }
-.cd { width: 11px; height: 11px; border-radius: 50%; }
-.card-bar-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: .7rem; color: rgba(255,255,255,.35); letter-spacing: .1em; margin-left: 6px; }
-.card-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
-.caller { display: flex; align-items: center; gap: 12px; }
-.caller-icon { width: 40px; height: 40px; border-radius: 50%; background: rgba(0,150,199,.2); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
-.caller-name { font-weight: 600; color: #fff; font-size: .9rem; }
-.caller-sub { color: rgba(255,255,255,.35); font-size: .75rem; }
-.wave-row { display: flex; align-items: center; gap: 10px; }
-.wave-label { font-family: 'Syne', sans-serif; font-weight: 800; font-size: .7rem; color: var(--blue); letter-spacing: .1em; }
-.waves { display: flex; align-items: flex-end; gap: 4px; height: 40px; margin-left: 8px; }
-.waves span { display: block; width: 5px; border-radius: 3px; background: var(--blue); }
-.waves span:nth-child(1){animation:w1 1.1s ease-in-out infinite}
-.waves span:nth-child(2){animation:w2 1.1s ease-in-out infinite .15s}
-.waves span:nth-child(3){animation:w3 1.1s ease-in-out infinite .3s}
-.waves span:nth-child(4){animation:w4 1.1s ease-in-out infinite .45s}
-.waves span:nth-child(5){animation:w5 1.1s ease-in-out infinite .6s}
-.answering { color: rgba(255,255,255,.25); font-size: .75rem; margin-left: auto; }
-.shield { background: rgba(239,68,68,.15); border: 1px solid rgba(239,68,68,.3); border-radius: 10px; padding: 12px 14px; font-size: .78rem; color: rgba(252,165,165,.9); line-height: 1.5; }
-
-/* ── STRIP ─────────────────────────────────────────── */
-.strip { background: var(--pale); border-top: 1px solid rgba(0,150,199,.2); border-bottom: 1px solid rgba(0,150,199,.2); }
-.strip-inner { max-width: 1100px; margin: 0 auto; padding: 20px 24px; display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; text-align: center; }
-.strip-item strong { display: block; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--blue); }
-.strip-item span { font-size: .75rem; color: var(--muted); margin-top: 2px; display: block; }
-
-/* ── SECTIONS ──────────────────────────────────────── */
-section { padding: 96px 0; }
-.sec-white { background: #fff; }
-.sec-pale  { background: var(--pale2); }
-.sec-navy  { background: var(--navy); }
-h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(28px, 4vw, 46px); line-height: 1.1; letter-spacing: -.02em; margin-bottom: 16px; }
-.sec-sub { font-size: 1rem; color: var(--muted); max-width: 540px; }
-.center { text-align: center; }
-.center .sec-sub { margin: 0 auto; }
-
-/* Problem */
-.problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
-.stats-list { display: flex; flex-direction: column; gap: 28px; }
-.stat-item { border-left: 4px solid var(--blue); padding-left: 24px; }
-.stat-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(36px, 5vw, 56px); color: var(--blue); line-height: 1; margin-bottom: 8px; }
-.stat-desc { font-size: .9rem; color: var(--muted); line-height: 1.6; }
-.stat-desc strong { color: var(--navy); }
-
-/* Cards */
-.cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 56px; }
-.card { background: #fff; border-radius: 16px; padding: 36px 28px; }
-.card-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: .65rem; color: rgba(0,150,199,.5); letter-spacing: .15em; text-transform: uppercase; margin-bottom: 16px; }
-.card h3 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.15rem; color: var(--navy); margin-bottom: 12px; }
-.card p { font-size: .9rem; color: var(--muted); line-height: 1.65; }
-.card-top { border-top: 4px solid var(--blue); }
-
-/* Hear ARIA */
-.aria-num {
-  font-family: 'Syne', sans-serif; font-weight: 800;
-  font-size: clamp(36px, 7vw, 72px); color: var(--blue);
-  display: block; margin: 20px 0 12px; line-height: 1;
+.hero-inner{
+  max-width:1120px;margin:0 auto;padding:80px 24px 100px;
+  display:grid;grid-template-columns:1.1fr 1fr;gap:64px;align-items:center;width:100%;
+  position:relative;z-index:2;
 }
-.aria-hint { font-size: .9rem; color: rgba(255,255,255,.3); margin-bottom: 32px; }
-
-/* Pricing */
-.plans { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 56px; }
-.plan { background: #fff; border: 1px solid rgba(3,4,94,.1); border-radius: 16px; padding: 36px 28px; display: flex; flex-direction: column; }
-.plan.pop { border: 2px solid var(--blue); position: relative; box-shadow: 0 8px 40px rgba(0,150,199,.12); }
-.pop-badge {
-  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
-  background: var(--blue); color: #fff;
-  font-family: 'Syne', sans-serif; font-weight: 800;
-  font-size: .6rem; letter-spacing: .15em; text-transform: uppercase;
-  padding: 5px 14px; border-radius: 100px; white-space: nowrap;
+.badge{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(200,255,0,.1);border:1px solid rgba(200,255,0,.3);
+  padding:8px 16px;border-radius:100px;margin-bottom:28px;
+  font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--lime);
 }
-.plan-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: .65rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
-.plan-price { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 3rem; color: var(--navy); line-height: 1; }
-.plan-price sup { font-size: 1.2rem; vertical-align: super; }
-.plan-mo { font-size: .8rem; color: var(--muted); margin-bottom: 8px; }
-.plan-mins { font-size: .8rem; color: var(--muted); margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(3,4,94,.08); }
-.plan ul { list-style: none; display: flex; flex-direction: column; gap: 10px; flex: 1; margin-bottom: 28px; }
-.plan li { font-size: .875rem; color: var(--muted); display: flex; align-items: flex-start; gap: 8px; }
-.plan li::before { content: '✓'; color: var(--blue); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
-.plan-btn { display: block; text-align: center; font-weight: 700; font-size: .9rem; padding: 13px; border-radius: 8px; transition: background .2s, color .2s; cursor: pointer; border: none; }
-.plan-btn-solid { background: var(--blue); color: #fff; }
-.plan-btn-solid:hover { background: var(--blue2); }
-.plan-btn-outline { background: transparent; color: var(--blue); border: 2px solid var(--blue); }
-.plan-btn-outline:hover { background: var(--pale); }
-.plan-fine { text-align: center; font-size: .72rem; color: rgba(3,4,94,.25); margin-top: 10px; }
+.live-dot{width:8px;height:8px;background:var(--lime);border-radius:50%;flex-shrink:0;animation:pulse-dot 2s ease-in-out infinite}
+h1{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(46px,7.5vw,88px);line-height:.93;
+  letter-spacing:-.03em;color:#fff;margin-bottom:24px;
+}
+.h1-accent{
+  color:var(--lime);
+  display:inline-block;
+}
+.hero-sub{font-size:1.1rem;color:var(--muted);line-height:1.7;max-width:460px;margin-bottom:36px}
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:44px}
+.btn-lime{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--lime);color:#080808;
+  font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;
+  padding:15px 32px;border-radius:8px;border:none;cursor:pointer;
+  transition:background .2s,transform .15s,box-shadow .2s;
+}
+.btn-lime:hover{background:var(--lime2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(200,255,0,.25)}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;color:#fff;
+  font-family:'Syne',sans-serif;font-weight:600;font-size:.95rem;
+  padding:14px 32px;border-radius:8px;
+  border:1px solid rgba(255,255,255,.2);cursor:pointer;
+  transition:border-color .2s,background .2s,transform .15s;
+}
+.btn-ghost:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.05);transform:translateY(-2px)}
+.hero-stats{display:flex;flex-wrap:wrap;gap:24px;padding-top:28px;border-top:1px solid var(--border)}
+.hstat strong{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--lime)}
+.hstat span{font-size:.8rem;color:var(--muted);margin-left:6px}
 
-/* Testimonials */
-.quotes { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 56px; }
-.quote { background: #fff; border-radius: 16px; padding: 32px 28px; }
-.stars { color: var(--blue); font-size: 1rem; margin-bottom: 16px; }
-.quote-text { font-size: .875rem; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
-.author { display: flex; align-items: center; gap: 12px; }
-.avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--blue); color: #fff; font-weight: 700; font-size: .8rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.author-name { font-weight: 600; color: var(--navy); font-size: .875rem; }
-.author-biz { font-size: .75rem; color: var(--muted); }
+/* ── PHONE CARD ── */
+.phone-card{
+  background:#0D0D0D;border-radius:20px;overflow:hidden;
+  border:1px solid rgba(200,255,0,.15);
+  animation:borderPulse 3s ease-in-out infinite;
+  box-shadow:0 32px 80px rgba(0,0,0,.5);
+}
+.card-bar{display:flex;align-items:center;gap:8px;padding:14px 18px;background:#0A0A0A;border-bottom:1px solid var(--border)}
+.cd{width:12px;height:12px;border-radius:50%}
+.card-bar-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem;color:rgba(255,255,255,.3);letter-spacing:.1em;margin-left:8px}
+.card-body{padding:24px;display:flex;flex-direction:column;gap:20px}
+.caller{display:flex;align-items:center;gap:14px}
+.caller-ico{width:44px;height:44px;border-radius:50%;background:rgba(200,255,0,.12);border:1px solid rgba(200,255,0,.2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.caller-name{font-weight:600;color:#fff;font-size:.95rem}
+.caller-sub{color:rgba(255,255,255,.35);font-size:.75rem;margin-top:2px}
+.wave-row{display:flex;align-items:center;gap:12px}
+.wave-lbl{font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem;color:var(--lime);letter-spacing:.12em}
+.waves{display:flex;align-items:flex-end;gap:4px;height:36px;margin-left:8px}
+.waves span{display:block;width:5px;border-radius:3px;background:var(--lime)}
+.waves span:nth-child(1){animation:w1 1s ease-in-out infinite}
+.waves span:nth-child(2){animation:w2 1s ease-in-out infinite .15s}
+.waves span:nth-child(3){animation:w3 1s ease-in-out infinite .3s}
+.waves span:nth-child(4){animation:w4 1s ease-in-out infinite .45s}
+.waves span:nth-child(5){animation:w5 1s ease-in-out infinite .6s}
+.answering{color:rgba(255,255,255,.2);font-size:.75rem;margin-left:auto}
+.shield-box{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:12px 14px;font-size:.8rem;color:rgba(252,165,165,.9);line-height:1.5}
+.play-card-btn{
+  width:100%;background:rgba(200,255,0,.1);
+  border:1px solid rgba(200,255,0,.25);
+  color:var(--lime);font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;
+  padding:13px;border-radius:10px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  transition:background .2s;margin-top:4px;
+}
+.play-card-btn:hover{background:rgba(200,255,0,.18)}
 
-/* Footer */
-footer { background: var(--navy); padding: 48px 0 32px; }
-.footer-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
-.footer-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,.08); margin-bottom: 24px; }
-.footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem; letter-spacing: .1em; color: #fff; }
-.footer-links { display: flex; flex-wrap: wrap; gap: 24px; }
-.footer-links a { font-size: .85rem; color: rgba(255,255,255,.35); transition: color .2s; }
-.footer-links a:hover { color: #fff; }
-.footer-tagline { font-size: .75rem; color: rgba(255,255,255,.2); }
-.footer-copy { text-align: center; font-size: .75rem; color: rgba(255,255,255,.15); }
+/* ── STRIP ── */
+.strip{
+  background:linear-gradient(135deg,#0F0F0F 0%,#111 100%);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+.strip-inner{max-width:1120px;margin:0 auto;padding:24px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center}
+.strip-item strong{display:block;font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;color:var(--lime);line-height:1}
+.strip-item span{font-size:.75rem;color:var(--muted);margin-top:4px;display:block}
 
-/* Typing indicator */
-@keyframes typing { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
-.typing-dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.5); animation:typing 1.2s ease-in-out infinite; }
-.typing-dot:nth-child(2){animation-delay:.2s}
-.typing-dot:nth-child(3){animation-delay:.4s}
-.typing-indicator { display:none; gap:4px; padding:10px 14px; background:rgba(0,150,199,.2); border-radius:14px; border-bottom-left-radius:4px; width:fit-content; }
-.typing-indicator.show { display:flex; }
-/* Audio demo */
-.demo-section { background: var(--navy); padding: 96px 0; }
-.demo-wrap { max-width: 780px; margin: 0 auto; padding: 0 24px; text-align: center; }
-.demo-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(28px,4vw,44px); color: #fff; margin-bottom: 12px; }
-.demo-sub { color: rgba(255,255,255,.45); font-size: 1rem; margin-bottom: 40px; }
-.demo-player { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 20px; padding: 32px 28px; text-align: left; }
-.demo-chat { display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px; min-height: 180px; }
-.bubble { display: flex; gap: 10px; align-items: flex-start; opacity: .3; transition: opacity .4s; }
-.bubble.active { opacity: 1; }
-.bubble.aria { flex-direction: row; }
-.bubble.customer { flex-direction: row-reverse; }
-.bub-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .7rem; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
-.bubble.aria .bub-avatar { background: var(--blue); color: #fff; }
-.bubble.customer .bub-avatar { background: rgba(255,255,255,.15); color: rgba(255,255,255,.7); }
-.bub-text { background: rgba(255,255,255,.08); border-radius: 14px; padding: 10px 14px; font-size: .875rem; color: rgba(255,255,255,.85); line-height: 1.5; max-width: 80%; }
-.bubble.aria .bub-text { background: rgba(0,150,199,.2); border-bottom-left-radius: 4px; }
-.bubble.customer .bub-text { background: rgba(255,255,255,.1); border-bottom-right-radius: 4px; }
-.demo-controls { display: flex; align-items: center; gap: 16px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.08); }
-.play-btn { width: 48px; height: 48px; border-radius: 50%; background: var(--blue); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .2s, transform .15s; }
-.play-btn:hover { background: var(--blue2); transform: scale(1.05); }
-.play-btn svg { width: 18px; height: 18px; fill: #fff; }
-.demo-wave { display: flex; align-items: center; gap: 3px; height: 32px; flex: 1; }
-.demo-wave span { display: block; width: 3px; border-radius: 3px; background: rgba(255,255,255,.2); height: 6px; transition: height .1s; }
-.demo-wave.playing span:nth-child(odd)  { animation: w1 .8s ease-in-out infinite; background: var(--blue); }
-.demo-wave.playing span:nth-child(even) { animation: w2 .8s ease-in-out infinite .2s; background: var(--blue); }
-.demo-label { font-size: .8rem; color: rgba(255,255,255,.35); white-space: nowrap; }
-.demo-cta { margin-top: 32px; }
-.demo-cta p { color: rgba(255,255,255,.4); font-size: .875rem; margin-bottom: 16px; }
+/* ── SECTIONS ── */
+.sec{padding:100px 0}
+.sec-dark{background:var(--bg)}
+.sec-dark2{background:var(--bg2)}
+.sec-dark3{background:var(--bg3)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+.chip{
+  display:inline-block;
+  font-family:'Syne',sans-serif;font-weight:700;font-size:.65rem;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--lime);background:rgba(200,255,0,.08);
+  border:1px solid rgba(200,255,0,.2);
+  padding:5px 12px;border-radius:4px;margin-bottom:20px;
+}
+h2{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(28px,4vw,52px);line-height:1.05;
+  letter-spacing:-.025em;margin-bottom:16px;color:#fff;
+}
+.sec-sub{font-size:1rem;color:var(--muted);max-width:520px;line-height:1.7}
+.center{text-align:center}
+.center .sec-sub{margin:0 auto}
 
-#modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 200; align-items: center; justify-content: center; padding: 24px; }
-#modal.open { display: flex; }
-.modal-box { background: #fff; border-radius: 20px; padding: 48px 36px; max-width: 360px; width: 100%; text-align: center; position: relative; }
-.modal-x { position: absolute; top: 16px; right: 20px; background: none; border: none; font-size: 1.5rem; color: var(--muted); cursor: pointer; line-height: 1; }
-.modal-icon { font-size: 2.5rem; margin-bottom: 16px; }
-.modal-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--navy); margin-bottom: 8px; }
-.modal-sub { font-size: .875rem; color: var(--muted); margin-bottom: 24px; }
-.modal-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.9rem; color: var(--blue); display: block; margin-bottom: 16px; }
-.modal-hint { font-size: .75rem; color: rgba(3,4,94,.3); line-height: 1.6; }
+/* ── PROBLEM ── */
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start}
+.stat-list{display:flex;flex-direction:column;gap:28px}
+.stat-item{padding:24px;background:var(--bg3);border-radius:var(--radius);border-left:3px solid var(--lime);transition:transform .2s}
+.stat-item:hover{transform:translateX(4px)}
+.stat-num{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(40px,5vw,60px);color:var(--lime);line-height:1;margin-bottom:8px}
+.stat-desc{font-size:.9rem;color:var(--muted);line-height:1.6}
+.stat-desc strong{color:#fff}
 
-/* ── RESPONSIVE ────────────────────────────────────── */
-@media (max-width: 768px) {
-  .nav-links, .nav-cta { display: none; }
-  .hamburger { display: flex; }
+/* ── HOW IT WORKS ── */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px}
+.step{
+  background:var(--bg3);border-radius:var(--radius);padding:36px 28px;
+  border:1px solid var(--border);
+  transition:border-color .3s,transform .2s,box-shadow .2s;
+  position:relative;overflow:hidden;
+}
+.step::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--lime)}
+.step:hover{border-color:rgba(200,255,0,.3);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.4)}
+.step-num{font-family:'Syne',sans-serif;font-weight:800;font-size:.65rem;color:rgba(200,255,0,.4);letter-spacing:.2em;text-transform:uppercase;margin-bottom:20px}
+.step h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.15rem;color:#fff;margin-bottom:12px}
+.step p{font-size:.9rem;color:var(--muted);line-height:1.65}
 
-  .hero-grid { grid-template-columns: 1fr; gap: 48px; padding: 60px 24px 80px; }
-  h1 { font-size: clamp(40px, 11vw, 60px); }
+/* ── DEMO SECTION ── */
+.demo-sec{background:var(--bg);padding:100px 0;position:relative;overflow:hidden}
+.demo-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(200,255,0,.06) 0%,transparent 60%);pointer-events:none}
+.demo-inner{max-width:760px;margin:0 auto;padding:0 24px;text-align:center;position:relative;z-index:2}
+.demo-player{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:20px;padding:28px 24px;text-align:left;margin-top:40px;
+}
+.demo-chat{display:flex;flex-direction:column;gap:14px;min-height:160px;margin-bottom:24px}
+.bubble{display:flex;gap:10px;align-items:flex-start}
+.bubble.customer{flex-direction:row-reverse}
+.bub-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;margin-top:2px}
+.bubble.aria .bub-av{background:var(--lime);color:#080808}
+.bubble.customer .bub-av{background:rgba(255,255,255,.1);color:rgba(255,255,255,.6)}
+.bub-txt{border-radius:14px;padding:10px 14px;font-size:.875rem;line-height:1.55;max-width:82%}
+.bubble.aria .bub-txt{background:rgba(200,255,0,.1);border:1px solid rgba(200,255,0,.15);color:#fff;border-bottom-left-radius:4px}
+.bubble.customer .bub-txt{background:rgba(255,255,255,.07);color:rgba(255,255,255,.8);border-bottom-right-radius:4px}
+.typing-ind{display:none;gap:4px;padding:10px 14px;background:rgba(200,255,0,.1);border:1px solid rgba(200,255,0,.15);border-radius:14px;border-bottom-left-radius:4px}
+.typing-ind.show{display:flex}
+.t-dot{width:6px;height:6px;border-radius:50%;background:var(--lime);animation:typing 1.2s ease-in-out infinite}
+.t-dot:nth-child(2){animation-delay:.2s}
+.t-dot:nth-child(3){animation-delay:.4s}
+.demo-controls{display:flex;align-items:center;gap:14px;padding-top:20px;border-top:1px solid var(--border)}
+.play-btn{
+  width:48px;height:48px;border-radius:50%;
+  background:var(--lime);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:background .2s,transform .15s,box-shadow .2s;
+}
+.play-btn:hover{background:var(--lime2);transform:scale(1.06);box-shadow:0 0 20px rgba(200,255,0,.3)}
+.play-btn svg{width:18px;height:18px}
+.demo-wave{display:flex;align-items:center;gap:3px;height:32px;flex:1}
+.demo-wave span{display:block;width:3px;border-radius:3px;background:rgba(255,255,255,.15);height:5px;transition:height .1s}
+.demo-wave.playing span:nth-child(odd){animation:w1 .7s ease-in-out infinite;background:var(--lime)}
+.demo-wave.playing span:nth-child(even){animation:w2 .7s ease-in-out infinite .2s;background:var(--lime)}
+.demo-lbl{font-size:.8rem;color:var(--muted);white-space:nowrap}
+.demo-cta-txt{color:var(--muted);font-size:.9rem;margin:28px 0 16px}
 
-  .strip-inner { grid-template-columns: repeat(2,1fr); }
+/* ── PRICING ── */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px}
+.plan{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:20px;padding:36px 28px;
+  display:flex;flex-direction:column;
+  transition:border-color .3s,transform .2s,box-shadow .2s;
+}
+.plan:hover{border-color:rgba(200,255,0,.25);transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.plan.pop{border-color:var(--lime);position:relative;box-shadow:0 0 40px rgba(200,255,0,.1)}
+.plan.pop:hover{box-shadow:0 20px 60px rgba(200,255,0,.15)}
+.pop-tag{
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  background:var(--lime);color:#080808;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:.6rem;
+  letter-spacing:.15em;text-transform:uppercase;
+  padding:5px 16px;border-radius:100px;white-space:nowrap;
+}
+.plan-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.plan-price{font-family:'Syne',sans-serif;font-weight:800;font-size:3.2rem;color:#fff;line-height:1}
+.plan-price sup{font-size:1.2rem;vertical-align:super;color:var(--lime)}
+.plan-mo{font-size:.8rem;color:var(--muted);margin-bottom:8px}
+.plan-mins{font-size:.8rem;color:var(--muted);padding-bottom:20px;margin-bottom:20px;border-bottom:1px solid var(--border)}
+.plan ul{list-style:none;display:flex;flex-direction:column;gap:10px;flex:1;margin-bottom:28px}
+.plan li{font-size:.875rem;color:var(--muted);display:flex;align-items:flex-start;gap:9px}
+.plan li::before{content:'✓';color:var(--lime);font-weight:700;flex-shrink:0;margin-top:1px}
+.plan-btn{
+  display:block;text-align:center;font-family:'Syne',sans-serif;
+  font-weight:700;font-size:.875rem;padding:13px;
+  border-radius:8px;cursor:pointer;border:none;
+  transition:background .2s,transform .15s;
+}
+.plan-btn-lime{background:var(--lime);color:#080808}
+.plan-btn-lime:hover{background:var(--lime2);transform:translateY(-1px)}
+.plan-btn-out{background:transparent;color:var(--lime);border:2px solid rgba(200,255,0,.35)}
+.plan-btn-out:hover{background:rgba(200,255,0,.08);border-color:var(--lime)}
+.plan-fine{text-align:center;font-size:.72rem;color:rgba(255,255,255,.2);margin-top:10px}
 
-  .problem-grid { grid-template-columns: 1fr; gap: 48px; }
-  .cards { grid-template-columns: 1fr; }
-  .plans { grid-template-columns: 1fr; }
-  .quotes { grid-template-columns: 1fr; }
+/* ── TESTIMONIALS ── */
+.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px}
+.quote{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:20px;padding:32px 28px;
+  transition:border-color .3s,transform .2s;
+}
+.quote:hover{border-color:rgba(200,255,0,.2);transform:translateY(-3px)}
+.stars{color:var(--lime);font-size:1rem;margin-bottom:16px;letter-spacing:2px}
+.q-text{font-size:.9rem;color:var(--muted);line-height:1.7;margin-bottom:20px}
+.author{display:flex;align-items:center;gap:12px}
+.av{width:40px;height:40px;border-radius:50%;background:var(--lime);color:#080808;font-weight:700;font-size:.8rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.au-name{font-weight:600;color:#fff;font-size:.875rem}
+.au-biz{font-size:.75rem;color:var(--muted)}
 
-  .hero-btns .btn-solid, .hero-btns .btn-outline { width: 100%; text-align: center; }
+/* ── CTA BAND ── */
+.cta-band{
+  background:var(--lime);padding:80px 24px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.cta-band h2{color:#080808;font-size:clamp(28px,4vw,52px);margin-bottom:16px}
+.cta-band p{color:rgba(8,8,8,.6);font-size:1rem;margin-bottom:32px}
+.btn-dark{
+  display:inline-flex;align-items:center;gap:10px;
+  background:#080808;color:#fff;
+  font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;
+  padding:15px 36px;border-radius:8px;border:none;cursor:pointer;
+  transition:background .2s,transform .15s;
+}
+.btn-dark:hover{background:#111;transform:translateY(-2px)}
 
-  .footer-top { flex-direction: column; text-align: center; }
-  .footer-links { justify-content: center; }
+/* ── FOOTER ── */
+footer{background:#050505;padding:56px 0 32px;border-top:1px solid var(--border)}
+.foot-inner{max-width:1120px;margin:0 auto;padding:0 24px}
+.foot-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px;padding-bottom:32px;border-bottom:1px solid var(--border);margin-bottom:28px}
+.foot-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;letter-spacing:.12em;color:#fff}
+.foot-logo span{color:var(--lime)}
+.foot-links{display:flex;flex-wrap:wrap;gap:24px}
+.foot-links a{font-size:.85rem;color:rgba(255,255,255,.3);transition:color .2s}
+.foot-links a:hover{color:#fff}
+.foot-tag{font-size:.75rem;color:rgba(255,255,255,.15)}
+.foot-copy{text-align:center;font-size:.75rem;color:rgba(255,255,255,.12)}
+
+/* ── MODAL ── */
+#modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9999;align-items:center;justify-content:center;padding:24px}
+#modal.open{display:flex}
+.modal-box{background:#0F0F0F;border:1px solid var(--border);border-radius:20px;padding:48px 36px;max-width:360px;width:100%;text-align:center;position:relative}
+.modal-x{position:absolute;top:16px;right:20px;background:none;border:none;font-size:1.5rem;color:var(--muted);cursor:pointer;line-height:1}
+.modal-ico{font-size:2.5rem;margin-bottom:16px}
+.modal-ttl{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:#fff;margin-bottom:8px}
+.modal-sub{font-size:.875rem;color:var(--muted);margin-bottom:24px}
+.modal-num{font-family:'Syne',sans-serif;font-weight:800;font-size:1.9rem;color:var(--lime);display:block;margin-bottom:16px}
+.modal-hint{font-size:.75rem;color:rgba(255,255,255,.2);line-height:1.6}
+
+/* ── DIVIDERS ── */
+.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(200,255,0,.2),transparent);border:none;margin:0}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .nav-links,.nav-cta{display:none}
+  .hamburger{display:flex}
+
+  .hero-inner{grid-template-columns:1fr;gap:48px;padding:60px 24px 80px}
+  h1{font-size:clamp(40px,11vw,58px)}
+  .btns .btn-lime,.btns .btn-ghost{width:100%;justify-content:center}
+
+  .strip-inner{grid-template-columns:repeat(2,1fr)}
+  .problem-grid{grid-template-columns:1fr;gap:48px}
+  .steps{grid-template-columns:1fr}
+  .plans{grid-template-columns:1fr}
+  .quotes{grid-template-columns:1fr}
+
+  .foot-top{flex-direction:column;text-align:center}
+  .foot-links{justify-content:center}
 }
 </style>
 </head>
@@ -301,42 +408,44 @@ footer { background: var(--navy); padding: 48px 0 32px; }
 <!-- NAV -->
 <nav id="nav">
   <div class="nav-inner">
-    <span class="logo">CALLA</span>
+    <span class="logo">CAL<span>LA</span></span>
     <ul class="nav-links">
       <li><a href="#how">How It Works</a></li>
+      <li><a href="#demo">Live Demo</a></li>
       <li><a href="#pricing">Pricing</a></li>
-      <li><a href="#aria">Hear ARIA</a></li>
     </ul>
     <a href="#pricing" class="nav-cta">Start Free Trial</a>
-    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <!-- Pure CSS hamburger — no JS needed -->
+    <input type="checkbox" id="menu-toggle">
+    <label for="menu-toggle" class="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
-    </button>
+    </label>
+    <div id="mob-nav">
+      <a href="#how">How It Works</a>
+      <a href="#demo">Live Demo</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#pricing" class="mob-cta">Start Free Trial</a>
+    </div>
   </div>
 </nav>
 
-<!-- MOBILE MENU -->
-<div id="mob-menu">
-  <a href="#how"     onclick="closeMenu()">How It Works</a>
-  <a href="#pricing" onclick="closeMenu()">Pricing</a>
-  <a href="#aria"    onclick="closeMenu()">Hear ARIA</a>
-  <a href="#pricing" onclick="closeMenu()">Start Free Trial</a>
-</div>
-
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-grid">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-inner">
     <div>
-      <div class="badge"><span class="dot"></span>ARIA Is Live Now</div>
-      <h1>YOUR PHONE.<br>NEVER MISSES<br>A CALL. <span class="accent">EVER.</span></h1>
-      <p class="hero-sub">ARIA answers every call, books appointments, and alerts you instantly when a customer is upset — before they leave a bad review.</p>
-      <div class="hero-btns">
-        <a href="#pricing" class="btn-solid">Start Free Trial</a>
-        <a href="tel:+19046643560" class="btn-outline">📞 Call ARIA Now</a>
+      <div class="badge"><span class="live-dot"></span>ARIA Is Live Now</div>
+      <h1>YOUR PHONE.<br>NEVER MISSES<br>A CALL. <span class="h1-accent">EVER.</span></h1>
+      <p class="hero-sub">ARIA answers every call, books appointments, and alerts you the second a customer is upset — before they leave a bad review.</p>
+      <div class="btns">
+        <a href="#pricing" class="btn-lime">Start Free Trial</a>
+        <a href="tel:+19046643560" class="btn-ghost">📞 Call ARIA Now</a>
       </div>
-      <div class="mini-stats">
-        <div class="mini-stat"><strong>847</strong><span>calls this week</span></div>
-        <div class="mini-stat"><strong>4.9★</strong><span>Google rating</span></div>
-        <div class="mini-stat"><strong>1,200+</strong><span>businesses</span></div>
+      <div class="hero-stats">
+        <div class="hstat"><strong>847</strong><span>calls this week</span></div>
+        <div class="hstat"><strong>4.9★</strong><span>Google rating</span></div>
+        <div class="hstat"><strong>1,200+</strong><span>businesses</span></div>
       </div>
     </div>
     <div>
@@ -345,28 +454,26 @@ footer { background: var(--navy); padding: 48px 0 32px; }
           <span class="cd" style="background:#f87171"></span>
           <span class="cd" style="background:#facc15"></span>
           <span class="cd" style="background:#4ade80"></span>
-          <span class="card-bar-title">ARIA — Live Call</span>
+          <span class="card-bar-title">ARIA — LIVE CALL</span>
         </div>
         <div class="card-body">
           <div class="caller">
-            <div class="caller-icon">📞</div>
+            <div class="caller-ico">📞</div>
             <div>
               <div class="caller-name">Maria G. — Hair Appointment</div>
               <div class="caller-sub">Incoming · 0:38</div>
             </div>
           </div>
           <div class="wave-row">
-            <span class="wave-label">ARIA</span>
-            <div class="waves">
-              <span></span><span></span><span></span><span></span><span></span>
-            </div>
+            <span class="wave-lbl">ARIA</span>
+            <div class="waves"><span></span><span></span><span></span><span></span><span></span></div>
             <span class="answering">Answering...</span>
           </div>
-          <div class="shield">
+          <div class="shield-box">
             <strong>📲 SHIELD Alert:</strong> Unhappy caller detected — owner notified before call ends
           </div>
-          <button onclick="playDemo(); document.getElementById('aria').scrollIntoView({behavior:'smooth'})" style="margin-top:16px;width:100%;background:var(--blue);border:none;border-radius:10px;padding:13px;color:#fff;font-family:'Inter',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+          <button class="play-card-btn" onclick="startDemo()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
             Play a real conversation
           </button>
         </div>
@@ -375,7 +482,7 @@ footer { background: var(--navy); padding: 48px 0 32px; }
   </div>
 </section>
 
-<!-- STATS STRIP -->
+<!-- STRIP -->
 <div class="strip">
   <div class="strip-inner">
     <div class="strip-item"><strong>847</strong><span>Calls answered this week</span></div>
@@ -385,23 +492,25 @@ footer { background: var(--navy); padding: 48px 0 32px; }
   </div>
 </div>
 
+<hr class="divider">
+
 <!-- THE PROBLEM -->
-<section class="sec-white">
+<section class="sec sec-dark2">
   <div class="wrap">
     <div class="problem-grid">
       <div>
         <div class="chip">The Problem</div>
-        <h2>Every missed call is a customer walking out the door.</h2>
-        <p class="sec-sub">The numbers are brutal. Unanswered phones are the silent killer of small business revenue.</p>
+        <h2>Every missed call is money walking out the door.</h2>
+        <p class="sec-sub">The numbers don't lie. Unanswered phones are silently killing small business revenue every single day.</p>
       </div>
-      <div class="stats-list">
+      <div class="stat-list">
         <div class="stat-item">
           <div class="stat-num">62%</div>
           <p class="stat-desc">of callers who reach voicemail <strong>never call back</strong>. They call your competitor instead.</p>
         </div>
         <div class="stat-item">
           <div class="stat-num">1 in 3</div>
-          <p class="stat-desc">small businesses <strong>lose clients to missed calls every week</strong> without ever knowing it happened.</p>
+          <p class="stat-desc">small businesses <strong>lose clients to missed calls every week</strong> without ever knowing it.</p>
         </div>
         <div class="stat-item">
           <div class="stat-num">$12K</div>
@@ -412,75 +521,78 @@ footer { background: var(--navy); padding: 48px 0 32px; }
   </div>
 </section>
 
+<hr class="divider">
+
 <!-- HOW IT WORKS -->
-<section id="how" class="sec-pale">
+<section id="how" class="sec sec-dark">
   <div class="wrap center">
     <div class="chip">How It Works</div>
     <h2>Three steps. Zero missed calls.</h2>
-    <div class="cards">
-      <div class="card card-top">
-        <div class="card-num">01</div>
+    <p class="sec-sub">Set up in 15 minutes. Works 24/7. You never touch it.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
         <h3>ARIA Answers</h3>
         <p>Every call, every time, 24/7. ARIA books appointments, answers FAQs, and captures leads — sounding completely natural, never robotic.</p>
       </div>
-      <div class="card card-top">
-        <div class="card-num">02</div>
+      <div class="step">
+        <div class="step-num">02</div>
         <h3>SHIELD Watches</h3>
-        <p>After every call, ARIA detects if the caller was happy or frustrated. You only hear about problems — before they turn into public bad reviews.</p>
+        <p>After every call, ARIA detects if the caller was happy or frustrated. You only hear about problems — before they turn into bad reviews.</p>
       </div>
-      <div class="card card-top">
-        <div class="card-num">03</div>
+      <div class="step">
+        <div class="step-num">03</div>
         <h3>You Get Paid</h3>
-        <p>Happy callers get a Google review request automatically. You wake up to 5-star reviews and a full appointment calendar.</p>
+        <p>Happy callers get an automatic Google review request. You wake up to 5-star reviews and a full calendar — without lifting a finger.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- HEAR ARIA DEMO -->
-<section id="aria" class="demo-section">
-  <div class="demo-wrap">
-    <div class="chip" style="color:#0096C7;background:rgba(0,150,199,.12);border-color:rgba(0,150,199,.3);margin-bottom:20px">Hear ARIA Live</div>
-    <h2 class="demo-title">Listen to a real ARIA call</h2>
-    <p class="demo-sub">Press play and hear exactly what your customers will hear when they call.</p>
+<hr class="divider">
+
+<!-- DEMO -->
+<section id="demo" class="demo-sec">
+  <div class="demo-inner">
+    <div class="chip">Live Demo</div>
+    <h2>Watch ARIA book an appointment</h2>
+    <p class="sec-sub" style="margin:0 auto">Press play and watch a real conversation happen in real time.</p>
 
     <div class="demo-player">
       <div class="demo-chat" id="demoChat">
-        <!-- bubbles injected by JS -->
+        <p style="color:rgba(255,255,255,.2);font-size:.85rem;text-align:center;padding:20px 0">Press ▶ play to start the demo</p>
       </div>
-      <div class="bubble aria" id="typingRow" style="margin-top:4px">
-        <div class="bub-avatar">AR</div>
-        <div class="typing-indicator" id="typingDots">
-          <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
+      <div class="bubble aria" id="typingRow" style="display:none">
+        <div class="bub-av">AR</div>
+        <div class="typing-ind" id="typingDots">
+          <span class="t-dot"></span><span class="t-dot"></span><span class="t-dot"></span>
         </div>
       </div>
-
       <div class="demo-controls">
         <button class="play-btn" id="playBtn" onclick="playDemo()">
-          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#fff"/></svg>
+          <svg viewBox="0 0 24 24" fill="#080808"><path d="M8 5v14l11-7z"/></svg>
         </button>
         <div class="demo-wave" id="demoWave">
           <span></span><span></span><span></span><span></span><span></span>
           <span></span><span></span><span></span><span></span><span></span>
           <span></span><span></span><span></span><span></span><span></span>
         </div>
-        <span class="demo-label" id="demoLabel">Press play to preview</span>
+        <span class="demo-lbl" id="demoLbl">Press play to start</span>
       </div>
     </div>
-
-    <div class="demo-cta">
-      <p>Want to talk to ARIA yourself?</p>
-      <a href="tel:+19046643560" class="btn-solid" style="display:inline-block">📞 Call +1 (904) 664-3560</a>
-    </div>
+    <p class="demo-cta-txt">Want to hear the real voice?</p>
+    <a href="tel:+19046643560" class="btn-lime" style="display:inline-flex">📞 Call +1 (904) 664-3560</a>
   </div>
 </section>
 
+<hr class="divider">
+
 <!-- PRICING -->
-<section id="pricing" class="sec-white">
+<section id="pricing" class="sec sec-dark2">
   <div class="wrap center">
     <div class="chip">Pricing</div>
-    <h2>Transparent pricing. No surprises.</h2>
-    <p class="sec-sub">No credit card required to start. Cancel anytime.</p>
+    <h2>Simple pricing. Insane value.</h2>
+    <p class="sec-sub">No credit card required to start. Cancel anytime. All plans include SHIELD.</p>
     <div class="plans">
 
       <div class="plan">
@@ -494,12 +606,12 @@ footer { background: var(--navy); padding: 48px 0 32px; }
           <li>SHIELD sentiment alerts</li>
           <li>Owner notifications</li>
         </ul>
-        <button class="plan-btn plan-btn-outline">Start 7-Day Free Trial</button>
+        <button class="plan-btn plan-btn-out">Start 7-Day Free Trial</button>
         <p class="plan-fine">No credit card required</p>
       </div>
 
       <div class="plan pop">
-        <div class="pop-badge">Most Popular</div>
+        <div class="pop-tag">Most Popular</div>
         <div class="plan-name">CALLA Pro</div>
         <div class="plan-price"><sup>$</sup>149</div>
         <div class="plan-mo">per month</div>
@@ -511,7 +623,7 @@ footer { background: var(--navy); padding: 48px 0 32px; }
           <li>CRM sync</li>
           <li>Auto Google review prompts</li>
         </ul>
-        <button class="plan-btn plan-btn-solid">Start 7-Day Free Trial</button>
+        <button class="plan-btn plan-btn-lime">Start 7-Day Free Trial</button>
         <p class="plan-fine">No credit card required</p>
       </div>
 
@@ -522,12 +634,12 @@ footer { background: var(--navy); padding: 48px 0 32px; }
         <div class="plan-mins">700 minutes / month</div>
         <ul>
           <li>Everything in Pro</li>
-          <li>Custom scripts & flows</li>
+          <li>Custom call scripts</li>
           <li>Multi-location support</li>
           <li>Priority support</li>
           <li>Dedicated account manager</li>
         </ul>
-        <button class="plan-btn plan-btn-outline">Start 7-Day Free Trial</button>
+        <button class="plan-btn plan-btn-out">Start 7-Day Free Trial</button>
         <p class="plan-fine">No credit card required</p>
       </div>
 
@@ -535,54 +647,54 @@ footer { background: var(--navy); padding: 48px 0 32px; }
   </div>
 </section>
 
+<hr class="divider">
+
 <!-- TESTIMONIALS -->
-<section class="sec-pale">
+<section class="sec sec-dark">
   <div class="wrap center">
     <div class="chip">What Owners Say</div>
     <h2>Real businesses. Real results.</h2>
     <div class="quotes">
       <div class="quote">
         <div class="stars">★★★★★</div>
-        <p class="quote-text">"I used to lose 6 calls a day with clients. ARIA answers every single one. Revenue went up $2,400 in the first month. SHIELD saved me from a 1-star review — that customer became a regular."</p>
-        <div class="author">
-          <div class="avatar">SR</div>
-          <div><div class="author-name">Sofia Ramirez</div><div class="author-biz">Bloom Hair Studio · Austin, TX</div></div>
-        </div>
+        <p class="q-text">"I used to lose 6 calls a day while with clients. ARIA answers every single one now. Revenue went up $2,400 in the first month. SHIELD literally saved me from a 1-star review."</p>
+        <div class="author"><div class="av">SR</div><div><div class="au-name">Sofia Ramirez</div><div class="au-biz">Bloom Hair Studio · Austin, TX</div></div></div>
       </div>
       <div class="quote">
         <div class="stars">★★★★★</div>
-        <p class="quote-text">"Before CALLA, after-hours calls disappeared. Now ARIA books appointments at 2am and I wake up to a full schedule. Google review prompts added 40+ five-star reviews in three months."</p>
-        <div class="author">
-          <div class="avatar">DK</div>
-          <div><div class="author-name">Dr. David Kim</div><div class="author-biz">Lakeside Dental · Chicago, IL</div></div>
-        </div>
+        <p class="q-text">"Before CALLA, after-hours calls just disappeared. Now ARIA books at 2am and I wake up to a full schedule. Google review prompts added 40+ five-star reviews in 3 months."</p>
+        <div class="author"><div class="av">DK</div><div><div class="au-name">Dr. David Kim</div><div class="au-biz">Lakeside Dental · Chicago, IL</div></div></div>
       </div>
       <div class="quote">
         <div class="stars">★★★★★</div>
-        <p class="quote-text">"Plumbing is emergency business — people hang up at voicemail. Since CALLA we haven't missed a single emergency call. SHIELD flagged a frustrated caller, we followed up, won the job, got 5 stars."</p>
-        <div class="author">
-          <div class="avatar">TM</div>
-          <div><div class="author-name">Tom Marchetti</div><div class="author-biz">Marchetti Plumbing · Phoenix, AZ</div></div>
-        </div>
+        <p class="q-text">"Plumbing is emergency business — people hang up at voicemail. Since CALLA we haven't missed a single emergency call. SHIELD flagged a frustrated caller and we turned it into a 5-star review."</p>
+        <div class="author"><div class="av">TM</div><div><div class="au-name">Tom Marchetti</div><div class="au-biz">Marchetti Plumbing · Phoenix, AZ</div></div></div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- CTA BAND -->
+<div class="cta-band">
+  <h2>Ready to never miss a call again?</h2>
+  <p>Start your 7-day free trial today. No credit card required.</p>
+  <a href="#pricing" class="btn-dark">Get Started Free →</a>
+</div>
+
 <!-- FOOTER -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-top">
-      <span class="footer-logo">CALLA</span>
-      <div class="footer-links">
+  <div class="foot-inner">
+    <div class="foot-top">
+      <span class="foot-logo">CAL<span>LA</span></span>
+      <div class="foot-links">
         <a href="#">Privacy</a>
         <a href="#">Terms</a>
         <a href="#">Contact</a>
         <a href="#pricing">Pricing</a>
       </div>
-      <span class="footer-tagline">Powered by AI. Built for humans.</span>
+      <span class="foot-tag">Powered by AI. Built for humans.</span>
     </div>
-    <p class="footer-copy">© 2025 CALLA. All rights reserved.</p>
+    <p class="foot-copy">© 2025 CALLA. All rights reserved.</p>
   </div>
 </footer>
 
@@ -590,113 +702,112 @@ footer { background: var(--navy); padding: 48px 0 32px; }
 <div id="modal" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="modal-box">
     <button class="modal-x" onclick="document.getElementById('modal').classList.remove('open')">×</button>
-    <div class="modal-icon">📞</div>
-    <div class="modal-title">Call ARIA Now</div>
+    <div class="modal-ico">📞</div>
+    <div class="modal-ttl">Call ARIA Now</div>
     <p class="modal-sub">Call from your phone — ARIA will answer.</p>
     <a href="tel:+19046643560" class="modal-num">+1 (904) 664-3560</a>
-    <p class="modal-hint">Try: "What are your hours?"<br>or "I'd like to book an appointment"</p>
+    <p class="modal-hint">Try: "What are your hours?" or "I'd like to book an appointment"</p>
   </div>
 </div>
 
 <script>
-  // Nav shadow
-  window.addEventListener('scroll', () => {
-    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
+// Nav shadow on scroll
+window.addEventListener('scroll',function(){
+  document.getElementById('nav').style.borderBottomColor = window.scrollY>20 ? 'rgba(200,255,0,0.15)' : 'rgba(255,255,255,0.08)';
+});
+
+// Close mobile menu when clicking a link
+document.querySelectorAll('#mob-nav a').forEach(function(a){
+  a.addEventListener('click',function(){
+    document.getElementById('menu-toggle').checked = false;
   });
+});
 
-  // Hamburger — simple toggle
-  var menuOpen = false;
-  function toggleMenu() {
-    menuOpen = !menuOpen;
-    var m = document.getElementById('mob-menu');
-    m.style.cssText = menuOpen
-      ? 'display:flex;flex-direction:column;gap:4px;'
-      : 'display:none;';
-  }
-  function closeMenu() {
-    menuOpen = false;
-    document.getElementById('mob-menu').style.display = 'none';
-  }
+// Demo player
+var demoPlaying=false, demoTimer=null;
+var script=[
+  {s:'aria',     t:'Thank you for calling! This is ARIA — how can I help you today?',          d:700 },
+  {s:'customer', t:'Hi, I\'d like to book a haircut for Saturday.',                             d:2400},
+  {s:'aria',     t:'Of course! We have openings at 10am, 1pm, and 3pm. Which works for you?',  d:2200},
+  {s:'customer', t:'1pm would be perfect.',                                                     d:2600},
+  {s:'aria',     t:'Wonderful! Can I get your name to hold the appointment?',                   d:1800},
+  {s:'customer', t:'It\'s Maria.',                                                              d:2000},
+  {s:'aria',     t:'You\'re all set Maria! Saturday at 1pm — we\'ll text you a reminder. Anything else I can help with?', d:1600},
+];
 
-  // ESC key
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      document.getElementById('modal').classList.remove('open');
-      closeMenu();
-    }
-  });
+function resetDemo(){
+  clearTimeout(demoTimer);
+  demoPlaying=false;
+  document.getElementById('demoChat').innerHTML='<p style="color:rgba(255,255,255,.2);font-size:.85rem;text-align:center;padding:20px 0">Press ▶ play to start the demo</p>';
+  document.getElementById('typingRow').style.display='none';
+  document.getElementById('typingDots').classList.remove('show');
+  document.getElementById('demoWave').classList.remove('playing');
+  document.getElementById('demoLbl').textContent='Press play to start';
+  document.getElementById('playBtn').innerHTML='<svg viewBox="0 0 24 24" fill="#080808"><path d="M8 5v14l11-7z"/></svg>';
+}
 
-  // Animated conversation demo — works on every device, no audio needed
-  var demoPlaying = false;
-  var demoTimer = null;
-  var script = [
-    { speaker:'aria',     text:'Thank you for calling! This is ARIA — how can I help you today?',               delay:600  },
-    { speaker:'customer', text:'Hi, I\'d like to book a haircut for Saturday.',                                   delay:2200 },
-    { speaker:'aria',     text:'Of course! We have openings at 10am, 1pm, and 3pm on Saturday. Which works?',   delay:2000 },
-    { speaker:'customer', text:'1pm would be perfect.',                                                           delay:2400 },
-    { speaker:'aria',     text:'Wonderful! Can I get your name to hold the appointment?',                        delay:1600 },
-    { speaker:'customer', text:'It\'s Maria.',                                                                    delay:2000 },
-    { speaker:'aria',     text:'You\'re all set, Maria! Saturday at 1pm. We\'ll text a reminder the day before.',delay:1400 },
-  ];
+function addBubble(line){
+  var chat=document.getElementById('demoChat');
+  // Remove placeholder
+  var ph=chat.querySelector('p');
+  if(ph)ph.remove();
+  var d=document.createElement('div');
+  d.className='bubble '+line.s;
+  d.style.cssText='opacity:0;transition:opacity .3s,transform .3s;transform:translateY(8px)';
+  d.innerHTML=line.s==='aria'
+    ?'<div class="bub-av">AR</div><div class="bub-txt">'+line.t+'</div>'
+    :'<div class="bub-av">👤</div><div class="bub-txt">'+line.t+'</div>';
+  chat.appendChild(d);
+  requestAnimationFrame(function(){d.style.opacity='1';d.style.transform='translateY(0)'});
+  d.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
 
-  function resetDemo() {
-    clearTimeout(demoTimer);
-    demoPlaying = false;
-    document.getElementById('demoChat').innerHTML = '';
+function runStep(i){
+  if(!demoPlaying||i>=script.length){
+    document.getElementById('typingRow').style.display='none';
     document.getElementById('typingDots').classList.remove('show');
     document.getElementById('demoWave').classList.remove('playing');
-    document.getElementById('demoLabel').textContent = 'Press play to preview';
-    document.getElementById('playBtn').innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#fff"/></svg>';
+    document.getElementById('demoLbl').textContent='Tap to replay';
+    document.getElementById('playBtn').innerHTML='<svg viewBox="0 0 24 24" fill="#080808"><path d="M8 5v14l11-7z"/></svg>';
+    demoPlaying=false;
+    return;
   }
+  var line=script[i];
+  if(line.s==='aria'){
+    document.getElementById('typingRow').style.display='flex';
+    document.getElementById('typingDots').classList.add('show');
+    document.getElementById('demoLbl').textContent='ARIA is typing...';
+  }else{
+    document.getElementById('typingRow').style.display='none';
+    document.getElementById('typingDots').classList.remove('show');
+    document.getElementById('demoLbl').textContent='Customer responding...';
+  }
+  demoTimer=setTimeout(function(){
+    document.getElementById('typingRow').style.display='none';
+    document.getElementById('typingDots').classList.remove('show');
+    addBubble(line);
+    demoTimer=setTimeout(function(){runStep(i+1);},line.d);
+  },line.s==='aria'?900:400);
+}
 
-  function addBubble(line) {
-    var chat = document.getElementById('demoChat');
-    var div = document.createElement('div');
-    div.className = 'bubble ' + line.speaker;
-    div.style.opacity = '0';
-    div.style.transition = 'opacity 0.3s';
-    div.innerHTML = line.speaker === 'aria'
-      ? '<div class="bub-avatar">AR</div><div class="bub-text">' + line.text + '</div>'
-      : '<div class="bub-avatar">👤</div><div class="bub-text">' + line.text + '</div>';
-    chat.appendChild(div);
-    setTimeout(function(){ div.style.opacity = '1'; }, 30);
-    div.scrollIntoView({ behavior:'smooth', block:'nearest' });
-  }
+function playDemo(){
+  if(demoPlaying){resetDemo();return;}
+  resetDemo();
+  demoPlaying=true;
+  document.getElementById('demoWave').classList.add('playing');
+  document.getElementById('playBtn').innerHTML='<svg viewBox="0 0 24 24" fill="#080808"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+  document.getElementById('demoLbl').textContent='Live conversation...';
+  runStep(0);
+}
 
-  function runStep(idx) {
-    if (!demoPlaying || idx >= script.length) {
-      document.getElementById('typingDots').classList.remove('show');
-      document.getElementById('demoWave').classList.remove('playing');
-      document.getElementById('demoLabel').textContent = 'Tap to replay';
-      document.getElementById('playBtn').innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#fff"/></svg>';
-      demoPlaying = false;
-      return;
-    }
-    var line = script[idx];
-    // Show typing indicator for ARIA lines
-    if (line.speaker === 'aria') {
-      document.getElementById('typingDots').classList.add('show');
-      document.getElementById('demoLabel').textContent = 'ARIA is typing...';
-    } else {
-      document.getElementById('typingDots').classList.remove('show');
-      document.getElementById('demoLabel').textContent = 'Customer responding...';
-    }
-    demoTimer = setTimeout(function() {
-      document.getElementById('typingDots').classList.remove('show');
-      addBubble(line);
-      demoTimer = setTimeout(function(){ runStep(idx + 1); }, line.delay);
-    }, line.speaker === 'aria' ? 900 : 400);
-  }
+function startDemo(){
+  document.getElementById('demo').scrollIntoView({behavior:'smooth'});
+  setTimeout(playDemo,600);
+}
 
-  function playDemo() {
-    if (demoPlaying) { resetDemo(); return; }
-    resetDemo();
-    demoPlaying = true;
-    document.getElementById('demoWave').classList.add('playing');
-    document.getElementById('playBtn').innerHTML = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="#fff"/><rect x="14" y="4" width="4" height="16" fill="#fff"/></svg>';
-    document.getElementById('demoLabel').textContent = 'Live conversation...';
-    runStep(0);
-  }
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape')document.getElementById('modal').classList.remove('open');
+});
 </script>
 </body>
 </html>
