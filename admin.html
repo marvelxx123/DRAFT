@@ -172,6 +172,69 @@
         </div>
       </div>
 
+      <!-- Google Ads Agent -->
+      <div class="agent-card" data-agent="googleads">
+        <div class="agent-card-head">
+          <div>
+            <div class="agent-icon">🎯</div>
+            <div class="agent-name">Google Ads Agent</div>
+            <div class="agent-schedule">Every 48 hours</div>
+          </div>
+          <div class="agent-status-badge idle"><span>○</span>IDLE</div>
+        </div>
+        <div class="agent-meta">
+          <div class="agent-meta-row"><span class="agent-meta-key">Last Run</span><span class="agent-meta-val meta-last">—</span></div>
+          <div class="agent-meta-row"><span class="agent-meta-key">Next Run</span><span class="agent-meta-val meta-next">—</span></div>
+          <div class="agent-meta-row"><span class="agent-meta-key">Output</span><span class="agent-meta-val meta-sched">data/google-ads-script.js</span></div>
+        </div>
+        <div class="agent-actions">
+          <button class="adm-btn primary btn-run" onclick="triggerAgent('googleads')">▶ RUN NOW</button>
+          <button class="adm-btn warning btn-pause" onclick="togglePause('googleads', false)">PAUSE</button>
+        </div>
+      </div>
+
+      <!-- Social Media Agent -->
+      <div class="agent-card" data-agent="social">
+        <div class="agent-card-head">
+          <div>
+            <div class="agent-icon">📱</div>
+            <div class="agent-name">Social Agent</div>
+            <div class="agent-schedule">Every 8 hours</div>
+          </div>
+          <div class="agent-status-badge idle"><span>○</span>IDLE</div>
+        </div>
+        <div class="agent-meta">
+          <div class="agent-meta-row"><span class="agent-meta-key">Last Run</span><span class="agent-meta-val meta-last">—</span></div>
+          <div class="agent-meta-row"><span class="agent-meta-key">Next Run</span><span class="agent-meta-val meta-next">—</span></div>
+          <div class="agent-meta-row"><span class="agent-meta-key">Platforms</span><span class="agent-meta-val meta-sched">IG · FB · X · TikTok · Pinterest</span></div>
+        </div>
+        <div class="agent-actions">
+          <button class="adm-btn primary btn-run" onclick="triggerAgent('social')">▶ RUN NOW</button>
+          <button class="adm-btn warning btn-pause" onclick="togglePause('social', false)">PAUSE</button>
+        </div>
+      </div>
+
+      <!-- Email Agent -->
+      <div class="agent-card" data-agent="email">
+        <div class="agent-card-head">
+          <div>
+            <div class="agent-icon">📧</div>
+            <div class="agent-name">Email Agent</div>
+            <div class="agent-schedule">Every 24 hours</div>
+          </div>
+          <div class="agent-status-badge idle"><span>○</span>IDLE</div>
+        </div>
+        <div class="agent-meta">
+          <div class="agent-meta-row"><span class="agent-meta-key">Last Run</span><span class="agent-meta-val meta-last">—</span></div>
+          <div class="agent-meta-row"><span class="agent-meta-key">Next Run</span><span class="agent-meta-val meta-next">—</span></div>
+          <div class="agent-meta-row"><span class="agent-meta-key">Sequences</span><span class="agent-meta-val meta-sched">Welcome · Cart · Post-purchase · Promo</span></div>
+        </div>
+        <div class="agent-actions">
+          <button class="adm-btn primary btn-run" onclick="triggerAgent('email')">▶ RUN NOW</button>
+          <button class="adm-btn warning btn-pause" onclick="togglePause('email', false)">PAUSE</button>
+        </div>
+      </div>
+
     </div><!-- /agents-grid -->
 
     <!-- ── GENERATED CONTENT PREVIEW ─────────────────────── -->
