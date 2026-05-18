@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WEARIT — Custom Print on Demand</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ── NAV ─────────────────────────────────────────────── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo">WEAR<span>IT</span></a>
+    <ul class="nav-links">
+      <li><a href="#products">Products</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#customizer">Customize</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn-cart" id="cartBtn" onclick="toggleCart()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <a href="editor.html" class="btn-primary">Start Designing</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ─────────────────────────────────────────────── -->
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <div class="grid-overlay"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge">AI-Powered • Print on Demand • Zero Inventory</div>
+    <h1>Your Design.<br/>Your Product.<br/><span class="gradient-text">Delivered.</span></h1>
+    <p class="hero-sub">Upload a photo, customize any product in real-time, and we handle printing, packaging, and global shipping — automatically, every time.</p>
+    <div class="hero-cta">
+      <a href="editor.html" class="btn-primary btn-lg">Start Designing Free</a>
+      <a href="#how" class="btn-ghost btn-lg">See How It Works</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><strong>50K+</strong><span>Products shipped</span></div>
+      <div class="stat-div"></div>
+      <div class="stat"><strong>180+</strong><span>Countries served</span></div>
+      <div class="stat-div"></div>
+      <div class="stat"><strong>48hr</strong><span>Avg fulfillment</span></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="floating-products">
+      <div class="fp fp-1">
+        <div class="product-card-mini tshirt-preview">
+          <div class="mini-product">
+            <div class="tshirt-shape">
+              <div class="tshirt-body"></div>
+              <div class="tshirt-sleeve left"></div>
+              <div class="tshirt-sleeve right"></div>
+              <div class="tshirt-design">🎨</div>
+            </div>
+          </div>
+          <span>Custom Tee</span>
+        </div>
+      </div>
+      <div class="fp fp-2">
+        <div class="product-card-mini">
+          <div class="mini-product">
+            <div class="glasses-shape">
+              <div class="lens left-lens"></div>
+              <div class="bridge"></div>
+              <div class="lens right-lens"></div>
+              <div class="arm left-arm"></div>
+              <div class="arm right-arm"></div>
+            </div>
+          </div>
+          <span>Custom Glasses</span>
+        </div>
+      </div>
+      <div class="fp fp-3">
+        <div class="product-card-mini">
+          <div class="mini-product mug-wrap">
+            <div class="mug-shape">
+              <div class="mug-body">
+                <div class="mug-design">✨</div>
+              </div>
+              <div class="mug-handle"></div>
+            </div>
+          </div>
+          <span>Custom Mug</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MARQUEE STRIP ──────────────────────────────────────── -->
+<div class="marquee-strip" aria-hidden="true">
+  <div class="marquee-track">
+    <span>FREE WORLDWIDE SHIPPING</span><span class="marquee-dot">✦</span>
+    <span>48H FULFILLMENT</span><span class="marquee-dot">✦</span>
+    <span>CUSTOM PRINT ON DEMAND</span><span class="marquee-dot">✦</span>
+    <span>SHIRTS · HOODIES · MUGS · CAPS</span><span class="marquee-dot">✦</span>
+    <span>NO MINIMUM ORDER</span><span class="marquee-dot">✦</span>
+    <span>AI-POWERED DESIGN STUDIO</span><span class="marquee-dot">✦</span>
+    <span>180+ COUNTRIES</span><span class="marquee-dot">✦</span>
+    <span>FREE WORLDWIDE SHIPPING</span><span class="marquee-dot">✦</span>
+    <span>48H FULFILLMENT</span><span class="marquee-dot">✦</span>
+    <span>CUSTOM PRINT ON DEMAND</span><span class="marquee-dot">✦</span>
+    <span>SHIRTS · HOODIES · MUGS · CAPS</span><span class="marquee-dot">✦</span>
+    <span>NO MINIMUM ORDER</span><span class="marquee-dot">✦</span>
+    <span>AI-POWERED DESIGN STUDIO</span><span class="marquee-dot">✦</span>
+    <span>180+ COUNTRIES</span><span class="marquee-dot">✦</span>
+  </div>
+</div>
+
+<!-- ── HOW IT WORKS ──────────────────────────────────────── -->
+<section class="section" id="how">
+  <div class="container">
+    <div class="section-header">
+      <div class="label">Process</div>
+      <h2>Three steps to anything custom</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <h3>Upload Your Photo</h3>
+        <p>Drag and drop any image — your logo, artwork, a photo — and our AI instantly optimizes it for print at any resolution.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <h3>Customize in 3D</h3>
+        <p>Place your design on a 3D product preview. Rotate, scale, reposition — see exactly how it looks before ordering.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </div>
+        <h3>We Handle the Rest</h3>
+        <p>Place your order. Our print partners produce and ship directly to your customer — fully automated, no inventory needed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRODUCTS ──────────────────────────────────────────── -->
+<section class="section dark-section" id="products">
+  <div class="container">
+    <div class="section-header">
+      <div class="label light">Catalog</div>
+      <h2>Everything you can customize</h2>
+    </div>
+    <div class="product-grid" id="productGrid">
+      <!-- injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ── CUSTOMIZER ────────────────────────────────────────── -->
+<section class="section" id="customizer">
+  <div class="container">
+    <div class="section-header">
+      <div class="label">Studio</div>
+      <h2>Design your product</h2>
+      <p>Upload your image and customize in real time</p>
+    </div>
+
+    <div class="customizer-layout">
+
+      <!-- LEFT: Controls -->
+      <div class="customizer-controls">
+
+        <!-- Product selector -->
+        <div class="ctrl-group">
+          <label class="ctrl-label">Choose Product</label>
+          <div class="product-tabs" id="productTabs">
+            <button class="ptab active" data-product="tshirt" onclick="selectProduct('tshirt', this)">T-Shirt</button>
+            <button class="ptab" data-product="glasses" onclick="selectProduct('glasses', this)">Glasses</button>
+            <button class="ptab" data-product="mug" onclick="selectProduct('mug', this)">Mug</button>
+            <button class="ptab" data-product="hoodie" onclick="selectProduct('hoodie', this)">Hoodie</button>
+            <button class="ptab" data-product="cap" onclick="selectProduct('cap', this)">Cap</button>
+            <button class="ptab" data-product="tote" onclick="selectProduct('tote', this)">Tote Bag</button>
+          </div>
+        </div>
+
+        <!-- Color -->
+        <div class="ctrl-group">
+          <label class="ctrl-label">Product Color</label>
+          <div class="color-swatches" id="colorSwatches">
+            <button class="swatch active" data-color="#FFFFFF" style="background:#FFFFFF;border:2px solid #000" onclick="selectColor('#FFFFFF', this)" title="White"></button>
+            <button class="swatch" data-color="#1a1a1a" style="background:#1a1a1a" onclick="selectColor('#1a1a1a', this)" title="Black"></button>
+            <button class="swatch" data-color="#2563eb" style="background:#2563eb" onclick="selectColor('#2563eb', this)" title="Blue"></button>
+            <button class="swatch" data-color="#dc2626" style="background:#dc2626" onclick="selectColor('#dc2626', this)" title="Red"></button>
+            <button class="swatch" data-color="#16a34a" style="background:#16a34a" onclick="selectColor('#16a34a', this)" title="Green"></button>
+            <button class="swatch" data-color="#9333ea" style="background:#9333ea" onclick="selectColor('#9333ea', this)" title="Purple"></button>
+            <button class="swatch" data-color="#f97316" style="background:#f97316" onclick="selectColor('#f97316', this)" title="Orange"></button>
+            <button class="swatch" data-color="#f1f5f9" style="background:#f1f5f9;border:2px solid #e2e8f0" onclick="selectColor('#f1f5f9', this)" title="Light Gray"></button>
+          </div>
+        </div>
+
+        <!-- Size -->
+        <div class="ctrl-group" id="sizeGroup">
+          <label class="ctrl-label">Size</label>
+          <div class="size-options" id="sizeOptions">
+            <button class="size-btn" onclick="selectSize('XS', this)">XS</button>
+            <button class="size-btn active" onclick="selectSize('S', this)">S</button>
+            <button class="size-btn" onclick="selectSize('M', this)">M</button>
+            <button class="size-btn" onclick="selectSize('L', this)">L</button>
+            <button class="size-btn" onclick="selectSize('XL', this)">XL</button>
+            <button class="size-btn" onclick="selectSize('2XL', this)">2XL</button>
+          </div>
+        </div>
+
+        <!-- Upload -->
+        <div class="ctrl-group">
+          <label class="ctrl-label">Your Design</label>
+          <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+            <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFileSelect(event)" />
+            <div class="upload-icon">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <p><strong>Drop your image here</strong></p>
+            <p class="upload-hint">PNG, JPG, SVG — up to 50MB</p>
+          </div>
+          <div class="uploaded-preview" id="uploadedPreview" style="display:none">
+            <img id="uploadedImg" src="" alt="Uploaded design" />
+            <button class="remove-img" onclick="removeImage()">✕ Remove</button>
+          </div>
+        </div>
+
+        <!-- Design controls -->
+        <div class="ctrl-group" id="designControls" style="display:none">
+          <label class="ctrl-label">Design Position</label>
+          <div class="slider-row">
+            <span>Scale</span>
+            <input type="range" min="20" max="100" value="60" id="scaleSlider" oninput="updateDesignTransform()" />
+            <span id="scaleVal">60%</span>
+          </div>
+          <div class="slider-row">
+            <span>Rotate</span>
+            <input type="range" min="-180" max="180" value="0" id="rotateSlider" oninput="updateDesignTransform()" />
+            <span id="rotateVal">0°</span>
+          </div>
+          <div class="slider-row">
+            <span>Opacity</span>
+            <input type="range" min="20" max="100" value="100" id="opacitySlider" oninput="updateDesignTransform()" />
+            <span id="opacityVal">100%</span>
+          </div>
+        </div>
+
+        <!-- Text -->
+        <div class="ctrl-group">
+          <label class="ctrl-label">Add Text (optional)</label>
+          <input type="text" class="text-input" id="customText" placeholder="Your text here..." oninput="updateText()" maxlength="40" />
+          <div class="text-style-row">
+            <select id="fontSelect" onchange="updateText()">
+              <option value="Inter">Inter</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Arial Black">Arial Black</option>
+              <option value="Palatino">Palatino</option>
+            </select>
+            <input type="color" id="textColor" value="#000000" onchange="updateText()" title="Text color" />
+          </div>
+        </div>
+
+        <!-- Quantity & Add to cart -->
+        <div class="ctrl-group">
+          <label class="ctrl-label">Quantity</label>
+          <div class="qty-row">
+            <button class="qty-btn" onclick="changeQty(-1)">−</button>
+            <span class="qty-val" id="qtyVal">1</span>
+            <button class="qty-btn" onclick="changeQty(1)">+</button>
+          </div>
+        </div>
+
+        <div class="price-row">
+          <div>
+            <div class="price-label">Total</div>
+            <div class="price-val" id="priceVal">$24.99</div>
+          </div>
+          <button class="btn-primary btn-add" onclick="addToCart()">Add to Cart</button>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: 3D Preview -->
+      <div class="customizer-preview">
+        <div class="preview-stage">
+          <div class="preview-controls-bar">
+            <button class="view-btn active" onclick="setView('front', this)">Front</button>
+            <button class="view-btn" onclick="setView('back', this)">Back</button>
+            <button class="view-btn" onclick="setView('side', this)">Side</button>
+          </div>
+
+          <div class="stage-3d" id="stage3d">
+            <!-- T-SHIRT -->
+            <div class="model-wrapper" id="model-tshirt">
+              <div class="model-3d tshirt-model" id="tshirtModel">
+                <div class="face front">
+                  <div class="tshirt-full">
+                    <div class="ts-body" id="tsBody">
+                      <div class="ts-collar"></div>
+                      <div class="ts-design-area" id="tsDesignArea">
+                        <img class="design-overlay" id="tsDesignImg" src="" alt="" style="display:none"/>
+                        <div class="design-text" id="tsText"></div>
+                      </div>
+                    </div>
+                    <div class="ts-sleeve ts-left"></div>
+                    <div class="ts-sleeve ts-right"></div>
+                  </div>
+                </div>
+                <div class="face back">
+                  <div class="tshirt-full back-face">
+                    <div class="ts-body" id="tsBodyBack">
+                      <div class="ts-collar"></div>
+                    </div>
+                    <div class="ts-sleeve ts-left"></div>
+                    <div class="ts-sleeve ts-right"></div>
+                  </div>
+                </div>
+                <div class="face side">
+                  <div class="ts-side-view" id="tsSideBody"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- GLASSES -->
+            <div class="model-wrapper hidden" id="model-glasses">
+              <div class="model-3d glasses-model" id="glassesModel">
+                <div class="face front">
+                  <div class="glasses-full">
+                    <div class="gls-frame">
+                      <div class="gls-arm gls-arm-left"></div>
+                      <div class="gls-lens-left" id="glsLeft">
+                        <div class="gls-inner"></div>
+                        <div class="design-overlay-gls" id="glsDesignL" style="display:none">
+                          <img id="glsDesignImgL" src="" alt="" />
+                        </div>
+                      </div>
+                      <div class="gls-bridge"></div>
+                      <div class="gls-lens-right" id="glsRight">
+                        <div class="gls-inner"></div>
+                        <div class="design-overlay-gls" id="glsDesignR" style="display:none">
+                          <img id="glsDesignImgR" src="" alt="" />
+                        </div>
+                      </div>
+                      <div class="gls-arm gls-arm-right"></div>
+                    </div>
+                    <div class="gls-text" id="glsText"></div>
+                  </div>
+                </div>
+                <div class="face side">
+                  <div class="gls-side-view"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- MUG -->
+            <div class="model-wrapper hidden" id="model-mug">
+              <div class="model-3d mug-model" id="mugModel">
+                <div class="face front">
+                  <div class="mug-full">
+                    <div class="mug-main" id="mugMain">
+                      <div class="mug-wrap-area">
+                        <img class="design-overlay" id="mugDesignImg" src="" alt="" style="display:none"/>
+                        <div class="design-text" id="mugText"></div>
+                      </div>
+                    </div>
+                    <div class="mug-handle-3d"></div>
+                    <div class="mug-base"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- HOODIE -->
+            <div class="model-wrapper hidden" id="model-hoodie">
+              <div class="model-3d hoodie-model" id="hoodieModel">
+                <div class="face front">
+                  <div class="hoodie-full">
+                    <div class="hd-body" id="hdBody">
+                      <div class="hd-hood"></div>
+                      <div class="hd-pocket"></div>
+                      <div class="hd-design-area">
+                        <img class="design-overlay" id="hdDesignImg" src="" alt="" style="display:none"/>
+                        <div class="design-text" id="hdText"></div>
+                      </div>
+                    </div>
+                    <div class="hd-sleeve hd-left"></div>
+                    <div class="hd-sleeve hd-right"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CAP -->
+            <div class="model-wrapper hidden" id="model-cap">
+              <div class="model-3d cap-model" id="capModel">
+                <div class="face front">
+                  <div class="cap-full">
+                    <div class="cap-crown" id="capCrown">
+                      <div class="cap-panel cap-p1"></div>
+                      <div class="cap-panel cap-p2"></div>
+                      <div class="cap-panel cap-p3"></div>
+                      <div class="cap-panel cap-p4"></div>
+                      <div class="cap-button"></div>
+                      <div class="cap-design-area">
+                        <img class="design-overlay" id="capDesignImg" src="" alt="" style="display:none"/>
+                        <div class="design-text" id="capText"></div>
+                      </div>
+                    </div>
+                    <div class="cap-brim"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TOTE -->
+            <div class="model-wrapper hidden" id="model-tote">
+              <div class="model-3d tote-model" id="toteModel">
+                <div class="face front">
+                  <div class="tote-full">
+                    <div class="tote-handles">
+                      <div class="tote-handle"></div>
+                      <div class="tote-handle"></div>
+                    </div>
+                    <div class="tote-body" id="toteBody">
+                      <div class="tote-design-area">
+                        <img class="design-overlay" id="toteDesignImg" src="" alt="" style="display:none"/>
+                        <div class="design-text" id="toteText"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="preview-hint">Drag to reposition your design on the product</div>
+        </div>
+
+        <div class="preview-info">
+          <div class="pi-row">
+            <span>Product</span><strong id="piProduct">Custom T-Shirt</strong>
+          </div>
+          <div class="pi-row">
+            <span>Color</span><strong id="piColor">White</strong>
+          </div>
+          <div class="pi-row">
+            <span>Size</span><strong id="piSize">S</strong>
+          </div>
+          <div class="pi-row">
+            <span>Print quality</span><strong>300 DPI Print-Ready</strong>
+          </div>
+          <div class="pi-row">
+            <span>Fulfillment</span><strong>2–5 business days</strong>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ───────────────────────────────────────────── -->
+<section class="section dark-section" id="pricing">
+  <div class="container">
+    <div class="section-header">
+      <div class="label light">Pricing</div>
+      <h2>Simple, transparent pricing</h2>
+      <p>No monthly fees. No minimums. Pay only when you sell.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="pc-icon">👕</div>
+        <div class="pc-name">T-Shirts</div>
+        <div class="pc-price">from <strong>$14.99</strong></div>
+        <ul class="pc-features">
+          <li>Gildan & Bella+Canvas</li>
+          <li>All sizes XS–3XL</li>
+          <li>Front & back print</li>
+          <li>Ships in 2–3 days</li>
+        </ul>
+      </div>
+      <div class="price-card featured">
+        <div class="pc-badge">Most Popular</div>
+        <div class="pc-icon">🕶️</div>
+        <div class="pc-name">Glasses</div>
+        <div class="pc-price">from <strong>$24.99</strong></div>
+        <ul class="pc-features">
+          <li>Custom frame colors</li>
+          <li>UV400 protection</li>
+          <li>Custom lens art</li>
+          <li>Ships in 3–5 days</li>
+        </ul>
+      </div>
+      <div class="price-card">
+        <div class="pc-icon">☕</div>
+        <div class="pc-name">Mugs</div>
+        <div class="pc-price">from <strong>$9.99</strong></div>
+        <ul class="pc-features">
+          <li>11oz & 15oz options</li>
+          <li>Dishwasher safe</li>
+          <li>Full wrap print</li>
+          <li>Ships in 2–3 days</li>
+        </ul>
+      </div>
+      <div class="price-card">
+        <div class="pc-icon">🧢</div>
+        <div class="pc-name">Caps & Hats</div>
+        <div class="pc-price">from <strong>$18.99</strong></div>
+        <ul class="pc-features">
+          <li>Embroidery & DTG</li>
+          <li>Adjustable sizing</li>
+          <li>6-panel & snapback</li>
+          <li>Ships in 3–5 days</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES ──────────────────────────────────────────── -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-header">
+      <div class="label">Why WEARIT</div>
+      <h2>Built for the AI era</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon">🤖</div>
+        <h3>AI Design Enhancement</h3>
+        <p>Your uploaded image is automatically upscaled, background-removed, and optimized for print — no Photoshop needed.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🌍</div>
+        <h3>Global Print Network</h3>
+        <p>Orders route to the nearest print facility automatically. Faster delivery, lower shipping, smaller carbon footprint.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">⚡</div>
+        <h3>Zero-Touch Fulfillment</h3>
+        <p>Order placed → printed → packed → shipped → tracking sent. Every step automated. You focus on selling.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔗</div>
+        <h3>Shopify & WooCommerce Ready</h3>
+        <p>Connect your existing store in minutes. Orders sync automatically, no manual processing required.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📦</div>
+        <h3>Zero Inventory Risk</h3>
+        <p>Products are only made when ordered. No upfront stock, no warehouse costs, no unsold inventory.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">💎</div>
+        <h3>Premium Quality Guarantee</h3>
+        <p>All products go through quality checks before shipping. Anything substandard? We reprint at no extra cost.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CART SIDEBAR ──────────────────────────────────────── -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button onclick="toggleCart()" class="cart-close">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty" id="cartEmpty">
+      <div class="cart-empty-icon">🛒</div>
+      <p>Your cart is empty</p>
+      <a href="#customizer" class="btn-primary" onclick="toggleCart()">Start Designing</a>
+    </div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-total">
+      <span>Total</span>
+      <strong id="cartTotal">$0.00</strong>
+    </div>
+    <button class="btn-primary btn-checkout" onclick="checkout()">Checkout →</button>
+    <p class="cart-note">Free shipping on orders over $50</p>
+  </div>
+</div>
+
+<!-- ── TOAST ─────────────────────────────────────────────── -->
+<div class="toast" id="toast"></div>
+
+<!-- ── FOOTER ────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#" class="logo">WEAR<span>IT</span></a>
+      <p>The fully automated custom print-on-demand platform powered by AI.</p>
+    </div>
+    <div class="footer-links">
+      <div class="fl-col">
+        <h4>Products</h4>
+        <a href="#">T-Shirts</a>
+        <a href="#">Glasses</a>
+        <a href="#">Mugs</a>
+        <a href="#">Hoodies</a>
+        <a href="#">Caps</a>
+        <a href="#">Tote Bags</a>
+      </div>
+      <div class="fl-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">How It Works</a>
+        <a href="#">Pricing</a>
+        <a href="#">Blog</a>
+      </div>
+      <div class="fl-col">
+        <h4>Support</h4>
+        <a href="#">Help Center</a>
+        <a href="#">Shipping Info</a>
+        <a href="#">Returns</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 WEARIT. All rights reserved.</p>
+    <div class="footer-badges">
+      <span>🔒 SSL Secured</span>
+      <span>🌿 Carbon Neutral</span>
+      <span>⭐ 4.9/5 Rating</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+</body>
+</html>

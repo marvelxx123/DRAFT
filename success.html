@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Confirmed — WEARIT</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    body { display: flex; flex-direction: column; min-height: 100vh; background: #fafafa; }
+    .success-wrap {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding: 40px 20px;
+    }
+    .success-card {
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: 24px;
+      padding: 56px 48px;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+    .success-icon {
+      width: 80px; height: 80px;
+      background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.4rem;
+      margin: 0 auto 28px;
+    }
+    .success-card h1 { font-size: 2rem; margin-bottom: 12px; }
+    .success-card p { color: var(--gray-600); line-height: 1.7; margin-bottom: 8px; }
+    .order-details {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 16px;
+      padding: 24px;
+      margin: 32px 0;
+      text-align: left;
+    }
+    .od-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: .9rem; border-bottom: 1px solid var(--gray-100); }
+    .od-row:last-child { border-bottom: none; }
+    .od-row span { color: var(--gray-600); }
+    .od-row strong { color: var(--black); }
+    .success-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid var(--gray-200);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 32px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .timeline { text-align: left; margin: 32px 0; }
+    .tl-item { display: flex; gap: 16px; margin-bottom: 20px; }
+    .tl-dot {
+      width: 28px; height: 28px; flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--green);
+      color: white;
+      font-size: .72rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 2px;
+    }
+    .tl-dot.pending { background: var(--gray-200); color: var(--gray-600); }
+    .tl-content strong { font-size: .9rem; display: block; }
+    .tl-content span { font-size: .8rem; color: var(--gray-400); }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="logo">WEAR<span>IT</span></a>
+  </div>
+</nav>
+
+<div class="success-wrap">
+  <div class="success-card" id="loadingState">
+    <div class="spinner"></div>
+    <p style="color:var(--gray-400)">Confirming your order...</p>
+  </div>
+
+  <div class="success-card" id="successState" style="display:none">
+    <div class="success-icon">✓</div>
+    <h1>Order Confirmed!</h1>
+    <p>Your order is being sent to production. You'll receive a confirmation email shortly with tracking details once it ships.</p>
+
+    <div class="order-details" id="orderDetails">
+      <div class="od-row"><span>Email</span><strong id="odEmail">—</strong></div>
+      <div class="od-row"><span>Total paid</span><strong id="odAmount">—</strong></div>
+      <div class="od-row"><span>Estimated delivery</span><strong>5–10 business days</strong></div>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot">✓</div>
+        <div class="tl-content">
+          <strong>Payment received</strong>
+          <span>Your payment was processed successfully</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">✓</div>
+        <div class="tl-content">
+          <strong>Order sent to production</strong>
+          <span>Our print partner has received your order</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot pending">3</div>
+        <div class="tl-content">
+          <strong>Printing & quality check</strong>
+          <span>Usually completed within 2–3 business days</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot pending">4</div>
+        <div class="tl-content">
+          <strong>Shipped — tracking sent</strong>
+          <span>You'll get an email with your tracking link</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="success-actions">
+      <a href="/" class="btn-primary">Design Another</a>
+      <a href="/" class="btn-ghost">Back to Home</a>
+    </div>
+  </div>
+
+  <div class="success-card" id="errorState" style="display:none">
+    <div class="success-icon" style="background:linear-gradient(135deg,#fee2e2,#fecaca)">⚠</div>
+    <h1>Something went wrong</h1>
+    <p>We couldn't confirm your order details. If you were charged, please contact support — your order may still be processing.</p>
+    <div class="success-actions" style="margin-top:32px">
+      <a href="/" class="btn-primary">Return Home</a>
+    </div>
+  </div>
+</div>
+
+<script>
+(async () => {
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get('session_id');
+
+  if (!sessionId) {
+    show('errorState');
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/checkout/session/${sessionId}`);
+    if (!res.ok) throw new Error('not found');
+    const data = await res.json();
+
+    if (data.status !== 'paid') throw new Error('unpaid');
+
+    document.getElementById('odEmail').textContent = data.customerEmail || '—';
+    document.getElementById('odAmount').textContent = data.amount ? `$${data.amount}` : '—';
+    show('successState');
+  } catch (e) {
+    show('errorState');
+  }
+})();
+
+function show(id) {
+  ['loadingState','successState','errorState'].forEach(s => {
+    document.getElementById(s).style.display = s === id ? 'block' : 'none';
+  });
+}
+</script>
+</body>
+</html>
