@@ -548,6 +548,15 @@ html, body {
 #adminToast.show { transform: translateX(-50%) translateY(0); }
 
 /* ── RESPONSIVE ───────────────────────────────────────────── */
+.agents-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+
 @media (max-width: 1024px) {
   .stats-row { grid-template-columns: repeat(2, 1fr); }
   .agents-grid { grid-template-columns: 1fr 1fr; }

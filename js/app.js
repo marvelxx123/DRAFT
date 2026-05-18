@@ -510,3 +510,24 @@ function showToast(msg) {
     stage.addEventListener('touchend', onUp);
   }
 })();
+
+/* ── COOKIE CONSENT ──────────────────────────────────────── */
+(function() {
+  if (localStorage.getItem('cookie_consent')) return;
+  const banner = document.getElementById('cookieBanner');
+  if (banner) setTimeout(() => banner.classList.add('visible'), 1200);
+})();
+
+function acceptCookies() {
+  localStorage.setItem('cookie_consent', 'accepted');
+  const banner = document.getElementById('cookieBanner');
+  if (banner) banner.classList.remove('visible');
+  // Enable GA tracking
+  if (typeof gtag !== 'undefined') gtag('consent', 'update', { analytics_storage: 'granted' });
+}
+
+function declineCookies() {
+  localStorage.setItem('cookie_consent', 'declined');
+  const banner = document.getElementById('cookieBanner');
+  if (banner) banner.classList.remove('visible');
+}

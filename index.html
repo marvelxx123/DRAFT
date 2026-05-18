@@ -3,13 +3,72 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WEARIT — Custom Print on Demand</title>
+  <title>WEARIT — Custom Print on Demand | Design Your Own Products</title>
+  <meta name="description" content="Create custom T-shirts, hoodies, mugs, glasses and 20+ products with WEARIT's AI-powered design studio. No minimums. Ships worldwide in 48 hours." />
+  <meta name="keywords" content="custom print on demand, custom t-shirts, custom hoodies, custom mugs, personalized products, print on demand" />
+  <link rel="canonical" href="https://wearit.com/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://wearit.com/" />
+  <meta property="og:title"       content="WEARIT — Custom Print on Demand" />
+  <meta property="og:description" content="Design your own T-shirts, hoodies, mugs, glasses and 20+ products. AI-powered editor. Ships worldwide in 48h. No minimums." />
+  <meta property="og:image"       content="https://wearit.com/og-image.png" />
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="WEARIT — Custom Print on Demand" />
+  <meta name="twitter:description" content="Design your own products. Ships worldwide in 48h. No minimums." />
+  <meta name="twitter:image"       content="https://wearit.com/og-image.png" />
+
+  <!-- JSON-LD structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "name": "WEARIT",
+    "description": "AI-powered custom print-on-demand platform. Design T-shirts, hoodies, mugs, glasses and 20+ products.",
+    "url": "https://wearit.com",
+    "logo": "https://wearit.com/og-image.png",
+    "contactPoint": { "@type": "ContactPoint", "email": "support@wearit.com", "contactType": "customer service" },
+    "sameAs": ["https://instagram.com/wearitstore", "https://twitter.com/wearitstore"],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Custom Products",
+      "itemListElement": [
+        { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Custom T-Shirt" }, "price": "24.99", "priceCurrency": "USD" },
+        { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Custom Hoodie" }, "price": "44.99", "priceCurrency": "USD" },
+        { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Custom Mug" }, "price": "14.99", "priceCurrency": "USD" }
+      ]
+    }
+  }
+  </script>
+
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Google Analytics — replace G-XXXXXXXXXX with your GA4 Measurement ID -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
 </head>
 <body>
+
+<!-- ── COOKIE CONSENT ────────────────────────────────────── -->
+<div class="cookie-banner" id="cookieBanner">
+  <div class="cookie-inner">
+    <p>We use cookies to improve your experience, analyze traffic, and personalize content. <a href="privacy.html">Learn more</a></p>
+    <div class="cookie-actions">
+      <button class="cookie-btn-secondary" onclick="declineCookies()">Decline</button>
+      <button class="cookie-btn-primary" onclick="acceptCookies()">Accept All</button>
+    </div>
+  </div>
+</div>
 
 <!-- ── NAV ─────────────────────────────────────────────── -->
 <nav class="nav" id="nav">
@@ -535,6 +594,45 @@
   </div>
 </section>
 
+<!-- ── TESTIMONIALS ───────────────────────────────────────── -->
+<section class="section" id="reviews">
+  <div class="container">
+    <div class="section-header">
+      <div class="label">Reviews</div>
+      <h2>What customers say</h2>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p>"I ordered custom hoodies for my entire team — 24 pieces — and every single one looked incredible. The design editor is insanely easy to use. Will order again."</p>
+        <div class="reviewer"><strong>Marcus T.</strong><span>Team Lead, NYC</span></div>
+      </div>
+      <div class="review-card featured-review">
+        <div class="review-stars">★★★★★</div>
+        <p>"Shipped to me in Paris in 4 days. The quality is insane for the price. The sunglasses with my logo on the lens? My followers went crazy. Ordering monthly now."</p>
+        <div class="reviewer"><strong>Sophie M.</strong><span>Fashion Influencer, Paris</span></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p>"I run a small streetwear brand and WEARIT has completely replaced my old print supplier. Zero inventory, zero headaches, and the quality is actually better."</p>
+        <div class="reviewer"><strong>Jay R.</strong><span>Brand Owner, LA</span></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p>"Used it for a corporate gift order — 50 custom mugs with our logo. Delivered on time, looked professional. Our clients loved them. Definitely recommending."</p>
+        <div class="reviewer"><strong>Priya K.</strong><span>Marketing Director, London</span></div>
+      </div>
+    </div>
+    <div class="reviews-summary">
+      <div class="rs-score">4.9<span>/5</span></div>
+      <div class="rs-bar-wrap">
+        <div class="rs-bar" style="width:94%"></div>
+      </div>
+      <div class="rs-count">Based on 2,847 verified reviews</div>
+    </div>
+  </div>
+</section>
+
 <!-- ── FEATURES ──────────────────────────────────────────── -->
 <section class="section" id="features">
   <div class="container">
@@ -573,6 +671,72 @@
         <h3>Premium Quality Guarantee</h3>
         <p>All products go through quality checks before shipping. Anything substandard? We reprint at no extra cost.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ────────────────────────────────────────────────── -->
+<section class="section dark-section" id="faq">
+  <div class="container">
+    <div class="section-header">
+      <div class="label light">FAQ</div>
+      <h2>Common questions</h2>
+    </div>
+    <div class="faq-grid">
+      <details class="faq-item">
+        <summary>How long does shipping take?</summary>
+        <p>Most orders ship within 48 hours of being placed. Delivery times vary by location: USA 3–5 days, Europe 5–8 days, rest of world 7–14 days. Express options available at checkout.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What file formats can I upload?</summary>
+        <p>PNG, JPG, SVG, and PDF — up to 50MB. For best print results, use PNG with transparent background at least 300 DPI. Our system auto-optimizes your image for print quality.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Is there a minimum order quantity?</summary>
+        <p>Zero minimums. Order one piece or one thousand — same price, same quality, same service. Perfect for individuals, brands, and corporate orders alike.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Can I sell these products in my own store?</summary>
+        <p>Yes, absolutely. WEARIT is built for drop-shipping. Connect your Shopify or WooCommerce store, set your own prices, and we handle printing and shipping directly to your customers.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What if the quality isn't right?</summary>
+        <p>We stand behind every order with our 30-day quality guarantee. If anything arrives damaged, misprinted, or wrong — we reprint it at zero cost. No questions asked.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Do you handle custom packaging?</summary>
+        <p>Yes. Premium subscribers can add custom branded packaging — tissue paper, stickers, thank-you cards — shipped directly to your customer with your branding, not ours.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ── TRUST STRIP ────────────────────────────────────────── -->
+<section class="trust-strip">
+  <div class="trust-inner">
+    <div class="trust-item">
+      <span class="trust-icon">🔒</span>
+      <div><strong>SSL Secured</strong><span>256-bit encryption</span></div>
+    </div>
+    <div class="trust-div"></div>
+    <div class="trust-item">
+      <span class="trust-icon">💳</span>
+      <div><strong>Secure Payments</strong><span>Powered by Stripe</span></div>
+    </div>
+    <div class="trust-div"></div>
+    <div class="trust-item">
+      <span class="trust-icon">🔄</span>
+      <div><strong>30-Day Guarantee</strong><span>Free reprints on defects</span></div>
+    </div>
+    <div class="trust-div"></div>
+    <div class="trust-item">
+      <span class="trust-icon">🌍</span>
+      <div><strong>Ships Worldwide</strong><span>180+ countries</span></div>
+    </div>
+    <div class="trust-div"></div>
+    <div class="trust-item">
+      <span class="trust-icon">⭐</span>
+      <div><strong>4.9/5 Rating</strong><span>2,847 reviews</span></div>
     </div>
   </div>
 </section>
@@ -623,22 +787,22 @@
       </div>
       <div class="fl-col">
         <h4>Company</h4>
-        <a href="#">About</a>
-        <a href="#">How It Works</a>
-        <a href="#">Pricing</a>
-        <a href="#">Blog</a>
+        <a href="#how">How It Works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#faq">FAQ</a>
       </div>
       <div class="fl-col">
         <h4>Support</h4>
-        <a href="#">Help Center</a>
-        <a href="#">Shipping Info</a>
-        <a href="#">Returns</a>
-        <a href="#">Contact</a>
+        <a href="returns.html">Returns Policy</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="mailto:support@wearit.com">Contact Us</a>
       </div>
     </div>
   </div>
   <div class="footer-bottom">
-    <p>© 2026 WEARIT. All rights reserved.</p>
+    <p>© 2026 WEARIT. All rights reserved. &nbsp;·&nbsp; <a href="privacy.html">Privacy</a> &nbsp;·&nbsp; <a href="terms.html">Terms</a> &nbsp;·&nbsp; <a href="returns.html">Returns</a></p>
     <div class="footer-badges">
       <span>🔒 SSL Secured</span>
       <span>🌿 Carbon Neutral</span>

@@ -1140,3 +1140,171 @@ h3 {
   .footer-links { gap: 32px; }
   .pricing-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ── COOKIE CONSENT ──────────────────────────────────────── */
+.cookie-banner {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--black-3);
+  border-top: 1px solid var(--border);
+  z-index: 9000;
+  transform: translateY(100%);
+  transition: transform .4s ease;
+}
+.cookie-banner.visible { transform: translateY(0); }
+.cookie-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.cookie-inner p { font-size: 13px; color: var(--gray); flex: 1; min-width: 240px; }
+.cookie-inner a { color: var(--neon); text-decoration: none; }
+.cookie-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.cookie-btn-primary {
+  padding: 8px 20px;
+  background: var(--neon);
+  color: #000;
+  font-family: var(--font-sub);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: background .15s;
+}
+.cookie-btn-primary:hover { background: #fff; }
+.cookie-btn-secondary {
+  padding: 8px 16px;
+  background: transparent;
+  color: var(--gray);
+  font-family: var(--font-sub);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all .15s;
+}
+.cookie-btn-secondary:hover { color: #fff; border-color: var(--gray); }
+
+/* ── TESTIMONIALS ────────────────────────────────────────── */
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+.review-card {
+  background: var(--black-2);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.featured-review { background: var(--black-3); }
+.review-stars { color: var(--neon); font-size: 14px; letter-spacing: 2px; }
+.review-card p { font-size: 14px; color: var(--gray); line-height: 1.7; flex: 1; font-style: italic; }
+.reviewer { display: flex; flex-direction: column; gap: 2px; }
+.reviewer strong { font-size: 13px; color: var(--white); font-family: var(--font-sub); letter-spacing: .3px; }
+.reviewer span { font-size: 11px; color: var(--gray-dim); }
+.reviews-summary {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border: 1px solid var(--border);
+  padding: 20px 24px;
+  background: var(--black-3);
+}
+.rs-score { font-family: var(--font-head); font-size: 48px; color: var(--neon); line-height: 1; }
+.rs-score span { font-size: 24px; color: var(--gray); }
+.rs-bar-wrap { flex: 1; height: 4px; background: var(--border); border-radius: 2px; }
+.rs-bar { height: 100%; background: var(--neon); border-radius: 2px; }
+.rs-count { font-size: 12px; color: var(--gray); font-family: var(--font-sub); letter-spacing: .5px; text-transform: uppercase; }
+
+/* ── FAQ ─────────────────────────────────────────────────── */
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.faq-item {
+  background: var(--black-3);
+  border: none;
+}
+.faq-item summary {
+  padding: 20px 24px;
+  font-family: var(--font-sub);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .3px;
+  color: var(--white);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  transition: color .15s;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: '+'; font-size: 20px; color: var(--neon); font-family: var(--font-head); }
+.faq-item[open] summary::after { content: '−'; }
+.faq-item[open] summary { color: var(--neon); }
+.faq-item p {
+  padding: 0 24px 20px;
+  font-size: 14px;
+  color: var(--gray);
+  line-height: 1.7;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+/* ── TRUST STRIP ─────────────────────────────────────────── */
+.trust-strip {
+  background: var(--black-3);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.trust-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 32px;
+}
+.trust-item div { display: flex; flex-direction: column; gap: 1px; }
+.trust-item strong { font-size: 13px; color: var(--white); font-family: var(--font-sub); letter-spacing: .3px; }
+.trust-item span { font-size: 11px; color: var(--gray); }
+.trust-icon { font-size: 22px; }
+.trust-div { width: 1px; height: 32px; background: var(--border); }
+.footer-bottom a { color: var(--gray); text-decoration: none; transition: color .15s; }
+.footer-bottom a:hover { color: var(--neon); }
+
+@media (max-width: 1024px) {
+  .reviews-grid { grid-template-columns: 1fr 1fr; }
+  .faq-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .reviews-grid { grid-template-columns: 1fr; }
+  .trust-inner { flex-direction: column; gap: 16px; }
+  .trust-div { display: none; }
+}
