@@ -1,0 +1,5 @@
+preview-*.png
+screenshot*.cjs
+screenshot*.mjs
+*.log
+.env
