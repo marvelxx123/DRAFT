@@ -20,6 +20,16 @@ const PRODUCTS = {
   phone_case:   { name: 'Phone Case',    emoji: '📱', price: 16.99, surfaces: { back: 'Back' },                     canvas: { w: 360, h: 620 }, defaultColor: '#000000', shape: 'phone' },
   notebook:     { name: 'Notebook',      emoji: '📓', price: 12.99, surfaces: { front: 'Front', back: 'Back' },      canvas: { w: 440, h: 600 }, defaultColor: '#ffffff', shape: 'card' },
   poster:       { name: 'Poster',        emoji: '🖼️', price: 9.99,  surfaces: { front: 'Front' },                   canvas: { w: 480, h: 680 }, defaultColor: '#ffffff', shape: 'rect' },
+  glasses:      { name: 'Sunglasses',    emoji: '🕶️', price: 34.99, surfaces: { frame: 'Frame' },                   canvas: { w: 600, h: 220 }, defaultColor: '#1a1a1a', shape: 'glasses' },
+  glass_panel:  { name: 'Glass Panel',   emoji: '🪟', price: 39.99, surfaces: { front: 'Front' },                   canvas: { w: 500, h: 380 }, defaultColor: '#c8e8ff', shape: 'glass' },
+  sticker:      { name: 'Sticker',       emoji: '⭐', price: 3.99,  surfaces: { front: 'Design' },                  canvas: { w: 400, h: 400 }, defaultColor: '#ffffff', shape: 'sticker' },
+  pillow:       { name: 'Throw Pillow',  emoji: '🛋️', price: 27.99, surfaces: { front: 'Front', back: 'Back' },     canvas: { w: 500, h: 500 }, defaultColor: '#f0f0f0', shape: 'pillow' },
+  canvas_print: { name: 'Canvas Print',  emoji: '🎨', price: 49.99, surfaces: { front: 'Front' },                   canvas: { w: 560, h: 420 }, defaultColor: '#ffffff', shape: 'canvas' },
+  coaster:      { name: 'Coaster',       emoji: '🫗', price: 8.99,  surfaces: { top: 'Top' },                       canvas: { w: 400, h: 400 }, defaultColor: '#f5f0e8', shape: 'coaster' },
+  keychain:     { name: 'Keychain',      emoji: '🔑', price: 6.99,  surfaces: { front: 'Front', back: 'Back' },     canvas: { w: 280, h: 380 }, defaultColor: '#c8a84b', shape: 'keychain' },
+  water_bottle: { name: 'Water Bottle',  emoji: '💧', price: 24.99, surfaces: { wrap: 'Wrap' },                     canvas: { w: 480, h: 320 }, defaultColor: '#d0d8e0', shape: 'bottle' },
+  socks:        { name: 'Custom Socks',  emoji: '🧦', price: 12.99, surfaces: { left: 'Left', right: 'Right' },     canvas: { w: 320, h: 480 }, defaultColor: '#ffffff', shape: 'sock' },
+  face_mask:    { name: 'Face Mask',     emoji: '😷', price: 9.99,  surfaces: { front: 'Front' },                   canvas: { w: 440, h: 280 }, defaultColor: '#ffffff', shape: 'mask' },
 };
 
 // ──────────────────────────────────────────────────────────────
@@ -253,6 +263,84 @@ function renderMockup() {
       mockup.style.cssText = `background:${color};border-radius:32px;box-shadow:0 4px 24px rgba(0,0,0,.25),0 0 0 2px ${darker}`;
       mockup.innerHTML = `<div class="phone-notch"></div><div class="phone-btn-r"></div>`;
       mockup.className = 'mockup-phone';
+      break;
+    }
+    case 'glasses': {
+      mockup.innerHTML = `
+        <div class="glasses-lens glasses-lens-l" style="background:${color};border-color:${darker}"></div>
+        <div class="glasses-bridge" style="background:${darker}"></div>
+        <div class="glasses-lens glasses-lens-r" style="background:${color};border-color:${darker}"></div>
+        <div class="glasses-arm glasses-arm-l" style="background:${darker}"></div>
+        <div class="glasses-arm glasses-arm-r" style="background:${darker}"></div>
+      `;
+      mockup.className = 'mockup-glasses';
+      break;
+    }
+    case 'glass': {
+      mockup.style.cssText = `background:linear-gradient(135deg,${color} 0%,rgba(255,255,255,.6) 50%,${color} 100%);border-radius:4px;box-shadow:0 6px 32px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.7)`;
+      mockup.className = 'mockup-rect';
+      break;
+    }
+    case 'sticker': {
+      mockup.style.cssText = `background:${color};border-radius:50%;box-shadow:0 4px 16px rgba(0,0,0,.2),0 0 0 4px ${darker},0 0 0 8px ${color}`;
+      mockup.className = 'mockup-sticker';
+      break;
+    }
+    case 'pillow': {
+      mockup.innerHTML = `<div class="pillow-body" style="background:${color};border-color:${darker}"></div>`;
+      mockup.className = 'mockup-pillow';
+      break;
+    }
+    case 'canvas': {
+      mockup.innerHTML = `
+        <div class="canvas-frame" style="background:${color}"></div>
+        <div class="canvas-edge-t" style="background:${darkenColor(color,15)}"></div>
+        <div class="canvas-edge-r" style="background:${darkenColor(color,25)}"></div>
+      `;
+      mockup.className = 'mockup-canvas';
+      break;
+    }
+    case 'coaster': {
+      mockup.style.cssText = `background:${color};border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,.25),0 0 0 3px ${darker}`;
+      mockup.className = 'mockup-coaster';
+      break;
+    }
+    case 'keychain': {
+      mockup.innerHTML = `
+        <div class="keychain-ring" style="border-color:${darkenColor(color,20)}"></div>
+        <div class="keychain-body" style="background:linear-gradient(160deg,${lighter},${color},${darker})"></div>
+      `;
+      mockup.className = 'mockup-keychain';
+      break;
+    }
+    case 'bottle': {
+      mockup.innerHTML = `
+        <div class="bottle-cap" style="background:${darkenColor(color,30)}"></div>
+        <div class="bottle-neck" style="background:${darker}"></div>
+        <div class="bottle-body" style="background:linear-gradient(180deg,${lighter} 0%,${color} 40%,${darker} 100%)"></div>
+      `;
+      mockup.className = 'mockup-bottle';
+      break;
+    }
+    case 'sock': {
+      mockup.innerHTML = `
+        <div class="sock-leg" style="background:${color}"></div>
+        <div class="sock-heel" style="background:${darker}"></div>
+        <div class="sock-foot" style="background:${color}"></div>
+        <div class="sock-toe" style="background:${darker}"></div>
+      `;
+      mockup.className = 'mockup-sock';
+      break;
+    }
+    case 'mask': {
+      mockup.innerHTML = `
+        <div class="mask-body" style="background:${color}"></div>
+        <div class="mask-pleat-1" style="background:${darkenColor(color,8)}"></div>
+        <div class="mask-pleat-2" style="background:${darkenColor(color,14)}"></div>
+        <div class="mask-loop-l" style="border-color:${darker}"></div>
+        <div class="mask-loop-r" style="border-color:${darker}"></div>
+      `;
+      mockup.className = 'mockup-mask';
       break;
     }
     case 'rect':
