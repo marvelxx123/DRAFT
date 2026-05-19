@@ -755,64 +755,102 @@ window.addEventListener('scroll',function(){
 document.querySelectorAll('#mob-nav a').forEach(function(a){
   a.addEventListener('click',function(){document.getElementById('menu-toggle').checked=false;});
 });
+
 var demoPlaying=false,demoTimer=null;
-var script=[
-  {s:'aria',t:'Thank you for calling! This is ARIA with CALLA — how can I help you today?',d:700},
-  {s:'customer',t:'Hi, I\'d like to book a haircut for Saturday.',d:2400},
-  {s:'aria',t:'Of course! We have openings at 10am, 1pm, and 3pm. Which works for you?',d:2200},
-  {s:'customer',t:'1pm would be perfect.',d:2600},
-  {s:'aria',t:'Wonderful! Can I get your name to hold the appointment?',d:1800},
-  {s:'customer',t:'It\'s Maria.',d:2000},
-  {s:'aria',t:'You\'re all set Maria! Saturday at 1pm — we\'ll text you a reminder. Anything else?',d:1600},
-  {s:'customer',t:'That\'s it, thank you!',d:1200},
-  {s:'aria',t:'Perfect! We look forward to seeing you Saturday. Have a wonderful day! 🦎',d:0},
+var demoConvo=[
+  {s:'aria',    t:'Thank you for calling! This is ARIA with CALLA — how can I help you today?', d:700},
+  {s:'customer',t:'Hi, I\'d like to book a haircut for Saturday.',                              d:2400},
+  {s:'aria',    t:'Of course! We have openings at 10am, 1pm, and 3pm. Which works for you?',   d:2200},
+  {s:'customer',t:'1pm would be perfect.',                                                      d:2600},
+  {s:'aria',    t:'Wonderful! Can I get your name to hold the appointment?',                    d:1800},
+  {s:'customer',t:'It\'s Maria.',                                                               d:2000},
+  {s:'aria',    t:'You\'re all set Maria! Saturday at 1pm — we\'ll text you a reminder. Anything else?', d:1600},
+  {s:'customer',t:'That\'s it, thank you!',                                                     d:1200},
+  {s:'aria',    t:'Perfect! We look forward to seeing you Saturday. Have a wonderful day! 🦎',  d:0},
 ];
+
 function resetDemo(){
-  clearTimeout(demoTimer);demoPlaying=false;
-  document.getElementById('demoChat').innerHTML='<p style="color:rgba(255,255,255,.2);font-size:.85rem;text-align:center;padding:20px 0">Press ▶ play to start the demo</p>';
-  document.getElementById('typingRow').style.display='none';
-  document.getElementById('demoWave').classList.remove('playing');
-  document.getElementById('demoLbl').textContent='Press play to start';
-  document.getElementById('playBtn').innerHTML='<svg viewBox="0 0 24 24" fill="#080808"><path d="M8 5v14l11-7z"/></svg>';
+  if(demoTimer){clearTimeout(demoTimer);demoTimer=null;}
+  demoPlaying=false;
+  var chat=document.getElementById('demoChat');
+  if(chat) chat.innerHTML='<p style="color:rgba(255,255,255,.2);font-size:.85rem;text-align:center;padding:20px 0">Press ▶ play to start the demo</p>';
+  var tr=document.getElementById('typingRow'); if(tr) tr.style.display='none';
+  var dw=document.getElementById('demoWave');  if(dw) dw.classList.remove('playing');
+  var dl=document.getElementById('demoLbl');   if(dl) dl.textContent='Press play to start';
+  var pb=document.getElementById('playBtn');
+  if(pb) pb.innerHTML='<svg viewBox="0 0 24 24" fill="#080808"><path d="M8 5v14l11-7z"/></svg>';
 }
+
 function addBubble(line){
   var chat=document.getElementById('demoChat');
-  var ph=chat.querySelector('p');if(ph)ph.remove();
+  if(!chat) return;
+  var ph=chat.querySelector('p'); if(ph) ph.remove();
   var d=document.createElement('div');
   d.className='bubble '+line.s;
-  d.style.cssText='opacity:0;transition:opacity .3s,transform .3s;transform:translateY(8px)';
-  d.innerHTML=line.s==='aria'?'<div class="bub-av">AR</div><div class="bub-txt">'+line.t+'</div>':'<div class="bub-av">👤</div><div class="bub-txt">'+line.t+'</div>';
+  d.style.opacity='0';
+  d.style.transform='translateY(8px)';
+  d.style.transition='opacity .3s,transform .3s';
+  d.innerHTML=line.s==='aria'
+    ?'<div class="bub-av">AR</div><div class="bub-txt">'+line.t+'</div>'
+    :'<div class="bub-av">👤</div><div class="bub-txt">'+line.t+'</div>';
   chat.appendChild(d);
-  requestAnimationFrame(function(){d.style.opacity='1';d.style.transform='translateY(0)'});
-  d.scrollIntoView({behavior:'smooth',block:'nearest'});
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      d.style.opacity='1';
+      d.style.transform='translateY(0)';
+    });
+  });
+  try{chat.scrollTop=chat.scrollHeight;}catch(e){}
 }
+
 function runStep(i){
-  if(!demoPlaying||i>=script.length){
-    document.getElementById('typingRow').style.display='none';
-    document.getElementById('demoWave').classList.remove('playing');
-    document.getElementById('demoLbl').textContent='Tap to replay';
-    document.getElementById('playBtn').innerHTML='<svg viewBox="0 0 24 24" fill="#080808"><path d="M8 5v14l11-7z"/></svg>';
-    demoPlaying=false;return;
+  if(!demoPlaying || i>=demoConvo.length){
+    var tr=document.getElementById('typingRow'); if(tr) tr.style.display='none';
+    var dw=document.getElementById('demoWave');  if(dw) dw.classList.remove('playing');
+    var dl=document.getElementById('demoLbl');   if(dl) dl.textContent='Tap to replay';
+    var pb=document.getElementById('playBtn');
+    if(pb) pb.innerHTML='<svg viewBox="0 0 24 24" fill="#080808"><path d="M8 5v14l11-7z"/></svg>';
+    demoPlaying=false;
+    return;
   }
-  var line=script[i];
-  if(line.s==='aria'){document.getElementById('typingRow').style.display='flex';document.getElementById('demoLbl').textContent='ARIA is typing...';}
-  else{document.getElementById('typingRow').style.display='none';document.getElementById('demoLbl').textContent='Customer responding...';}
+  var line=demoConvo[i];
+  var tr=document.getElementById('typingRow');
+  var dl=document.getElementById('demoLbl');
+  if(line.s==='aria'){
+    if(tr) tr.style.display='flex';
+    if(dl) dl.textContent='ARIA is typing...';
+  } else {
+    if(tr) tr.style.display='none';
+    if(dl) dl.textContent='Customer responding...';
+  }
   demoTimer=setTimeout(function(){
-    document.getElementById('typingRow').style.display='none';
+    if(tr) tr.style.display='none';
     addBubble(line);
-    demoTimer=setTimeout(function(){runStep(i+1);},line.d||800);
-  },line.s==='aria'?900:400);
+    var delay=line.d>0?line.d:800;
+    demoTimer=setTimeout(function(){runStep(i+1);},delay);
+  }, line.s==='aria'?900:400);
 }
+
 function playDemo(){
   if(demoPlaying){resetDemo();return;}
-  resetDemo();demoPlaying=true;
-  document.getElementById('demoWave').classList.add('playing');
-  document.getElementById('playBtn').innerHTML='<svg viewBox="0 0 24 24" fill="#080808"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
-  document.getElementById('demoLbl').textContent='Live conversation...';
+  resetDemo();
+  demoPlaying=true;
+  var dw=document.getElementById('demoWave'); if(dw) dw.classList.add('playing');
+  var pb=document.getElementById('playBtn');
+  if(pb) pb.innerHTML='<svg viewBox="0 0 24 24" fill="#080808"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+  var dl=document.getElementById('demoLbl'); if(dl) dl.textContent='Live conversation...';
   runStep(0);
 }
-function startDemo(){document.getElementById('demo').scrollIntoView({behavior:'smooth'});setTimeout(playDemo,600);}
-document.addEventListener('keydown',function(e){if(e.key==='Escape')document.getElementById('modal').classList.remove('open');});
+
+function startDemo(){
+  var s=document.getElementById('demo');
+  if(s) s.scrollIntoView({behavior:'smooth'});
+  setTimeout(playDemo,600);
+}
+
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape') document.getElementById('modal').classList.remove('open');
+});
 </script>
 </body>
 </html>
