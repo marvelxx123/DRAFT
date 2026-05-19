@@ -238,6 +238,27 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:0}
 .play-card-btn{width:100%;background:rgba(200,255,0,.08);border:1px solid rgba(200,255,0,.2);color:var(--lime);font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;padding:12px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .2s}
 .play-card-btn:hover{background:rgba(200,255,0,.15)}
 
+/* COMPARE TABLE */
+.comp-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:48px;border-radius:16px;border:1px solid var(--border)}
+.comp-table{width:100%;border-collapse:collapse;font-size:.84rem;min-width:560px}
+.comp-table thead th{padding:14px 18px;text-align:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);background:var(--bg3);white-space:nowrap}
+.comp-table thead th:first-child{text-align:left;min-width:170px}
+.comp-table thead th.hcalla{color:var(--lime);background:rgba(200,255,0,.07)}
+.comp-table tbody td{padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.04);text-align:center;color:rgba(255,255,255,.4);vertical-align:middle}
+.comp-table tbody td:first-child{text-align:left;color:rgba(255,255,255,.75);font-weight:500}
+.comp-table tbody td.hcalla{background:rgba(200,255,0,.04);color:#fff;font-weight:600}
+.comp-table tbody tr:last-child td{border-bottom:none}
+.cchk{color:var(--lime);font-weight:700}.cnope{color:rgba(255,255,255,.18)}.cprt{color:rgba(255,200,60,.7);font-size:.78rem}
+.plan-over{font-size:.72rem;color:rgba(200,255,0,.55);margin:-14px 0 20px}
+/* SHIELD SPOTLIGHT */
+.shield-spot{background:rgba(200,255,0,.04);border:1px solid rgba(200,255,0,.16);border-radius:20px;padding:56px 48px;margin-top:56px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.shield-stat{font-family:'Syne',sans-serif;font-weight:900;font-size:3.4rem;color:var(--lime);line-height:1;margin-bottom:8px}
+.shield-label{font-size:.78rem;color:var(--muted);margin-bottom:28px}
+.shield-flow{display:flex;flex-direction:column;gap:10px}
+.sflow-step{display:flex;align-items:flex-start;gap:14px;padding:12px 16px;background:rgba(255,255,255,.03);border-radius:10px;font-size:.84rem;color:rgba(255,255,255,.7);line-height:1.45}
+.sflow-ico{font-size:1rem;flex-shrink:0;margin-top:1px}
+@media(max-width:900px){.shield-spot{grid-template-columns:1fr;padding:36px 24px}}
+
 @media(max-width:900px){
   .hero-inner{grid-template-columns:1fr;gap:40px}
   .problem-grid,.aria-inner{grid-template-columns:1fr}
@@ -463,7 +484,7 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:0}
             <span class="answering">Answering...</span>
           </div>
           <div class="shield-box">🛡️ <strong>SHIELD Alert:</strong> Unhappy caller detected — owner notified</div>
-          <button class="play-card-btn" onclick="startDemo()">
+          <button class="play-card-btn" id="cardDemoBtn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
             Watch a live conversation
           </button>
@@ -540,10 +561,10 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:0}
       <h2>This is ARIA.<br>She never misses a word.</h2>
       <p class="sec-sub">Like a chameleon that adapts to any caller — ARIA talks to every one of your customers, 24 hours a day, 7 days a week. No voicemail. No hold music. No lost revenue.</p>
       <div class="aria-facts">
-        <div class="fact-row"><span class="fact-icon">🦎</span> Answers every call in under 2 rings, sounds completely human</div>
-        <div class="fact-row"><span class="fact-icon">📅</span> Books appointments directly into your calendar automatically</div>
-        <div class="fact-row"><span class="fact-icon">🛡️</span> CALLA SHIELD detects upset callers and alerts you instantly</div>
-        <div class="fact-row"><span class="fact-icon">⭐</span> Auto-sends Google review requests to happy callers</div>
+        <div class="fact-row"><span class="fact-icon">🦎</span> Answers in under 2 rings — 24/7, weekends, after hours. Callers hear a real voice, not hold music.</div>
+        <div class="fact-row"><span class="fact-icon">📅</span> Offers 2–3 real-time open slots, confirms the booking instantly, and texts a reminder — all without you lifting a finger.</div>
+        <div class="fact-row"><span class="fact-icon">🛡️</span> CALLA SHIELD detects caller frustration 30–60 seconds early — escalates before they hang up and leave a 1-star review.</div>
+        <div class="fact-row"><span class="fact-icon">⭐</span> 2 hours after every happy call, ARIA auto-texts a Google review link — turning satisfied customers into 5-star ratings.</div>
       </div>
     </div>
   </div>
@@ -561,9 +582,9 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:0}
         <p class="sec-sub">The numbers don't lie. Unanswered phones are silently killing small business revenue every single day.</p>
       </div>
       <div class="stat-list">
-        <div class="stat-item"><div class="stat-num">62%</div><p class="stat-desc">of callers who reach voicemail <strong>never call back</strong>. They call your competitor instead.</p></div>
-        <div class="stat-item"><div class="stat-num">1 in 3</div><p class="stat-desc">small businesses <strong>lose clients to missed calls every week</strong> without ever knowing it.</p></div>
-        <div class="stat-item"><div class="stat-num">$12K</div><p class="stat-desc">average annual revenue <strong>lost to unanswered phones</strong> per local business.</p></div>
+        <div class="stat-item"><div class="stat-num">85%</div><p class="stat-desc">of callers who don't reach someone <strong>never call back</strong>. They call your competitor instead.</p></div>
+        <div class="stat-item"><div class="stat-num">62%</div><p class="stat-desc">of small business calls go unanswered — <strong>7% are spam</strong>, the other 55% are real customers you're losing.</p></div>
+        <div class="stat-item"><div class="stat-num">$22K</div><p class="stat-desc">average lifetime value of a single new dental patient. A missed call is never just a missed call.</p></div>
       </div>
     </div>
   </div>
@@ -626,7 +647,8 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:0}
         <div class="plan-price"><sup>$</sup>79</div>
         <div class="plan-mo">per month</div>
         <div class="plan-mins">100 minutes / month</div>
-        <ul><li>24/7 AI answering</li><li>Call summaries via SMS</li><li>SHIELD sentiment alerts</li><li>Owner notifications</li></ul>
+        <div class="plan-over">then $0.20/min · spam blocked free</div>
+        <ul><li>24/7 AI answering</li><li>Call summaries via SMS</li><li>SHIELD sentiment alerts</li><li>Owner notifications</li><li>Spam & robocall blocking</li></ul>
         <button class="plan-btn btn-plan-out">Start 7-Day Free Trial</button>
         <p class="plan-fine">No credit card required</p>
       </div>
@@ -636,7 +658,8 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:0}
         <div class="plan-price"><sup>$</sup>149</div>
         <div class="plan-mo">per month</div>
         <div class="plan-mins">300 minutes / month</div>
-        <ul><li>Everything in Lite</li><li>Appointment booking</li><li>Lead capture & qualification</li><li>CRM sync</li><li>Auto Google review prompts</li></ul>
+        <div class="plan-over">then $0.15/min · spam blocked free</div>
+        <ul><li>Everything in Lite</li><li>Real-time appointment booking</li><li>Lead capture & qualification</li><li>CRM sync</li><li>Auto Google review prompts</li><li>Missed-call SMS recovery</li></ul>
         <button class="plan-btn btn-plan-lime">Start 7-Day Free Trial</button>
         <p class="plan-fine">No credit card required</p>
       </div>
@@ -645,9 +668,107 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:0}
         <div class="plan-price"><sup>$</sup>249</div>
         <div class="plan-mo">per month</div>
         <div class="plan-mins">700 minutes / month</div>
-        <ul><li>Everything in Pro</li><li>Custom call scripts</li><li>Multi-location support</li><li>Priority support</li><li>Dedicated account manager</li></ul>
+        <div class="plan-over">then $0.12/min · spam blocked free</div>
+        <ul><li>Everything in Pro</li><li>Custom call scripts</li><li>Multi-location support</li><li>Bilingual (English/Spanish)</li><li>Priority support</li><li>Dedicated account manager</li></ul>
         <button class="plan-btn btn-plan-out">Start 7-Day Free Trial</button>
         <p class="plan-fine">No credit card required</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- WHY CALLA WINS -->
+<section class="sec sec-dark">
+  <div class="wrap center">
+    <div class="chip">How We Compare</div>
+    <h2>All features included. Zero gating.</h2>
+    <p class="sec-sub">Competitors hide booking, SMS, and emotion detection behind expensive upgrades. CALLA Pro includes everything — even SHIELD™ sentiment detection that nobody else in this space offers.</p>
+    <div class="comp-wrap">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="hcalla">CALLA Pro<br><span style="color:var(--lime);font-size:1rem;font-family:'Syne',sans-serif;font-weight:900">$149/mo</span></th>
+            <th>Goodcall<br><span style="font-weight:400;font-size:.7rem">$99–$199</span></th>
+            <th>Rosie AI<br><span style="font-weight:400;font-size:.7rem">$99/mo</span></th>
+            <th>Smith.ai<br><span style="font-weight:400;font-size:.7rem">$292+/mo</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>24/7 AI answering</td>
+            <td class="hcalla cchk">✓</td>
+            <td class="cchk">✓</td>
+            <td class="cchk">✓</td>
+            <td class="cchk">✓</td>
+          </tr>
+          <tr>
+            <td>Appointment booking</td>
+            <td class="hcalla cchk">✓ Included</td>
+            <td class="cnope">✗ Not available</td>
+            <td class="cprt">$149+ plan only</td>
+            <td class="cchk">✓</td>
+          </tr>
+          <tr>
+            <td>SMS confirmations</td>
+            <td class="hcalla cchk">✓ Included</td>
+            <td class="cnope">✗ Not available</td>
+            <td class="cprt">$149+ plan only</td>
+            <td class="cnope">✗</td>
+          </tr>
+          <tr>
+            <td>Sentiment / emotion detection</td>
+            <td class="hcalla"><span style="color:var(--lime);font-weight:700">✓ SHIELD™</span></td>
+            <td class="cnope">✗</td>
+            <td class="cnope">✗</td>
+            <td class="cnope">✗</td>
+          </tr>
+          <tr>
+            <td>Auto Google review prompts</td>
+            <td class="hcalla cchk">✓ Automatic</td>
+            <td class="cnope">✗</td>
+            <td class="cnope">✗</td>
+            <td class="cnope">✗</td>
+          </tr>
+          <tr>
+            <td>Spam / robocall blocking</td>
+            <td class="hcalla cchk">✓ Included</td>
+            <td class="cnope">✗</td>
+            <td class="cnope">✗</td>
+            <td class="cchk">✓</td>
+          </tr>
+          <tr>
+            <td>Setup time</td>
+            <td class="hcalla" style="color:var(--lime);font-weight:700">15 minutes</td>
+            <td style="color:rgba(255,255,255,.5)">~30 min</td>
+            <td style="color:rgba(255,255,255,.5)">~30 min</td>
+            <td style="color:rgba(239,68,68,.75);font-weight:600">2+ weeks</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SHIELD SPOTLIGHT -->
+    <div class="shield-spot">
+      <div>
+        <div class="chip" style="margin-bottom:20px">CALLA SHIELD™</div>
+        <h2 style="font-size:clamp(24px,3.5vw,44px);margin-bottom:12px">The only AI receptionist that protects your reputation.</h2>
+        <p class="sec-sub" style="max-width:100%">Every other service just answers calls. CALLA SHIELD monitors every conversation in real time — detecting when a caller is frustrated before they hang up and leave a 1-star review.</p>
+        <div class="shield-flow" style="margin-top:28px">
+          <div class="sflow-step"><span class="sflow-ico">🎙️</span><span><strong style="color:#fff">ARIA detects rising frustration</strong> — tone, pitch, short clipped answers — within 30–60 seconds of the conversation.</span></div>
+          <div class="sflow-step"><span class="sflow-ico">⚡</span><span><strong style="color:#fff">Immediate owner alert</strong> — you get a text with the caller's name, issue, and a direct call-back number. You can step in before they leave.</span></div>
+          <div class="sflow-step"><span class="sflow-ico">⭐</span><span><strong style="color:#fff">Happy calls trigger review requests</strong> — ARIA automatically sends a Google review link 2 hours after a positive call. Set it and forget it.</span></div>
+        </div>
+      </div>
+      <div style="text-align:center">
+        <div class="shield-stat">1-star</div>
+        <div class="shield-label">reviews cost SMBs an avg. of 30 new customers</div>
+        <div class="shield-stat" style="margin-top:16px">62%</div>
+        <div class="shield-label">of callers who hit voicemail never call back</div>
+        <div class="shield-stat" style="margin-top:16px">$0</div>
+        <div class="shield-label">extra cost — SHIELD is included in every plan</div>
       </div>
     </div>
   </div>
@@ -896,7 +1017,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Wire up "Watch a live conversation" card button
-  var cardBtn = document.querySelector('.play-card-btn');
+  var cardBtn = getEl('cardDemoBtn');
   if (cardBtn) {
     cardBtn.addEventListener('click', function() {
       var demoSection = getEl('demo');
