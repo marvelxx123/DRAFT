@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WEARIT — How It All Works</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black:  #080808;
+    --black2: #101010;
+    --black3: #161616;
+    --black4: #1e1e1e;
+    --neon:   #e8ff00;
+    --neon12: rgba(232,255,0,.12);
+    --border: #2a2a2a;
+    --text:   #f0f0f0;
+    --muted:  #888;
+    --red:    #ff4c4c;
+    --cyan:   #00e5ff;
+    --purple: #b57bff;
+    --orange: #ff9500;
+    --green:  #39ff14;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.6; }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: #000; border-bottom: 2px solid var(--neon);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 40px;
+  }
+  .nav-logo { font-family: 'Bebas Neue'; font-size: 28px; letter-spacing: 4px; color: var(--text); }
+  .nav-logo span { color: var(--neon); }
+  .nav-links { display: flex; gap: 24px; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; transition: color .2s; }
+  .nav-links a:hover { color: var(--neon); }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center; padding: 80px 40px 60px;
+    background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(232,255,0,.07), transparent);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-label { display: inline-block; background: var(--neon12); border: 1px solid var(--neon); color: var(--neon); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; padding: 6px 16px; border-radius: 20px; margin-bottom: 24px; }
+  .hero h1 { font-family: 'Bebas Neue'; font-size: clamp(48px, 8vw, 90px); letter-spacing: 4px; line-height: 1; margin-bottom: 20px; }
+  .hero h1 span { color: var(--neon); }
+  .hero p { font-size: 17px; color: var(--muted); max-width: 560px; margin: 0 auto 40px; }
+  .scroll-btn { display: inline-block; background: var(--neon); color: #000; font-family: 'Bebas Neue'; font-size: 16px; letter-spacing: 2px; padding: 14px 36px; border-radius: 3px; text-decoration: none; }
+  .scroll-btn:hover { opacity: .9; }
+
+  /* ── SECTIONS ── */
+  section { padding: 80px 40px; max-width: 1100px; margin: 0 auto; }
+  section + section { border-top: 1px solid var(--border); }
+  .section-label { font-family: 'Oswald'; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--neon); margin-bottom: 12px; }
+  .section-title { font-family: 'Bebas Neue'; font-size: clamp(32px, 5vw, 52px); letter-spacing: 2px; margin-bottom: 16px; }
+  .section-sub { font-size: 15px; color: var(--muted); max-width: 620px; margin-bottom: 48px; }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow { display: flex; align-items: stretch; gap: 0; flex-wrap: wrap; justify-content: center; }
+  .flow-step {
+    flex: 0 0 auto; width: 160px;
+    background: var(--black3); border: 1px solid var(--border);
+    border-radius: 8px; padding: 24px 16px; text-align: center;
+    position: relative; transition: border-color .2s, transform .2s;
+  }
+  .flow-step:hover { border-color: var(--neon); transform: translateY(-4px); }
+  .flow-icon { font-size: 36px; margin-bottom: 12px; display: block; }
+  .flow-step h3 { font-family: 'Oswald'; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: var(--text); margin-bottom: 8px; }
+  .flow-step p { font-size: 11px; color: var(--muted); line-height: 1.5; }
+  .flow-arrow {
+    display: flex; align-items: center; padding: 0 4px;
+    color: var(--neon); font-size: 22px; flex-shrink: 0; align-self: center;
+  }
+  @media(max-width: 800px) {
+    .flow { flex-direction: column; align-items: center; }
+    .flow-arrow { transform: rotate(90deg); }
+  }
+
+  /* ── AGENTS GRID ── */
+  .agents-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .agent-card {
+    background: var(--black3); border: 1px solid var(--border);
+    border-radius: 8px; padding: 28px 24px;
+    transition: border-color .2s, transform .2s;
+  }
+  .agent-card:hover { border-color: var(--neon); transform: translateY(-3px); }
+  .agent-head { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+  .agent-icon { width: 52px; height: 52px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+  .agent-icon.content  { background: rgba(0,229,255,.12); }
+  .agent-icon.ads      { background: rgba(255,76,76,.12); }
+  .agent-icon.seo      { background: rgba(232,255,0,.12); }
+  .agent-icon.google   { background: rgba(255,149,0,.12); }
+  .agent-icon.social   { background: rgba(181,123,255,.12); }
+  .agent-icon.email    { background: rgba(57,255,20,.12); }
+  .agent-meta h3 { font-family: 'Oswald'; font-size: 16px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+  .agent-badge { display: inline-block; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; padding: 2px 10px; border-radius: 20px; font-family: 'Oswald'; }
+  .badge-content  { background: rgba(0,229,255,.15);  color: var(--cyan);   border: 1px solid var(--cyan); }
+  .badge-ads      { background: rgba(255,76,76,.15);  color: var(--red);    border: 1px solid var(--red); }
+  .badge-seo      { background: rgba(232,255,0,.15);  color: var(--neon);   border: 1px solid var(--neon); }
+  .badge-google   { background: rgba(255,149,0,.15);  color: var(--orange); border: 1px solid var(--orange); }
+  .badge-social   { background: rgba(181,123,255,.15);color: var(--purple); border: 1px solid var(--purple); }
+  .badge-email    { background: rgba(57,255,20,.15);  color: var(--green);  border: 1px solid var(--green); }
+  .agent-card p { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 14px; }
+  .agent-outputs { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .agent-outputs li { font-size: 12px; color: var(--muted); display: flex; align-items: flex-start; gap: 8px; }
+  .agent-outputs li::before { content: "→"; color: var(--neon); flex-shrink: 0; margin-top: 2px; }
+  .agent-schedule { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+  .agent-schedule span { color: var(--neon); font-family: 'Oswald'; }
+
+  /* ── PAGES TABLE ── */
+  .pages-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .page-card { background: var(--black3); border: 1px solid var(--border); border-radius: 8px; padding: 22px 20px; }
+  .page-card .page-url { font-family: monospace; font-size: 12px; color: var(--neon); margin-bottom: 10px; display: block; }
+  .page-card h4 { font-family: 'Oswald'; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+  .page-card p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .page-card .lock { font-size: 10px; background: rgba(255,149,0,.15); color: var(--orange); border: 1px solid var(--orange); border-radius: 20px; padding: 2px 8px; letter-spacing: 1px; display: inline-block; margin-top: 8px; }
+
+  /* ── SETUP STEPS ── */
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step { display: flex; gap: 24px; padding: 28px 0; border-bottom: 1px solid var(--border); }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
+    background: var(--neon12); border: 2px solid var(--neon);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue'; font-size: 22px; color: var(--neon);
+  }
+  .step-body h3 { font-family: 'Oswald'; font-size: 16px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+  .step-body p { font-size: 14px; color: var(--muted); margin-bottom: 10px; }
+  .step-body .step-link { display: inline-block; background: var(--black4); border: 1px solid var(--border); color: var(--neon); font-family: monospace; font-size: 12px; padding: 4px 12px; border-radius: 4px; margin: 4px 6px 4px 0; }
+  .step-body .note { font-size: 12px; color: #666; font-style: italic; margin-top: 6px; }
+
+  /* ── MONEY FLOW ── */
+  .money-flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .money-card { background: var(--black3); border: 1px solid var(--border); border-radius: 8px; padding: 24px 20px; text-align: center; }
+  .money-card .money-icon { font-size: 40px; margin-bottom: 12px; display: block; }
+  .money-card h4 { font-family: 'Oswald'; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; color: var(--text); margin-bottom: 8px; }
+  .money-card p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .money-card .price { font-family: 'Bebas Neue'; font-size: 28px; color: var(--neon); margin: 8px 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center; padding: 48px 40px;
+    background: #000; border-top: 2px solid var(--neon);
+    margin-top: 40px;
+  }
+  footer .logo { font-family: 'Bebas Neue'; font-size: 32px; letter-spacing: 4px; margin-bottom: 8px; }
+  footer .logo span { color: var(--neon); }
+  footer p { font-size: 12px; color: #555; }
+  footer .footer-links { display: flex; justify-content: center; gap: 24px; margin: 16px 0; }
+  footer .footer-links a { font-size: 12px; color: #555; text-decoration: none; }
+  footer .footer-links a:hover { color: var(--neon); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">WEAR<span>IT</span></div>
+  <div class="nav-links">
+    <a href="#how-it-works">How It Works</a>
+    <a href="#agents">AI Agents</a>
+    <a href="#pages">Pages</a>
+    <a href="#setup">Go Live</a>
+    <a href="#money">Revenue Model</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">System Blueprint</div>
+  <h1>Your <span>WEARIT</span><br>Business, Explained</h1>
+  <p>A complete visual guide to how your custom print-on-demand website works — the customer journey, the AI agents, and how to launch it live.</p>
+  <a href="#how-it-works" class="scroll-btn">Start Reading ↓</a>
+</div>
+
+<!-- ── HOW IT WORKS ── -->
+<section id="how-it-works">
+  <div class="section-label">The Big Picture</div>
+  <div class="section-title">What Happens When a Customer Orders</div>
+  <p class="section-sub">From the moment someone visits your site to the moment a package lands at their door — fully automated, zero manual work from you.</p>
+
+  <div class="flow">
+    <div class="flow-step">
+      <span class="flow-icon">🌐</span>
+      <h3>Customer Visits</h3>
+      <p>Finds your site via Google, social media, or ads</p>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <span class="flow-icon">🎨</span>
+      <h3>Designs Product</h3>
+      <p>Uses your editor to upload logo, add text, pick product</p>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <span class="flow-icon">💳</span>
+      <h3>Pays via Stripe</h3>
+      <p>Secure checkout — you receive money instantly</p>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <span class="flow-icon">🔔</span>
+      <h3>Webhook Fires</h3>
+      <p>Stripe tells your server "payment received"</p>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <span class="flow-icon">🏭</span>
+      <h3>Printful Prints</h3>
+      <p>Your server auto-sends the order to Printful factory</p>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <span class="flow-icon">📦</span>
+      <h3>Ships to Customer</h3>
+      <p>Printful ships worldwide — tracking sent automatically</p>
+    </div>
+  </div>
+
+  <div style="margin-top: 40px; background: var(--black3); border: 1px solid var(--border); border-left: 4px solid var(--neon); border-radius: 8px; padding: 24px 28px;">
+    <h3 style="font-family: 'Oswald'; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; color: var(--neon); margin-bottom: 10px;">💡 Your Role in All This</h3>
+    <p style="font-size: 14px; color: var(--muted);">Absolutely nothing. You set it up once, deploy it, and money moves from customer → your Stripe account → Printful fulfillment. You never touch an order manually. The AI agents run in the background generating content, ads, and social posts so the site stays fresh and keeps attracting new customers.</p>
+  </div>
+</section>
+
+<!-- ── AI AGENTS ── -->
+<section id="agents">
+  <div class="section-label">Your AI Team</div>
+  <div class="section-title">6 Agents Working 24/7 For You</div>
+  <p class="section-sub">These run on your server automatically. You never need to write a post, create an ad, or update your SEO manually again.</p>
+
+  <div class="agents-grid">
+
+    <div class="agent-card">
+      <div class="agent-head">
+        <div class="agent-icon content">✍️</div>
+        <div class="agent-meta">
+          <h3>Content Agent</h3>
+          <span class="agent-badge badge-content">Writing</span>
+        </div>
+      </div>
+      <p>Writes fresh website copy so your site never feels stale. Every 6 hours it generates new hero taglines, product descriptions, and promotional banners using AI.</p>
+      <ul class="agent-outputs">
+        <li>New hero taglines for your homepage</li>
+        <li>Product descriptions for all 20 items</li>
+        <li>Promotional banner text</li>
+        <li>Saved to <code style="color:var(--neon);font-size:11px">data/generated-content.json</code></li>
+      </ul>
+      <div class="agent-schedule">⏱ Runs every <span>6 hours</span></div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-head">
+        <div class="agent-icon ads">📣</div>
+        <div class="agent-meta">
+          <h3>Ad Copy Agent</h3>
+          <span class="agent-badge badge-ads">Advertising</span>
+        </div>
+      </div>
+      <p>Creates ready-to-use social media ad copy for Instagram and Twitter/X. Includes discount campaigns and promotional angles — just copy, paste, and post.</p>
+      <ul class="agent-outputs">
+        <li>Instagram ad captions + hooks</li>
+        <li>Twitter/X ad copy</li>
+        <li>Discount campaign ideas</li>
+        <li>Saved to <code style="color:var(--neon);font-size:11px">data/generated-ads.json</code></li>
+      </ul>
+      <div class="agent-schedule">⏱ Runs every <span>12 hours</span></div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-head">
+        <div class="agent-icon seo">🔍</div>
+        <div class="agent-meta">
+          <h3>SEO Agent</h3>
+          <span class="agent-badge badge-seo">Search Ranking</span>
+        </div>
+      </div>
+      <p>Keeps your site optimised for Google. Generates meta titles, descriptions, and keywords. Also automatically writes your sitemap.xml so Google can find all 20 product pages.</p>
+      <ul class="agent-outputs">
+        <li>Meta title + description for each page</li>
+        <li>5 target keywords per run</li>
+        <li>FAQ content for Google snippets</li>
+        <li>Rewrites <code style="color:var(--neon);font-size:11px">sitemap.xml</code> automatically</li>
+      </ul>
+      <div class="agent-schedule">⏱ Runs every <span>24 hours</span></div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-head">
+        <div class="agent-icon google">📈</div>
+        <div class="agent-meta">
+          <h3>Google Ads Agent</h3>
+          <span class="agent-badge badge-google">Paid Traffic</span>
+        </div>
+      </div>
+      <p>Generates complete Google Ads campaigns as a script you paste directly into Google Ads. No API approval needed. Covers 6 product categories with headlines, descriptions, and keywords.</p>
+      <ul class="agent-outputs">
+        <li>6 ad groups (T-Shirts, Hoodies, Glasses, Mugs, Caps, Totes)</li>
+        <li>RSA responsive ads (15 headlines, 4 descriptions each)</li>
+        <li>Keyword lists per product</li>
+        <li>Paste-ready script → <code style="color:var(--neon);font-size:11px">data/google-ads-script.js</code></li>
+      </ul>
+      <div class="agent-schedule">⏱ Runs every <span>48 hours</span></div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-head">
+        <div class="agent-icon social">📱</div>
+        <div class="agent-meta">
+          <h3>Social Media Agent</h3>
+          <span class="agent-badge badge-social">Social</span>
+        </div>
+      </div>
+      <p>Creates a full content pack for every major platform simultaneously. Picks a random product and deal angle, then generates platform-specific posts for all 5 channels at once.</p>
+      <ul class="agent-outputs">
+        <li>Instagram caption + hashtags + image brief</li>
+        <li>Facebook conversational post</li>
+        <li>Twitter/X 5-tweet thread</li>
+        <li>TikTok 30-second video script</li>
+        <li>Pinterest pin title + description</li>
+      </ul>
+      <div class="agent-schedule">⏱ Runs every <span>8 hours</span></div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-head">
+        <div class="agent-icon email">📧</div>
+        <div class="agent-meta">
+          <h3>Email Agent</h3>
+          <span class="agent-badge badge-email">Email Marketing</span>
+        </div>
+      </div>
+      <p>Generates 4 professional HTML email templates every day — fully branded with your WEARIT dark theme. Connect SendGrid to actually send them; the agent handles the writing.</p>
+      <ul class="agent-outputs">
+        <li>Welcome email (30% off discount code)</li>
+        <li>Abandoned cart recovery (10% off, 24h urgency)</li>
+        <li>Post-purchase thank you + referral code</li>
+        <li>Weekly promo newsletter</li>
+      </ul>
+      <div class="agent-schedule">⏱ Runs every <span>24 hours</span></div>
+    </div>
+
+  </div>
+
+  <div style="margin-top: 32px; background: var(--black3); border: 1px solid var(--border); border-left: 4px solid var(--purple); border-radius: 8px; padding: 24px 28px;">
+    <h3 style="font-family: 'Oswald'; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; color: var(--purple); margin-bottom: 10px;">🎛️ Mission Control — Your Private Dashboard</h3>
+    <p style="font-size: 14px; color: var(--muted); margin-bottom: 10px;">Visit <strong style="color:var(--text)">yourdomain.com/admin.html</strong> and log in with your password to see all 6 agents. You can see when each one last ran, what it generated, pause any agent, or trigger one manually right now. It's completely hidden from Google and customers.</p>
+    <p style="font-size: 13px; color: #666; font-style: italic;">Only you have the password. The page is blocked in robots.txt so search engines can't find it.</p>
+  </div>
+</section>
+
+<!-- ── PAGES ── -->
+<section id="pages">
+  <div class="section-label">What Was Built</div>
+  <div class="section-title">Every Page & File</div>
+  <p class="section-sub">Here's a map of every URL on your website and what it does.</p>
+
+  <div class="pages-grid">
+    <div class="page-card">
+      <span class="page-url">/ (index.html)</span>
+      <h4>Homepage</h4>
+      <p>Your main storefront. Product catalog, design preview, pricing, testimonials, FAQ, trust badges, and cart sidebar.</p>
+    </div>
+    <div class="page-card">
+      <span class="page-url">/editor.html</span>
+      <h4>Design Studio</h4>
+      <p>Full VistaPrint-style canvas editor. 20 products, upload images, add text, drag/resize, download, and add to cart.</p>
+    </div>
+    <div class="page-card">
+      <span class="page-url">/admin.html</span>
+      <h4>Mission Control</h4>
+      <p>Private dashboard. See all 6 agents, trigger runs, view logs, preview AI-generated content.</p>
+      <span class="lock">🔒 Password Protected</span>
+    </div>
+    <div class="page-card">
+      <span class="page-url">/privacy.html</span>
+      <h4>Privacy Policy</h4>
+      <p>GDPR & CCPA compliant. Covers data collection, Stripe, Printful, cookies, and your customers' rights.</p>
+    </div>
+    <div class="page-card">
+      <span class="page-url">/terms.html</span>
+      <h4>Terms of Service</h4>
+      <p>Full legal terms. IP ownership, prohibited content, liability limits, Delaware law.</p>
+    </div>
+    <div class="page-card">
+      <span class="page-url">/returns.html</span>
+      <h4>Returns Policy</h4>
+      <p>30-day quality guarantee, free reprints on defects, explains the custom product no-return policy.</p>
+    </div>
+    <div class="page-card">
+      <span class="page-url">/404.html</span>
+      <h4>Custom 404</h4>
+      <p>Branded error page with "Back to Home" and "Open Editor" buttons — customers never hit a dead end.</p>
+    </div>
+    <div class="page-card">
+      <span class="page-url">/sitemap.xml</span>
+      <h4>Sitemap</h4>
+      <p>Auto-generated by the SEO agent every 24 hours. Tells Google about all 20 product pages.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── MONEY FLOW ── -->
+<section id="money">
+  <div class="section-label">The Business Model</div>
+  <div class="section-title">How You Make Money</div>
+  <p class="section-sub">You sell at your price. Printful charges you their wholesale price. You keep the difference — no inventory, no upfront costs.</p>
+
+  <div class="money-flow">
+    <div class="money-card">
+      <span class="money-icon">👕</span>
+      <h4>Example: T-Shirt</h4>
+      <div class="price">$35</div>
+      <p>Customer pays your price on the website</p>
+    </div>
+    <div class="money-card" style="display:flex;align-items:center;justify-content:center;">
+      <span style="font-size: 40px; color: var(--neon);">−</span>
+    </div>
+    <div class="money-card">
+      <span class="money-icon">🏭</span>
+      <h4>Printful Cost</h4>
+      <div class="price" style="color: var(--red);">$14</div>
+      <p>Printful prints + ships the order for you</p>
+    </div>
+    <div class="money-card" style="display:flex;align-items:center;justify-content:center;">
+      <span style="font-size: 40px; color: var(--neon);">=</span>
+    </div>
+    <div class="money-card" style="border-color: var(--neon);">
+      <span class="money-icon">💰</span>
+      <h4>Your Profit</h4>
+      <div class="price">$21</div>
+      <p>Goes straight into your Stripe account. No touching inventory.</p>
+    </div>
+  </div>
+
+  <div style="margin-top: 32px; background: var(--black3); border: 1px solid var(--border); border-radius: 8px; padding: 24px 28px;">
+    <p style="font-size: 14px; color: var(--muted);">💡 <strong style="color:var(--text)">Stripe</strong> holds your money and pays out to your bank. <strong style="color:var(--text)">Printful</strong> charges their cost automatically when an order is placed. You never handle any physical product or deal with shipping. The entire operation runs while you sleep.</p>
+  </div>
+</section>
+
+<!-- ── SETUP STEPS ── -->
+<section id="setup">
+  <div class="section-label">Going Live</div>
+  <div class="section-title">5 Steps to Launch</div>
+  <p class="section-sub">The code is done. These are the only steps left before real customers can buy from you.</p>
+
+  <div class="steps">
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Create a Stripe Account</h3>
+        <p>Stripe handles all payments. Sign up at stripe.com, then get your keys from the Dashboard → Developers → API Keys.</p>
+        <span class="step-link">stripe.com/register</span>
+        <p class="note">You need: <strong>Secret Key</strong> (sk_live_...) and a <strong>Webhook Secret</strong> (whsec_...) — you get the webhook secret after registering your endpoint URL in Stripe's dashboard.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Create a Printful Account</h3>
+        <p>Printful prints and ships every order. Sign up free, create a Store, and get your API key from Settings → API.</p>
+        <span class="step-link">printful.com</span>
+        <p class="note">You need: <strong>API Key</strong> and your <strong>Store ID</strong> (visible in the URL when you're in your store dashboard).</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Get an Anthropic API Key</h3>
+        <p>This powers all 6 AI agents. Sign up at console.anthropic.com and create an API key.</p>
+        <span class="step-link">console.anthropic.com</span>
+        <p class="note">Add a credit card and some balance (agents use Claude Haiku — it's very cheap, roughly $1–2/month at normal usage).</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Deploy to Railway</h3>
+        <p>Railway hosts your server. Create an account, connect your GitHub repo (<strong>marvelxx123/DRAFT</strong>), and it will auto-detect and deploy.</p>
+        <span class="step-link">railway.app</span>
+        <p>Then in Railway's Variables tab, add all your keys:</p>
+        <div style="margin-top: 10px;">
+          <span class="step-link">STRIPE_SECRET_KEY</span>
+          <span class="step-link">STRIPE_WEBHOOK_SECRET</span>
+          <span class="step-link">PRINTFUL_API_KEY</span>
+          <span class="step-link">PRINTFUL_STORE_ID</span>
+          <span class="step-link">ANTHROPIC_API_KEY</span>
+          <span class="step-link">ADMIN_PASSWORD</span>
+        </div>
+        <p class="note">ADMIN_PASSWORD is whatever you want — it's what you'll use to log into your Mission Control dashboard.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h3>Register Your Stripe Webhook</h3>
+        <p>After Railway gives you a URL (e.g. <code style="color:var(--neon)">wearit-production.up.railway.app</code>), go to Stripe → Developers → Webhooks → Add Endpoint.</p>
+        <p>Set the endpoint URL to:</p>
+        <span class="step-link">https://your-railway-url.up.railway.app/api/webhooks/stripe</span>
+        <p>Select the event: <strong style="color:var(--text)">checkout.session.completed</strong></p>
+        <p class="note">This is the connection between Stripe and Printful. When a customer pays, Stripe notifies your server, which automatically sends the order to Printful for printing.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top: 40px; background: var(--neon12); border: 1px solid var(--neon); border-radius: 8px; padding: 32px; text-align: center;">
+    <div style="font-size: 48px; margin-bottom: 16px;">🚀</div>
+    <h3 style="font-family: 'Bebas Neue'; font-size: 28px; letter-spacing: 2px; margin-bottom: 12px;">That's It. You're Live.</h3>
+    <p style="font-size: 15px; color: var(--muted); max-width: 500px; margin: 0 auto;">Once those 5 steps are done, your store is open, agents are running, and orders are being fulfilled automatically. You just need to drive traffic — and the agents are already working on that too.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="logo">WEAR<span>IT</span></div>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="editor.html">Design Studio</a>
+    <a href="admin.html">Mission Control</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+  </div>
+  <p>Your automated custom apparel business — built and ready to launch.</p>
+</footer>
+
+</body>
+</html>
