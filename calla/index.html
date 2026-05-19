@@ -602,7 +602,7 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:0}
         <div class="typing-ind" id="typingDots"><span class="t-dot"></span><span class="t-dot"></span><span class="t-dot"></span></div>
       </div>
       <div class="demo-controls">
-        <button class="play-btn" id="playBtn" onclick="playDemo()"><svg viewBox="0 0 24 24" fill="#080808"><path d="M8 5v14l11-7z"/></svg></button>
+        <button class="play-btn" id="playBtn"><svg viewBox="0 0 24 24" fill="#080808"><path d="M8 5v14l11-7z"/></svg></button>
         <div class="demo-wave" id="demoWave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
         <span class="demo-lbl" id="demoLbl">Press play to start</span>
       </div>
@@ -749,107 +749,162 @@ hr.divider{border:none;border-top:1px solid var(--border);margin:0}
 </div>
 
 <script>
-window.addEventListener('scroll',function(){
-  document.getElementById('nav').style.borderBottomColor=window.scrollY>20?'rgba(200,255,0,0.18)':'rgba(255,255,255,0.08)';
-});
-document.querySelectorAll('#mob-nav a').forEach(function(a){
-  a.addEventListener('click',function(){document.getElementById('menu-toggle').checked=false;});
-});
+document.addEventListener('DOMContentLoaded', function() {
 
-var demoPlaying=false,demoTimer=null;
-var demoConvo=[
-  {s:'aria',    t:'Thank you for calling! This is ARIA with CALLA — how can I help you today?', d:700},
-  {s:'customer',t:'Hi, I\'d like to book a haircut for Saturday.',                              d:2400},
-  {s:'aria',    t:'Of course! We have openings at 10am, 1pm, and 3pm. Which works for you?',   d:2200},
-  {s:'customer',t:'1pm would be perfect.',                                                      d:2600},
-  {s:'aria',    t:'Wonderful! Can I get your name to hold the appointment?',                    d:1800},
-  {s:'customer',t:'It\'s Maria.',                                                               d:2000},
-  {s:'aria',    t:'You\'re all set Maria! Saturday at 1pm — we\'ll text you a reminder. Anything else?', d:1600},
-  {s:'customer',t:'That\'s it, thank you!',                                                     d:1200},
-  {s:'aria',    t:'Perfect! We look forward to seeing you Saturday. Have a wonderful day! 🦎',  d:0},
-];
+  // Nav scroll highlight
+  window.addEventListener('scroll', function() {
+    var nav = document.getElementById('nav');
+    if (nav) nav.style.borderBottomColor = window.scrollY > 20 ? 'rgba(200,255,0,0.18)' : 'rgba(255,255,255,0.08)';
+  });
 
-function resetDemo(){
-  if(demoTimer){clearTimeout(demoTimer);demoTimer=null;}
-  demoPlaying=false;
-  var chat=document.getElementById('demoChat');
-  if(chat) chat.innerHTML='<p style="color:rgba(255,255,255,.2);font-size:.85rem;text-align:center;padding:20px 0">Press ▶ play to start the demo</p>';
-  var tr=document.getElementById('typingRow'); if(tr) tr.style.display='none';
-  var dw=document.getElementById('demoWave');  if(dw) dw.classList.remove('playing');
-  var dl=document.getElementById('demoLbl');   if(dl) dl.textContent='Press play to start';
-  var pb=document.getElementById('playBtn');
-  if(pb) pb.innerHTML='<svg viewBox="0 0 24 24" fill="#080808"><path d="M8 5v14l11-7z"/></svg>';
-}
-
-function addBubble(line){
-  var chat=document.getElementById('demoChat');
-  if(!chat) return;
-  var ph=chat.querySelector('p'); if(ph) ph.remove();
-  var d=document.createElement('div');
-  d.className='bubble '+line.s;
-  d.style.opacity='0';
-  d.style.transform='translateY(8px)';
-  d.style.transition='opacity .3s,transform .3s';
-  d.innerHTML=line.s==='aria'
-    ?'<div class="bub-av">AR</div><div class="bub-txt">'+line.t+'</div>'
-    :'<div class="bub-av">👤</div><div class="bub-txt">'+line.t+'</div>';
-  chat.appendChild(d);
-  requestAnimationFrame(function(){
-    requestAnimationFrame(function(){
-      d.style.opacity='1';
-      d.style.transform='translateY(0)';
+  // Close mobile nav on link click
+  document.querySelectorAll('#mob-nav a').forEach(function(a) {
+    a.addEventListener('click', function() {
+      var t = document.getElementById('menu-toggle');
+      if (t) t.checked = false;
     });
   });
-  try{chat.scrollTop=chat.scrollHeight;}catch(e){}
-}
 
-function runStep(i){
-  if(!demoPlaying || i>=demoConvo.length){
-    var tr=document.getElementById('typingRow'); if(tr) tr.style.display='none';
-    var dw=document.getElementById('demoWave');  if(dw) dw.classList.remove('playing');
-    var dl=document.getElementById('demoLbl');   if(dl) dl.textContent='Tap to replay';
-    var pb=document.getElementById('playBtn');
-    if(pb) pb.innerHTML='<svg viewBox="0 0 24 24" fill="#080808"><path d="M8 5v14l11-7z"/></svg>';
-    demoPlaying=false;
-    return;
+  // Modal close on Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      var m = document.getElementById('modal');
+      if (m) m.classList.remove('open');
+    }
+  });
+
+  // ---- DEMO ----
+  var playing = false;
+  var timer = null;
+  var step = 0;
+
+  var lines = [
+    {who:'aria',     msg:'Thank you for calling! This is ARIA with CALLA — how can I help you today?'},
+    {who:'customer', msg:'Hi, I\'d like to book a haircut for Saturday.'},
+    {who:'aria',     msg:'Of course! We have openings at 10am, 1pm, and 3pm. Which works for you?'},
+    {who:'customer', msg:'1pm would be perfect.'},
+    {who:'aria',     msg:'Wonderful! Can I get your name to hold the appointment?'},
+    {who:'customer', msg:'It\'s Maria.'},
+    {who:'aria',     msg:'You\'re all set Maria! Saturday at 1pm — we\'ll text you a reminder. Anything else?'},
+    {who:'customer', msg:'That\'s it, thank you!'},
+    {who:'aria',     msg:'Perfect! We look forward to seeing you Saturday. Have a wonderful day!'}
+  ];
+
+  var delays = [800, 2000, 1800, 2200, 1600, 1800, 1400, 1000, 0];
+
+  function getEl(id) { return document.getElementById(id); }
+
+  function setPlayIcon() {
+    var pb = getEl('playBtn');
+    if (pb) pb.innerHTML = '<svg viewBox="0 0 24 24" fill="#080808"><path d="M8 5v14l11-7z"/></svg>';
   }
-  var line=demoConvo[i];
-  var tr=document.getElementById('typingRow');
-  var dl=document.getElementById('demoLbl');
-  if(line.s==='aria'){
-    if(tr) tr.style.display='flex';
-    if(dl) dl.textContent='ARIA is typing...';
-  } else {
-    if(tr) tr.style.display='none';
-    if(dl) dl.textContent='Customer responding...';
+
+  function setPauseIcon() {
+    var pb = getEl('playBtn');
+    if (pb) pb.innerHTML = '<svg viewBox="0 0 24 24" fill="#080808"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
   }
-  demoTimer=setTimeout(function(){
-    if(tr) tr.style.display='none';
-    addBubble(line);
-    var delay=line.d>0?line.d:800;
-    demoTimer=setTimeout(function(){runStep(i+1);},delay);
-  }, line.s==='aria'?900:400);
-}
 
-function playDemo(){
-  if(demoPlaying){resetDemo();return;}
-  resetDemo();
-  demoPlaying=true;
-  var dw=document.getElementById('demoWave'); if(dw) dw.classList.add('playing');
-  var pb=document.getElementById('playBtn');
-  if(pb) pb.innerHTML='<svg viewBox="0 0 24 24" fill="#080808"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
-  var dl=document.getElementById('demoLbl'); if(dl) dl.textContent='Live conversation...';
-  runStep(0);
-}
+  function clearChat() {
+    var chat = getEl('demoChat');
+    if (chat) chat.innerHTML = '<p style="color:rgba(255,255,255,.2);font-size:.85rem;text-align:center;padding:20px 0">Press ▶ play to start the demo</p>';
+    var tr = getEl('typingRow');
+    if (tr) tr.style.display = 'none';
+    var dw = getEl('demoWave');
+    if (dw) dw.classList.remove('playing');
+    var dl = getEl('demoLbl');
+    if (dl) dl.textContent = 'Press play to start';
+  }
 
-function startDemo(){
-  var s=document.getElementById('demo');
-  if(s) s.scrollIntoView({behavior:'smooth'});
-  setTimeout(playDemo,600);
-}
+  function showBubble(line) {
+    var chat = getEl('demoChat');
+    if (!chat) return;
+    var ph = chat.querySelector('p');
+    if (ph) ph.remove();
+    var wrap = document.createElement('div');
+    wrap.className = 'bubble ' + line.who;
+    var av = document.createElement('div');
+    av.className = 'bub-av';
+    av.textContent = line.who === 'aria' ? 'AR' : '👤';
+    var txt = document.createElement('div');
+    txt.className = 'bub-txt';
+    txt.textContent = line.msg;
+    if (line.who === 'aria') { wrap.appendChild(av); wrap.appendChild(txt); }
+    else { wrap.appendChild(av); wrap.appendChild(txt); }
+    chat.appendChild(wrap);
+    chat.scrollTop = chat.scrollHeight;
+  }
 
-document.addEventListener('keydown',function(e){
-  if(e.key==='Escape') document.getElementById('modal').classList.remove('open');
+  function nextStep() {
+    if (!playing || step >= lines.length) {
+      playing = false;
+      setPlayIcon();
+      var dw = getEl('demoWave'); if (dw) dw.classList.remove('playing');
+      var dl = getEl('demoLbl');  if (dl) dl.textContent = 'Tap to replay';
+      var tr = getEl('typingRow'); if (tr) tr.style.display = 'none';
+      return;
+    }
+
+    var line = lines[step];
+    var delay = delays[step] > 0 ? delays[step] : 800;
+    step++;
+
+    // Show typing indicator for ARIA
+    var tr = getEl('typingRow');
+    var dl = getEl('demoLbl');
+    if (line.who === 'aria') {
+      if (tr) tr.style.display = 'flex';
+      if (dl) dl.textContent = 'ARIA is typing...';
+      timer = setTimeout(function() {
+        if (tr) tr.style.display = 'none';
+        showBubble(line);
+        timer = setTimeout(nextStep, delay);
+      }, 900);
+    } else {
+      if (tr) tr.style.display = 'none';
+      if (dl) dl.textContent = 'Customer responding...';
+      timer = setTimeout(function() {
+        showBubble(line);
+        timer = setTimeout(nextStep, delay);
+      }, 400);
+    }
+  }
+
+  function startDemo() {
+    if (playing) {
+      // Stop
+      if (timer) { clearTimeout(timer); timer = null; }
+      playing = false;
+      clearChat();
+      setPlayIcon();
+      return;
+    }
+    // Start
+    clearChat();
+    step = 0;
+    playing = true;
+    setPauseIcon();
+    var dw = getEl('demoWave'); if (dw) dw.classList.add('playing');
+    var dl = getEl('demoLbl');  if (dl) dl.textContent = 'Live conversation...';
+    nextStep();
+  }
+
+  // Wire up play button
+  var playBtn = getEl('playBtn');
+  if (playBtn) {
+    playBtn.addEventListener('click', startDemo);
+    playBtn.addEventListener('touchend', function(e) { e.preventDefault(); startDemo(); });
+  }
+
+  // Wire up "Watch a live conversation" card button
+  var cardBtn = document.querySelector('.play-card-btn');
+  if (cardBtn) {
+    cardBtn.addEventListener('click', function() {
+      var demoSection = getEl('demo');
+      if (demoSection) demoSection.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(startDemo, 600);
+    });
+  }
+
 });
 </script>
 </body>
