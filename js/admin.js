@@ -57,7 +57,49 @@ function showDashboard() {
 }
 
 async function loadAll() {
-  await Promise.all([loadAgentStatus(), loadLogs(), loadContent()]);
+  await Promise.all([loadAgentStatus(), loadLogs(), loadContent(), loadLeads()]);
+}
+
+// ── LEADS ─────────────────────────────────────────────────────────────────
+async function loadLeads() {
+  try {
+    const res = await fetch('/api/contact', {
+      headers: { 'Authorization': 'Bearer ' + AUTH_TOKEN }
+    });
+    const data = await res.json();
+    renderLeads(data.leads || []);
+  } catch { /* silently fail */ }
+}
+
+function renderLeads(leads) {
+  const empty = document.getElementById('leadsEmpty');
+  const list  = document.getElementById('leadsList');
+  if (!leads.length) { empty.style.display = ''; list.innerHTML = ''; return; }
+  empty.style.display = 'none';
+  const urgColor = { 'Emergency — Right Now': '#e63946', 'Today': '#f39c12', 'This Week': '#2ecc71', 'Just Getting a Quote': '#888' };
+  list.innerHTML = leads.slice(0, 30).map(l => `
+    <div style="background:var(--card,#161616);border:1px solid ${l.status==='new'?'rgba(46,204,113,0.4)':'var(--border,#232323)'};border-radius:10px;padding:1rem 1.25rem;margin-bottom:0.65rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+      <div style="display:flex;flex-direction:column;gap:0.2rem;">
+        <div style="font-weight:700;font-size:0.95rem;">${escHtml(l.name)}</div>
+        <div style="font-size:0.85rem;color:#aaa;">${escHtml(l.service)}</div>
+        <div style="font-size:0.72rem;color:#666;">${formatTime(l.createdAt)}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+        <span style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;padding:0.2rem 0.6rem;border-radius:4px;background:${(urgColor[l.urgency]||'#888')}22;color:${urgColor[l.urgency]||'#888'};border:1px solid ${urgColor[l.urgency]||'#888'}44;">${escHtml(l.urgency)}</span>
+        <a href="tel:${escHtml(l.phone)}" style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:#c8a96e;letter-spacing:0.05em;">${escHtml(l.phone)}</a>
+        ${l.status==='new' ? `<button onclick="markCalled(${l.id})" style="background:#2ecc71;color:#000;font-weight:700;font-size:0.72rem;letter-spacing:0.08em;padding:0.3rem 0.7rem;border-radius:5px;border:none;cursor:pointer;">✓ MARK CALLED</button>` : `<span style="font-size:0.72rem;color:#555;font-weight:600;">CALLED</span>`}
+      </div>
+    </div>
+  `).join('');
+}
+
+async function markCalled(id) {
+  await fetch(`/api/contact/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + AUTH_TOKEN },
+    body: JSON.stringify({ status: 'called' }),
+  });
+  loadLeads();
 }
 
 // ── AGENT STATUS ──────────────────────────────────────────────────────────

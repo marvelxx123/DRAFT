@@ -111,6 +111,7 @@
     <li><a href="#areas">Areas</a></li>
     <li><a href="#why">Why Us</a></li>
     <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contact">Contact</a></li>
     <li><a class="nav-cta" href="tel:9045550100">📞 (904) 555-0100</a></li>
   </ul>
 
@@ -433,6 +434,107 @@
   </div>
 </section>
 
+<!-- ── CONTACT FORM ─────────────────────────────────────────────────────────── -->
+<section class="section contact-section" id="contact">
+  <div class="section-inner">
+    <div class="contact-layout">
+
+      <!-- Left: form -->
+      <div class="contact-form-wrap fade-up">
+        <p class="section-label">Free Estimate</p>
+        <h2 class="section-title" style="margin-bottom:0.5rem;">Get a Quote.<br>We Call You Back.</h2>
+        <p class="contact-promise">
+          <span class="promise-dot"></span>
+          We respond within 30 minutes during business hours
+        </p>
+
+        <form class="contact-form" id="contactForm" onsubmit="submitForm(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="cf-name">Your Name</label>
+              <input class="form-input" id="cf-name" type="text" placeholder="John Smith" required autocomplete="name" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cf-phone">Phone Number <span class="form-required">*</span></label>
+              <input class="form-input" id="cf-phone" type="tel" placeholder="(904) 000-0000" required autocomplete="tel" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="cf-service">What's the problem?</label>
+              <select class="form-input form-select" id="cf-service" required>
+                <option value="" disabled selected>Select service…</option>
+                <option>Broken Spring</option>
+                <option>Door Won't Open / Close</option>
+                <option>Opener Not Working</option>
+                <option>Broken Cable</option>
+                <option>Door Off Track</option>
+                <option>New Door Installation</option>
+                <option>Tune-Up / Maintenance</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cf-urgency">How soon do you need it?</label>
+              <select class="form-input form-select" id="cf-urgency" required>
+                <option value="" disabled selected>Select urgency…</option>
+                <option>Emergency — Right Now</option>
+                <option>Today</option>
+                <option>This Week</option>
+                <option>Just Getting a Quote</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="btn-submit" type="submit" id="submitBtn">
+            <span id="submitText">Get My Free Estimate →</span>
+          </button>
+
+          <p class="form-note">No spam. No obligation. Just a call back from a real local tech.</p>
+        </form>
+
+        <!-- Success state -->
+        <div class="form-success hidden" id="formSuccess">
+          <div class="success-icon">✓</div>
+          <div class="success-title">Got it — we'll call you shortly.</div>
+          <p class="success-sub">Can't wait? Call us directly:</p>
+          <a class="success-phone" href="tel:9045550100">(904) 555-0100</a>
+        </div>
+      </div>
+
+      <!-- Right: info -->
+      <div class="contact-info fade-up delay-2">
+        <div class="contact-info-card">
+          <div class="ci-icon">📞</div>
+          <div class="ci-title">Prefer to Call?</div>
+          <a class="ci-phone" href="tel:9045550100">(904) 555-0100</a>
+          <p class="ci-note">Mon–Sun · 7am–9pm<br>Emergency line always on</p>
+        </div>
+
+        <div class="contact-info-card">
+          <div class="ci-icon">⚡</div>
+          <div class="ci-title">Response Promise</div>
+          <p class="ci-note">We call back within <strong style="color:var(--white)">30 minutes</strong> during business hours. Emergency calls answered immediately.</p>
+        </div>
+
+        <div class="contact-info-card">
+          <div class="ci-icon">💰</div>
+          <div class="ci-title">Free Estimates</div>
+          <p class="ci-note">No call-out fee. No pressure. Flat-rate quote before we touch anything.</p>
+        </div>
+
+        <div class="contact-trust">
+          <span>🛡️ Licensed &amp; Insured</span>
+          <span>⭐ 5-Star Rated</span>
+          <span>📍 Local Jacksonville Tech</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <!-- ── EMERGENCY BANNER ────────────────────────────────────────────────────── -->
 <section class="emergency">
   <div class="emergency-inner">
@@ -519,6 +621,30 @@
     const isOpen = item.classList.contains('open');
     document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
     if (!isOpen) item.classList.add('open');
+  }
+
+  // Contact form submit
+  async function submitForm(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const txt = document.getElementById('submitText');
+    btn.disabled = true;
+    txt.textContent = 'Sending…';
+    const lead = {
+      name:    document.getElementById('cf-name').value,
+      phone:   document.getElementById('cf-phone').value,
+      service: document.getElementById('cf-service').value,
+      urgency: document.getElementById('cf-urgency').value,
+    };
+    try {
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(lead),
+      });
+    } catch (_) {}
+    document.getElementById('contactForm').classList.add('hidden');
+    document.getElementById('formSuccess').classList.remove('hidden');
   }
 
   // Nav background on scroll
