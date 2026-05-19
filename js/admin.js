@@ -168,6 +168,26 @@ async function loadContent() {
       setText('previewKeywords', data.seo.keywords.join('\n'));
     }
   }
+
+  // JAX Lead Gen previews
+  if (data.jaxProfiles && data.jaxProfiles.entries && data.jaxProfiles.entries.length) {
+    const latest = data.jaxProfiles.entries[0];
+    setText('previewJaxGBP',      latest.googlePost    || '—');
+    setText('previewJaxNextdoor', latest.nextdoorIntro || '—');
+  }
+  if (data.jaxSocial && data.jaxSocial.posts && data.jaxSocial.posts.length) {
+    setText('previewJaxFB', data.jaxSocial.posts[0].facebookGroup || '—');
+  }
+  if (data.jaxCraigslist && data.jaxCraigslist.ads && data.jaxCraigslist.ads.length) {
+    const ad = data.jaxCraigslist.ads[0];
+    setText('previewJaxCL', `[${ad.title}]\n\n${ad.body || '—'}`);
+  }
+  if (data.jaxOutreach && data.jaxOutreach.packs && data.jaxOutreach.packs.length) {
+    setText('previewJaxRE', data.jaxOutreach.packs[0].realEstateDM || '—');
+  }
+  if (data.jaxFollowup && data.jaxFollowup.sequences && data.jaxFollowup.sequences.length) {
+    setText('previewJaxSMS', data.jaxFollowup.sequences[0].thankYouSms || '—');
+  }
 }
 
 // ── UTILS ─────────────────────────────────────────────────────────────────
