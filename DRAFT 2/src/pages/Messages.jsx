@@ -123,6 +123,13 @@ export default function Messages({ session }) {
     const withId = params.get('with')
     if (withId) getProfile(withId).then(({ data }) => data && setSelected(data))
     loadConversations()
+    // Realtime: refresh inbox when any message arrives for this user
+    const ch = supabase.channel(`inbox_${session.user.id}`)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages',
+        filter: `receiver_id=eq.${session.user.id}` },
+        () => loadConversations()
+      ).subscribe()
+    return () => supabase.removeChannel(ch)
   }, [session])
 
   const loadConversations = async () => {

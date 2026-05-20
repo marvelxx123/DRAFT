@@ -234,6 +234,7 @@ create trigger on_follow_change
 -- ── SCOUT PRO TIER ──────────────────────────────────────────
 -- Run this after the main schema to add paid scout features
 alter table profiles add column if not exists scout_pro boolean default false;
+alter table profiles add column if not exists is_public boolean default true;
 
 create table if not exists scout_analyses (
   id uuid default gen_random_uuid() primary key,
@@ -248,3 +249,56 @@ create table if not exists scout_analyses (
 
 alter table scout_analyses enable row level security;
 create policy "scout_analyses_own" on scout_analyses for all using (auth.uid() = scout_id);
+
+-- ── SMART FEED ALGORITHM ────────────────────────────────────
+-- Scores videos using 6 factors: freshness, engagement rate,
+-- underexposure boost, new-creator boost, AI score, serendipity
+create or replace function get_smart_feed(p_limit int default 30)
+returns table (
+  id uuid, user_id uuid, title text, category text, video_url text,
+  thumbnail_url text, likes_count int, comments_count int, views_count int,
+  scout_score int, scout_report jsonb, created_at timestamptz, profiles jsonb
+)
+language sql stable security definer
+as $$
+  with player_context as (
+    select
+      user_id,
+      sum(views_count)::float as total_views,
+      count(*)::float         as video_count
+    from videos
+    group by user_id
+  ),
+  scored as (
+    select
+      v.id, v.user_id, v.title, v.category, v.video_url,
+      v.thumbnail_url, v.likes_count, v.comments_count, v.views_count,
+      v.scout_score, v.scout_report, v.created_at,
+      jsonb_build_object(
+        'id', p.id, 'username', p.username, 'full_name', p.full_name,
+        'position', p.position, 'school', p.school, 'year', p.year,
+        'avatar_url', p.avatar_url, 'draft_score', p.draft_score
+      ) as profiles,
+      -- 1. FRESHNESS: strong for 48h, fades over 5 days
+      (12.0 / (1.0 + (extract(epoch from now() - v.created_at)/3600.0) / 36.0)) as f_fresh,
+      -- 2. ENGAGEMENT RATE: likes + comments per sqrt(views) rewards quality
+      ((v.likes_count * 4.0 + v.comments_count * 7.0 + 0.5) / sqrt(greatest(v.views_count, 1))) as f_engage,
+      -- 3. UNDEREXPOSURE BOOST: players with <500 total views get up to +5 pts
+      (5.0 / (1.0 + coalesce(pc.total_views, 0) / 200.0)) as f_exposure,
+      -- 4. NEW CREATOR BOOST: first 5 uploads get extra push
+      (3.0 / (1.0 + coalesce(pc.video_count, 1) / 2.0)) as f_new_creator,
+      -- 5. AI SCOUT SCORE: high-rated players deserve more reach
+      coalesce(v.scout_score, 50) * 0.04 as f_ai_score,
+      -- 6. SERENDIPITY: small random factor prevents echo chambers
+      random() * 2.0 as f_random
+    from videos v
+    join profiles p on p.id = v.user_id
+    left join player_context pc on pc.user_id = v.user_id
+  )
+  select id, user_id, title, category, video_url, thumbnail_url,
+         likes_count, comments_count, views_count, scout_score, scout_report,
+         created_at, profiles
+  from scored
+  order by (f_fresh + f_engage + f_exposure + f_new_creator + f_ai_score + f_random) desc
+  limit p_limit
+$$;

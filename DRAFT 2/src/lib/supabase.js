@@ -11,6 +11,10 @@ export const signUp = (email, password, fullName) =>
 export const signIn = (email, password) =>
   supabase.auth.signInWithPassword({ email, password })
 export const signOut = () => supabase.auth.signOut()
+export const signInWithGoogle = () =>
+  supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } })
+export const changeEmail = (newEmail) => supabase.auth.updateUser({ email: newEmail })
+export const changePassword = (newPassword) => supabase.auth.updateUser({ password: newPassword })
 
 // ── PROFILES ───────────────────────────────────────────
 export const getProfile = (id) =>
@@ -24,10 +28,7 @@ export const searchProfiles = (q) =>
 
 // ── VIDEOS ───────────────────────────────────────────────
 export const getFeedVideos = () =>
-  supabase.from('videos')
-    .select('*, profiles(id,username,full_name,position,school,year,avatar_url,draft_score)')
-    .order('created_at', { ascending: false })
-    .limit(30)
+  supabase.rpc('get_smart_feed', { p_limit: 30 })
 
 export const getUserVideos = (userId) =>
   supabase.from('videos').select('*').eq('user_id', userId).order('created_at', { ascending: false })

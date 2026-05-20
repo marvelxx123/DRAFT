@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { getProfile, getUserVideos, signOut, updateProfile, supabase } from '../lib/supabase.js'
+import { getProfile, getUserVideos, signOut, updateProfile, changeEmail, changePassword, supabase } from '../lib/supabase.js'
 import { T, POS, CAT, fmt, initials, timeAgo } from '../lib/theme.js'
 
 function Av({ profile, size=80, accent, ring=false }) {
@@ -95,6 +95,12 @@ export default function Profile({ session }) {
   const [uplAv, setUplAv]    = useState(false)
   const [editForm, setEF]    = useState({})
   const [selectedVideo, setSV] = useState(null)
+  const [showSettings, setSettings] = useState(false)
+  const [isPublic, setPublic]       = useState(true)
+  const [newEmail, setNewEmail]     = useState('')
+  const [newPass, setNewPass]       = useState('')
+  const [settMsg, setSettMsg]       = useState('')
+  const [settLoad, setSettLoad]     = useState(false)
   const avatarRef            = useRef()
 
   const targetId = userId || session?.user?.id
@@ -108,6 +114,7 @@ export default function Profile({ session }) {
       .then(([{ data:p }, { data:v }]) => {
         setProf(p); setVideos(v||[])
         setEF({ full_name:p?.full_name||'', bio:p?.bio||'', school:p?.school||'', year:p?.year||'', height:p?.height||'', position:p?.position||'' })
+        setPublic(p?.is_public !== false)
         setLoad(false)
         if (!isOwn && session?.user?.id && p?.id) {
           supabase.from('notifications').insert({ user_id:p.id, actor_id:session.user.id, type:'view', text:'viewed your profile', link:`/profile/${p.id}`, read:false }).then(()=>{})
@@ -220,6 +227,9 @@ export default function Profile({ session }) {
                 <button onClick={shareProfile} style={{ width:36, height:36, borderRadius:10, background:T.card2, border:`1px solid ${T.border3}`, display:'flex', alignItems:'center', justifyContent:'center' }}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={T.sub} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                 </button>
+                <button onClick={()=>setSettings(true)} style={{ width:36, height:36, borderRadius:10, background:T.card2, border:`1px solid ${T.border3}`, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.sub} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </button>
               </> : <>
                 <button style={{ flex:1, padding:'9px 0', borderRadius:10, fontWeight:800, fontSize:14, background:accent, color:'#000', border:'none', fontFamily:"'Space Grotesk',sans-serif" }}>Follow</button>
                 {session && <button onClick={()=>navigate(`/messages?with=${targetId}`)}
@@ -283,13 +293,6 @@ export default function Profile({ session }) {
           </div>
         )}
 
-        {/* Sign out */}
-        {isOwn && (
-          <button onClick={async()=>{ await signOut(); navigate('/') }}
-            style={{ width:'100%', padding:'11px', background:'transparent', border:`1px solid ${T.border2}`, borderRadius:10, color:T.sub, fontWeight:600, fontSize:13, marginBottom:18 }}>
-            Sign Out
-          </button>
-        )}
 
         {/* Tabs */}
         <div style={{ display:'flex', borderBottom:`1px solid ${T.border}` }}>
@@ -355,6 +358,73 @@ export default function Profile({ session }) {
       )}
 
       <div style={{ height:48 }}/>
+
+      {/* Settings bottom sheet */}
+      {showSettings && (
+        <div style={{ position:'fixed', inset:0, zIndex:300, display:'flex', flexDirection:'column', justifyContent:'flex-end' }}>
+          <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,.6)' }} onClick={()=>{ setSettings(false); setSettMsg(''); setNewEmail(''); setNewPass('') }}/>
+          <div style={{ position:'relative', background:T.surface, borderRadius:'22px 22px 0 0', padding:'24px 22px 40px', maxHeight:'88vh', overflowY:'auto' }}>
+            {/* Handle bar */}
+            <div style={{ width:36, height:4, background:T.border2, borderRadius:2, margin:'-12px auto 20px' }}/>
+            <div style={{ fontFamily:"'Space Grotesk',sans-serif", fontSize:18, fontWeight:700, marginBottom:20 }}>Settings</div>
+
+            {/* Public / Private toggle */}
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 0', borderBottom:`1px solid ${T.border}` }}>
+              <div>
+                <div style={{ fontWeight:700, fontSize:15, color:T.text }}>Public Profile</div>
+                <div style={{ fontSize:12, color:T.sub, marginTop:2 }}>Anyone can discover and view your profile</div>
+              </div>
+              <div onClick={async()=>{
+                const next = !isPublic
+                setPublic(next)
+                await updateProfile(session.user.id, { is_public: next })
+              }} style={{ width:48, height:28, borderRadius:14, background:isPublic?T.electric:T.card2, border:`1.5px solid ${isPublic?T.electric:T.border3}`, position:'relative', cursor:'pointer', transition:'background .2s' }}>
+                <div style={{ position:'absolute', top:3, left:isPublic?22:3, width:18, height:18, borderRadius:'50%', background:isPublic?'#000':'#fff', transition:'left .2s' }}/>
+              </div>
+            </div>
+
+            {/* Change Email */}
+            <div style={{ padding:'16px 0', borderBottom:`1px solid ${T.border}` }}>
+              <div style={{ fontWeight:700, fontSize:15, color:T.text, marginBottom:10 }}>Change Email</div>
+              <input value={newEmail} onChange={e=>setNewEmail(e.target.value)} placeholder="New email address" type="email"
+                style={{ width:'100%', background:'transparent', border:`1px solid ${T.border3}`, borderRadius:10, padding:'12px 14px', color:T.text, fontSize:14, outline:'none', marginBottom:10 }}
+                onFocus={e=>e.target.style.borderColor=T.electric} onBlur={e=>e.target.style.borderColor=T.border3}/>
+              <button disabled={settLoad||!newEmail.includes('@')} onClick={async()=>{
+                setSettLoad(true); setSettMsg('')
+                const { error } = await changeEmail(newEmail.trim().toLowerCase())
+                setSettMsg(error ? `Error: ${error.message}` : 'Confirmation sent to new email')
+                setNewEmail(''); setSettLoad(false)
+              }} style={{ width:'100%', padding:'12px', background:newEmail.includes('@')?T.electric:T.card2, color:newEmail.includes('@')?'#000':T.sub, border:'none', borderRadius:10, fontWeight:700, fontSize:14, opacity:settLoad?.6:1 }}>
+                {settLoad?'Saving…':'Update Email'}
+              </button>
+            </div>
+
+            {/* Change Password */}
+            <div style={{ padding:'16px 0', borderBottom:`1px solid ${T.border}` }}>
+              <div style={{ fontWeight:700, fontSize:15, color:T.text, marginBottom:10 }}>Change Password</div>
+              <input value={newPass} onChange={e=>setNewPass(e.target.value)} placeholder="New password (min 6 chars)" type="password"
+                style={{ width:'100%', background:'transparent', border:`1px solid ${T.border3}`, borderRadius:10, padding:'12px 14px', color:T.text, fontSize:14, outline:'none', marginBottom:10 }}
+                onFocus={e=>e.target.style.borderColor=T.electric} onBlur={e=>e.target.style.borderColor=T.border3}/>
+              <button disabled={settLoad||newPass.length<6} onClick={async()=>{
+                setSettLoad(true); setSettMsg('')
+                const { error } = await changePassword(newPass)
+                setSettMsg(error ? `Error: ${error.message}` : 'Password updated')
+                setNewPass(''); setSettLoad(false)
+              }} style={{ width:'100%', padding:'12px', background:newPass.length>=6?T.electric:T.card2, color:newPass.length>=6?'#000':T.sub, border:'none', borderRadius:10, fontWeight:700, fontSize:14, opacity:settLoad?.6:1 }}>
+                {settLoad?'Saving…':'Update Password'}
+              </button>
+            </div>
+
+            {settMsg && <p style={{ fontSize:13, color:settMsg.startsWith('Error')?T.crimson:T.lime, fontWeight:600, textAlign:'center', padding:'10px 0' }}>{settMsg}</p>}
+
+            {/* Sign Out */}
+            <button onClick={async()=>{ await signOut(); navigate('/') }}
+              style={{ width:'100%', marginTop:16, padding:'14px', background:'transparent', border:`1px solid ${T.crimson}44`, borderRadius:12, color:T.crimson, fontWeight:700, fontSize:15 }}>
+              Sign Out
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Video detail overlay — tap a grid cell to open */}
       {selectedVideo && (
