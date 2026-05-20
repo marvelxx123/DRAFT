@@ -3,7 +3,7 @@
 
 module.exports = {
   businessName: 'Jacksonville Garage Pros',   // ← your business name
-  phone:        '(904) 555-0100',              // ← your phone number
+  phone:        '(904) 468-3428',              // ← your phone number
   website:      '',                            // ← your website (leave blank if none yet)
   areas:        ['Jacksonville', 'Orange Park', 'Fleming Island', 'Mandarin', 'Southside', 'Arlington', 'Ponte Vedra', 'Middleburg', 'Jacksonville Beach', 'Neptune Beach', 'Atlantic Beach', 'Nocatee'],
   services:     ['garage door repair', 'broken spring replacement', 'opener installation', 'cable repair', 'new door installation', 'emergency service', 'maintenance tune-up', 'off-track door repair', 'hurricane-rated door installation', 'roller replacement'],
