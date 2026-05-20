@@ -28,6 +28,11 @@ function readData() {
 const context = `My name is [YOUR NAME], owner of ${cfg.businessName} in Jacksonville FL. ` +
   `Phone: ${cfg.phone}. Services: ${cfg.services.join(', ')}. USP: ${cfg.usp}. Years in business: ${cfg.yearsExp}.`;
 
+const month = String(new Date().getMonth() + 1);
+const seasonal = cfg.seasonalContext[month] || 'standard season';
+const pmTarget = cfg.pmCompanies[Math.floor(Math.random() * cfg.pmCompanies.length)];
+const hoaTarget = cfg.hoaTargets[Math.floor(Math.random() * cfg.hoaTargets.length)];
+
 async function run() {
   log(AGENT_ID, 'info', 'Outreach agent starting…');
   const data = readData();
@@ -42,23 +47,25 @@ async function run() {
   );
   log(AGENT_ID, 'success', 'Real estate agent DM generated');
 
-  // Property manager cold email
+  // Property manager cold email — uses a real Jacksonville PM company name
   pack.propertyManagerEmail = await callClaude(
-    `Write a cold email to a Jacksonville FL residential property manager, from a local garage door technician. ` +
+    `Write a cold email to the maintenance coordinator at ${pmTarget}, a Jacksonville FL residential property management company, from a local garage door technician. ` +
     `${context} Goal: become their preferred vendor for garage door calls across their properties. ` +
     `Subject line + body. Max 150 words total. Professional but human. ` +
     `Mention volume pricing, fast response, and that we handle both emergency and routine calls. ` +
     `Include phone. End with a simple CTA (a quick call or adding us to their vendor list).`
   );
+  pack.propertyManagerTarget = pmTarget;
   log(AGENT_ID, 'success', 'Property manager email generated');
 
-  // HOA / community manager pitch
+  // HOA pitch — targets a real Ponte Vedra / Jacksonville Beach HOA community
   pack.hoaPitch = await callClaude(
-    `Write a short message to a Jacksonville FL HOA board or community manager, from a local garage door technician. ` +
-    `${context} Goal: get referred to homeowners in the community when they need garage work. ` +
+    `Write a short message to the community manager at ${hoaTarget} HOA in Ponte Vedra / Jacksonville FL, from a local garage door technician. ` +
+    `${context} Goal: get added to the HOA preferred vendor list and/or mentioned in the community newsletter. ` +
     `Max 100 words. Suggest sending their info in the HOA newsletter or vendor list. ` +
     `Mention being local, licensed, and offering HOA-member discounts. Friendly and neighbor-like tone.`
   );
+  pack.hoaTarget = hoaTarget;
   log(AGENT_ID, 'success', 'HOA pitch generated');
 
   // Apartment complex maintenance director pitch

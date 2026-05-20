@@ -1,0 +1,64 @@
+{
+  "generatedAt": "2026-05-20",
+  "topChannels": [
+    { "rank": 1, "name": "Google Business Profile", "cost": "$0", "conversionRate": "50-65%", "timeToResult": "30-60 days", "notes": "Emergency intent, highest converting channel" },
+    { "rank": 2, "name": "Word of mouth / referrals", "cost": "$0", "conversionRate": "40-60%", "timeToResult": "Immediate", "notes": "Pre-sold before they call" },
+    { "rank": 3, "name": "Realtor referrals", "cost": "$0", "conversionRate": "30-50%", "timeToResult": "30-60 days", "notes": "Ponte Vedra median $679k, sellers must fix to close" },
+    { "rank": 4, "name": "Property management companies", "cost": "$0", "conversionRate": "Near 100% on work orders", "timeToResult": "30-90 days", "notes": "Steady volume, lower margin" },
+    { "rank": 5, "name": "Nextdoor", "cost": "$0", "conversionRate": "20-35%", "timeToResult": "2-4 weeks", "notes": "77% homeowners, Ponte Vedra skews high-income" },
+    { "rank": 6, "name": "Craigslist", "cost": "$0", "conversionRate": "Variable", "timeToResult": "Days", "notes": "2-5 calls/week, price-conscious but real" },
+    { "rank": 7, "name": "Thumbtack", "cost": "$35-80/lead", "conversionRate": "~10 jobs per $600 spend", "timeToResult": "Immediate", "notes": "Supplemental only, monitor ROI weekly" },
+    { "rank": 8, "name": "Angi/HomeAdvisor", "cost": "$1,400+/customer", "conversionRate": "6-10%", "timeToResult": "Immediate", "notes": "AVOID - shared leads, too expensive for solo operator" }
+  ],
+  "jacksonvilleTargets": {
+    "pmCompanies": [
+      "Navy to Navy Homes",
+      "Nest Finders",
+      "Green River Property Management (904-807-8331)",
+      "First Place Management",
+      "Rental Guys Property Management (904-254-2773)",
+      "TG Property Management",
+      "Suncoast Rentals"
+    ],
+    "hoaTargets": [
+      "Marsh Landing (1,000+ homes, Ponte Vedra)",
+      "Del Webb Ponte Vedra",
+      "Fairfield",
+      "Sawgrass Country Club",
+      "Plantation Oaks"
+    ],
+    "realtorAssociations": ["Northeast Florida Association of Realtors (NEFAR)"],
+    "builderAssociations": ["Northeast Florida Builders Association (NEFBA)"]
+  },
+  "seasonalCalendar": {
+    "MayJune": "Pre-hurricane season — push door inspections and hurricane upgrades",
+    "JulyAugust": "Heat causes seal/opener failures — push maintenance",
+    "SeptemberOctober": "Storm damage surge — be available 24/7, insurance work",
+    "NovemberJanuary": "Snowbirds return, holiday usage spike, brief cold snaps",
+    "FebruaryApril": "Real estate season peak — hit realtors hard"
+  },
+  "keyInsights": [
+    "Answer phone within 10 min — first tech to answer wins 70-80% of emergency calls",
+    "Emergency repairs convert at 50-65% call-to-booked, highest in home services",
+    "Precision Garage Door has 8,373 reviews — beat them on speed and personal service",
+    "Yard signs + door hangers after every job = cheapest local marketing possible",
+    "Google Business Profile: 40+ reviews at 90%+ response rate beats 100 reviews at 50%",
+    "Ponte Vedra Beach median home price $679k — least price-sensitive customers in area",
+    "Pre-listing repairs from realtors = highest-ticket, least price-sensitive jobs",
+    "First 10 customers in 45-60 days is realistic with daily execution"
+  ],
+  "gbpOptimizationChecklist": [
+    "Claim and verify listing",
+    "Primary category: Garage Door Repair Service",
+    "Add all secondary categories (installer, door supplier, home improvement)",
+    "Set service area zip codes: 32082, 32250, 32233, 32266, 32225, 32224, 32246",
+    "Add every service with description and price range",
+    "Write 750-char business description with local keywords",
+    "Upload 2-3 photos per week (target 50+ total)",
+    "Name photos with keywords before uploading",
+    "Post 2-3x per week on GBP",
+    "Ask for Google review at end of EVERY job — text link on the spot",
+    "Respond to every review within 24 hours",
+    "Add Q&A section with your own questions and answers"
+  ]
+}

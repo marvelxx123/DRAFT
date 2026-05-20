@@ -38,6 +38,8 @@ const ANGLES = [
 
 const context = `Business: ${cfg.businessName}. Jacksonville FL. Phone: ${cfg.phone}. Services: ${cfg.services.join(', ')}. USP: ${cfg.usp}.`;
 const month = new Date().toLocaleString('default', { month: 'long' });
+const monthNum = String(new Date().getMonth() + 1);
+const seasonal = (cfg.seasonalContext && cfg.seasonalContext[monthNum]) || '';
 const areas = cfg.areas.join(', ');
 
 async function run() {
@@ -49,9 +51,9 @@ async function run() {
   // Facebook group post (community-style, triggers replies)
   pack.facebookGroup = await callClaude(
     `Write a Facebook community group post for a Jacksonville FL garage door technician. ${context} ` +
-    `Angle: "${angle}". Month: ${month}. Areas covered: ${areas}. ` +
+    `Angle: "${angle}". Month: ${month}. Seasonal context: ${seasonal}. Areas covered: ${areas}. ` +
     `Sound like a real local person, not a corporation. Max 120 words. ` +
-    `Ask the community a question to drive engagement (e.g. "Has anyone in Mandarin dealt with this?"). ` +
+    `Ask the community a question to drive engagement (e.g. "Has anyone in Ponte Vedra dealt with this?"). ` +
     `Include phone number naturally at the end. No hashtags.`
   );
   log(AGENT_ID, 'success', 'Facebook group post generated');
