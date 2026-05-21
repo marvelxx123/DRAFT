@@ -52,11 +52,11 @@ app.use((err, _req, res, _next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`\n WEARIT server running on http://localhost:${PORT}`);
-  console.log(`   Stripe:    ${process.env.STRIPE_SECRET_KEY ? '✓' : '✗ missing STRIPE_SECRET_KEY'}`);
-  console.log(`   Printful:  ${process.env.PRINTFUL_API_KEY  ? '✓' : '✗ missing PRINTFUL_API_KEY'}`);
+  console.log(`\n 904 Garage Doors server running on http://localhost:${PORT}`);
   console.log(`   Claude AI: ${process.env.ANTHROPIC_API_KEY ? '✓' : '✗ missing ANTHROPIC_API_KEY (agents need this)'}`);
-  console.log(`   Admin:     POST /api/admin/login  GET /api/admin/status\n`);
+  console.log(`   Admin:     POST /api/admin/login  GET /api/admin/status`);
+  console.log(`   Leads:     GET /leads/dashboard`);
+  console.log(`   Site:      GET /904.html  GET /yulee.html  GET /fernandina-beach.html\n`);
 
   // Start autonomous agents
   agentRunner.startAll();
