@@ -71,6 +71,20 @@ body {
 .stars { color: #ffc107; font-size: 20px; letter-spacing: 2px; }
 .stars-text { color: #aaa; font-size: 14px; }
 
+/* Honest "new business" badge — shows until real reviews are in */
+.new-badge {
+  display: inline-block;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.2);
+  color: #ccc;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 99px;
+}
+
 .hero h1 {
   font-size: clamp(28px, 6vw, 52px);
   font-weight: 900;
@@ -216,6 +230,25 @@ h2.center { text-align: center; }
   text-decoration: none;
 }
 .btn-call-inline:hover { background: var(--red-dark); }
+
+/* Tech photo placeholder — swap with real <img> tag once you have a photo */
+.tech-photo-placeholder {
+  border: 2px dashed #ddd;
+  border-radius: var(--radius);
+  padding: 32px;
+  text-align: center;
+  background: var(--light);
+  margin-bottom: 24px;
+}
+.photo-inner { color: var(--gray-lt); }
+.photo-icon  { font-size: 40px; display: block; margin-bottom: 8px; }
+.photo-inner p     { font-size: 15px; font-weight: 600; color: var(--gray); }
+.photo-inner small { font-size: 12px; }
+
+/* Guarantee cards (replacing fake reviews while real ones build) */
+.guarantee-card { display: flex; flex-direction: column; gap: 6px; }
+.guarantee-icon { font-size: 28px; margin-bottom: 4px; }
+.guarantee-card h4 { font-size: 15px; font-weight: 800; color: var(--dark); }
 
 /* Reviews */
 .reviews-col { display: flex; flex-direction: column; gap: 16px; }
