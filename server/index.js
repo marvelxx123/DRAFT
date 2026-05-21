@@ -3,17 +3,12 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 
-const checkoutRoutes = require('./routes/checkout');
-const webhookRoutes  = require('./routes/webhooks');
-const adminRoutes    = require('./routes/admin');
-const agentRunner    = require('./agents/agentRunner');
-const leadsRouter    = require('../leads/api');
+const adminRoutes = require('./routes/admin');
+const agentRunner = require('./agents/agentRunner');
+const leadsRouter = require('../leads/api');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// ── STRIPE WEBHOOK: must receive raw body before any json() middleware ──────
-app.use('/api/webhooks/stripe', express.raw({ type: 'application/json' }));
 
 // ── MIDDLEWARE ───────────────────────────────────────────────────────────────
 app.use(cors({
@@ -23,26 +18,30 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 
 // ── API ROUTES ───────────────────────────────────────────────────────────────
-app.use('/api/checkout', checkoutRoutes);
-app.use('/api/webhooks', webhookRoutes);
-app.use('/api/admin',    adminRoutes);
-app.use('/leads',        leadsRouter);   // Garage door lead generation dashboard
+app.use('/api/admin', adminRoutes);
+app.use('/leads',     leadsRouter);
 
 // ── HEALTH CHECK ─────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {
   res.json({
-    status: 'ok',
-    stripe:   !!process.env.STRIPE_SECRET_KEY,
-    printful: !!process.env.PRINTFUL_API_KEY,
-    agents:   agentRunner.getStatus().map(a => ({ id: a.id, status: a.status })),
+    status:    'ok',
+    business:  '904 Garage Doors',
+    agents:    agentRunner.getStatus().map(a => ({ id: a.id, status: a.status })),
     timestamp: new Date().toISOString(),
   });
 });
 
 // ── SERVE FRONTEND ───────────────────────────────────────────────────────────
 app.use(express.static(path.join(__dirname, '..')));
+
+// Root → 904 Garage Doors landing page
+app.get('/', (_req, res) => {
+  res.sendFile(path.join(__dirname, '..', '904.html'));
+});
+
+// Catch-all → garage door homepage (not the old WearIt index.html)
 app.get('*', (_req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'index.html'));
+  res.sendFile(path.join(__dirname, '..', '904.html'));
 });
 
 // ── GLOBAL ERROR HANDLER ─────────────────────────────────────────────────────
