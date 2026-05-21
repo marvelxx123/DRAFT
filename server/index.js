@@ -7,6 +7,7 @@ const checkoutRoutes = require('./routes/checkout');
 const webhookRoutes  = require('./routes/webhooks');
 const adminRoutes    = require('./routes/admin');
 const agentRunner    = require('./agents/agentRunner');
+const leadsRouter    = require('../leads/api');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,6 +26,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use('/api/checkout', checkoutRoutes);
 app.use('/api/webhooks', webhookRoutes);
 app.use('/api/admin',    adminRoutes);
+app.use('/leads',        leadsRouter);   // Garage door lead generation dashboard
 
 // ── HEALTH CHECK ─────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {

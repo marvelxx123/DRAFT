@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jacksonville Lead HQ</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f2f5;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ─────────────────────────────────────────────────────────── */
+    header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      padding: 20px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .header-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    header h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    header h1 span {
+      color: #f59e0b;
+    }
+
+    .header-meta {
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    /* ── STATS BAR ──────────────────────────────────────────────────────── */
+    .stats-bar {
+      max-width: 800px;
+      margin: 16px auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 14px 10px;
+      text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .stat-card .number {
+      font-size: 1.8rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .stat-card .label {
+      font-size: 0.7rem;
+      color: #64748b;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-emergency .number { color: #dc2626; }
+    .stat-standard .number  { color: #2563eb; }
+    .stat-opp .number       { color: #16a34a; }
+    .stat-total .number     { color: #475569; }
+
+    /* ── TABS ────────────────────────────────────────────────────────────── */
+    .tabs {
+      max-width: 800px;
+      margin: 0 auto 12px;
+      padding: 0 16px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .tab {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: white;
+      color: #475569;
+      transition: all 0.2s;
+    }
+
+    .tab.active-all     { background: #475569; color: white; }
+    .tab.active-emerg   { background: #dc2626; color: white; }
+    .tab.active-std     { background: #2563eb; color: white; }
+    .tab.active-opp     { background: #16a34a; color: white; }
+
+    /* ── LEAD CARDS ─────────────────────────────────────────────────────── */
+    .leads-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 16px 80px;
+    }
+
+    .lead-card {
+      background: white;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      border-left: 5px solid #e2e8f0;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    .lead-card:active {
+      transform: scale(0.99);
+    }
+
+    .lead-card.emergency { border-left-color: #dc2626; }
+    .lead-card.standard  { border-left-color: #2563eb; }
+    .lead-card.opportunity { border-left-color: #16a34a; }
+    .lead-card.contacted { opacity: 0.55; }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .priority-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .badge-emergency  { background: #fee2e2; color: #dc2626; }
+    .badge-standard   { background: #dbeafe; color: #2563eb; }
+    .badge-opportunity { background: #dcfce7; color: #16a34a; }
+
+    .lead-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #1e293b;
+      line-height: 1.3;
+      flex: 1;
+    }
+
+    .lead-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+
+    .lead-meta span {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .score-pill {
+      background: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .reason {
+      font-size: 0.78rem;
+      color: #64748b;
+      background: #f8fafc;
+      padding: 6px 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn:active { opacity: 0.7; }
+
+    .btn-copy {
+      background: #1e293b;
+      color: white;
+      flex: 1;
+    }
+
+    .btn-view {
+      background: #f1f5f9;
+      color: #475569;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .btn-contact {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .btn-contact.done {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+
+    /* ── EMPTY STATE ─────────────────────────────────────────────────────── */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #94a3b8;
+    }
+
+    .empty-state h2 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: #64748b;
+    }
+
+    .empty-state p {
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    /* ── TOAST ───────────────────────────────────────────────────────────── */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1e293b;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+      pointer-events: none;
+    }
+
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── REFRESH BUTTON ──────────────────────────────────────────────────── */
+    .refresh-btn {
+      background: none;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .refresh-btn:hover { background: #0f172a; }
+
+    /* ── RESPONSIVE ──────────────────────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      header h1 { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div>
+        <h1>Jacksonville <span>Lead HQ</span></h1>
+        <div class="header-meta" id="header-date">Loading...</div>
+      </div>
+      <button class="refresh-btn" onclick="loadLeads()">Refresh</button>
+    </div>
+  </header>
+
+  <!-- Stats summary -->
+  <div class="stats-bar">
+    <div class="stat-card stat-emergency">
+      <div class="number" id="count-emergency">—</div>
+      <div class="label">Emergency</div>
+    </div>
+    <div class="stat-card stat-standard">
+      <div class="number" id="count-standard">—</div>
+      <div class="label">Standard</div>
+    </div>
+    <div class="stat-card stat-opp">
+      <div class="number" id="count-opp">—</div>
+      <div class="label">Opportunity</div>
+    </div>
+    <div class="stat-card stat-total">
+      <div class="number" id="count-total">—</div>
+      <div class="label">Total</div>
+    </div>
+  </div>
+
+  <!-- Filter tabs -->
+  <div class="tabs">
+    <button class="tab active-all" onclick="filterLeads('ALL', this)">All</button>
+    <button class="tab" onclick="filterLeads('EMERGENCY', this)">Emergency</button>
+    <button class="tab" onclick="filterLeads('STANDARD', this)">Standard</button>
+    <button class="tab" onclick="filterLeads('OPPORTUNITY', this)">Opportunity</button>
+  </div>
+
+  <!-- Lead cards go here -->
+  <div class="leads-container" id="leads-container">
+    <div class="empty-state">
+      <h2>Loading leads...</h2>
+      <p>Fetching your latest lead data.</p>
+    </div>
+  </div>
+
+  <!-- Copy toast notification -->
+  <div id="toast">Copied to clipboard!</div>
+
+  <script>
+    // All leads stored here so we can re-filter without re-fetching
+    let allLeads = [];
+    let currentFilter = 'ALL';
+    let contactedIds = new Set();
+
+    // Set today's date in the header
+    document.getElementById('header-date').textContent =
+      'Today — ' + new Date().toLocaleDateString('en-US', {
+        weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+      });
+
+    /**
+     * Fetches the latest lead report from the API and renders everything.
+     */
+    async function loadLeads() {
+      try {
+        const res = await fetch('/leads/api/latest');
+        const data = await res.json();
+
+        allLeads = data.leads || [];
+
+        // Update stats
+        const counts = data.counts || {};
+        document.getElementById('count-emergency').textContent = counts.emergency || 0;
+        document.getElementById('count-standard').textContent  = counts.standard  || 0;
+        document.getElementById('count-opp').textContent       = counts.opportunity || 0;
+        document.getElementById('count-total').textContent     = counts.total || 0;
+
+        // Load contacted status from outreach log
+        await loadContactedStatus();
+
+        // Render cards
+        renderLeads(allLeads);
+      } catch (err) {
+        document.getElementById('leads-container').innerHTML = `
+          <div class="empty-state">
+            <h2>Could not load leads</h2>
+            <p>Make sure the server is running and you've run<br>
+               <code>node leads/orchestrator.js</code> at least once.</p>
+          </div>`;
+      }
+    }
+
+    /**
+     * Fetches outreach log to know which leads are already contacted.
+     */
+    async function loadContactedStatus() {
+      try {
+        const res = await fetch('/leads/api/outreach-log');
+        const log = await res.json();
+        contactedIds = new Set(log.filter(e => e.contacted).map(e => e.id));
+      } catch {
+        // Not critical — just means the contacted state won't show
+      }
+    }
+
+    /**
+     * Filters leads by priority and re-renders the cards.
+     */
+    function filterLeads(priority, btn) {
+      currentFilter = priority;
+
+      // Update tab styles
+      document.querySelectorAll('.tab').forEach(t => {
+        t.className = 'tab';
+      });
+
+      const classMap = {
+        ALL: 'active-all',
+        EMERGENCY: 'active-emerg',
+        STANDARD: 'active-std',
+        OPPORTUNITY: 'active-opp',
+      };
+      btn.classList.add(classMap[priority]);
+
+      const filtered = priority === 'ALL'
+        ? allLeads
+        : allLeads.filter(l => l.priority === priority);
+
+      renderLeads(filtered);
+    }
+
+    /**
+     * Renders lead cards into the container.
+     */
+    function renderLeads(leads) {
+      const container = document.getElementById('leads-container');
+
+      if (!leads || leads.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h2>No leads found</h2>
+            <p>Run <strong>node leads/orchestrator.js</strong> to scan for leads,<br>
+               or check back after the next automated scan.</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = leads.map(lead => buildCard(lead)).join('');
+    }
+
+    /**
+     * Builds the HTML for a single lead card.
+     */
+    function buildCard(lead) {
+      const priorityClass = (lead.priority || 'standard').toLowerCase();
+      const badgeClass = 'badge-' + priorityClass;
+      const isContacted = contactedIds.has(lead.id);
+
+      // Format time ago
+      const timeAgo = lead.postedAt ? getTimeAgo(lead.postedAt) : 'Unknown time';
+
+      // Escape template for safe embedding in data attribute
+      const safeTemplate = (lead.template || '').replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+
+      return `
+        <div class="lead-card ${priorityClass} ${isContacted ? 'contacted' : ''}" id="card-${lead.id}">
+          <div class="card-top">
+            <div class="lead-title">${escapeHtml(lead.title || 'Untitled lead')}</div>
+            <span class="priority-badge ${badgeClass}">${lead.priority || 'STANDARD'}</span>
+          </div>
+
+          <div class="lead-meta">
+            <span>📍 ${escapeHtml(lead.platform || 'Unknown')}</span>
+            <span>🕐 ${timeAgo}</span>
+            <span class="score-pill">Score: ${lead.score || 0}/100</span>
+            ${isContacted ? '<span style="color:#16a34a;font-weight:600;">✓ Contacted</span>' : ''}
+          </div>
+
+          <div class="reason">${escapeHtml(lead.qualificationReason || 'No reason provided')}</div>
+
+          <div class="card-actions">
+            <button class="btn btn-copy" onclick="copyTemplate('${lead.id}', \`${safeTemplate}\`)">
+              Copy Outreach Message
+            </button>
+            ${lead.url ? `<a class="btn btn-view" href="${lead.url}" target="_blank" rel="noopener">View Post</a>` : ''}
+            <button
+              class="btn btn-contact ${isContacted ? 'done' : ''}"
+              id="contact-btn-${lead.id}"
+              onclick="markContacted('${lead.id}')"
+            >
+              ${isContacted ? 'Contacted ✓' : 'Mark Contacted'}
+            </button>
+          </div>
+        </div>`;
+    }
+
+    /**
+     * Copies the outreach template to the clipboard and shows a toast.
+     */
+    async function copyTemplate(id, template) {
+      // Decode HTML entities back to normal text
+      const decoded = template
+        .replace(/&#39;/g, "'")
+        .replace(/&quot;/g, '"')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>');
+
+      try {
+        await navigator.clipboard.writeText(decoded);
+        showToast('Outreach message copied! Paste it into the platform.');
+      } catch {
+        // Fallback for older browsers or HTTP (non-HTTPS) contexts
+        const el = document.createElement('textarea');
+        el.value = decoded;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        showToast('Copied!');
+      }
+    }
+
+    /**
+     * Marks a lead as contacted via the API and updates the UI.
+     */
+    async function markContacted(id) {
+      try {
+        const res = await fetch(`/leads/api/mark-contacted/${id}`, { method: 'POST' });
+        if (res.ok) {
+          contactedIds.add(id);
+          const btn = document.getElementById(`contact-btn-${id}`);
+          if (btn) {
+            btn.textContent = 'Contacted ✓';
+            btn.classList.add('done');
+          }
+          const card = document.getElementById(`card-${id}`);
+          if (card) card.classList.add('contacted');
+          showToast('Marked as contacted!');
+        }
+      } catch (err) {
+        showToast('Could not update — check server connection');
+      }
+    }
+
+    /**
+     * Shows a brief toast notification at the bottom of the screen.
+     */
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    /**
+     * Converts an ISO timestamp to a human-readable "time ago" string.
+     */
+    function getTimeAgo(isoString) {
+      const date = new Date(isoString);
+      const diff = Date.now() - date.getTime();
+      const minutes = Math.floor(diff / 60000);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+
+      if (minutes < 2) return 'just now';
+      if (minutes < 60) return `${minutes}m ago`;
+      if (hours < 24) return `${hours}h ago`;
+      if (days === 1) return 'yesterday';
+      return `${days} days ago`;
+    }
+
+    /**
+     * Escapes HTML characters to prevent XSS from lead content.
+     */
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Load leads on page open
+    loadLeads();
+
+    // Auto-refresh every 5 minutes so you always see fresh leads
+    setInterval(loadLeads, 5 * 60 * 1000);
+  </script>
+
+</body>
+</html>

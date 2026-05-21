@@ -2,3 +2,9 @@ node_modules/
 .env
 *.log
 .DS_Store
+
+# Lead generation data — these are generated files and may contain personal info.
+# The sample_lead.json is tracked (it's just test data), but real lead reports are not.
+leads/data/*.json
+leads/data/*.txt
+!leads/data/sample_lead.json
