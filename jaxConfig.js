@@ -6,15 +6,31 @@ module.exports = {
     phoneRaw: '+19044683428',
     phoneLink: 'tel:+19044683428',
     email: process.env.BUSINESS_EMAIL || '',
-    serviceArea: 'Jacksonville, FL',
+    serviceArea: 'Jacksonville, Yulee & Fernandina Beach, FL',
   },
 
-  // Neighborhoods and suburbs to target for SEO and lead filtering
+  // All areas served — used by agents for SEO, lead filtering, and ad targeting
   serviceZones: [
-    'Jacksonville', 'JAX', 'Ponte Vedra', 'Fleming Island',
-    'Orange Park', 'Mandarin', 'Southside', 'Northside',
+    // Jacksonville proper
+    'Jacksonville', 'JAX', 'Mandarin', 'Southside', 'Northside',
     'Avondale', 'San Marco', 'Riverside', 'Atlantic Beach',
-    'Neptune Beach', 'Jacksonville Beach', 'St. Johns', 'Middleburg',
+    'Neptune Beach', 'Jacksonville Beach', 'Arlington', 'Westside',
+    // St. Johns County
+    'Ponte Vedra', 'St. Johns', 'Fleming Island',
+    // Clay County
+    'Orange Park', 'Middleburg',
+    // Nassau County — less competition, big opportunity
+    'Yulee', 'Fernandina Beach', 'Amelia Island', 'Nassau County',
+    'Callahan', 'Hilliard', 'Bryceville',
+  ],
+
+  // Priority markets — agents write specific content for these
+  priorityMarkets: [
+    { name: 'Jacksonville',     county: 'Duval',   competition: 'high',   note: 'Core market' },
+    { name: 'Yulee',            county: 'Nassau',  competition: 'low',    note: 'Fast-growing, underserved' },
+    { name: 'Fernandina Beach', county: 'Nassau',  competition: 'low',    note: 'Amelia Island — higher income homeowners' },
+    { name: 'Orange Park',      county: 'Clay',    competition: 'medium', note: 'Large suburb, family homes' },
+    { name: 'Ponte Vedra',      county: 'St. Johns', competition: 'medium', note: 'Affluent, willing to pay premium' },
   ],
 
   services: [

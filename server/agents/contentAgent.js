@@ -2,15 +2,10 @@ const fetch = require('node-fetch');
 const fs = require('fs');
 const path = require('path');
 const { log } = require('./logger');
+const config = require('../../jaxConfig');
 
 const AGENT_ID = 'content';
 const CONTENT_FILE = path.join(__dirname, '../../data/generated-content.json');
-
-const PRODUCTS_SAMPLE = [
-  'T-Shirts', 'Hoodies', 'Mugs', 'Sunglasses', 'Glass Panels',
-  'Stickers', 'Pillows', 'Canvas Prints', 'Coasters', 'Keychains',
-  'Water Bottles', 'Custom Socks', 'Face Masks', 'Tote Bags', 'Caps',
-];
 
 async function callClaude(prompt) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -30,8 +25,7 @@ async function callClaude(prompt) {
     }),
   });
   if (!res.ok) throw new Error(`Claude API error: ${res.status}`);
-  const data = await res.json();
-  return data.content[0].text.trim();
+  return (await res.json()).content[0].text.trim();
 }
 
 function readContent() {
@@ -39,40 +33,70 @@ function readContent() {
   catch { return {}; }
 }
 
+// Pick a random market from the priority list for geo-targeted content
+function randomMarket() {
+  const m = config.priorityMarkets;
+  return m[Math.floor(Math.random() * m.length)];
+}
+
 async function run() {
   log(AGENT_ID, 'info', 'Content agent starting run…');
   const content = readContent();
+  const market = randomMarket();
+  const phone = config.business.phone;
 
   try {
-    // 1. Generate a hero tagline
+    // 1. Hero tagline tailored to a specific market
     const tagline = await callClaude(
-      'Generate ONE punchy, bold streetwear-style marketing tagline for a custom print-on-demand store called WEARIT. ' +
-      'Max 8 words. No quotes. Examples of tone: "Your Art. Their Eyes." or "Print It. Wear It. Own It."'
+      `Write ONE punchy headline for a garage door repair company called "904 Garage Doors" ` +
+      `targeting homeowners in ${market.name}, FL. ` +
+      `Max 10 words. No quotes. Emphasize speed and local trust. ` +
+      `Examples: "Fast Garage Door Repair in ${market.name} — Call Now" or ` +
+      `"${market.name}'s Most Trusted Garage Door Tech."`
     );
     content.heroTagline = tagline;
-    log(AGENT_ID, 'success', `Hero tagline updated: "${tagline}"`);
+    content.heroMarket  = market.name;
+    log(AGENT_ID, 'success', `Hero tagline for ${market.name}: "${tagline}"`);
 
-    // 2. Pick a random product and write a description
-    const product = PRODUCTS_SAMPLE[Math.floor(Math.random() * PRODUCTS_SAMPLE.length)];
-    const desc = await callClaude(
-      `Write a 2-sentence product description for custom-printed ${product} sold on WEARIT. ` +
-      `Tone: bold, streetwear, confident. Focus on uniqueness and quality. No fluff.`
+    // 2. Emergency service description
+    const emergency = await callClaude(
+      `Write 2 sentences for the emergency section of a garage door repair website. ` +
+      `Business: 904 Garage Doors, serving ${market.name}, FL. Phone: ${phone}. ` +
+      `Tone: urgent but reassuring. Focus on: broken springs, doors off track, car trapped. ` +
+      `End with the phone number. No fluff.`
     );
-    if (!content.productDescriptions) content.productDescriptions = {};
-    content.productDescriptions[product] = desc;
-    log(AGENT_ID, 'success', `Product description updated: ${product}`);
+    content.emergencyBlurb = emergency;
+    log(AGENT_ID, 'success', 'Emergency blurb updated');
 
-    // 3. Generate a promotional banner message
-    const promo = await callClaude(
-      'Generate ONE short promotional banner message (max 12 words) for a print-on-demand store. ' +
-      'Include a sense of urgency or exclusivity. No emoji. Uppercase style OK.'
+    // 3. SEO meta description for the landing page
+    const metaDesc = await callClaude(
+      `Write a Google meta description (max 155 chars) for 904 Garage Doors. ` +
+      `Keywords to include: garage door repair, ${market.name} FL, same-day service, free estimate. ` +
+      `Include a call to action. No quotes.`
     );
-    content.promoBanner = promo;
-    log(AGENT_ID, 'success', `Promo banner updated: "${promo}"`);
+    content.metaDescription = metaDesc;
+    log(AGENT_ID, 'success', 'Meta description updated');
+
+    // 4. Trust-building FAQ answer (rotates daily)
+    const faqs = [
+      'How fast can you get to me for an emergency in ' + market.name + '?',
+      'Are you licensed and insured in Florida?',
+      'Do you charge for estimates in ' + market.name + '?',
+      'Can you fix my garage door today?',
+      'What garage door brands do you service?',
+    ];
+    const faq = faqs[new Date().getDay() % faqs.length];
+    const faqAnswer = await callClaude(
+      `Answer this customer question for 904 Garage Doors in ${market.name}, FL: "${faq}". ` +
+      `2-3 sentences. Honest, friendly, confident. End with the phone number ${phone} if relevant.`
+    );
+    if (!content.faqs) content.faqs = {};
+    content.faqs[faq] = faqAnswer;
+    log(AGENT_ID, 'success', `FAQ updated: ${faq}`);
 
     content.lastUpdated = new Date().toISOString();
     fs.writeFileSync(CONTENT_FILE, JSON.stringify(content, null, 2));
-    log(AGENT_ID, 'success', 'Content agent run complete. All content saved.');
+    log(AGENT_ID, 'success', 'Content agent run complete.');
   } catch (err) {
     log(AGENT_ID, 'error', `Content agent error: ${err.message}`);
   }

@@ -2,12 +2,21 @@ const fetch = require('node-fetch');
 const fs = require('fs');
 const path = require('path');
 const { log } = require('./logger');
+const config = require('../../jaxConfig');
 
 const AGENT_ID = 'social';
 const SOCIAL_FILE = path.join(__dirname, '../../data/social-content.json');
 
-const PRODUCTS = ['Custom T-Shirts', 'Custom Hoodies', 'Personalized Mugs', 'Custom Sunglasses', 'Custom Caps', 'Tote Bags', 'Custom Socks', 'Canvas Prints', 'Keychains', 'Custom Phone Cases'];
-const THEMES = ['new drop', 'customer spotlight', 'behind the scenes', 'product feature', 'limited time offer', 'styling tips'];
+const POST_THEMES = [
+  'spring replacement tip',
+  'emergency service story',
+  'before & after',
+  'maintenance tip',
+  'seasonal reminder',
+  'local area shoutout',
+  'free estimate offer',
+  'customer win',
+];
 
 async function callClaude(prompt) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -27,58 +36,63 @@ function readContent() {
   catch { return { packs: [] }; }
 }
 
+function randomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
 async function run() {
-  log(AGENT_ID, 'info', 'Social media agent starting…');
-  const product = PRODUCTS[Math.floor(Math.random() * PRODUCTS.length)];
-  const theme   = THEMES[Math.floor(Math.random() * THEMES.length)];
-  log(AGENT_ID, 'info', `Theme: "${theme}" · Product focus: ${product}`);
+  log(AGENT_ID, 'info', 'Social agent starting…');
+  const market = randomItem(config.priorityMarkets);
+  const theme  = randomItem(POST_THEMES);
+  const phone  = config.business.phone;
+  const name   = config.business.name;
+
+  log(AGENT_ID, 'info', `Theme: "${theme}" · Market: ${market.name}`);
 
   const content = readContent();
-  const pack = { id: Date.now(), date: new Date().toISOString(), product, theme };
+  const pack = { id: Date.now(), date: new Date().toISOString(), market: market.name, theme };
+
+  const context = `Business: ${name}. Phone: ${phone}. Location: ${market.name}, FL (${market.county} County). ` +
+    `Theme: "${theme}". Tone: friendly, local, trustworthy — like a neighbor who's also a pro.`;
 
   try {
-    // Instagram
-    pack.instagram = await callClaude(
-      `Write an Instagram post caption for WEARIT (custom print-on-demand store). Theme: "${theme}". Product: ${product}. ` +
-      `Bold streetwear tone. Include a call to action (link in bio). End with 8 relevant hashtags. Max 180 words total.`
-    );
-    log(AGENT_ID, 'success', 'Instagram caption generated');
-
-    // Facebook
+    // Facebook — most important for garage door leads
     pack.facebook = await callClaude(
-      `Write a Facebook post for WEARIT custom print-on-demand store. Theme: "${theme}". Product: ${product}. ` +
-      `Conversational, community-focused tone. Include a question to drive comments. Include a CTA with URL https://wearit.com. Max 150 words.`
+      `${context} Write a Facebook post for a local garage door company. ` +
+      `Max 120 words. Start with something that stops the scroll — a relatable situation ` +
+      `("Had a customer in ${market.name} this morning who couldn't get their car out..."). ` +
+      `End with a CTA including the phone number. Conversational, zero corporate speak. ` +
+      `Add 3 relevant local hashtags at the end (#904GarageDoors #${market.name.replace(' ','')}FL #JacksonvilleGarage).`
     );
     log(AGENT_ID, 'success', 'Facebook post generated');
 
-    // Twitter/X thread
-    pack.twitter_thread = await callClaude(
-      `Write a 4-tweet Twitter/X thread for WEARIT (custom print-on-demand). Theme: "${theme}". Product: ${product}. ` +
-      `Each tweet max 240 chars. Number them 1/ 2/ 3/ 4/. Last tweet has CTA. Punchy, bold tone.`
+    // Nextdoor — hyper-local, very effective for trades
+    pack.nextdoor = await callClaude(
+      `${context} Write a Nextdoor post (as a local business introducing itself). ` +
+      `Max 80 words. Sound like a neighbor, not an ad. Mention ${market.name} specifically. ` +
+      `Offer something free (estimate, safety check). Include phone: ${phone}. No hashtags.`
     );
-    log(AGENT_ID, 'success', 'Twitter/X thread generated');
+    log(AGENT_ID, 'success', 'Nextdoor post generated');
 
-    // TikTok script
-    pack.tiktok = await callClaude(
-      `Write a TikTok video script for WEARIT. Theme: "${theme}". Product: ${product}. ` +
-      `Format: HOOK (first 3 seconds, max 15 words), then BODY (30-second script, natural spoken language), then CTA. ` +
-      `Trend-aware, energetic, Gen-Z friendly tone.`
+    // Google Business update post
+    pack.googleBusiness = await callClaude(
+      `${context} Write a Google Business Profile post for a garage door company. ` +
+      `Max 100 words. Include a specific offer or tip. End with the phone number. ` +
+      `Focus on ${market.name} area. Professional but approachable.`
     );
-    log(AGENT_ID, 'success', 'TikTok script generated');
+    log(AGENT_ID, 'success', 'Google Business post generated');
 
-    // Pinterest
-    pack.pinterest = {
-      title: await callClaude(`Write a Pinterest pin title for a ${product} product from WEARIT. Max 80 chars. SEO-optimized. No emoji.`),
-      description: await callClaude(`Write a Pinterest pin description for ${product} from WEARIT. 200-280 chars. Include keywords, benefits, and a subtle CTA. SEO-focused.`),
-      board: `Custom ${product.split(' ').pop()} Ideas`,
-    };
-    log(AGENT_ID, 'success', 'Pinterest pin generated');
+    // Craigslist services ad (refresh weekly)
+    pack.craigslist = await callClaude(
+      `${context} Write a Craigslist "Services" ad for garage door repair/install in ${market.name}, FL. ` +
+      `Format: short title (max 60 chars), then 4-6 bullet points of what's offered, ` +
+      `then the phone number. Include "Free Estimates" and "Same-Day Service." Plain text, no markdown.`
+    );
+    log(AGENT_ID, 'success', 'Craigslist ad generated');
 
     content.packs.unshift(pack);
     content.packs = content.packs.slice(0, 30);
     content.lastUpdated = new Date().toISOString();
     fs.writeFileSync(SOCIAL_FILE, JSON.stringify(content, null, 2));
-    log(AGENT_ID, 'success', 'Social content pack saved. Agent run complete.');
+    log(AGENT_ID, 'success', `Social pack saved for ${market.name}.`);
   } catch (err) {
     log(AGENT_ID, 'error', `Social agent error: ${err.message}`);
   }
