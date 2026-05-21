@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily 5 — 904 Garage Doors</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root { --red: #d32f2f; --dark: #1a1a1a; --gray: #666; --light: #f7f7f7; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .header {
+      background: var(--dark);
+      color: #fff;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .header-left h1 { font-size: 22px; font-weight: 800; }
+    .header-left p  { color: #999; font-size: 13px; margin-top: 2px; }
+    .header-right   { display: flex; align-items: center; gap: 12px; }
+    .date-badge {
+      background: var(--red);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .reset-btn {
+      background: transparent;
+      border: 1px solid #444;
+      color: #999;
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .reset-btn:hover { border-color: #fff; color: #fff; }
+
+    /* MAIN GRID */
+    .main { max-width: 720px; margin: 0 auto; padding: 24px 16px 48px; }
+
+    .progress-bar {
+      background: #e0e0e0;
+      border-radius: 99px;
+      height: 8px;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      background: var(--red);
+      height: 100%;
+      border-radius: 99px;
+      transition: width .4s ease;
+    }
+    .progress-label {
+      font-size: 13px;
+      color: var(--gray);
+      margin-bottom: 8px;
+    }
+
+    /* TASK CARDS */
+    .task-card {
+      background: #fff;
+      border: 1.5px solid #e8e8e8;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 14px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      cursor: pointer;
+      transition: border-color .15s, box-shadow .15s;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .task-card:hover { border-color: #bbb; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .task-card.done  { opacity: .55; }
+    .task-card.done .task-title { text-decoration: line-through; }
+
+    .task-check {
+      width: 28px;
+      height: 28px;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all .15s;
+      margin-top: 2px;
+    }
+    .task-card.done .task-check {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
+
+    .task-body { flex: 1; }
+    .task-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .task-num {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+    }
+    .task-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 99px;
+      letter-spacing: .3px;
+    }
+    .tag-urgent   { background: #ffebee; color: var(--red); }
+    .tag-social   { background: #e3f2fd; color: #1565c0; }
+    .tag-leads    { background: #e8f5e9; color: #2e7d32; }
+    .tag-profile  { background: #fff8e1; color: #f57f17; }
+    .tag-review   { background: #f3e5f5; color: #6a1b9a; }
+
+    .task-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+    .task-desc  { font-size: 14px; color: var(--gray); line-height: 1.6; }
+
+    .task-actions {
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .task-link {
+      display: inline-block;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      background: var(--light);
+      color: var(--dark);
+      border: 1px solid #ddd;
+      transition: background .1s;
+    }
+    .task-link:hover { background: #eee; }
+    .task-link.primary {
+      background: var(--red);
+      color: #fff;
+      border-color: var(--red);
+    }
+    .task-link.primary:hover { background: #b71c1c; }
+
+    /* LEAD FEED */
+    .lead-feed { margin-top: 8px; }
+    .lead-item {
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      background: #fafafa;
+    }
+    .lead-item.emergency { border-left: 3px solid var(--red); }
+    .lead-priority { font-size: 11px; font-weight: 700; color: var(--red); white-space: nowrap; }
+
+    /* ALL DONE BANNER */
+    .all-done {
+      background: #e8f5e9;
+      border: 1.5px solid #a5d6a7;
+      border-radius: 12px;
+      padding: 28px;
+      text-align: center;
+      margin-top: 24px;
+      display: none;
+    }
+    .all-done h3 { color: #2e7d32; font-size: 22px; margin-bottom: 8px; }
+    .all-done p  { color: #555; font-size: 15px; }
+
+    /* FOOTER */
+    .footer-note {
+      text-align: center;
+      color: #aaa;
+      font-size: 12px;
+      margin-top: 32px;
+    }
+    .footer-note a { color: var(--red); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-left">
+      <h1>Daily 5 — 904 Garage Doors</h1>
+      <p>5 tasks every morning. Do these before your first job.</p>
+    </div>
+    <div class="header-right">
+      <span class="date-badge" id="todayDate"></span>
+      <button class="reset-btn" onclick="resetAll()">Reset</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <p class="progress-label" id="progressLabel">0 of 5 done</p>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+
+    <!-- TASK 1: Check Leads -->
+    <div class="task-card" id="task1" onclick="toggle(1)">
+      <div class="task-check" id="check1"></div>
+      <div class="task-body">
+        <div class="task-meta">
+          <span class="task-num">Task 1</span>
+          <span class="task-tag tag-leads">Leads</span>
+        </div>
+        <div class="task-title">Check overnight leads</div>
+        <p class="task-desc">
+          Look at the leads your scout agent found overnight. Any emergencies need a call-back now —
+          emergencies are spring breaks, cars trapped, doors off track.
+        </p>
+        <div class="task-actions">
+          <a href="/leads/dashboard" class="task-link primary" onclick="event.stopPropagation()">Open Lead Dashboard →</a>
+          <a href="tel:+19044683428" class="task-link" onclick="event.stopPropagation()">Your Number: (904) 468-3428</a>
+        </div>
+        <!-- Lead feed placeholder — populated by JS -->
+        <div class="lead-feed" id="leadFeed"></div>
+      </div>
+    </div>
+
+    <!-- TASK 2: Post on Facebook -->
+    <div class="task-card" id="task2" onclick="toggle(2)">
+      <div class="task-check" id="check2"></div>
+      <div class="task-body">
+        <div class="task-meta">
+          <span class="task-num">Task 2</span>
+          <span class="task-tag tag-social">Social</span>
+        </div>
+        <div class="task-title">Post today's content on Facebook</div>
+        <p class="task-desc">
+          Your content agent wrote a Facebook post overnight. Copy it and post it on your 904 Garage Doors
+          Facebook Business Page. Consistency builds trust — even one post a day matters.
+        </p>
+        <div class="task-actions">
+          <a href="/api/admin/status" class="task-link" onclick="event.stopPropagation()">Get Today's Post →</a>
+          <a href="https://www.facebook.com" target="_blank" class="task-link primary" onclick="event.stopPropagation()">Open Facebook</a>
+        </div>
+        <div id="fbPostPreview" style="margin-top:12px; display:none;">
+          <textarea id="fbPostText" rows="5" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-size:13px; resize:vertical;"></textarea>
+          <button onclick="copyPost(); event.stopPropagation();" style="margin-top:6px; padding:6px 14px; background:#1565c0; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:13px;">Copy Post</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASK 3: Craigslist -->
+    <div class="task-card" id="task3" onclick="toggle(3)">
+      <div class="task-check" id="check3"></div>
+      <div class="task-body">
+        <div class="task-meta">
+          <span class="task-num">Task 3</span>
+          <span class="task-tag tag-leads">Leads</span>
+        </div>
+        <div class="task-title">Check Craigslist Jacksonville &amp; refresh your ad</div>
+        <p class="task-desc">
+          Search Craigslist Jacksonville for people needing garage help. Also refresh your
+          own service posting so it stays near the top. Takes 5 minutes.
+        </p>
+        <div class="task-actions">
+          <a href="https://jacksonville.craigslist.org/search/sss?query=garage+door" target="_blank" class="task-link primary" onclick="event.stopPropagation()">Search Craigslist →</a>
+          <a href="https://jacksonville.craigslist.org/post?type=service" target="_blank" class="task-link" onclick="event.stopPropagation()">Post/Refresh Your Ad</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASK 4: Google Business -->
+    <div class="task-card" id="task4" onclick="toggle(4)">
+      <div class="task-check" id="check4"></div>
+      <div class="task-body">
+        <div class="task-meta">
+          <span class="task-num">Task 4</span>
+          <span class="task-tag tag-profile">Profile</span>
+        </div>
+        <div class="task-title">Check Google Business Profile</div>
+        <p class="task-desc">
+          Look for new reviews, questions, or messages. Reply to every review — even a simple
+          "Thanks for the kind words!" helps your ranking. Google rewards active businesses.
+        </p>
+        <div class="task-actions">
+          <a href="https://business.google.com" target="_blank" class="task-link primary" onclick="event.stopPropagation()">Open Google Business →</a>
+        </div>
+        <p style="font-size:12px; color:#e57373; margin-top:10px; font-weight:600;" id="gbpWarning"></p>
+      </div>
+    </div>
+
+    <!-- TASK 5: Follow-Ups -->
+    <div class="task-card" id="task5" onclick="toggle(5)">
+      <div class="task-check" id="check5"></div>
+      <div class="task-body">
+        <div class="task-meta">
+          <span class="task-num">Task 5</span>
+          <span class="task-tag tag-review">Follow-Up</span>
+        </div>
+        <div class="task-title">Follow up with yesterday's contacts</div>
+        <p class="task-desc">
+          Anyone who asked for a quote yesterday and hasn't booked? Call or text them today.
+          Most people forget — a 30-second follow-up wins the job.
+          Your script: "Hey, this is [Name] from 904 Garage Doors. Just checking in on that estimate — still need help with your garage?"
+        </p>
+        <div class="task-actions">
+          <a href="/leads/api/outreach-log" class="task-link primary" onclick="event.stopPropagation()">Open Follow-Up List →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALL DONE -->
+    <div class="all-done" id="allDone">
+      <h3>You're locked in for today!</h3>
+      <p>All 5 tasks done. Now go do what you do best — fix garages.</p>
+      <p style="margin-top:12px; font-size:14px; color:#888;">Come back tomorrow morning and reset.</p>
+    </div>
+
+    <p class="footer-note">
+      904 Garage Doors &nbsp;|&nbsp; <a href="/904.html">View Your Website</a> &nbsp;|&nbsp; <a href="/admin.html">Mission Control</a>
+    </p>
+  </div>
+
+  <script>
+    // ── DATE ──────────────────────────────────────────────────────────────
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const now = new Date();
+    document.getElementById('todayDate').textContent =
+      `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
+
+    // Google Business reminder if it's been a while
+    const lastGBP = localStorage.getItem('lastGBPCheck');
+    if (lastGBP) {
+      const daysSince = Math.floor((Date.now() - parseInt(lastGBP)) / 86400000);
+      if (daysSince >= 3) {
+        document.getElementById('gbpWarning').textContent =
+          `⚠ You haven't checked GBP in ${daysSince} days. New reviews may be waiting.`;
+      }
+    }
+
+    // ── PERSISTENCE ───────────────────────────────────────────────────────
+    const TODAY = now.toDateString();
+    const storageKey = `daily5_${TODAY}`;
+    let state = JSON.parse(localStorage.getItem(storageKey) || '{"done":[]}');
+
+    function toggle(n) {
+      const idx = state.done.indexOf(n);
+      if (idx === -1) {
+        state.done.push(n);
+        if (n === 4) localStorage.setItem('lastGBPCheck', Date.now());
+      } else {
+        state.done.splice(idx, 1);
+      }
+      localStorage.setItem(storageKey, JSON.stringify(state));
+      render();
+    }
+
+    function resetAll() {
+      state = { done: [] };
+      localStorage.setItem(storageKey, JSON.stringify(state));
+      render();
+    }
+
+    function render() {
+      for (let i = 1; i <= 5; i++) {
+        const card  = document.getElementById(`task${i}`);
+        const check = document.getElementById(`check${i}`);
+        if (state.done.includes(i)) {
+          card.classList.add('done');
+          check.textContent = '✓';
+        } else {
+          card.classList.remove('done');
+          check.textContent = '';
+        }
+      }
+      const pct = (state.done.length / 5) * 100;
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressLabel').textContent =
+        `${state.done.length} of 5 done`;
+      document.getElementById('allDone').style.display =
+        state.done.length === 5 ? 'block' : 'none';
+    }
+
+    render();
+
+    // ── LOAD LEADS ────────────────────────────────────────────────────────
+    async function loadLeads() {
+      try {
+        const res = await fetch('/leads/api/latest');
+        if (!res.ok) return;
+        const data = await res.json();
+        const leads = (data.leads || []).slice(0, 3);
+        if (!leads.length) return;
+
+        const feed = document.getElementById('leadFeed');
+        feed.innerHTML = leads.map(l => `
+          <div class="lead-item ${l.priority === 'EMERGENCY' ? 'emergency' : ''}">
+            <div>
+              <strong style="font-size:13px;">${l.title || 'Unnamed lead'}</strong>
+              <div style="color:#888; font-size:12px; margin-top:2px;">${l.platform || ''} · ${l.qualificationReason || ''}</div>
+            </div>
+            ${l.priority === 'EMERGENCY' ? '<span class="lead-priority">EMERGENCY</span>' : ''}
+          </div>
+        `).join('');
+      } catch { /* no leads yet — fine */ }
+    }
+
+    loadLeads();
+
+    // ── COPY POST ─────────────────────────────────────────────────────────
+    function copyPost() {
+      const text = document.getElementById('fbPostText').value;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Post copied to clipboard! Now paste it into Facebook.');
+      });
+    }
+  </script>
+
+</body>
+</html>
