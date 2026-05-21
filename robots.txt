@@ -3,4 +3,5 @@ Allow: /
 Disallow: /admin.html
 Disallow: /api/
 Disallow: /data/
-Sitemap: https://wearit.com/sitemap.xml
+
+Sitemap: https://904garagedoors.com/sitemap.xml
