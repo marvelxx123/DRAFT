@@ -3,603 +3,1625 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jacksonville Lead HQ</title>
+  <title>904 Lead HQ — Garage Door Leads Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:        #d32f2f;
+      --red-light:  #ffebee;
+      --red-mid:    #ef5350;
+      --yellow:     #f59e0b;
+      --yellow-light: #fffbeb;
+      --green:      #2e7d32;
+      --green-light: #e8f5e9;
+      --blue:       #1565c0;
+      --blue-light: #e3f2fd;
+      --dark:       #1a1a1a;
+      --dark2:      #222;
+      --surface:    #f4f5f7;
+      --white:      #ffffff;
+      --border:     #e2e8f0;
+      --text:       #1e293b;
+      --muted:      #64748b;
+      --shadow:     0 2px 12px rgba(0,0,0,0.09);
+      --radius:     12px;
     }
 
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f0f2f5;
-      color: #1a1a2e;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: var(--surface);
+      color: var(--text);
       min-height: 100vh;
     }
 
-    /* ── HEADER ─────────────────────────────────────────────────────────── */
+    /* ── LAYOUT ──────────────────────────────────────────────────────── */
+    .layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      grid-template-rows: 60px 1fr;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────────────────── */
     header {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      grid-column: 1 / -1;
+      background: var(--dark);
       color: white;
-      padding: 20px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      height: 60px;
       position: sticky;
       top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      z-index: 200;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
 
-    .header-inner {
-      max-width: 800px;
-      margin: 0 auto;
+    .header-brand {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
     }
 
-    header h1 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      background: var(--red);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 900;
+      color: white;
+      flex-shrink: 0;
     }
 
-    header h1 span {
-      color: #f59e0b;
+    .brand-name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
     }
 
-    .header-meta {
+    .brand-name span { color: var(--red-mid); }
+
+    .header-center {
+      display: flex;
+      align-items: center;
+      gap: 6px;
       font-size: 0.8rem;
       color: #94a3b8;
     }
 
-    /* ── STATS BAR ──────────────────────────────────────────────────────── */
-    .stats-bar {
-      max-width: 800px;
-      margin: 16px auto;
-      padding: 0 16px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
     }
 
-    .stat-card {
-      background: white;
-      border-radius: 12px;
-      padding: 14px 10px;
-      text-align: center;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
     }
 
-    .stat-card .number {
-      font-size: 1.8rem;
-      font-weight: 700;
-      line-height: 1;
-    }
-
-    .stat-card .label {
-      font-size: 0.7rem;
-      color: #64748b;
-      margin-top: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .stat-emergency .number { color: #dc2626; }
-    .stat-standard .number  { color: #2563eb; }
-    .stat-opp .number       { color: #16a34a; }
-    .stat-total .number     { color: #475569; }
-
-    /* ── TABS ────────────────────────────────────────────────────────────── */
-    .tabs {
-      max-width: 800px;
-      margin: 0 auto 12px;
-      padding: 0 16px;
-      display: flex;
-      gap: 8px;
-    }
-
-    .tab {
-      padding: 8px 16px;
-      border-radius: 20px;
-      border: none;
-      font-size: 0.85rem;
+    #live-clock {
+      color: #e2e8f0;
       font-weight: 600;
-      cursor: pointer;
-      background: white;
-      color: #475569;
-      transition: all 0.2s;
+      font-size: 0.85rem;
+      font-variant-numeric: tabular-nums;
     }
 
-    .tab.active-all     { background: #475569; color: white; }
-    .tab.active-emerg   { background: #dc2626; color: white; }
-    .tab.active-std     { background: #2563eb; color: white; }
-    .tab.active-opp     { background: #16a34a; color: white; }
-
-    /* ── LEAD CARDS ─────────────────────────────────────────────────────── */
-    .leads-container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 0 16px 80px;
-    }
-
-    .lead-card {
-      background: white;
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 12px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-      border-left: 5px solid #e2e8f0;
-      transition: transform 0.1s, box-shadow 0.1s;
-    }
-
-    .lead-card:active {
-      transform: scale(0.99);
-    }
-
-    .lead-card.emergency { border-left-color: #dc2626; }
-    .lead-card.standard  { border-left-color: #2563eb; }
-    .lead-card.opportunity { border-left-color: #16a34a; }
-    .lead-card.contacted { opacity: 0.55; }
-
-    .card-top {
+    .header-actions {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       gap: 8px;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+
+    .toggle {
+      position: relative;
+      width: 36px;
+      height: 20px;
+    }
+
+    .toggle input { display: none; }
+
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      background: #374151;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .toggle input:checked + .toggle-track { background: #22c55e; }
+
+    .toggle-track::after {
+      content: '';
+      position: absolute;
+      left: 3px;
+      top: 3px;
+      width: 14px;
+      height: 14px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+
+    .toggle input:checked + .toggle-track::after { transform: translateX(16px); }
+
+    .btn-run {
+      background: var(--red);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-run:hover { background: #b71c1c; }
+
+    /* ── SIDEBAR ──────────────────────────────────────────────────────── */
+    .sidebar {
+      background: var(--dark2);
+      padding: 20px 0;
+      border-right: 1px solid #2a2a2a;
+      overflow-y: auto;
+    }
+
+    .nav-section {
+      padding: 0 12px;
       margin-bottom: 8px;
     }
 
-    .priority-badge {
+    .nav-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 0 8px;
+      margin-bottom: 4px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: #94a3b8;
+      font-size: 0.83rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-item:hover { background: #2a2a2a; color: #e2e8f0; }
+    .nav-item.active { background: rgba(211,47,47,0.15); color: #ef5350; font-weight: 600; }
+
+    .nav-icon { font-size: 1rem; width: 18px; text-align: center; }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--red);
+      color: white;
       font-size: 0.65rem;
       font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 20px;
+      padding: 2px 6px;
+      border-radius: 10px;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .sidebar-divider {
+      height: 1px;
+      background: #2a2a2a;
+      margin: 12px 12px;
+    }
+
+    .sidebar-phone {
+      padding: 12px;
+      margin-top: 8px;
+    }
+
+    .phone-card {
+      background: rgba(211,47,47,0.12);
+      border: 1px solid rgba(211,47,47,0.25);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .phone-label {
+      font-size: 0.65rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .phone-num {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #ef5350;
+    }
+
+    /* ── MAIN ──────────────────────────────────────────────────────────── */
+    .main {
+      overflow-y: auto;
+      padding: 24px 24px 48px;
+    }
+
+    /* ── SECTION HEADING ──────────────────────────────────────────────── */
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .section-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── KPI CARDS ──────────────────────────────────────────────────────── */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .kpi-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      box-shadow: var(--shadow);
+      border-top: 4px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card.emergency { border-top-color: var(--red); }
+    .kpi-card.score     { border-top-color: var(--yellow); }
+    .kpi-card.total     { border-top-color: var(--blue); }
+    .kpi-card.contacts  { border-top-color: var(--green); }
+
+    .kpi-icon {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+
+    .kpi-num {
+      font-size: 2.1rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .kpi-card.emergency .kpi-num { color: var(--red); }
+    .kpi-card.score .kpi-num     { color: var(--yellow); }
+    .kpi-card.total .kpi-num     { color: var(--blue); }
+    .kpi-card.contacts .kpi-num  { color: var(--green); }
+
+    .kpi-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .kpi-trend {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* skeleton loader */
+    .skeleton {
+      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 6px;
+      color: transparent !important;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ── PIPELINE ──────────────────────────────────────────────────────── */
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .pipeline-col {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .col-header {
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .col-header.emerg { background: var(--red); color: white; }
+    .col-header.std   { background: var(--blue); color: white; }
+    .col-header.opp   { background: var(--green); color: white; }
+
+    .col-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .col-count {
+      background: rgba(255,255,255,0.25);
+      border-radius: 12px;
+      padding: 2px 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .col-body {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 80px;
+    }
+
+    /* ── LEAD CARD ──────────────────────────────────────────────────────── */
+    .lead-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      transition: box-shadow 0.15s, transform 0.1s;
+    }
+
+    /* inside pipeline, cards are on a white bg col, so add subtle shadow */
+    .pipeline .lead-card {
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .lead-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+
+    .lead-card.contacted {
+      opacity: 0.5;
+      filter: grayscale(0.3);
+    }
+
+    .card-row1 {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .lead-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .platform-badge {
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: #f1f5f9;
+      color: #475569;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       white-space: nowrap;
       flex-shrink: 0;
     }
 
-    .badge-emergency  { background: #fee2e2; color: #dc2626; }
-    .badge-standard   { background: #dbeafe; color: #2563eb; }
-    .badge-opportunity { background: #dcfce7; color: #16a34a; }
-
-    .lead-title {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #1e293b;
-      line-height: 1.3;
-      flex: 1;
+    .score-bar-wrap {
+      margin-bottom: 6px;
     }
 
-    .lead-meta {
+    .score-bar-label {
       display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+      justify-content: space-between;
+      font-size: 0.67rem;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .score-bar {
+      height: 4px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .score-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .score-fill.high   { background: var(--red); }
+    .score-fill.medium { background: var(--yellow); }
+    .score-fill.low    { background: var(--green); }
+
+    .card-meta {
+      display: flex;
+      gap: 8px;
+      font-size: 0.67rem;
+      color: var(--muted);
       margin-bottom: 8px;
-      font-size: 0.75rem;
-      color: #64748b;
-    }
-
-    .lead-meta span {
-      display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      gap: 3px;
     }
 
-    .score-pill {
-      background: #f1f5f9;
-      padding: 2px 8px;
-      border-radius: 10px;
-      font-weight: 600;
+    .priority-tag {
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 20px;
+      text-transform: uppercase;
     }
 
-    .reason {
-      font-size: 0.78rem;
-      color: #64748b;
-      background: #f8fafc;
-      padding: 6px 10px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      line-height: 1.4;
-    }
+    .priority-tag.EMERGENCY  { background: var(--red-light);   color: var(--red); }
+    .priority-tag.STANDARD   { background: var(--blue-light);  color: var(--blue); }
+    .priority-tag.OPPORTUNITY { background: var(--green-light); color: var(--green); }
 
     .card-actions {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
     }
 
     .btn {
-      padding: 8px 14px;
-      border-radius: 8px;
       border: none;
-      font-size: 0.8rem;
+      border-radius: 7px;
+      font-size: 0.72rem;
       font-weight: 600;
       cursor: pointer;
-      transition: opacity 0.2s;
+      padding: 6px 10px;
+      transition: opacity 0.15s, background 0.15s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .btn:active { opacity: 0.7; }
 
-    .btn-copy {
-      background: #1e293b;
-      color: white;
-      flex: 1;
-    }
+    .btn-copy    { background: var(--dark); color: white; flex: 1; justify-content: center; }
+    .btn-copy:hover { background: #374151; }
+    .btn-mark    { background: #f1f5f9; color: var(--muted); }
+    .btn-mark:hover { background: #e2e8f0; }
+    .btn-mark.done { background: var(--green-light); color: var(--green); }
+    .btn-view    { background: #f8fafc; color: var(--muted); border: 1px solid var(--border); }
+    .btn-view:hover { background: #f1f5f9; }
 
-    .btn-view {
-      background: #f1f5f9;
-      color: #475569;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-    }
-
-    .btn-contact {
-      background: #f1f5f9;
-      color: #475569;
-    }
-
-    .btn-contact.done {
-      background: #dcfce7;
-      color: #16a34a;
-    }
-
-    /* ── EMPTY STATE ─────────────────────────────────────────────────────── */
-    .empty-state {
+    .empty-col {
+      padding: 24px 14px;
       text-align: center;
-      padding: 60px 20px;
-      color: #94a3b8;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.5;
     }
 
-    .empty-state h2 {
-      font-size: 1.1rem;
-      margin-bottom: 8px;
-      color: #64748b;
+    .empty-col .emoji { font-size: 1.8rem; display: block; margin-bottom: 6px; }
+
+    /* ── CHARTS ──────────────────────────────────────────────────────── */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 28px;
     }
 
-    .empty-state p {
+    .chart-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .chart-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 160px;
+    }
+
+    .best-time-content {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .time-slot {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+    }
+
+    .time-slot-icon { font-size: 1.2rem; }
+
+    .time-slot-info { flex: 1; }
+    .time-slot-label { font-size: 0.78rem; font-weight: 600; }
+    .time-slot-desc  { font-size: 0.68rem; color: var(--muted); }
+
+    .time-slot-bar {
+      width: 60px;
+      height: 6px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .time-slot-fill { height: 100%; border-radius: 4px; }
+
+    /* ── CONTACT SUBMISSIONS ──────────────────────────────────────────── */
+    .submissions-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+
+    .card-pad { padding: 18px; }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    thead tr { background: #f8fafc; }
+
+    th {
+      text-align: left;
+      padding: 10px 12px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+
+    .status-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+
+    .status-new    { background: var(--blue-light);  color: var(--blue); }
+    .status-called { background: var(--yellow-light); color: #92400e; }
+    .status-booked { background: var(--green-light);  color: var(--green); }
+
+    .status-btn {
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: white;
+      cursor: pointer;
+      margin-left: 4px;
+      transition: all 0.15s;
+    }
+
+    .status-btn:hover { background: var(--surface); }
+
+    .tel-link {
+      color: var(--red);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .tel-link:hover { text-decoration: underline; }
+
+    .no-submissions {
+      text-align: center;
+      padding: 36px;
+      color: var(--muted);
       font-size: 0.85rem;
-      line-height: 1.6;
     }
 
-    /* ── TOAST ───────────────────────────────────────────────────────────── */
+    /* ── INTELLIGENCE ─────────────────────────────────────────────────── */
+    .intel-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .intel-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .intel-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .keyword-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .keyword-pill {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: #f1f5f9;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .keyword-pill.hot { background: var(--red-light); color: var(--red); border-color: #fca5a5; }
+
+    .area-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .area-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .area-name { font-size: 0.8rem; font-weight: 600; }
+
+    .area-bar-wrap { flex: 1; }
+
+    .area-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .area-fill { height: 100%; border-radius: 4px; background: var(--blue); }
+
+    .area-count { font-size: 0.72rem; color: var(--muted); font-weight: 600; min-width: 20px; text-align: right; }
+
+    .outreach-tip {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .tip-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .tip-text { font-size: 0.75rem; line-height: 1.5; color: var(--text); }
+    .tip-text strong { color: var(--red); }
+
+    /* ── TOAST ──────────────────────────────────────────────────────────── */
     #toast {
       position: fixed;
-      bottom: 24px;
+      bottom: 28px;
       left: 50%;
       transform: translateX(-50%) translateY(80px);
       background: #1e293b;
       color: white;
-      padding: 10px 20px;
-      border-radius: 20px;
-      font-size: 0.85rem;
+      padding: 10px 22px;
+      border-radius: 24px;
+      font-size: 0.82rem;
       font-weight: 600;
-      z-index: 1000;
-      transition: transform 0.3s ease;
+      z-index: 9999;
+      transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
       pointer-events: none;
+      white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
 
-    #toast.show {
-      transform: translateX(-50%) translateY(0);
+    #toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── RESPONSIVE ─────────────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .layout { grid-template-columns: 1fr; grid-template-rows: 60px auto 1fr; }
+      .sidebar { grid-row: 2; display: flex; flex-direction: row; flex-wrap: wrap; padding: 8px 12px; gap: 4px; align-items: center; border-right: none; border-bottom: 1px solid #2a2a2a; }
+      .nav-label { display: none; }
+      .nav-section { padding: 0; display: flex; gap: 4px; margin-bottom: 0; }
+      .nav-item { padding: 6px 10px; font-size: 0.75rem; }
+      .sidebar-divider, .sidebar-phone { display: none; }
+      .pipeline { grid-template-columns: 1fr; }
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .charts-row { grid-template-columns: 1fr; }
+      .intel-row { grid-template-columns: 1fr; }
     }
 
-    /* ── REFRESH BUTTON ──────────────────────────────────────────────────── */
-    .refresh-btn {
-      background: none;
-      border: 1px solid #334155;
-      color: #94a3b8;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      cursor: pointer;
-    }
-
-    .refresh-btn:hover { background: #0f172a; }
-
-    /* ── RESPONSIVE ──────────────────────────────────────────────────────── */
-    @media (max-width: 480px) {
-      .stats-bar { grid-template-columns: repeat(2, 1fr); }
-      header h1 { font-size: 1.2rem; }
+    @media (max-width: 600px) {
+      .header-center { display: none; }
+      .brand-name { font-size: 0.95rem; }
+      .kpi-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .kpi-num { font-size: 1.7rem; }
+      .main { padding: 16px 12px 40px; }
+      .btn-run { font-size: 0.72rem; padding: 6px 10px; }
+      .toggle-row span { display: none; }
     }
   </style>
 </head>
 <body>
 
+<div class="layout">
+
+  <!-- ── HEADER ── -->
   <header>
-    <div class="header-inner">
-      <div>
-        <h1>Jacksonville <span>Lead HQ</span></h1>
-        <div class="header-meta" id="header-date">Loading...</div>
-      </div>
-      <button class="refresh-btn" onclick="loadLeads()">Refresh</button>
+    <div class="header-brand">
+      <div class="brand-icon">9</div>
+      <div class="brand-name">904 <span>Lead HQ</span></div>
+    </div>
+
+    <div class="header-center">
+      <div class="live-dot"></div>
+      <span>Jacksonville, FL &nbsp;|&nbsp;</span>
+      <span id="live-clock">—</span>
+    </div>
+
+    <div class="header-actions">
+      <label class="toggle-row" title="Auto-refresh every 60 seconds">
+        <span>Auto-refresh</span>
+        <label class="toggle">
+          <input type="checkbox" id="auto-refresh-toggle" />
+          <div class="toggle-track"></div>
+        </label>
+      </label>
+      <button class="btn-run" onclick="runScout()">&#9654; Run Scout Now</button>
     </div>
   </header>
 
-  <!-- Stats summary -->
-  <div class="stats-bar">
-    <div class="stat-card stat-emergency">
-      <div class="number" id="count-emergency">—</div>
-      <div class="label">Emergency</div>
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="nav-section">
+      <div class="nav-label">Dashboard</div>
+      <button class="nav-item active" onclick="scrollTo('#section-kpi')">
+        <span class="nav-icon">&#128200;</span> Overview
+        <span class="nav-badge" id="sidebar-emergency-count">0</span>
+      </button>
+      <button class="nav-item" onclick="scrollTo('#section-pipeline')">
+        <span class="nav-icon">&#128229;</span> Pipeline
+      </button>
+      <button class="nav-item" onclick="scrollTo('#section-analytics')">
+        <span class="nav-icon">&#128202;</span> Analytics
+      </button>
     </div>
-    <div class="stat-card stat-standard">
-      <div class="number" id="count-standard">—</div>
-      <div class="label">Standard</div>
+    <div class="sidebar-divider"></div>
+    <div class="nav-section">
+      <div class="nav-label">Management</div>
+      <button class="nav-item" onclick="scrollTo('#section-contacts')">
+        <span class="nav-icon">&#128222;</span> Contact Forms
+        <span class="nav-badge" id="sidebar-contacts-count" style="background:#2e7d32">0</span>
+      </button>
+      <button class="nav-item" onclick="scrollTo('#section-intel')">
+        <span class="nav-icon">&#129504;</span> Intelligence
+      </button>
     </div>
-    <div class="stat-card stat-opp">
-      <div class="number" id="count-opp">—</div>
-      <div class="label">Opportunity</div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-phone">
+      <div class="phone-card">
+        <div class="phone-label">Your Business Line</div>
+        <div class="phone-num">
+          <a href="tel:+19044683428" style="color:inherit;text-decoration:none;">(904) 468-3428</a>
+        </div>
+      </div>
     </div>
-    <div class="stat-card stat-total">
-      <div class="number" id="count-total">—</div>
-      <div class="label">Total</div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <!-- KPI Cards -->
+    <div id="section-kpi">
+      <div class="section-head">
+        <div>
+          <div class="section-title">Overview</div>
+          <div class="section-sub" id="last-updated">Loading data...</div>
+        </div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi-card total">
+          <div class="kpi-icon">&#128229;</div>
+          <div class="kpi-num skeleton" id="kpi-total">—</div>
+          <div class="kpi-label">Total Leads This Week</div>
+          <div class="kpi-trend" id="kpi-today">— today</div>
+        </div>
+        <div class="kpi-card emergency">
+          <div class="kpi-icon">&#128680;</div>
+          <div class="kpi-num skeleton" id="kpi-emergency">—</div>
+          <div class="kpi-label">Emergency Leads</div>
+          <div class="kpi-trend">Respond within minutes</div>
+        </div>
+        <div class="kpi-card score">
+          <div class="kpi-icon">&#11088;</div>
+          <div class="kpi-num skeleton" id="kpi-score">—</div>
+          <div class="kpi-label">Avg Lead Score</div>
+          <div class="kpi-trend">Out of 100</div>
+        </div>
+        <div class="kpi-card contacts">
+          <div class="kpi-icon">&#128231;</div>
+          <div class="kpi-num skeleton" id="kpi-contacts">—</div>
+          <div class="kpi-label">Contact Form Submissions</div>
+          <div class="kpi-trend" id="kpi-platform">Top: —</div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- Filter tabs -->
-  <div class="tabs">
-    <button class="tab active-all" onclick="filterLeads('ALL', this)">All</button>
-    <button class="tab" onclick="filterLeads('EMERGENCY', this)">Emergency</button>
-    <button class="tab" onclick="filterLeads('STANDARD', this)">Standard</button>
-    <button class="tab" onclick="filterLeads('OPPORTUNITY', this)">Opportunity</button>
-  </div>
+    <!-- Lead Pipeline -->
+    <div id="section-pipeline">
+      <div class="section-head">
+        <div>
+          <div class="section-title">&#128229; Lead Pipeline</div>
+          <div class="section-sub">Sorted by score — highest priority first</div>
+        </div>
+      </div>
 
-  <!-- Lead cards go here -->
-  <div class="leads-container" id="leads-container">
-    <div class="empty-state">
-      <h2>Loading leads...</h2>
-      <p>Fetching your latest lead data.</p>
-    </div>
-  </div>
-
-  <!-- Copy toast notification -->
-  <div id="toast">Copied to clipboard!</div>
-
-  <script>
-    // All leads stored here so we can re-filter without re-fetching
-    let allLeads = [];
-    let currentFilter = 'ALL';
-    let contactedIds = new Set();
-
-    // Set today's date in the header
-    document.getElementById('header-date').textContent =
-      'Today — ' + new Date().toLocaleDateString('en-US', {
-        weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
-      });
-
-    /**
-     * Fetches the latest lead report from the API and renders everything.
-     */
-    async function loadLeads() {
-      try {
-        const res = await fetch('/leads/api/latest');
-        const data = await res.json();
-
-        allLeads = data.leads || [];
-
-        // Update stats
-        const counts = data.counts || {};
-        document.getElementById('count-emergency').textContent = counts.emergency || 0;
-        document.getElementById('count-standard').textContent  = counts.standard  || 0;
-        document.getElementById('count-opp').textContent       = counts.opportunity || 0;
-        document.getElementById('count-total').textContent     = counts.total || 0;
-
-        // Load contacted status from outreach log
-        await loadContactedStatus();
-
-        // Render cards
-        renderLeads(allLeads);
-      } catch (err) {
-        document.getElementById('leads-container').innerHTML = `
-          <div class="empty-state">
-            <h2>Could not load leads</h2>
-            <p>Make sure the server is running and you've run<br>
-               <code>node leads/orchestrator.js</code> at least once.</p>
-          </div>`;
-      }
-    }
-
-    /**
-     * Fetches outreach log to know which leads are already contacted.
-     */
-    async function loadContactedStatus() {
-      try {
-        const res = await fetch('/leads/api/outreach-log');
-        const log = await res.json();
-        contactedIds = new Set(log.filter(e => e.contacted).map(e => e.id));
-      } catch {
-        // Not critical — just means the contacted state won't show
-      }
-    }
-
-    /**
-     * Filters leads by priority and re-renders the cards.
-     */
-    function filterLeads(priority, btn) {
-      currentFilter = priority;
-
-      // Update tab styles
-      document.querySelectorAll('.tab').forEach(t => {
-        t.className = 'tab';
-      });
-
-      const classMap = {
-        ALL: 'active-all',
-        EMERGENCY: 'active-emerg',
-        STANDARD: 'active-std',
-        OPPORTUNITY: 'active-opp',
-      };
-      btn.classList.add(classMap[priority]);
-
-      const filtered = priority === 'ALL'
-        ? allLeads
-        : allLeads.filter(l => l.priority === priority);
-
-      renderLeads(filtered);
-    }
-
-    /**
-     * Renders lead cards into the container.
-     */
-    function renderLeads(leads) {
-      const container = document.getElementById('leads-container');
-
-      if (!leads || leads.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state">
-            <h2>No leads found</h2>
-            <p>Run <strong>node leads/orchestrator.js</strong> to scan for leads,<br>
-               or check back after the next automated scan.</p>
-          </div>`;
-        return;
-      }
-
-      container.innerHTML = leads.map(lead => buildCard(lead)).join('');
-    }
-
-    /**
-     * Builds the HTML for a single lead card.
-     */
-    function buildCard(lead) {
-      const priorityClass = (lead.priority || 'standard').toLowerCase();
-      const badgeClass = 'badge-' + priorityClass;
-      const isContacted = contactedIds.has(lead.id);
-
-      // Format time ago
-      const timeAgo = lead.postedAt ? getTimeAgo(lead.postedAt) : 'Unknown time';
-
-      // Escape template for safe embedding in data attribute
-      const safeTemplate = (lead.template || '').replace(/'/g, '&#39;').replace(/"/g, '&quot;');
-
-      return `
-        <div class="lead-card ${priorityClass} ${isContacted ? 'contacted' : ''}" id="card-${lead.id}">
-          <div class="card-top">
-            <div class="lead-title">${escapeHtml(lead.title || 'Untitled lead')}</div>
-            <span class="priority-badge ${badgeClass}">${lead.priority || 'STANDARD'}</span>
+      <div class="pipeline">
+        <!-- EMERGENCY column -->
+        <div class="pipeline-col">
+          <div class="col-header emerg">
+            <div class="col-title">&#128680; Emergency</div>
+            <div class="col-count" id="col-count-emergency">0</div>
           </div>
-
-          <div class="lead-meta">
-            <span>📍 ${escapeHtml(lead.platform || 'Unknown')}</span>
-            <span>🕐 ${timeAgo}</span>
-            <span class="score-pill">Score: ${lead.score || 0}/100</span>
-            ${isContacted ? '<span style="color:#16a34a;font-weight:600;">✓ Contacted</span>' : ''}
+          <div class="col-body" id="col-emergency">
+            <div class="empty-col">
+              <span class="emoji">&#128994;</span>
+              No emergency leads right now
+            </div>
           </div>
+        </div>
 
-          <div class="reason">${escapeHtml(lead.qualificationReason || 'No reason provided')}</div>
-
-          <div class="card-actions">
-            <button class="btn btn-copy" onclick="copyTemplate('${lead.id}', \`${safeTemplate}\`)">
-              Copy Outreach Message
-            </button>
-            ${lead.url ? `<a class="btn btn-view" href="${lead.url}" target="_blank" rel="noopener">View Post</a>` : ''}
-            <button
-              class="btn btn-contact ${isContacted ? 'done' : ''}"
-              id="contact-btn-${lead.id}"
-              onclick="markContacted('${lead.id}')"
-            >
-              ${isContacted ? 'Contacted ✓' : 'Mark Contacted'}
-            </button>
+        <!-- STANDARD column -->
+        <div class="pipeline-col">
+          <div class="col-header std">
+            <div class="col-title">&#128203; Standard</div>
+            <div class="col-count" id="col-count-standard">0</div>
           </div>
-        </div>`;
+          <div class="col-body" id="col-standard">
+            <div class="empty-col">
+              <span class="emoji">&#128203;</span>
+              No standard leads yet
+            </div>
+          </div>
+        </div>
+
+        <!-- OPPORTUNITY column -->
+        <div class="pipeline-col">
+          <div class="col-header opp">
+            <div class="col-title">&#128188; Opportunity</div>
+            <div class="col-count" id="col-count-opportunity">0</div>
+          </div>
+          <div class="col-body" id="col-opportunity">
+            <div class="empty-col">
+              <span class="emoji">&#128188;</span>
+              No opportunities yet
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analytics -->
+    <div id="section-analytics">
+      <div class="section-head">
+        <div>
+          <div class="section-title">&#128202; Analytics</div>
+          <div class="section-sub">Based on all lead history</div>
+        </div>
+      </div>
+
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="chart-title">Leads Per Day — Last 7 Days</div>
+          <div class="chart-container">
+            <canvas id="chart-bar"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">Lead Breakdown by Priority</div>
+          <div class="chart-container">
+            <canvas id="chart-doughnut"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">&#128336; Best Times to Post / Respond</div>
+          <div class="best-time-content">
+            <div class="time-slot">
+              <div class="time-slot-icon">&#9728;&#65039;</div>
+              <div class="time-slot-info">
+                <div class="time-slot-label">7 – 9 AM</div>
+                <div class="time-slot-desc">Homeowners discover issues before work</div>
+              </div>
+              <div class="time-slot-bar"><div class="time-slot-fill" style="width:90%;background:#d32f2f;"></div></div>
+            </div>
+            <div class="time-slot">
+              <div class="time-slot-icon">&#127774;</div>
+              <div class="time-slot-info">
+                <div class="time-slot-label">11 AM – 1 PM</div>
+                <div class="time-slot-desc">Lunch break browsing — quote seekers</div>
+              </div>
+              <div class="time-slot-bar"><div class="time-slot-fill" style="width:65%;background:#f59e0b;"></div></div>
+            </div>
+            <div class="time-slot">
+              <div class="time-slot-icon">&#127769;</div>
+              <div class="time-slot-info">
+                <div class="time-slot-label">5 – 8 PM</div>
+                <div class="time-slot-desc">After work — high volume, check daily</div>
+              </div>
+              <div class="time-slot-bar"><div class="time-slot-fill" style="width:80%;background:#1565c0;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Submissions -->
+    <div id="section-contacts">
+      <div class="section-head">
+        <div>
+          <div class="section-title">&#128222; Contact Form Submissions</div>
+          <div class="section-sub">From the 904garagedoors.com website — tap phone to call</div>
+        </div>
+      </div>
+
+      <div class="submissions-card">
+        <div class="table-wrap" id="submissions-wrap">
+          <div class="no-submissions">No contact form submissions yet. They appear here when customers fill out the form on your website.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lead Intelligence -->
+    <div id="section-intel">
+      <div class="section-head">
+        <div>
+          <div class="section-title">&#129504; Lead Intelligence</div>
+          <div class="section-sub">Patterns detected from your lead data</div>
+        </div>
+      </div>
+
+      <div class="intel-row">
+        <div class="intel-card">
+          <div class="intel-title">&#128269; Top Keywords Found</div>
+          <div class="keyword-list" id="keyword-list">
+            <span class="keyword-pill hot">broken spring</span>
+            <span class="keyword-pill hot">car trapped</span>
+            <span class="keyword-pill hot">won't open</span>
+            <span class="keyword-pill">off track</span>
+            <span class="keyword-pill">opener repair</span>
+            <span class="keyword-pill">cable snapped</span>
+            <span class="keyword-pill">panel dent</span>
+            <span class="keyword-pill">new door</span>
+            <span class="keyword-pill">tune-up</span>
+            <span class="keyword-pill">same day</span>
+            <span class="keyword-pill">estimate</span>
+            <span class="keyword-pill">won't close</span>
+          </div>
+        </div>
+
+        <div class="intel-card">
+          <div class="intel-title">&#128205; Hot Areas This Week</div>
+          <div class="area-list" id="area-list">
+            <!-- populated by JS -->
+            <div style="color:var(--muted);font-size:0.8rem;">Loading area data...</div>
+          </div>
+        </div>
+
+        <div class="intel-card">
+          <div class="intel-title">&#128276; Suggested Outreach Times</div>
+          <div class="outreach-tip">
+            <div class="tip-icon">&#127381;</div>
+            <div class="tip-text"><strong>Respond to emergencies immediately</strong> — people in a panic call the first tech who replies. Every minute counts.</div>
+          </div>
+          <div class="outreach-tip">
+            <div class="tip-icon">&#128337;</div>
+            <div class="tip-text">Check leads at <strong>7 AM, 12 PM, and 5 PM</strong> daily for best coverage of all posting windows.</div>
+          </div>
+          <div class="outreach-tip">
+            <div class="tip-icon">&#128241;</div>
+            <div class="tip-text">Send follow-ups <strong>Tuesday–Thursday</strong> — best days for homeowner response rates.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Toast -->
+<div id="toast">Copied!</div>
+
+<script>
+'use strict';
+
+// ── STATE ────────────────────────────────────────────────────────────
+let allLeads       = [];
+let contactedIds   = new Set();
+let statsData      = {};
+let submissionStatuses = {}; // stored in localStorage
+let barChart       = null;
+let doughnutChart  = null;
+let autoRefreshInterval = null;
+
+// ── INIT ─────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  startClock();
+  loadStatusesFromStorage();
+  loadAll();
+
+  document.getElementById('auto-refresh-toggle').addEventListener('change', function () {
+    if (this.checked) {
+      autoRefreshInterval = setInterval(loadAll, 60000);
+      showToast('Auto-refresh ON — updates every 60s');
+    } else {
+      clearInterval(autoRefreshInterval);
+      showToast('Auto-refresh OFF');
     }
+  });
+});
 
-    /**
-     * Copies the outreach template to the clipboard and shows a toast.
-     */
-    async function copyTemplate(id, template) {
-      // Decode HTML entities back to normal text
-      const decoded = template
-        .replace(/&#39;/g, "'")
-        .replace(/&quot;/g, '"')
-        .replace(/&amp;/g, '&')
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>');
+// ── CLOCK ─────────────────────────────────────────────────────────────
+function startClock() {
+  function tick() {
+    const now = new Date();
+    const jax = now.toLocaleTimeString('en-US', {
+      timeZone: 'America/New_York',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+    document.getElementById('live-clock').textContent = jax + ' ET';
+  }
+  tick();
+  setInterval(tick, 1000);
+}
 
-      try {
-        await navigator.clipboard.writeText(decoded);
-        showToast('Outreach message copied! Paste it into the platform.');
-      } catch {
-        // Fallback for older browsers or HTTP (non-HTTPS) contexts
-        const el = document.createElement('textarea');
-        el.value = decoded;
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
-        showToast('Copied!');
+// ── LOAD ALL DATA ─────────────────────────────────────────────────────
+async function loadAll() {
+  try {
+    const [latestRes, statsRes, logRes, subRes] = await Promise.all([
+      fetch('/leads/api/latest'),
+      fetch('/leads/api/stats'),
+      fetch('/leads/api/outreach-log'),
+      fetch('/leads/api/outreach-log'), // reuse for contacted status
+    ]);
+
+    const latest = await latestRes.json();
+    statsData     = await statsRes.json();
+    const log     = await logRes.json();
+
+    allLeads = latest.leads || [];
+    contactedIds = new Set(log.filter(e => e.contacted).map(e => e.id));
+
+    updateKPIs();
+    renderPipeline();
+    renderCharts();
+    renderAreaList();
+    updateSidebarBadges();
+
+    // Load contact submissions separately
+    await loadSubmissions();
+
+    // Update last-updated timestamp
+    const ts = latest.generatedAt
+      ? new Date(latest.generatedAt).toLocaleString('en-US', { timeZone: 'America/New_York' })
+      : 'Never';
+    document.getElementById('last-updated').textContent = 'Last cycle: ' + ts;
+
+    // Remove skeleton classes after first load
+    document.querySelectorAll('.skeleton').forEach(el => el.classList.remove('skeleton'));
+
+  } catch (err) {
+    console.error('[Dashboard] Load error:', err.message);
+    document.getElementById('last-updated').textContent = 'Error loading data — is the server running?';
+  }
+}
+
+// ── KPIS ──────────────────────────────────────────────────────────────
+function updateKPIs() {
+  const s = statsData;
+  setText('kpi-total',     s.leadsThisWeek ?? allLeads.length);
+  setText('kpi-emergency', s.emergencyCount ?? 0);
+  setText('kpi-score',     s.avgScore ?? 0);
+  setText('kpi-contacts',  s.contactSubmissions ?? 0);
+  setText('kpi-today',     (s.leadsToday ?? 0) + ' today');
+  setText('kpi-platform',  'Top: ' + (s.topPlatform || 'none'));
+}
+
+// ── PIPELINE ──────────────────────────────────────────────────────────
+function renderPipeline() {
+  const groups = { EMERGENCY: [], STANDARD: [], OPPORTUNITY: [] };
+  for (const lead of allLeads) {
+    const p = lead.priority || 'STANDARD';
+    if (groups[p]) groups[p].push(lead);
+  }
+
+  renderColumn('col-emergency',   'col-count-emergency',   groups.EMERGENCY,   'emerg');
+  renderColumn('col-standard',    'col-count-standard',    groups.STANDARD,    'std');
+  renderColumn('col-opportunity', 'col-count-opportunity', groups.OPPORTUNITY, 'opp');
+}
+
+function renderColumn(colId, countId, leads, type) {
+  const col   = document.getElementById(colId);
+  const count = document.getElementById(countId);
+  count.textContent = leads.length;
+
+  if (leads.length === 0) {
+    const labels = { emerg: 'No emergency leads right now', std: 'No standard leads yet', opp: 'No opportunities yet' };
+    const emojis = { emerg: '&#128994;', std: '&#128203;', opp: '&#128188;' };
+    col.innerHTML = `<div class="empty-col"><span class="emoji">${emojis[type]}</span>${labels[type]}</div>`;
+    return;
+  }
+
+  col.innerHTML = leads.map(buildLeadCard).join('');
+}
+
+function buildLeadCard(lead) {
+  const isContacted = contactedIds.has(lead.id);
+  const score = lead.score || 0;
+  const scoreClass = score >= 75 ? 'high' : score >= 50 ? 'medium' : 'low';
+  const timeAgo = lead.postedAt ? getTimeAgo(lead.postedAt) : 'Unknown';
+  const safeTemplate = escHtml(lead.template || 'No template available.');
+  const priority = lead.priority || 'STANDARD';
+
+  return `
+    <div class="lead-card ${isContacted ? 'contacted' : ''}" id="card-${lead.id}">
+      <div class="card-row1">
+        <div class="lead-title">${escHtml(lead.title || 'Untitled lead')}</div>
+        <div class="platform-badge">${escHtml(lead.platform || 'unknown')}</div>
+      </div>
+
+      <div class="score-bar-wrap">
+        <div class="score-bar-label">
+          <span>Score</span>
+          <span>${score}/100</span>
+        </div>
+        <div class="score-bar">
+          <div class="score-fill ${scoreClass}" style="width:${score}%"></div>
+        </div>
+      </div>
+
+      <div class="card-meta">
+        <span>&#128336; ${escHtml(timeAgo)}</span>
+        <span class="priority-tag ${priority}">${priority}</span>
+        ${isContacted ? '<span style="color:var(--green);font-weight:700;font-size:0.67rem;">&#10003; Contacted</span>' : ''}
+      </div>
+
+      <div class="card-actions">
+        <button class="btn btn-copy" onclick="copyTemplate(${JSON.stringify(lead.template || '')})">
+          &#128203; Copy Outreach
+        </button>
+        ${lead.url ? `<a class="btn btn-view" href="${escAttr(lead.url)}" target="_blank" rel="noopener">&#128279; Post</a>` : ''}
+        <button
+          class="btn btn-mark ${isContacted ? 'done' : ''}"
+          id="contact-btn-${lead.id}"
+          onclick="markContacted('${escAttr(lead.id)}')"
+        >${isContacted ? '&#10003; Contacted' : 'Mark Contacted'}</button>
+      </div>
+    </div>`;
+}
+
+// ── CHARTS ────────────────────────────────────────────────────────────
+function renderCharts() {
+  renderBarChart();
+  renderDoughnutChart();
+}
+
+function renderBarChart() {
+  const leadsPerDay = statsData.leadsPerDay || {};
+  const labels = Object.keys(leadsPerDay).map(d => {
+    const dt = new Date(d + 'T12:00:00');
+    return dt.toLocaleDateString('en-US', { weekday: 'short', month: 'numeric', day: 'numeric' });
+  });
+  const data = Object.values(leadsPerDay);
+
+  // If no real data yet, show sample data
+  const hasData = data.some(v => v > 0);
+  const displayData = hasData ? data : [1, 0, 2, 1, 3, 0, 1];
+
+  const ctx = document.getElementById('chart-bar').getContext('2d');
+  if (barChart) barChart.destroy();
+  barChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: hasData ? labels : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      datasets: [{
+        label: 'Leads',
+        data: displayData,
+        backgroundColor: '#d32f2f',
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { stepSize: 1, font: { size: 10 } },
+          grid: { color: '#f1f5f9' },
+        },
+        x: { ticks: { font: { size: 9 } }, grid: { display: false } }
       }
     }
+  });
+}
 
-    /**
-     * Marks a lead as contacted via the API and updates the UI.
-     */
-    async function markContacted(id) {
-      try {
-        const res = await fetch(`/leads/api/mark-contacted/${id}`, { method: 'POST' });
-        if (res.ok) {
-          contactedIds.add(id);
-          const btn = document.getElementById(`contact-btn-${id}`);
-          if (btn) {
-            btn.textContent = 'Contacted ✓';
-            btn.classList.add('done');
-          }
-          const card = document.getElementById(`card-${id}`);
-          if (card) card.classList.add('contacted');
-          showToast('Marked as contacted!');
+function renderDoughnutChart() {
+  const e = statsData.emergencyCount   || allLeads.filter(l => l.priority === 'EMERGENCY').length;
+  const s = statsData.standardCount    || allLeads.filter(l => l.priority === 'STANDARD').length;
+  const o = statsData.opportunityCount || allLeads.filter(l => l.priority === 'OPPORTUNITY').length;
+
+  const ctx = document.getElementById('chart-doughnut').getContext('2d');
+  if (doughnutChart) doughnutChart.destroy();
+  doughnutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Emergency', 'Standard', 'Opportunity'],
+      datasets: [{
+        data: [e || 0, s || 0, o || 0],
+        backgroundColor: ['#d32f2f', '#1565c0', '#2e7d32'],
+        borderWidth: 2,
+        borderColor: '#fff',
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { font: { size: 10 }, padding: 10, boxWidth: 12 }
         }
-      } catch (err) {
-        showToast('Could not update — check server connection');
+      },
+      cutout: '65%',
+    }
+  });
+}
+
+// ── AREA LIST ─────────────────────────────────────────────────────────
+function renderAreaList() {
+  const JAX_AREAS = [
+    'mandarin', 'southside', 'ponte vedra', 'orange park', 'fleming island',
+    'northside', 'jacksonville beach', 'atlantic beach', 'san marco', 'riverside',
+    'avondale', 'neptune beach', 'st. johns', 'middleburg', 'yulee',
+  ];
+
+  const counts = {};
+  for (const lead of allLeads) {
+    const text = (lead.rawText || lead.description || '').toLowerCase();
+    for (const area of JAX_AREAS) {
+      if (text.includes(area)) {
+        counts[area] = (counts[area] || 0) + 1;
       }
     }
+  }
 
-    /**
-     * Shows a brief toast notification at the bottom of the screen.
-     */
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2500);
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 6);
+  const maxCount = sorted[0]?.[1] || 1;
+
+  const container = document.getElementById('area-list');
+
+  if (sorted.length === 0) {
+    // Show placeholder areas for demo
+    const demo = [
+      ['Mandarin', 3], ['Ponte Vedra', 2], ['Orange Park', 2],
+      ['Southside', 1], ['Fleming Island', 1],
+    ];
+    container.innerHTML = demo.map(([area, n]) => `
+      <div class="area-item">
+        <div class="area-name">${area}</div>
+        <div class="area-bar-wrap">
+          <div class="area-bar"><div class="area-fill" style="width:${Math.round(n/3*100)}%"></div></div>
+        </div>
+        <div class="area-count">${n}</div>
+      </div>`).join('');
+    return;
+  }
+
+  container.innerHTML = sorted.map(([area, n]) => `
+    <div class="area-item">
+      <div class="area-name" style="text-transform:capitalize">${area}</div>
+      <div class="area-bar-wrap">
+        <div class="area-bar"><div class="area-fill" style="width:${Math.round(n/maxCount*100)}%"></div></div>
+      </div>
+      <div class="area-count">${n}</div>
+    </div>`).join('');
+}
+
+// ── SIDEBAR BADGES ─────────────────────────────────────────────────────
+function updateSidebarBadges() {
+  const emergCount = allLeads.filter(l => l.priority === 'EMERGENCY' && !contactedIds.has(l.id)).length;
+  document.getElementById('sidebar-emergency-count').textContent = emergCount;
+  document.getElementById('sidebar-contacts-count').textContent = statsData.contactSubmissions || 0;
+}
+
+// ── CONTACT SUBMISSIONS ────────────────────────────────────────────────
+async function loadSubmissions() {
+  try {
+    const subs = await fetchSubmissions();
+
+    const wrap = document.getElementById('submissions-wrap');
+    document.getElementById('sidebar-contacts-count').textContent = subs.length;
+
+    if (subs.length === 0) {
+      wrap.innerHTML = '<div class="no-submissions">No contact form submissions yet. They appear here when customers fill out the form on your website.</div>';
+      return;
     }
 
-    /**
-     * Converts an ISO timestamp to a human-readable "time ago" string.
-     */
-    function getTimeAgo(isoString) {
-      const date = new Date(isoString);
-      const diff = Date.now() - date.getTime();
-      const minutes = Math.floor(diff / 60000);
-      const hours = Math.floor(minutes / 60);
-      const days = Math.floor(hours / 24);
+    wrap.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Service</th>
+            <th>Area</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${subs.map(buildSubmissionRow).join('')}
+        </tbody>
+      </table>`;
+  } catch (err) {
+    console.warn('[Dashboard] Could not load submissions:', err.message);
+  }
+}
 
-      if (minutes < 2) return 'just now';
-      if (minutes < 60) return `${minutes}m ago`;
-      if (hours < 24) return `${hours}h ago`;
-      if (days === 1) return 'yesterday';
-      return `${days} days ago`;
+async function fetchSubmissions() {
+  try {
+    const res = await fetch('/leads/api/submissions');
+    if (!res.ok) return [];
+    return await res.json();
+  } catch {
+    return [];
+  }
+}
+
+function buildSubmissionRow(sub) {
+  const status = submissionStatuses[sub.id] || sub.status || 'new';
+  const time = sub.submittedAt
+    ? new Date(sub.submittedAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+    : '—';
+
+  return `
+    <tr id="sub-row-${sub.id}">
+      <td style="font-weight:600">${escHtml(sub.name || '—')}</td>
+      <td>
+        ${sub.phone
+          ? `<a class="tel-link" href="tel:${sub.phone.replace(/\D/g,'')}">${escHtml(sub.phone)}</a>`
+          : '—'}
+      </td>
+      <td>${escHtml(sub.service || '—')}</td>
+      <td>${escHtml(sub.area || '—')}</td>
+      <td style="color:var(--muted);font-size:0.75rem">${time}</td>
+      <td><span class="status-badge status-${status}" id="sub-status-${sub.id}">${status.toUpperCase()}</span></td>
+      <td>
+        <button class="status-btn" onclick="updateSubStatus('${sub.id}', 'called')">Called</button>
+        <button class="status-btn" onclick="updateSubStatus('${sub.id}', 'booked')">Booked</button>
+      </td>
+    </tr>`;
+}
+
+function updateSubStatus(id, newStatus) {
+  submissionStatuses[id] = newStatus;
+  saveStatusesToStorage();
+  const el = document.getElementById(`sub-status-${id}`);
+  if (el) {
+    el.className = `status-badge status-${newStatus}`;
+    el.textContent = newStatus.toUpperCase();
+  }
+  showToast(`Marked as ${newStatus}`);
+}
+
+// ── OUTREACH COPY ─────────────────────────────────────────────────────
+async function copyTemplate(text) {
+  if (!text) { showToast('No template for this lead'); return; }
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast('Outreach message copied! Paste into the platform.');
+  } catch {
+    const el = document.createElement('textarea');
+    el.value = text;
+    el.style.position = 'fixed';
+    el.style.opacity = '0';
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast('Copied!');
+  }
+}
+
+// ── MARK CONTACTED ────────────────────────────────────────────────────
+async function markContacted(id) {
+  try {
+    const res = await fetch(`/leads/api/mark-contacted/${id}`, { method: 'POST' });
+    if (res.ok) {
+      contactedIds.add(id);
+      const btn  = document.getElementById(`contact-btn-${id}`);
+      const card = document.getElementById(`card-${id}`);
+      if (btn)  { btn.textContent = '✓ Contacted'; btn.classList.add('done'); }
+      if (card) { card.classList.add('contacted'); }
+      showToast('Marked as contacted!');
+      updateSidebarBadges();
+    } else {
+      showToast('Could not update — check server');
     }
+  } catch {
+    showToast('Server connection error');
+  }
+}
 
-    /**
-     * Escapes HTML characters to prevent XSS from lead content.
-     */
-    function escapeHtml(str) {
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+// ── RUN SCOUT ─────────────────────────────────────────────────────────
+async function runScout() {
+  showToast('Scouting for leads... check server console');
+  // POST to a run endpoint if available, otherwise reload
+  try {
+    const res = await fetch('/leads/api/run', { method: 'POST' });
+    if (res.ok) {
+      showToast('Scout cycle complete! Refreshing...');
+      setTimeout(loadAll, 2000);
+    } else {
+      showToast('Run it with: node leads/orchestrator.js');
     }
+  } catch {
+    showToast('Run: node leads/orchestrator.js on your server');
+  }
+}
 
-    // Load leads on page open
-    loadLeads();
+// ── UTILS ─────────────────────────────────────────────────────────────
+function scrollTo(selector) {
+  const el = document.querySelector(selector);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    // Auto-refresh every 5 minutes so you always see fresh leads
-    setInterval(loadLeads, 5 * 60 * 1000);
-  </script>
+  // Update active nav item
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  event.target.closest('.nav-item')?.classList.add('active');
+}
+
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function getTimeAgo(isoString) {
+  const diff = Date.now() - new Date(isoString).getTime();
+  const m = Math.floor(diff / 60000);
+  const h = Math.floor(m / 60);
+  const d = Math.floor(h / 24);
+  if (m < 2)  return 'just now';
+  if (m < 60) return `${m}m ago`;
+  if (h < 24) return `${h}h ago`;
+  if (d === 1) return 'yesterday';
+  return `${d} days ago`;
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function escAttr(str) {
+  return String(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── LOCAL STORAGE ─────────────────────────────────────────────────────
+function loadStatusesFromStorage() {
+  try {
+    const raw = localStorage.getItem('904_sub_statuses');
+    if (raw) submissionStatuses = JSON.parse(raw);
+  } catch {}
+}
+
+function saveStatusesToStorage() {
+  try {
+    localStorage.setItem('904_sub_statuses', JSON.stringify(submissionStatuses));
+  } catch {}
+}
+</script>
 
 </body>
 </html>

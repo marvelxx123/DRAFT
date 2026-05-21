@@ -35,13 +35,17 @@ function ensureDataDir() {
 }
 
 /**
- * Loads the sample lead from disk (if it exists) so the dashboard
+ * Loads sample leads from disk (if it exists) so the dashboard
  * always has at least one lead to show, even before the first real scouting cycle.
+ * Supports both a single object and an array.
  */
 function loadSampleLead() {
   if (fs.existsSync(SAMPLE_LEAD_FILE)) {
     try {
-      return JSON.parse(fs.readFileSync(SAMPLE_LEAD_FILE, 'utf8'));
+      const parsed = JSON.parse(fs.readFileSync(SAMPLE_LEAD_FILE, 'utf8'));
+      // Support both array format (new) and single-object format (old)
+      if (Array.isArray(parsed)) return parsed;
+      return parsed;
     } catch {
       return null;
     }
@@ -86,11 +90,11 @@ async function runLeadCycle() {
     console.log('[Orchestrator] Continuing with any leads already found...');
   }
 
-  // Include the sample lead so the dashboard always has something to show
+  // Include the sample lead(s) so the dashboard always has something to show
   const sampleLead = loadSampleLead();
   if (sampleLead && rawLeads.length === 0) {
-    console.log('[Orchestrator] No live leads found — using sample lead for demonstration');
-    rawLeads = [sampleLead];
+    console.log('[Orchestrator] No live leads found — using sample leads for demonstration');
+    rawLeads = Array.isArray(sampleLead) ? sampleLead : [sampleLead];
   }
 
   // ── STEP 2: QUALIFY ──────────────────────────────────────────────────────────

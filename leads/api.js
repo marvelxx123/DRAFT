@@ -215,6 +215,29 @@ router.post('/api/contact', (req, res) => {
   }
 });
 
+// ── GET /leads/api/submissions ───────────────────────────────────────────────
+// Returns all contact form submissions (for the dashboard table).
+router.get('/api/submissions', (req, res) => {
+  const submissions = readJson(CONTACT_SUBMISSIONS, []);
+  const sorted = submissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+  res.json(sorted);
+});
+
+// ── POST /leads/api/run ──────────────────────────────────────────────────────
+// Triggers a manual scout cycle from the dashboard "Run Scout Now" button.
+router.post('/api/run', (req, res) => {
+  // Kick off in background so we can return immediately
+  const { runLeadCycle } = require('./orchestrator');
+  runLeadCycle()
+    .then((report) => {
+      console.log(`[API] Manual scout cycle complete: ${report.counts.total} leads`);
+    })
+    .catch((err) => {
+      console.error('[API] Manual scout cycle error:', err.message);
+    });
+  res.json({ success: true, message: 'Scout cycle started — check server console for progress' });
+});
+
 // ── GET /leads/dashboard ─────────────────────────────────────────────────────
 router.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'dashboard.html'));

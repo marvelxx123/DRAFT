@@ -1,15 +1,74 @@
-{
-  "id": "c2FtcGxlbGVhZA",
-  "title": "Garage door spring broke — car stuck inside! Need help ASAP",
-  "description": "My garage door spring snapped this morning and my car is stuck in the garage. I need to get to work. Looking for someone who can come out TODAY in the Mandarin/San Jose area. Jacksonville FL.",
-  "url": "https://jacksonville.craigslist.org/search/bbb?query=garage+door",
-  "platform": "craigslist",
-  "postedAt": "2026-05-21T07:30:00.000Z",
-  "rawText": "garage door spring broke car stuck inside need help asap my garage door spring snapped this morning and my car is stuck in the garage i need to get to work looking for someone who can come out today in the mandarin san jose area jacksonville fl",
-  "priority": "EMERGENCY",
-  "score": 95,
-  "qualificationReason": "Emergency signals detected: broken spring, stuck, asap",
-  "qualifiedAt": "2026-05-21T08:00:00.000Z",
-  "template": "Hi! I saw your post about \"Garage door spring broke — car stuck inside! Need help ASAP\" on craigslist.\n\nI'm a local Jacksonville garage door technician and I can help you today — same-day service is what I do.\n\nBroken springs, cables off track, door stuck open or closed — I've fixed hundreds of these in Jacksonville, Orange Park, and Ponte Vedra. I carry the most common parts on my truck so I can usually fix it in one visit.\n\nI can be out to you within a few hours. Give me a call or text anytime at [YOUR PHONE NUMBER] and we'll get your door working again fast.\n\n— [YOUR NAME]\nJacksonville Garage Door Services\nLicensed & Insured",
-  "_note": "This is a sample lead for testing the dashboard. Real leads come from Craigslist via the Scout agent."
-}
+[
+  {
+    "id": "emerg_001_spring",
+    "title": "Garage door spring broke — car stuck inside! Need help ASAP",
+    "description": "My garage door spring snapped this morning and my car is stuck in the garage. I need to get to work. Looking for someone who can come out TODAY in the Mandarin/San Jose area. Jacksonville FL.",
+    "url": "https://jacksonville.craigslist.org/search/bbb?query=garage+door+spring",
+    "platform": "craigslist",
+    "postedAt": "2026-05-21T07:30:00.000Z",
+    "priority": "EMERGENCY",
+    "score": 95,
+    "qualificationReason": "Emergency signals detected: broken spring, car trapped, asap, today",
+    "rawText": "garage door spring broke car stuck inside need help asap my garage door spring snapped this morning and my car is stuck in the garage i need to get to work looking for someone who can come out today in the mandarin san jose area jacksonville fl"
+  },
+  {
+    "id": "emerg_002_track",
+    "title": "Door off track — won't close, security risk, need someone tonight",
+    "description": "My garage door came off track this afternoon and now it won't close all the way. My garage is basically open to the street right now. I'm in Ponte Vedra Beach and I need someone who can come tonight or first thing tomorrow. Emergency please.",
+    "url": "https://jacksonville.craigslist.org/search/bbb?query=garage+door+off+track",
+    "platform": "craigslist",
+    "postedAt": "2026-05-21T15:45:00.000Z",
+    "priority": "EMERGENCY",
+    "score": 90,
+    "qualificationReason": "Emergency signals detected: off track, won't close, tonight",
+    "rawText": "door off track wont close security risk need someone tonight my garage door came off track this afternoon and now it wont close all the way my garage is basically open to the street right now im in ponte vedra beach and i need someone who can come tonight or first thing tomorrow emergency please"
+  },
+  {
+    "id": "std_001_opener",
+    "title": "Garage door opener stopped working — need repair or replacement",
+    "description": "Garage door opener just died. The door itself seems fine but the motor doesn't respond to the remote or the wall button. It's about 12 years old. Looking for someone in the Southside/St. Johns area to come take a look and give me an estimate.",
+    "url": "https://jacksonville.craigslist.org/search/bbb?query=garage+door+opener+repair",
+    "platform": "craigslist",
+    "postedAt": "2026-05-20T11:00:00.000Z",
+    "priority": "STANDARD",
+    "score": 62,
+    "qualificationReason": "Planned project: opener not working, estimate",
+    "rawText": "garage door opener stopped working need repair or replacement garage door opener just died the door itself seems fine but the motor doesnt respond to the remote or the wall button its about 12 years old looking for someone in the southside st johns area to come take a look and give me an estimate"
+  },
+  {
+    "id": "std_002_panel",
+    "title": "Dented garage door panel — car backed into it",
+    "description": "Backed the car into the garage door and now two panels are dented pretty badly. The door still opens and closes but it looks terrible. Looking for quotes on panel replacement or if a full new door makes more sense financially. Orange Park area.",
+    "url": "https://jacksonville.craigslist.org/search/bbb?query=garage+door+panel+dent",
+    "platform": "craigslist",
+    "postedAt": "2026-05-19T14:20:00.000Z",
+    "priority": "STANDARD",
+    "score": 55,
+    "qualificationReason": "Planned project: panel replacement, quote",
+    "rawText": "dented garage door panel car backed into it backed the car into the garage door and now two panels are dented pretty badly the door still opens and closes but it looks terrible looking for quotes on panel replacement or if a full new door makes more sense financially orange park area"
+  },
+  {
+    "id": "opp_001_newdoor",
+    "title": "Looking for quotes on a new garage door — new construction",
+    "description": "We are finishing a new build in Fleming Island and need to select a garage door. Looking for a local installer who can work with our contractor timeline. Two-car garage, would like something that looks nice and is energy efficient. Please send quotes.",
+    "url": "https://jacksonville.craigslist.org/search/bbb?query=garage+door+installation+quote",
+    "platform": "craigslist",
+    "postedAt": "2026-05-18T09:15:00.000Z",
+    "priority": "OPPORTUNITY",
+    "score": 42,
+    "qualificationReason": "Potential project: new door install, quote, contractor",
+    "rawText": "looking for quotes on a new garage door new construction we are finishing a new build in fleming island and need to select a garage door looking for a local installer who can work with our contractor timeline two car garage would like something that looks nice and is energy efficient please send quotes"
+  },
+  {
+    "id": "opp_002_tuneup",
+    "title": "Annual garage door tune-up and inspection — Mandarin area",
+    "description": "Looking for someone to do a full tune-up and safety inspection on our 8-year-old garage door and opener. Want to make sure springs and cables are still good before they fail. Non-urgent, just want to be proactive. Mandarin area, Jacksonville.",
+    "url": "https://jacksonville.craigslist.org/search/bbb?query=garage+door+tune+up+service",
+    "platform": "craigslist",
+    "postedAt": "2026-05-17T16:30:00.000Z",
+    "priority": "OPPORTUNITY",
+    "score": 35,
+    "qualificationReason": "Planned project: maintenance, tune-up, service",
+    "rawText": "annual garage door tune up and inspection mandarin area looking for someone to do a full tune up and safety inspection on our 8 year old garage door and opener want to make sure springs and cables are still good before they fail non urgent just want to be proactive mandarin area jacksonville"
+  }
+]
