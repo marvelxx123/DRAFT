@@ -23,7 +23,7 @@ function validateSession(token) {
 }
 
 function checkPassword(provided) {
-  const expected = process.env.ADMIN_PASSWORD || 'wearit-admin-2025';
+  const expected = process.env.ADMIN_PASSWORD || 'change-this-password';
   // Constant-time comparison
   const a = Buffer.from(provided + '');
   const b = Buffer.from(expected + '');
