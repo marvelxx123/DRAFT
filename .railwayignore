@@ -3,3 +3,4 @@ screenshot*.cjs
 screenshot*.mjs
 *.log
 .env
+DRAFT 2
