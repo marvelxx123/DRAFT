@@ -276,6 +276,168 @@ const cities = [
       { name: 'Ponte Vedra',        slug: 'ponte-vedra' },
     ],
   },
+  {
+    slug:    'bartram-park',
+    name:    'Bartram Park',
+    full:    'Bartram Park, FL',
+    county:  'St. Johns County',
+    zip:     '32258',
+    lat:     30.1010, lng: -81.5620,
+    heroH:   ['Bartram Park', 'garage door', 'repair.', '<strong>Same day.</strong>'],
+    heroCopy: 'Garage door repair in Bartram Park — fast same-day service for the planned communities of south St. Johns County. Flat-rate pricing, no surprises.',
+    cityPara: [
+      'Bartram Park and the surrounding master-planned communities in 32258 have seen some of the fastest growth in all of Northeast Florida. Newer construction means a lot of homes with warranty windows closing — and garage doors that were installed quickly during the building boom.',
+      'We serve all of Bartram Park, Bartram Springs, Durbin Crossing, and the neighborhoods south along US-1 toward St. Johns. When a spring breaks on a Monday morning and you need to get to work, we get there first.'
+    ],
+    review: {
+      text: '"Brand new house, two-year-old door, spring snapped without warning. 904 came out the same afternoon, had the part on the truck, and explained exactly what happened. Solid crew."',
+      name: 'Derek H.', initials: 'DH', service: 'Spring Replacement · Bartram Park'
+    },
+    faqs: [
+      { q: 'Do you serve the Durbin Crossing and Bartram Springs communities?', a: 'Yes — all of Bartram Park, Bartram Springs, Durbin Crossing, and the surrounding neighborhoods in 32258 and South St. Johns County.' },
+      { q: 'My garage door is only a few years old — why did the spring break?', a: 'Builder-grade springs in new construction are often rated for fewer cycles than premium replacements. We upgrade to higher-cycle springs so you\'re not calling again in 2 years.' },
+    ],
+    nearby: [
+      { name: 'Nocatee',        slug: 'nocatee' },
+      { name: 'Fleming Island', slug: 'fleming-island' },
+      { name: 'Orange Park',    slug: 'orange-park' },
+    ],
+  },
+  {
+    slug:    'arlington',
+    name:    'Arlington',
+    full:    'Arlington, Jacksonville FL',
+    county:  'Duval County',
+    zip:     '32211',
+    lat:     30.3350, lng: -81.5700,
+    heroH:   ['Arlington', 'garage door', 'repair.', '<strong>Today.</strong>'],
+    heroCopy: 'Garage door repair in Arlington, Jacksonville — same-day service for Duval County\'s east side. Honest flat-rate pricing, 7 days a week.',
+    cityPara: [
+      'Arlington is one of Jacksonville\'s established east-side neighborhoods — mature trees, older homes, and garage doors that have been running for 15 to 20 years. When they finally go, we get there fast.',
+      'We cover all of Arlington in 32211, from the Regency Square area through to the St. Johns River waterfront neighborhoods. Springs, openers, cables, full replacements — whatever the door needs, same day.'
+    ],
+    review: {
+      text: '"Called at 8 AM, they were here by 10. Older home with an older door — they knew exactly what it needed, had the springs on the truck, and were done in 45 minutes. No upselling, just fixed it."',
+      name: 'Sandra T.', initials: 'ST', service: 'Spring Replacement · Arlington'
+    },
+    faqs: [
+      { q: 'Do you service older homes in Arlington with original garage doors?', a: 'Absolutely. Older Duval County homes are a big part of our work. We stock springs and hardware for legacy doors and can usually complete the repair same day.' },
+      { q: 'Do you serve the Regency Square area?', a: 'Yes — all of Arlington including Regency, the waterfront areas, and the neighborhoods along Atlantic Blvd.' },
+    ],
+    nearby: [
+      { name: 'Atlantic Beach',    slug: 'atlantic-beach' },
+      { name: 'Neptune Beach',     slug: 'neptune-beach' },
+      { name: 'Mandarin',          slug: 'mandarin' },
+    ],
+  },
+  {
+    slug:    'southside',
+    name:    'Southside',
+    full:    'Southside, Jacksonville FL',
+    county:  'Duval County',
+    zip:     '32256',
+    lat:     30.2180, lng: -81.5530,
+    heroH:   ['Southside Jacksonville', 'garage door', 'repair.', '<strong>Same day.</strong>'],
+    heroCopy: 'Garage door repair in Southside Jacksonville — serving Deerwood, Tinseltown, and the Town Center corridor. Flat-rate pricing, fast response.',
+    cityPara: [
+      'Southside Jacksonville — including Deerwood, Tinseltown, and the Town Center corridor — is one of the most active residential and commercial zones in the city. We run a lot of calls in 32256 because of the density: townhomes, single-family communities, and new builds all along the 9A corridor.',
+      'Whether you\'re in a Deerwood estate or a newer Town Center townhome, we serve all of Southside same day. Quick dispatch from our centrally located team means most calls in this zone get a tech in under two hours.'
+    ],
+    review: {
+      text: '"Townhome in the Town Center area, single car garage, opener died on a Wednesday evening. They had someone out by 8 AM the next day. New opener, tested everything, in and out in an hour. Worth every penny."',
+      name: 'Marcus W.', initials: 'MW', service: 'Opener Replacement · Southside'
+    },
+    faqs: [
+      { q: 'Do you serve the Deerwood and Town Center neighborhoods?', a: 'Yes — all of Southside Jacksonville in 32256, including Deerwood, Tinseltown, Town Center, and the surrounding communities.' },
+      { q: 'Can you service townhome garage doors in Southside?', a: 'Absolutely. Townhome garages are common in Southside and we carry parts that fit the compact single-car systems typical in those communities.' },
+    ],
+    nearby: [
+      { name: 'Mandarin',       slug: 'mandarin' },
+      { name: 'Bartram Park',   slug: 'bartram-park' },
+      { name: 'Orange Park',    slug: 'orange-park' },
+    ],
+  },
+  {
+    slug:    'st-johns',
+    name:    'St. Johns',
+    full:    'St. Johns, FL',
+    county:  'St. Johns County',
+    zip:     '32259',
+    lat:     30.1020, lng: -81.6000,
+    heroH:   ['St. Johns', 'garage door', 'repair.', '<strong>Same day.</strong>'],
+    heroCopy: 'Garage door repair in St. Johns — serving the fastest-growing county in Florida. Same-day service for RiverTown, Julington Creek, and all of 32259.',
+    cityPara: [
+      'St. Johns County is the fastest-growing county in Florida, and 32259 is at the center of that growth. RiverTown, Julington Creek Plantation, Durbin Crossing South — these master-planned communities are full of homes where the garage door is the main entry point every single day.',
+      'We prioritize St. Johns County calls because volume is high and competition is real. Fast response, transparent pricing, and technicians who know the neighborhoods. We\'re not just passing through — this is one of our busiest service zones.'
+    ],
+    review: {
+      text: '"RiverTown community, opener failed and door was stuck halfway. Called at 7 AM, tech was at the house by 9:30. Fixed the opener, checked the springs and cables while he was there. Professional all the way through."',
+      name: 'Jennifer B.', initials: 'JB', service: 'Opener Repair · St. Johns'
+    },
+    faqs: [
+      { q: 'Do you serve RiverTown and Julington Creek Plantation?', a: 'Yes — all of St. Johns County in 32259, including RiverTown, Julington Creek, Durbin Crossing South, and the growing communities along the 9B corridor.' },
+      { q: 'Is same-day service available in St. Johns?', a: 'Yes. St. Johns is one of our most active service zones and we run multiple techs in the area daily. Same-day is almost always available.' },
+    ],
+    nearby: [
+      { name: 'Nocatee',        slug: 'nocatee' },
+      { name: 'Bartram Park',   slug: 'bartram-park' },
+      { name: 'Fleming Island', slug: 'fleming-island' },
+    ],
+  },
+  {
+    slug:    'middleburg',
+    name:    'Middleburg',
+    full:    'Middleburg, FL',
+    county:  'Clay County',
+    zip:     '32068',
+    lat:     30.0690, lng: -81.8830,
+    heroH:   ['Middleburg', 'garage door', 'repair.', '<strong>Today.</strong>'],
+    heroCopy: 'Garage door repair in Middleburg, FL — serving Clay County with same-day service. Spring replacement, openers, cables, and full installations in 32068.',
+    cityPara: [
+      'Middleburg is Clay County\'s working-class heart — established neighborhoods, newer subdivisions, and a lot of homes where the garage door gets heavy use every day. When it breaks, you need someone who shows up when they say they will.',
+      'We serve all of Middleburg in 32068 including the communities along Blanding Blvd and CR-218. Flat-rate pricing, no hidden fees, same-day availability most days. We\'re not the cheapest option, but we\'re the one you won\'t have to call back.'
+    ],
+    review: {
+      text: '"Middleburg homeowner here. Spring broke on a Friday afternoon — called three places, only 904 could come out the same day. Fair price, tech knew what he was doing. Already recommended them to two neighbors."',
+      name: 'Kevin P.', initials: 'KP', service: 'Spring Replacement · Middleburg'
+    },
+    faqs: [
+      { q: 'Do you service Middleburg and Clay County?', a: 'Yes — all of Middleburg in 32068 and the surrounding Clay County communities. We run the Blanding Blvd corridor regularly.' },
+      { q: 'How quickly can you get to Middleburg?', a: 'Usually same day. Middleburg is a regular service zone for us — we typically have availability within a few hours on weekdays.' },
+    ],
+    nearby: [
+      { name: 'Orange Park',    slug: 'orange-park' },
+      { name: 'Fleming Island', slug: 'fleming-island' },
+      { name: 'Mandarin',       slug: 'mandarin' },
+    ],
+  },
+  {
+    slug:    'ortega',
+    name:    'Ortega',
+    full:    'Ortega, Jacksonville FL',
+    county:  'Duval County',
+    zip:     '32210',
+    lat:     30.2760, lng: -81.7060,
+    heroH:   ['Ortega', 'garage door', 'repair.', '<strong>Today.</strong>'],
+    heroCopy: 'Garage door repair in Ortega, Jacksonville — serving one of Duval County\'s most established waterfront neighborhoods. Same-day service, premium results.',
+    cityPara: [
+      'Ortega is one of Jacksonville\'s most established and storied neighborhoods — large lots, older homes with custom doors, and waterfront estates where presentation matters as much as function. We\'ve done work throughout Ortega and know the difference between a quick fix and the right fix.',
+      'We serve all of Ortega in 32210, from the Ortega Forest area through to the Venetia and Tide Water communities. Whether it\'s a 30-year-old door on a classic estate or a newer installation that\'s acting up, same-day service is standard.'
+    ],
+    review: {
+      text: '"Ortega Forest home — original wood carriage doors from the 80s. Found a company willing to work on them instead of just telling me to replace everything. They repaired the springs and hardware, door works better than it has in years."',
+      name: 'Patricia L.', initials: 'PL', service: 'Spring & Hardware Repair · Ortega'
+    },
+    faqs: [
+      { q: 'Do you work on older and custom garage doors in Ortega?', a: 'Yes — we work on all door types including older wood carriage doors and custom installations common in Ortega\'s estate homes. We repair first when possible.' },
+      { q: 'Do you serve Ortega Forest and the waterfront neighborhoods?', a: 'Yes — all of Ortega in 32210, including Ortega Forest, Venetia, Tide Water, and the surrounding Duval County neighborhoods.' },
+    ],
+    nearby: [
+      { name: 'Orange Park',    slug: 'orange-park' },
+      { name: 'Fleming Island', slug: 'fleming-island' },
+      { name: 'Mandarin',       slug: 'mandarin' },
+    ],
+  },
 ];
 
 /* ─── SHARED CONTENT ─── */

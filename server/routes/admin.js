@@ -21,6 +21,12 @@ const ALL_PAGES = [
   { label: 'Fleming Island',    file: 'garage-door-repair-fleming-island.html',  url: '/garage-door-repair-fleming-island',     critical: false },
   { label: 'Neptune Beach',     file: 'garage-door-repair-neptune-beach.html',   url: '/garage-door-repair-neptune-beach',      critical: false },
   { label: 'Atlantic Beach',    file: 'garage-door-repair-atlantic-beach.html',  url: '/garage-door-repair-atlantic-beach',     critical: false },
+  { label: 'Bartram Park',      file: 'garage-door-repair-bartram-park.html',    url: '/garage-door-repair-bartram-park',       critical: false },
+  { label: 'Arlington',         file: 'garage-door-repair-arlington.html',       url: '/garage-door-repair-arlington',          critical: false },
+  { label: 'Southside',         file: 'garage-door-repair-southside.html',       url: '/garage-door-repair-southside',          critical: false },
+  { label: 'St. Johns',         file: 'garage-door-repair-st-johns.html',        url: '/garage-door-repair-st-johns',           critical: false },
+  { label: 'Middleburg',        file: 'garage-door-repair-middleburg.html',      url: '/garage-door-repair-middleburg',         critical: false },
+  { label: 'Ortega',            file: 'garage-door-repair-ortega.html',          url: '/garage-door-repair-ortega',             critical: false },
   { label: 'Sitemap',           file: 'sitemap.xml',                             url: '/sitemap.xml',                           critical: false },
   { label: 'Command Center',    file: 'jax-command.html',                        url: '/jax-command',                           critical: true  },
 ];
