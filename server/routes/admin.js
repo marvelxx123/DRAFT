@@ -154,6 +154,16 @@ router.get('/research', requireAdmin, (_req, res) => {
   }
 });
 
+// GET /api/admin/funnel — funnel intelligence
+router.get('/funnel', requireAdmin, (_req, res) => {
+  try {
+    const data = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/funnel-insights.json'), 'utf8'));
+    res.json(data);
+  } catch {
+    res.json({ error: 'Funnel agent has not run yet' });
+  }
+});
+
 // GET /api/admin/leads — 904 garage doors leads
 router.get('/leads', requireAdmin, (_req, res) => {
   const fs = require('fs'), path = require('path');

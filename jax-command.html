@@ -310,6 +310,38 @@
       </table>
     </div>
 
+    <!-- FUNNEL INTELLIGENCE -->
+    <div class="grid-2" style="margin-bottom:1.5rem">
+
+      <!-- LEAD ANALYTICS -->
+      <div class="card">
+        <div class="card-title"><span>Lead Analytics</span><span class="last-updated" id="funnelUpdated"></span></div>
+        <div id="leadAnalytics"><div class="empty">Loading…</div></div>
+      </div>
+
+      <!-- FUNNEL TACTICS -->
+      <div class="card">
+        <div class="card-title"><span>Funnel Intelligence — Live Research</span></div>
+        <div id="funnelTactics"><div class="empty">Loading…</div></div>
+      </div>
+
+    </div>
+
+    <!-- COPY IMPROVEMENTS + COMPETITOR FUNNELS -->
+    <div class="grid-2" style="margin-bottom:1.5rem">
+
+      <div class="card">
+        <div class="card-title"><span>Copy Improvements — AI Suggestions</span></div>
+        <div id="copyImprovements"><div class="empty">Loading…</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span>Competitor Funnel Tactics</span></div>
+        <div id="competitorFunnels"><div class="empty">Loading…</div></div>
+      </div>
+
+    </div>
+
     <!-- PAGE HEALTH — full width -->
     <div class="card" style="margin-bottom:1.5rem">
       <div class="card-title">
@@ -400,7 +432,7 @@
 
   // ── LOAD ALL ───────────────────────────────────────────────────────────────
   async function loadAll() {
-    await Promise.all([loadLeads(), loadResearch(), loadAgents(), loadLogs(), loadHealth()]);
+    await Promise.all([loadLeads(), loadResearch(), loadFunnel(), loadAgents(), loadLogs(), loadHealth()]);
   }
 
   // ── LEADS ──────────────────────────────────────────────────────────────────
@@ -575,6 +607,82 @@
 
   function esc(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── FUNNEL INTELLIGENCE ────────────────────────────────────────────────────
+  async function loadFunnel() {
+    try {
+      const r = await fetch('/api/admin/funnel', { headers: authHeaders() });
+      const d = await r.json();
+      if (d.error) {
+        ['leadAnalytics','funnelTactics','copyImprovements','competitorFunnels'].forEach(id => {
+          document.getElementById(id).innerHTML = '<div class="empty">Funnel agent runs twice daily — data loading after first run</div>';
+        });
+        return;
+      }
+
+      const updated = d.lastRun ? new Date(d.lastRun).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+      document.getElementById('funnelUpdated').textContent = updated ? `Run #${d.runNumber} · ${updated}` : '';
+
+      // Lead analytics
+      const ls = d.leadsStats;
+      document.getElementById('leadAnalytics').innerHTML = ls ? `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem">
+          <div class="kpi" style="padding:0.85rem"><div class="kpi-label">Total Leads</div><div class="kpi-val gold">${ls.total}</div></div>
+          <div class="kpi" style="padding:0.85rem"><div class="kpi-label">This Week</div><div class="kpi-val green">${ls.last7d}</div></div>
+          <div class="kpi" style="padding:0.85rem"><div class="kpi-label">Emergency</div><div class="kpi-val red">${ls.emergency}</div></div>
+          <div class="kpi" style="padding:0.85rem"><div class="kpi-label">Avg Score</div><div class="kpi-val">${ls.avgScore}</div></div>
+        </div>
+        ${ls.topService?.length ? `<div style="font-size:0.62rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:var(--sub);margin-bottom:0.5rem">Top Services</div>
+        ${ls.topService.map(([s,n]) => `<div style="display:flex;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid var(--border);font-size:0.78rem"><span>${esc(s)}</span><span style="color:var(--gold);font-weight:700">${n}</span></div>`).join('')}` : ''}
+        ${ls.topCity?.length ? `<div style="font-size:0.62rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:var(--sub);margin:0.75rem 0 0.5rem">Top Cities</div>
+        ${ls.topCity.map(([c,n]) => `<div style="display:flex;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid var(--border);font-size:0.78rem"><span>${esc(c)}</span><span style="color:var(--gold);font-weight:700">${n}</span></div>`).join('')}` : ''}
+        ${ls.peakHour ? `<div style="font-size:0.72rem;color:var(--sub);margin-top:0.75rem">Peak hour: <strong style="color:var(--text)">${ls.peakHour[0]}:00</strong> · ${ls.peakHour[1]} calls</div>` : ''}
+      ` : '<div class="empty">No lead data yet — first leads will build analytics</div>';
+
+      // Funnel tactics
+      const tactics = Array.isArray(d.tactics) ? d.tactics : [];
+      document.getElementById('funnelTactics').innerHTML = tactics.length
+        ? tactics.map(t => `<div class="insight-item">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.3rem">
+              <div class="insight-label ${t.impact === 'high' ? 'high' : 'medium'}">${t.impact?.toUpperCase() || 'TACTIC'} IMPACT</div>
+              <span style="font-size:0.6rem;color:var(--sub)">${t.effort || ''} effort</span>
+            </div>
+            <strong style="font-size:0.82rem">${esc(t.tactic || '')}</strong>
+            <div style="font-size:0.75rem;color:var(--sub);margin-top:0.3rem;line-height:1.5">${esc(t.why || '')}</div>
+            <div class="insight-action">→ ${esc(t.implement || '')}</div>
+          </div>`).join('')
+        : '<div class="empty">No tactics data yet</div>';
+
+      // Copy improvements
+      const imp = d.improvements || {};
+      document.getElementById('copyImprovements').innerHTML = (imp.formHeadlines?.length || imp.submitButtons?.length)
+        ? `${imp.formHeadlines?.length ? `<div style="font-size:0.62rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:var(--sub);margin-bottom:0.5rem">Form Headlines</div>
+            ${imp.formHeadlines.map(h => `<div class="insight-item" style="padding:0.5rem 0">"${esc(h)}"</div>`).join('')}` : ''}
+          ${imp.submitButtons?.length ? `<div style="font-size:0.62rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:var(--sub);margin:0.75rem 0 0.5rem">CTA Buttons</div>
+            ${imp.submitButtons.map(b => `<div class="insight-item" style="padding:0.5rem 0"><span style="background:var(--red);color:#fff;padding:0.2rem 0.6rem;border-radius:4px;font-size:0.72rem">${esc(b)}</span></div>`).join('')}` : ''}
+          ${imp.heroSub ? `<div style="font-size:0.62rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:var(--sub);margin:0.75rem 0 0.5rem">Hero Sub</div><div class="insight-item" style="padding:0.5rem 0">${esc(imp.heroSub)}</div>` : ''}
+          ${imp.emergencyHeadline ? `<div style="font-size:0.62rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:var(--sub);margin:0.75rem 0 0.5rem">Emergency CTA</div><div class="insight-item" style="padding:0.5rem 0">"${esc(imp.emergencyHeadline)}"</div>` : ''}`
+        : '<div class="empty">Improvements generate after first funnel run</div>';
+
+      // Competitor funnels
+      const cf = d.competitorFunnels || {};
+      document.getElementById('competitorFunnels').innerHTML = (cf.winnerTactics?.length || cf.quickWins?.length)
+        ? `${cf.winnerTactics?.length ? `<div style="font-size:0.62rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:var(--sub);margin-bottom:0.5rem">What Winners Do</div>
+            ${cf.winnerTactics.map(t => `<div class="comp-strength">✓ ${esc(t)}</div>`).join('')}` : ''}
+          ${cf.commonMistakes?.length ? `<div style="font-size:0.62rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:var(--sub);margin:0.75rem 0 0.5rem">Common Mistakes to Avoid</div>
+            ${cf.commonMistakes.map(m => `<div class="comp-weakness">✗ ${esc(m)}</div>`).join('')}` : ''}
+          ${cf.quickWins?.length ? `<div style="font-size:0.62rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:var(--sub);margin:0.75rem 0 0.5rem">Quick Wins</div>
+            ${cf.quickWins.map(w => `<div class="insight-action" style="padding:0.25rem 0">→ ${esc(w)}</div>`).join('')}` : ''}
+          ${cf.emergingTrends?.length ? `<div style="font-size:0.62rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:var(--sub);margin:0.75rem 0 0.5rem">2025 Trends</div>
+            ${cf.emergingTrends.map(t => `<div style="font-size:0.75rem;color:var(--gold);padding:0.2rem 0">◆ ${esc(t)}</div>`).join('')}` : ''}`
+        : '<div class="empty">Competitor analysis loads after first funnel run</div>';
+
+    } catch {
+      ['leadAnalytics','funnelTactics','copyImprovements','competitorFunnels'].forEach(id => {
+        document.getElementById(id).innerHTML = '<div class="empty">Could not load funnel data</div>';
+      });
+    }
   }
 
   // ── PAGE HEALTH ────────────────────────────────────────────────────────────

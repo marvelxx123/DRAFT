@@ -10,6 +10,7 @@ const jaxCraigslistAgent = require('./jaxCraigslistAgent');
 const jaxOutreachAgent  = require('./jaxOutreachAgent');
 const jaxFollowupAgent  = require('./jaxFollowupAgent');
 const jaxResearchAgent  = require('./jaxResearchAgent');
+const funnelAgent       = require('./funnelAgent');
 const { log } = require('./logger');
 
 const SCHEDULES = {
@@ -25,6 +26,7 @@ const SCHEDULES = {
   jaxoutreach:    24 * 60 * 60 * 1000,
   jaxfollowup:    24 * 60 * 60 * 1000,
   jaxresearch:    12 * 60 * 60 * 1000, // twice daily
+  funnel:         12 * 60 * 60 * 1000, // twice daily
 };
 
 const AGENT_NAMES = {
@@ -40,6 +42,7 @@ const AGENT_NAMES = {
   jaxoutreach:    'JAX Outreach Agent',
   jaxfollowup:    'JAX Follow-Up Agent',
   jaxresearch:    'JAX Research Agent',
+  funnel:         'Funnel Intelligence Agent',
 };
 
 const AGENT_SCHEDULES_LABEL = {
@@ -55,6 +58,7 @@ const AGENT_SCHEDULES_LABEL = {
   jaxoutreach:    'Every 24 hours',
   jaxfollowup:    'Every 24 hours',
   jaxresearch:    'Twice daily (6 AM & 7 PM)',
+  funnel:         'Twice daily — funnel research & lead analytics',
 };
 
 const agentState = {};
@@ -67,7 +71,7 @@ const agents = {
   social: socialAgent, email: emailAgent,
   jaxprofile: jaxProfileAgent, jaxsocial: jaxSocialAgent,
   jaxcraigslist: jaxCraigslistAgent, jaxoutreach: jaxOutreachAgent,
-  jaxfollowup: jaxFollowupAgent, jaxresearch: jaxResearchAgent,
+  jaxfollowup: jaxFollowupAgent, jaxresearch: jaxResearchAgent, funnel: funnelAgent,
 };
 
 async function runAgent(id) {
@@ -90,7 +94,7 @@ function scheduleAgent(id) {
   // Stagger starts so they don't all hit the API at once
   const stagger = { content: 10, ads: 20, seo: 30, googleads: 40, social: 15, email: 25,
     jaxprofile: 35, jaxsocial: 45, jaxcraigslist: 55, jaxoutreach: 65, jaxfollowup: 75,
-    jaxresearch: 90 };
+    jaxresearch: 90, funnel: 105 };
   setTimeout(() => runAgent(id), (stagger[id] || 10) * 1000);
   state.nextRun = new Date(Date.now() + interval).toISOString();
   state.timer = setInterval(async () => {
@@ -100,7 +104,7 @@ function scheduleAgent(id) {
 }
 
 function startAll() {
-  log('runner', 'info', 'Agent runner starting — 12 agents: 6 WEARIT + 5 JAX Lead Gen + 1 JAX Research');
+  log('runner', 'info', 'Agent runner starting — 13 agents: 6 WEARIT + 5 JAX Lead Gen + 1 JAX Research + 1 Funnel');
   for (const id of Object.keys(agents)) scheduleAgent(id);
 }
 
