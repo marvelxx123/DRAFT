@@ -49,7 +49,8 @@ app.use((req, res, next) => {
 });
 
 // ── SERVE FRONTEND ───────────────────────────────────────────────────────────
-app.use(express.static(path.join(__dirname, '..')));
+// index:false prevents express.static from auto-serving index.html for /
+app.use(express.static(path.join(__dirname, '..'), { index: false }));
 app.get('/', (_req, res) => {
   res.sendFile(path.join(__dirname, '..', '904garage.html'));
 });
