@@ -41,8 +41,11 @@ app.get('/api/health', (_req, res) => {
 
 // ── SERVE FRONTEND ───────────────────────────────────────────────────────────
 app.use(express.static(path.join(__dirname, '..')));
+app.get('/', (_req, res) => {
+  res.sendFile(path.join(__dirname, '..', '904garage.html'));
+});
 app.get('*', (_req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'index.html'));
+  res.sendFile(path.join(__dirname, '..', '404.html'));
 });
 
 // ── GLOBAL ERROR HANDLER ─────────────────────────────────────────────────────
