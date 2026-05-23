@@ -1,8 +1,86 @@
 const express = require('express');
-const router = express.Router();
+const router  = express.Router();
+const fs      = require('fs');
+const path    = require('path');
+const { execSync } = require('child_process');
 const { checkPassword, createSession, requireAdmin } = require('../middleware/adminAuth');
-const { readLogs } = require('../agents/logger');
+const { readLogs, log } = require('../agents/logger');
 const agentRunner = require('../agents/agentRunner');
+
+const ROOT = path.join(__dirname, '../..');
+
+const ALL_PAGES = [
+  { label: 'Homepage',          file: '904garage.html',                         url: '/',                                       critical: true  },
+  { label: 'Ponte Vedra',       file: 'garage-door-repair-ponte-vedra.html',    url: '/garage-door-repair-ponte-vedra',         critical: false },
+  { label: 'Jacksonville Beach',file: 'garage-door-repair-jacksonville-beach.html', url: '/garage-door-repair-jacksonville-beach', critical: false },
+  { label: 'Fernandina Beach',  file: 'garage-door-repair-fernandina-beach.html',url: '/garage-door-repair-fernandina-beach',   critical: false },
+  { label: 'Yulee',             file: 'garage-door-repair-yulee.html',           url: '/garage-door-repair-yulee',              critical: false },
+  { label: 'Nocatee',           file: 'garage-door-repair-nocatee.html',         url: '/garage-door-repair-nocatee',            critical: false },
+  { label: 'Mandarin',          file: 'garage-door-repair-mandarin.html',        url: '/garage-door-repair-mandarin',           critical: false },
+  { label: 'Orange Park',       file: 'garage-door-repair-orange-park.html',     url: '/garage-door-repair-orange-park',        critical: false },
+  { label: 'Fleming Island',    file: 'garage-door-repair-fleming-island.html',  url: '/garage-door-repair-fleming-island',     critical: false },
+  { label: 'Neptune Beach',     file: 'garage-door-repair-neptune-beach.html',   url: '/garage-door-repair-neptune-beach',      critical: false },
+  { label: 'Atlantic Beach',    file: 'garage-door-repair-atlantic-beach.html',  url: '/garage-door-repair-atlantic-beach',     critical: false },
+  { label: 'Sitemap',           file: 'sitemap.xml',                             url: '/sitemap.xml',                           critical: false },
+  { label: 'Command Center',    file: 'jax-command.html',                        url: '/jax-command',                           critical: true  },
+];
+
+function checkPage(page) {
+  const filePath = path.join(ROOT, page.file);
+  const result = { label: page.label, url: page.url, file: page.file, critical: page.critical };
+  try {
+    const stat = fs.statSync(filePath);
+    const size = stat.size;
+    if (size < 500) { result.status = 'error'; result.reason = 'File too small — may be empty'; return result; }
+    const sample = fs.readFileSync(filePath, 'utf8').slice(0, 2000);
+    if (page.file.endsWith('.html') && !sample.includes('904')) {
+      result.status = 'error'; result.reason = 'Missing brand content'; return result;
+    }
+    result.status = 'ok';
+    result.sizeKb = Math.round(size / 1024);
+    result.checkedAt = new Date().toISOString();
+  } catch {
+    result.status = 'missing';
+    result.reason = 'File not found';
+  }
+  return result;
+}
+
+function autoFix(results) {
+  const broken = results.filter(r => r.status !== 'ok' && !r.critical && r.file.includes('garage-door-repair'));
+  if (broken.length === 0) return [];
+
+  const fixed = [];
+  try {
+    execSync(`node ${path.join(ROOT, 'generate-city-pages.js')}`, { cwd: ROOT, timeout: 30000 });
+    for (const page of broken) {
+      const filePath = path.join(ROOT, page.file);
+      if (fs.existsSync(filePath) && fs.statSync(filePath).size > 500) {
+        fixed.push(page.label);
+        page.status = 'fixed';
+        page.reason = 'Auto-regenerated';
+        log('pagehealth', 'success', `Auto-fixed: ${page.label} (${page.file})`);
+      }
+    }
+  } catch (err) {
+    log('pagehealth', 'error', `Auto-fix failed: ${err.message}`);
+  }
+  return fixed;
+}
+
+// GET /api/admin/pages-health
+router.get('/pages-health', requireAdmin, (_req, res) => {
+  const results = ALL_PAGES.map(checkPage);
+  const fixed   = autoFix(results);
+  const summary = {
+    total:   results.length,
+    ok:      results.filter(r => r.status === 'ok' || r.status === 'fixed').length,
+    issues:  results.filter(r => r.status === 'error' || r.status === 'missing').length,
+    fixed:   fixed.length,
+    checkedAt: new Date().toISOString(),
+  };
+  res.json({ pages: results, summary, fixed });
+});
 
 // POST /api/admin/login
 router.post('/login', (req, res) => {
