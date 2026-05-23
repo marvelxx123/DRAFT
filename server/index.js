@@ -39,6 +39,15 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
+// ── WWW → non-www redirect ───────────────────────────────────────────────────
+app.use((req, res, next) => {
+  if (req.headers.host && req.headers.host.startsWith('www.')) {
+    const target = `https://${req.headers.host.slice(4)}${req.url}`;
+    return res.redirect(301, target);
+  }
+  next();
+});
+
 // ── SERVE FRONTEND ───────────────────────────────────────────────────────────
 app.use(express.static(path.join(__dirname, '..')));
 app.get('/', (_req, res) => {
