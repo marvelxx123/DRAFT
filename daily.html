@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>904 Garage Doors — Daily 5</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <meta name="robots" content="noindex" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #080808; --dark: #111; --card: #161616; --border: #232323;
+      --gold: #c8a96e; --white: #f5f5f5; --grey: #777; --green: #2ecc71; --red: #e63946;
+    }
+    body { background: var(--black); color: var(--white); font-family: 'Inter', sans-serif; min-height: 100vh; padding: 2rem 1.5rem; -webkit-font-smoothing: antialiased; }
+    .wrap { max-width: 680px; margin: 0 auto; }
+
+    .header { text-align: center; margin-bottom: 2.5rem; }
+    .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 0.25rem; }
+    .date-line { font-size: 0.8rem; color: var(--grey); text-transform: uppercase; letter-spacing: 0.15em; }
+    .title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 8vw, 3.5rem); letter-spacing: 0.04em; line-height: 1; margin: 0.5rem 0 0.25rem; }
+    .subtitle { font-size: 0.85rem; color: var(--grey); }
+
+    /* Progress bar */
+    .progress-wrap { background: var(--dark); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; margin-bottom: 2rem; }
+    .progress-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .progress-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--grey); }
+    .progress-count { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--gold); }
+    .progress-bar { height: 6px; background: var(--border); border-radius: 6px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), #e2c98a); border-radius: 6px; transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); width: 0%; }
+
+    /* Task list */
+    .tasks { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; }
+    .task {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      cursor: pointer;
+      transition: border-color 0.25s, transform 0.2s, opacity 0.3s;
+      user-select: none;
+    }
+    .task:hover { border-color: rgba(200,169,110,0.3); transform: translateX(3px); }
+    .task.done { opacity: 0.45; border-color: var(--border); }
+    .task.done .task-check { background: var(--green); border-color: var(--green); }
+    .task.done .task-check::after { opacity: 1; }
+    .task.done .task-title { text-decoration: line-through; color: var(--grey); }
+
+    .task-check {
+      width: 22px; height: 22px;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      flex-shrink: 0;
+      margin-top: 1px;
+      position: relative;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .task-check::after {
+      content: '✓';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: #fff;
+      font-weight: 700;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .task-body { flex: 1; }
+    .task-meta { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem; }
+    .task-num { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; }
+    .task-time { font-size: 0.65rem; color: var(--grey); background: var(--dark); border: 1px solid var(--border); padding: 0.1rem 0.45rem; border-radius: 4px; }
+    .task-title { font-weight: 700; font-size: 0.95rem; color: var(--white); margin-bottom: 0.3rem; line-height: 1.3; }
+    .task-desc { font-size: 0.8rem; color: var(--grey); line-height: 1.55; }
+    .task-link { display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.6rem; font-size: 0.75rem; font-weight: 600; color: var(--gold); border: 1px solid rgba(200,169,110,0.25); padding: 0.25rem 0.6rem; border-radius: 5px; text-decoration: none; transition: background 0.2s; }
+    .task-link:hover { background: rgba(200,169,110,0.1); }
+
+    /* Done state */
+    .done-banner {
+      display: none;
+      background: linear-gradient(135deg, #0d1f12, #081309);
+      border: 1px solid rgba(46,204,113,0.3);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .done-banner.show { display: block; }
+    .done-emoji { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .done-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--green); letter-spacing: 0.05em; margin-bottom: 0.4rem; }
+    .done-sub { font-size: 0.82rem; color: var(--grey); }
+
+    /* Reset button */
+    .reset-btn {
+      display: block;
+      width: 100%;
+      padding: 0.85rem;
+      background: var(--dark);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--grey);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      margin-bottom: 1.5rem;
+    }
+    .reset-btn:hover { color: var(--white); border-color: rgba(255,255,255,0.2); }
+
+    /* Quick links */
+    .quick-links { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 2rem; }
+    .quick-link {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      text-decoration: none;
+      transition: border-color 0.2s, transform 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .quick-link:hover { border-color: rgba(200,169,110,0.35); transform: translateY(-2px); }
+    .ql-icon { font-size: 1.4rem; }
+    .ql-text { font-size: 0.78rem; font-weight: 600; color: var(--white); }
+    .ql-sub { font-size: 0.68rem; color: var(--grey); margin-top: 0.1rem; }
+
+    .footer-note { text-align: center; font-size: 0.72rem; color: var(--grey); padding-bottom: 2rem; line-height: 1.6; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="logo">904 Garage Doors</div>
+    <div class="date-line" id="dateDisplay"></div>
+    <h1 class="title">Your Daily 5</h1>
+    <p class="subtitle">5 tasks · under 25 minutes · repeat every day</p>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <span class="progress-label">Today's Progress</span>
+      <span class="progress-count" id="progressCount">0 / 5</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <!-- Done banner -->
+  <div class="done-banner" id="doneBanner">
+    <div class="done-emoji">🔥</div>
+    <div class="done-title">Day Complete.</div>
+    <p class="done-sub">You just did what most of your competitors won't.<br>Do this every day and the phone starts ringing.</p>
+  </div>
+
+  <!-- Tasks -->
+  <div class="tasks" id="taskList">
+
+    <div class="task" id="t1" onclick="toggle('t1')">
+      <div class="task-check"></div>
+      <div class="task-body">
+        <div class="task-meta">
+          <span class="task-num">Task 1</span>
+          <span class="task-time">⏱ 3 min</span>
+        </div>
+        <div class="task-title">Post your Craigslist ad</div>
+        <p class="task-desc">Open Mission Control → run Craigslist Agent → copy the ad → go to Jacksonville Craigslist → Services → Skilled Trades → paste & post. Do this every 48 hours to stay on top.</p>
+        <a class="task-link" href="/admin.html" target="_blank">→ Open Mission Control</a>
+      </div>
+    </div>
+
+    <div class="task" id="t2" onclick="toggle('t2')">
+      <div class="task-check"></div>
+      <div class="task-body">
+        <div class="task-meta">
+          <span class="task-num">Task 2</span>
+          <span class="task-time">⏱ 4 min</span>
+        </div>
+        <div class="task-title">Post in 2 Jacksonville Facebook groups</div>
+        <p class="task-desc">Open Mission Control → JAX Social Agent → copy the Facebook Group Post → paste into 2 local groups (Jacksonville Homeowners, Ponte Vedra Community, etc.). Don't spam — post in different groups each day.</p>
+        <a class="task-link" href="/admin.html" target="_blank">→ Get Today's Post</a>
+      </div>
+    </div>
+
+    <div class="task" id="t3" onclick="toggle('t3')">
+      <div class="task-check"></div>
+      <div class="task-body">
+        <div class="task-meta">
+          <span class="task-num">Task 3</span>
+          <span class="task-time">⏱ 5 min</span>
+        </div>
+        <div class="task-title">Send 3 cold DMs to real estate agents</div>
+        <p class="task-desc">Open Mission Control → Outreach Agent → copy the Real Estate DM → find 3 Jacksonville realtors on Facebook or Instagram → send. One realtor relationship = 2-3 jobs/month. This is your biggest lever.</p>
+        <a class="task-link" href="/admin.html" target="_blank">→ Get Outreach DM</a>
+      </div>
+    </div>
+
+    <div class="task" id="t4" onclick="toggle('t4')">
+      <div class="task-check"></div>
+      <div class="task-body">
+        <div class="task-meta">
+          <span class="task-num">Task 4</span>
+          <span class="task-time">⏱ 3 min</span>
+        </div>
+        <div class="task-title">Text a past customer</div>
+        <p class="task-desc">Open Mission Control → Follow-Up Agent → copy the 6-month maintenance reminder OR the referral text → send it to one past customer. Old customers = cheapest leads you'll ever get.</p>
+        <a class="task-link" href="/admin.html" target="_blank">→ Get Follow-Up Text</a>
+      </div>
+    </div>
+
+    <div class="task" id="t5" onclick="toggle('t5')">
+      <div class="task-check"></div>
+      <div class="task-body">
+        <div class="task-meta">
+          <span class="task-num">Task 5</span>
+          <span class="task-time">⏱ 5 min</span>
+        </div>
+        <div class="task-title">Post on your Nextdoor business page</div>
+        <p class="task-desc">Open Mission Control → JAX Social Agent → copy the Nextdoor post → paste it on Nextdoor for that neighborhood. Rotate neighborhoods daily. Nextdoor is gold for local trades — neighbors trust neighbors.</p>
+        <a class="task-link" href="/admin.html" target="_blank">→ Get Nextdoor Post</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Reset -->
+  <button class="reset-btn" onclick="resetAll()">↺ Reset for Tomorrow</button>
+
+  <!-- Quick links -->
+  <div class="quick-links">
+    <a class="quick-link" href="/admin.html" target="_blank">
+      <span class="ql-icon">⚡</span>
+      <div>
+        <div class="ql-text">Mission Control</div>
+        <div class="ql-sub">Run your agents</div>
+      </div>
+    </a>
+    <a class="quick-link" href="/904garage.html" target="_blank">
+      <span class="ql-icon">🏠</span>
+      <div>
+        <div class="ql-text">904 Garage Page</div>
+        <div class="ql-sub">Your website</div>
+      </div>
+    </a>
+    <a class="quick-link" href="https://www.craigslist.org/search/jax/bbb" target="_blank">
+      <span class="ql-icon">📋</span>
+      <div>
+        <div class="ql-text">Craigslist JAX</div>
+        <div class="ql-sub">Post your ad</div>
+      </div>
+    </a>
+    <a class="quick-link" href="tel:9044683428">
+      <span class="ql-icon">📞</span>
+      <div>
+        <div class="ql-text">(904) 468-3428</div>
+        <div class="ql-sub">Your business number</div>
+      </div>
+    </a>
+  </div>
+
+  <p class="footer-note">
+    Do these 5 things every single day.<br>
+    Consistency beats talent. The phone will ring.
+  </p>
+
+</div>
+
+<script>
+  // Date display
+  document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+  // Load saved state (persists across sessions for the day)
+  const TODAY = new Date().toDateString();
+  const stored = JSON.parse(localStorage.getItem('daily5') || '{}');
+  if (stored.date !== TODAY) {
+    // New day — reset
+    localStorage.setItem('daily5', JSON.stringify({ date: TODAY, done: [] }));
+  }
+
+  function getState() { return JSON.parse(localStorage.getItem('daily5') || '{}'); }
+  function saveState(s) { localStorage.setItem('daily5', JSON.stringify(s)); }
+
+  function renderAll() {
+    const s = getState();
+    const done = s.done || [];
+    ['t1','t2','t3','t4','t5'].forEach(id => {
+      const el = document.getElementById(id);
+      if (done.includes(id)) el.classList.add('done');
+      else el.classList.remove('done');
+    });
+    const count = done.length;
+    document.getElementById('progressCount').textContent = count + ' / 5';
+    document.getElementById('progressFill').style.width = (count / 5 * 100) + '%';
+    document.getElementById('doneBanner').classList.toggle('show', count === 5);
+  }
+
+  function toggle(id) {
+    const s = getState();
+    const done = s.done || [];
+    const idx = done.indexOf(id);
+    if (idx > -1) done.splice(idx, 1);
+    else done.push(id);
+    s.done = done;
+    saveState(s);
+    renderAll();
+  }
+
+  function resetAll() {
+    saveState({ date: TODAY, done: [] });
+    renderAll();
+  }
+
+  renderAll();
+</script>
+</body>
+</html>

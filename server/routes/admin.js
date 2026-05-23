@@ -54,9 +54,14 @@ router.get('/content', requireAdmin, (_req, res) => {
   const base = path.join(__dirname, '../../data');
   const read = f => { try { return JSON.parse(fs.readFileSync(path.join(base, f), 'utf8')); } catch { return null; } };
   res.json({
-    content: read('generated-content.json'),
-    ads:     read('generated-ads.json'),
-    seo:     read('generated-seo.json'),
+    content:       read('generated-content.json'),
+    ads:           read('generated-ads.json'),
+    seo:           read('generated-seo.json'),
+    jaxProfiles:   read('jax-profiles.json'),
+    jaxSocial:     read('jax-social.json'),
+    jaxCraigslist: read('jax-craigslist.json'),
+    jaxOutreach:   read('jax-outreach.json'),
+    jaxFollowup:   read('jax-followup.json'),
   });
 });
 
