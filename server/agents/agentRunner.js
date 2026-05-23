@@ -9,20 +9,22 @@ const jaxSocialAgent    = require('./jaxSocialAgent');
 const jaxCraigslistAgent = require('./jaxCraigslistAgent');
 const jaxOutreachAgent  = require('./jaxOutreachAgent');
 const jaxFollowupAgent  = require('./jaxFollowupAgent');
+const jaxResearchAgent  = require('./jaxResearchAgent');
 const { log } = require('./logger');
 
 const SCHEDULES = {
-  content:        6  * 60 * 60 * 1000,  // every 6 hours
-  ads:            12 * 60 * 60 * 1000,  // every 12 hours
-  seo:            24 * 60 * 60 * 1000,  // every 24 hours
-  googleads:      48 * 60 * 60 * 1000,  // every 48 hours
-  social:         8  * 60 * 60 * 1000,  // every 8 hours
-  email:          24 * 60 * 60 * 1000,  // every 24 hours
-  jaxprofile:     168 * 60 * 60 * 1000, // every 7 days
-  jaxsocial:      24 * 60 * 60 * 1000,  // every 24 hours
-  jaxcraigslist:  48 * 60 * 60 * 1000,  // every 48 hours
-  jaxoutreach:    24 * 60 * 60 * 1000,  // every 24 hours
-  jaxfollowup:    24 * 60 * 60 * 1000,  // every 24 hours
+  content:        6  * 60 * 60 * 1000,
+  ads:            12 * 60 * 60 * 1000,
+  seo:            24 * 60 * 60 * 1000,
+  googleads:      48 * 60 * 60 * 1000,
+  social:         8  * 60 * 60 * 1000,
+  email:          24 * 60 * 60 * 1000,
+  jaxprofile:     168 * 60 * 60 * 1000,
+  jaxsocial:      24 * 60 * 60 * 1000,
+  jaxcraigslist:  48 * 60 * 60 * 1000,
+  jaxoutreach:    24 * 60 * 60 * 1000,
+  jaxfollowup:    24 * 60 * 60 * 1000,
+  jaxresearch:    12 * 60 * 60 * 1000, // twice daily
 };
 
 const AGENT_NAMES = {
@@ -37,6 +39,7 @@ const AGENT_NAMES = {
   jaxcraigslist:  'JAX Craigslist Agent',
   jaxoutreach:    'JAX Outreach Agent',
   jaxfollowup:    'JAX Follow-Up Agent',
+  jaxresearch:    'JAX Research Agent',
 };
 
 const AGENT_SCHEDULES_LABEL = {
@@ -51,6 +54,7 @@ const AGENT_SCHEDULES_LABEL = {
   jaxcraigslist:  'Every 48 hours',
   jaxoutreach:    'Every 24 hours',
   jaxfollowup:    'Every 24 hours',
+  jaxresearch:    'Twice daily (6 AM & 7 PM)',
 };
 
 const agentState = {};
@@ -63,7 +67,7 @@ const agents = {
   social: socialAgent, email: emailAgent,
   jaxprofile: jaxProfileAgent, jaxsocial: jaxSocialAgent,
   jaxcraigslist: jaxCraigslistAgent, jaxoutreach: jaxOutreachAgent,
-  jaxfollowup: jaxFollowupAgent,
+  jaxfollowup: jaxFollowupAgent, jaxresearch: jaxResearchAgent,
 };
 
 async function runAgent(id) {
@@ -85,7 +89,8 @@ function scheduleAgent(id) {
   const state = agentState[id];
   // Stagger starts so they don't all hit the API at once
   const stagger = { content: 10, ads: 20, seo: 30, googleads: 40, social: 15, email: 25,
-    jaxprofile: 35, jaxsocial: 45, jaxcraigslist: 55, jaxoutreach: 65, jaxfollowup: 75 };
+    jaxprofile: 35, jaxsocial: 45, jaxcraigslist: 55, jaxoutreach: 65, jaxfollowup: 75,
+    jaxresearch: 90 };
   setTimeout(() => runAgent(id), (stagger[id] || 10) * 1000);
   state.nextRun = new Date(Date.now() + interval).toISOString();
   state.timer = setInterval(async () => {
@@ -95,7 +100,7 @@ function scheduleAgent(id) {
 }
 
 function startAll() {
-  log('runner', 'info', 'Agent runner starting — 11 agents: 6 WEARIT + 5 JAX Lead Gen');
+  log('runner', 'info', 'Agent runner starting — 12 agents: 6 WEARIT + 5 JAX Lead Gen + 1 JAX Research');
   for (const id of Object.keys(agents)) scheduleAgent(id);
 }
 

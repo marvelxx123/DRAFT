@@ -65,4 +65,26 @@ router.get('/content', requireAdmin, (_req, res) => {
   });
 });
 
+// GET /api/admin/research — 904 garage doors competitive research
+router.get('/research', requireAdmin, (_req, res) => {
+  const fs = require('fs'), path = require('path');
+  try {
+    const data = JSON.parse(fs.readFileSync(path.join(__dirname, '../../data/jax-research.json'), 'utf8'));
+    res.json(data);
+  } catch {
+    res.json({ error: 'No research data yet — agent runs twice daily' });
+  }
+});
+
+// GET /api/admin/leads — 904 garage doors leads
+router.get('/leads', requireAdmin, (_req, res) => {
+  const fs = require('fs'), path = require('path');
+  try {
+    const data = JSON.parse(fs.readFileSync(path.join(__dirname, '../../data/leads.json'), 'utf8'));
+    res.json(Array.isArray(data) ? data : [data]);
+  } catch {
+    res.json([]);
+  }
+});
+
 module.exports = router;

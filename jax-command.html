@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>904 Garage Doors — Command Center</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #0a0c10;
+      --bg2:    #111318;
+      --bg3:    #181b22;
+      --border: rgba(255,255,255,0.07);
+      --text:   #e2e8f0;
+      --sub:    rgba(255,255,255,0.4);
+      --red:    #d63b2f;
+      --gold:   #c9a84c;
+      --green:  #22c55e;
+      --blue:   #3b82f6;
+      --orange: #f97316;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+    a { color: inherit; text-decoration: none; }
+
+    /* LOGIN */
+    #loginScreen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+    .login-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 3rem 2.5rem; width: 100%; max-width: 400px; text-align: center; }
+    .login-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.1em; color: #fff; margin-bottom: 0.25rem; }
+    .login-logo em { color: var(--gold); font-style: normal; }
+    .login-sub { font-size: 0.75rem; color: var(--sub); margin-bottom: 2rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .login-input { width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.85rem 1rem; color: var(--text); font-size: 0.9rem; font-family: 'Inter', sans-serif; outline: none; margin-bottom: 1rem; }
+    .login-input:focus { border-color: var(--gold); }
+    .login-btn { width: 100%; background: var(--red); color: #fff; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.05em; border: none; border-radius: 8px; padding: 0.9rem; cursor: pointer; transition: background 0.2s; }
+    .login-btn:hover { background: #b52e24; }
+    .login-err { color: var(--red); font-size: 0.78rem; margin-top: 0.75rem; display: none; }
+
+    /* DASHBOARD */
+    #dashboard { display: none; }
+
+    /* TOPBAR */
+    .topbar { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 0.9rem 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+    .topbar-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.08em; }
+    .topbar-logo em { color: var(--gold); font-style: normal; }
+    .topbar-right { display: flex; align-items: center; gap: 1rem; }
+    .topbar-time { font-size: 0.78rem; color: var(--sub); font-feature-settings: "tnum"; }
+    .pulse-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.85)} }
+    .logout-btn { background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--sub); font-size: 0.72rem; padding: 0.3rem 0.7rem; cursor: pointer; }
+    .logout-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+    /* LAYOUT */
+    .main { padding: 1.5rem; max-width: 1400px; margin: 0 auto; }
+
+    /* SITE LINKS BAR */
+    .site-links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .site-link { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.78rem; font-weight: 600; color: var(--sub); display: flex; align-items: center; gap: 0.4rem; transition: border-color 0.2s, color 0.2s; }
+    .site-link:hover { border-color: var(--gold); color: var(--text); }
+    .site-link::before { content: '↗'; color: var(--gold); font-size: 0.7rem; }
+
+    /* KPI ROW */
+    .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .kpi { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem 1.5rem; }
+    .kpi-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sub); margin-bottom: 0.4rem; }
+    .kpi-val { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 0.03em; line-height: 1; }
+    .kpi-val.red { color: var(--red); }
+    .kpi-val.green { color: var(--green); }
+    .kpi-val.gold { color: var(--gold); }
+    .kpi-sub { font-size: 0.68rem; color: var(--sub); margin-top: 0.25rem; }
+
+    /* GRID */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+    @media (max-width: 1024px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 700px)  { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+    /* CARD */
+    .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+    .card-title { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sub); margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; }
+    .card-title span { display: flex; align-items: center; gap: 0.5rem; }
+    .refresh-btn { background: none; border: 1px solid var(--border); color: var(--sub); font-size: 0.65rem; padding: 0.2rem 0.5rem; border-radius: 4px; cursor: pointer; font-family: inherit; }
+    .refresh-btn:hover { color: var(--text); }
+
+    /* AGENT CARDS */
+    .agent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
+    .agent-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+    .agent-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+    .agent-name { font-size: 0.78rem; font-weight: 700; }
+    .agent-badge { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; padding: 0.2rem 0.5rem; border-radius: 4px; text-transform: uppercase; }
+    .badge-idle    { background: rgba(255,255,255,0.06); color: var(--sub); }
+    .badge-running { background: rgba(59,130,246,0.15); color: var(--blue); }
+    .badge-error   { background: rgba(214,59,47,0.15); color: var(--red); }
+    .badge-paused  { background: rgba(249,115,22,0.12); color: var(--orange); }
+    .agent-sched { font-size: 0.65rem; color: var(--sub); }
+    .agent-last  { font-size: 0.62rem; color: var(--sub); margin-top: 0.25rem; }
+    .agent-actions { display: flex; gap: 0.4rem; margin-top: 0.65rem; }
+    .agent-btn { background: none; border: 1px solid var(--border); color: var(--sub); font-size: 0.6rem; padding: 0.2rem 0.5rem; border-radius: 4px; cursor: pointer; font-family: inherit; }
+    .agent-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+    .agent-btn.run { color: var(--green); border-color: rgba(34,197,94,0.3); }
+    .agent-btn.run:hover { background: rgba(34,197,94,0.1); }
+
+    /* LEADS */
+    .lead-row { display: flex; align-items: flex-start; justify-content: space-between; padding: 0.85rem 0; border-bottom: 1px solid var(--border); gap: 1rem; }
+    .lead-row:last-child { border-bottom: none; }
+    .lead-name { font-size: 0.85rem; font-weight: 700; }
+    .lead-meta { font-size: 0.7rem; color: var(--sub); margin-top: 0.2rem; }
+    .lead-phone { font-size: 0.78rem; color: var(--gold); font-weight: 600; }
+    .lead-urgency { font-size: 0.6rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; text-transform: uppercase; white-space: nowrap; }
+    .urg-emergency { background: rgba(214,59,47,0.2); color: var(--red); }
+    .urg-today     { background: rgba(249,115,22,0.15); color: var(--orange); }
+    .urg-week      { background: rgba(59,130,246,0.12); color: var(--blue); }
+    .urg-quote     { background: rgba(255,255,255,0.05); color: var(--sub); }
+
+    /* RESEARCH */
+    .insight-item { padding: 0.85rem 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; color: var(--text); line-height: 1.6; }
+    .insight-item:last-child { border-bottom: none; }
+    .insight-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .insight-label.high   { color: var(--red); }
+    .insight-label.medium { color: var(--orange); }
+    .insight-label.low    { color: var(--sub); }
+    .insight-action { font-size: 0.72rem; color: var(--gold); margin-top: 0.25rem; }
+
+    /* COMPETITOR */
+    .comp-item { padding: 0.85rem 0; border-bottom: 1px solid var(--border); }
+    .comp-item:last-child { border-bottom: none; }
+    .comp-name { font-size: 0.82rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .comp-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
+    .comp-tag { font-size: 0.6rem; background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; padding: 0.15rem 0.5rem; color: var(--sub); }
+    .comp-weakness { font-size: 0.72rem; color: rgba(214,59,47,0.8); margin-top: 0.3rem; }
+    .comp-strength { font-size: 0.72rem; color: rgba(34,197,94,0.8); margin-top: 0.15rem; }
+
+    /* CITY PAGES */
+    .city-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.5rem; }
+    .city-item { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; font-size: 0.78rem; display: flex; align-items: center; justify-content: space-between; }
+    .city-item a { color: var(--gold); font-size: 0.65rem; }
+
+    /* MARKET DATA */
+    .market-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+    .market-table th { text-align: left; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sub); padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+    .market-table td { padding: 0.65rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .market-table tr:last-child td { border-bottom: none; }
+    .market-num { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--gold); }
+    .market-label { font-size: 0.7rem; color: var(--sub); margin-top: 0.1rem; }
+
+    /* LOG */
+    .log-entry { font-size: 0.72rem; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.03); display: flex; gap: 0.75rem; }
+    .log-time  { color: var(--sub); flex-shrink: 0; font-feature-settings: "tnum"; }
+    .log-agent { color: var(--gold); flex-shrink: 0; min-width: 90px; }
+    .log-msg   { color: var(--text); }
+    .log-level-success { color: var(--green); }
+    .log-level-error   { color: var(--red); }
+    .log-level-warn    { color: var(--orange); }
+
+    /* EMPTY */
+    .empty { text-align: center; padding: 2rem; color: var(--sub); font-size: 0.82rem; }
+
+    /* LAST UPDATED */
+    .last-updated { font-size: 0.62rem; color: var(--sub); }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">904 <em>Garage Doors</em></div>
+    <div class="login-sub">Command Center · Secure Access</div>
+    <input class="login-input" type="password" id="loginPwd" placeholder="Admin password" onkeydown="if(event.key==='Enter')doLogin()" />
+    <button class="login-btn" onclick="doLogin()">Access Dashboard</button>
+    <div class="login-err" id="loginErr">Incorrect password</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="topbar">
+    <div class="topbar-logo">904 <em>Garage Doors</em> <span style="font-family:Inter;font-size:0.7rem;color:var(--sub);font-weight:500;letter-spacing:0.05em;margin-left:0.5rem">Command Center</span></div>
+    <div class="topbar-right">
+      <div class="pulse-dot"></div>
+      <div class="topbar-time" id="clock">—</div>
+      <button class="logout-btn" onclick="logout()">Log out</button>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- LIVE SITE LINKS -->
+    <div class="site-links">
+      <a class="site-link" href="https://904garagedoors.com" target="_blank">904garagedoors.com (live)</a>
+      <a class="site-link" href="/garage-door-repair-ponte-vedra" target="_blank">Ponte Vedra page</a>
+      <a class="site-link" href="/garage-door-repair-jacksonville-beach" target="_blank">Jax Beach page</a>
+      <a class="site-link" href="/garage-door-repair-yulee" target="_blank">Yulee page</a>
+      <a class="site-link" href="/garage-door-repair-fernandina-beach" target="_blank">Fernandina page</a>
+      <a class="site-link" href="/sitemap.xml" target="_blank">Sitemap</a>
+      <a class="site-link" href="/adhd.html" target="_blank">ADHD Command Post</a>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-row" id="kpiRow">
+      <div class="kpi"><div class="kpi-label">Total Leads</div><div class="kpi-val gold" id="kpiLeads">—</div><div class="kpi-sub">All time</div></div>
+      <div class="kpi"><div class="kpi-label">Today's Leads</div><div class="kpi-val green" id="kpiToday">—</div><div class="kpi-sub">Last 24 hours</div></div>
+      <div class="kpi"><div class="kpi-label">Emergency</div><div class="kpi-val red" id="kpiEmergency">—</div><div class="kpi-sub">Right now urgency</div></div>
+      <div class="kpi"><div class="kpi-label">City Pages</div><div class="kpi-val" id="kpiPages">10</div><div class="kpi-sub">Live & indexed</div></div>
+      <div class="kpi"><div class="kpi-label">Research Runs</div><div class="kpi-val gold" id="kpiResearch">—</div><div class="kpi-sub">Twice daily</div></div>
+      <div class="kpi"><div class="kpi-label">Agents Running</div><div class="kpi-val" id="kpiAgents">—</div><div class="kpi-sub">Active / total</div></div>
+    </div>
+
+    <!-- TOP ROW: LEADS + MARKET ALERTS -->
+    <div class="grid-2">
+
+      <!-- LEADS -->
+      <div class="card">
+        <div class="card-title">
+          <span>Recent Leads</span>
+          <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
+        </div>
+        <div id="leadsContainer"><div class="empty">Loading leads…</div></div>
+      </div>
+
+      <!-- MARKET ALERTS -->
+      <div class="card">
+        <div class="card-title"><span>Market Alerts</span><span class="last-updated" id="alertsUpdated"></span></div>
+        <div id="alertsContainer"><div class="empty">Loading…</div></div>
+      </div>
+
+    </div>
+
+    <!-- STRATEGIC INSIGHTS + COMPETITOR INTEL -->
+    <div class="grid-2">
+
+      <div class="card">
+        <div class="card-title"><span>Strategic Insights</span><span class="last-updated" id="insightsUpdated"></span></div>
+        <div id="insightsContainer"><div class="empty">Loading…</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span>Competitor Intelligence</span></div>
+        <div id="competitorContainer"><div class="empty">Loading…</div></div>
+      </div>
+
+    </div>
+
+    <!-- MARKET DATA TABLE -->
+    <div class="card" style="margin-bottom:1.5rem">
+      <div class="card-title"><span>Market Data — Key Numbers</span></div>
+      <table class="market-table">
+        <thead><tr>
+          <th>Market</th><th>Homes</th><th>Median Value</th><th>Median Income</th><th>Ownership</th><th>Top Competitor</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td><div style="font-weight:700">Jacksonville</div><div class="market-label">Duval County</div></td>
+            <td><div class="market-num">226K</div><div class="market-label">owner-occ. homes</div></td>
+            <td><div class="market-num">$294K</div><div class="market-label">city median</div></td>
+            <td><div class="market-num">$70K</div><div class="market-label">household</div></td>
+            <td><div class="market-num">57.6%</div></td>
+            <td><div style="font-size:0.72rem">America's Garage Doors<br><span style="color:var(--sub)">980 reviews</span></div></td>
+          </tr>
+          <tr>
+            <td><div style="font-weight:700">Ponte Vedra</div><div class="market-label">St. Johns County</div></td>
+            <td><div class="market-num">30K+</div><div class="market-label">32082 + 32081</div></td>
+            <td><div class="market-num">$910K</div><div class="market-label">median (32082)</div></td>
+            <td><div class="market-num">$128K</div><div class="market-label">household</div></td>
+            <td><div class="market-num">82.5%</div></td>
+            <td><div style="font-size:0.72rem">Precision Garage Door<br><span style="color:var(--sub)">1,071 area reviews</span></div></td>
+          </tr>
+          <tr>
+            <td><div style="font-weight:700">Fernandina Beach</div><div class="market-label">Nassau County</div></td>
+            <td><div class="market-num">26K</div><div class="market-label">SFH Nassau Co.</div></td>
+            <td><div class="market-num">$555K</div><div class="market-label">Fernandina city</div></td>
+            <td><div class="market-num">$90K</div><div class="market-label">Nassau County</div></td>
+            <td><div class="market-num">82.7%</div></td>
+            <td><div style="font-size:0.72rem">Precision (36 mi away)<br><span style="color:var(--sub)">244 area reviews</span></div></td>
+          </tr>
+          <tr>
+            <td><div style="font-weight:700">Yulee</div><div class="market-label">Nassau County</div></td>
+            <td><div class="market-num">+30%</div><div class="market-label">growth since 2019</div></td>
+            <td><div class="market-num">$303K</div><div class="market-label">median home</div></td>
+            <td><div class="market-num">$85K</div><div class="market-label">household</div></td>
+            <td><div class="market-num">78.9%</div></td>
+            <td><div style="font-size:0.72rem">Precision (54 reviews)<br><span style="color:var(--green);font-size:0.65rem">⚡ Underserved market</span></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CITY PAGES + AGENTS -->
+    <div class="grid-2">
+
+      <!-- CITY PAGES -->
+      <div class="card">
+        <div class="card-title"><span>City Pages — Live</span></div>
+        <div class="city-grid">
+          <div class="city-item">Ponte Vedra <a href="/garage-door-repair-ponte-vedra" target="_blank">↗</a></div>
+          <div class="city-item">Jacksonville Beach <a href="/garage-door-repair-jacksonville-beach" target="_blank">↗</a></div>
+          <div class="city-item">Fernandina Beach <a href="/garage-door-repair-fernandina-beach" target="_blank">↗</a></div>
+          <div class="city-item">Yulee <a href="/garage-door-repair-yulee" target="_blank">↗</a></div>
+          <div class="city-item">Nocatee <a href="/garage-door-repair-nocatee" target="_blank">↗</a></div>
+          <div class="city-item">Mandarin <a href="/garage-door-repair-mandarin" target="_blank">↗</a></div>
+          <div class="city-item">Orange Park <a href="/garage-door-repair-orange-park" target="_blank">↗</a></div>
+          <div class="city-item">Fleming Island <a href="/garage-door-repair-fleming-island" target="_blank">↗</a></div>
+          <div class="city-item">Neptune Beach <a href="/garage-door-repair-neptune-beach" target="_blank">↗</a></div>
+          <div class="city-item">Atlantic Beach <a href="/garage-door-repair-atlantic-beach" target="_blank">↗</a></div>
+        </div>
+      </div>
+
+      <!-- KEYWORD ANALYSIS -->
+      <div class="card">
+        <div class="card-title"><span>Keyword Analysis</span></div>
+        <div id="keywordsContainer"><div class="empty">Loading…</div></div>
+      </div>
+
+    </div>
+
+    <!-- AGENTS -->
+    <div class="card" style="margin-bottom:1.5rem">
+      <div class="card-title">
+        <span>Agent Status — All 12</span>
+        <button class="refresh-btn" onclick="loadAgents()">↻ Refresh</button>
+      </div>
+      <div class="agent-grid" id="agentGrid"><div class="empty" style="grid-column:1/-1">Loading agents…</div></div>
+    </div>
+
+    <!-- LOGS -->
+    <div class="card" style="margin-bottom:2rem">
+      <div class="card-title">
+        <span>Recent Logs</span>
+        <button class="refresh-btn" onclick="loadLogs()">↻ Refresh</button>
+      </div>
+      <div id="logContainer"><div class="empty">Loading logs…</div></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let TOKEN = sessionStorage.getItem('jax_cmd_token') || '';
+
+  // ── CLOCK ──────────────────────────────────────────────────────────────────
+  function tick() {
+    const now = new Date();
+    document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  }
+  setInterval(tick, 1000); tick();
+
+  // ── AUTH ───────────────────────────────────────────────────────────────────
+  async function doLogin() {
+    const pwd = document.getElementById('loginPwd').value;
+    try {
+      const r = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pwd }),
+      });
+      if (!r.ok) throw new Error();
+      const d = await r.json();
+      TOKEN = d.token;
+      sessionStorage.setItem('jax_cmd_token', TOKEN);
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      loadAll();
+      setInterval(loadAll, 30000);
+    } catch {
+      document.getElementById('loginErr').style.display = 'block';
+    }
+  }
+
+  function logout() {
+    sessionStorage.removeItem('jax_cmd_token');
+    location.reload();
+  }
+
+  function authHeaders() { return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${TOKEN}` }; }
+
+  // ── LOAD ALL ───────────────────────────────────────────────────────────────
+  async function loadAll() {
+    await Promise.all([loadLeads(), loadResearch(), loadAgents(), loadLogs()]);
+  }
+
+  // ── LEADS ──────────────────────────────────────────────────────────────────
+  async function loadLeads() {
+    try {
+      const r = await fetch('/api/admin/leads', { headers: authHeaders() });
+      const leads = await r.json();
+      if (!Array.isArray(leads) || leads.length === 0) {
+        document.getElementById('leadsContainer').innerHTML = '<div class="empty">No leads yet — form submissions will appear here</div>';
+        document.getElementById('kpiLeads').textContent = '0';
+        document.getElementById('kpiToday').textContent = '0';
+        document.getElementById('kpiEmergency').textContent = '0';
+        return;
+      }
+      const now = Date.now();
+      const today = leads.filter(l => l.timestamp && (now - new Date(l.timestamp).getTime()) < 86400000);
+      const emergency = leads.filter(l => l.urgency && l.urgency.toLowerCase().includes('emergency'));
+      document.getElementById('kpiLeads').textContent    = leads.length;
+      document.getElementById('kpiToday').textContent    = today.length;
+      document.getElementById('kpiEmergency').textContent = emergency.length;
+
+      const recent = [...leads].reverse().slice(0, 8);
+      document.getElementById('leadsContainer').innerHTML = recent.map(l => {
+        const urgClass = (l.urgency || '').toLowerCase().includes('emergency') ? 'urg-emergency'
+          : (l.urgency || '').toLowerCase().includes('today') ? 'urg-today'
+          : (l.urgency || '').toLowerCase().includes('week') ? 'urg-week' : 'urg-quote';
+        const date = l.timestamp ? new Date(l.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+        return `<div class="lead-row">
+          <div>
+            <div class="lead-name">${esc(l.name || '—')}</div>
+            <div class="lead-meta">${esc(l.service || '—')} · ${date}${l.city ? ' · ' + esc(l.city) : ''}</div>
+          </div>
+          <div style="text-align:right">
+            <div class="lead-phone"><a href="tel:${esc(l.phone || '')}">${esc(l.phone || '—')}</a></div>
+            <div class="lead-urgency ${urgClass}">${esc(l.urgency || 'quote')}</div>
+          </div>
+        </div>`;
+      }).join('');
+    } catch (e) {
+      document.getElementById('leadsContainer').innerHTML = '<div class="empty">Could not load leads</div>';
+    }
+  }
+
+  // ── RESEARCH ───────────────────────────────────────────────────────────────
+  async function loadResearch() {
+    try {
+      const r = await fetch('/api/admin/research', { headers: authHeaders() });
+      const d = await r.json();
+
+      if (d.error) {
+        ['alertsContainer','insightsContainer','competitorContainer','keywordsContainer'].forEach(id => {
+          document.getElementById(id).innerHTML = `<div class="empty">${d.error}</div>`;
+        });
+        return;
+      }
+
+      document.getElementById('kpiResearch').textContent = d.runNumber || '—';
+      const updated = d.lastRun ? new Date(d.lastRun).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+      document.getElementById('alertsUpdated').textContent   = updated ? `Updated ${updated}` : '';
+      document.getElementById('insightsUpdated').textContent = updated ? `Updated ${updated}` : '';
+
+      // Market alerts
+      const alerts = Array.isArray(d.marketAlerts) ? d.marketAlerts : [];
+      document.getElementById('alertsContainer').innerHTML = alerts.length
+        ? alerts.map(a => `<div class="insight-item">
+            <div class="insight-label ${a.urgency || 'low'}">${(a.urgency || 'low').toUpperCase()}</div>
+            ${esc(a.alert || '')}
+            <div class="insight-action">→ ${esc(a.action || '')}</div>
+          </div>`).join('')
+        : '<div class="empty">No alerts yet</div>';
+
+      // Insights
+      const ins = d.insights || {};
+      const items = [
+        ...(ins.immediateActions || []).map(a => ({ type: 'ACTION', text: a })),
+        ...(ins.contentGaps || []).map(g => ({ type: 'CONTENT GAP', text: g })),
+        ...(ins.timingOpportunities || []).map(t => ({ type: 'TIMING', text: t })),
+        ins.nextCityPage ? { type: 'NEXT PAGE', text: `Build: /garage-door-repair-${ins.nextCityPage}` } : null,
+      ].filter(Boolean);
+      document.getElementById('insightsContainer').innerHTML = items.length
+        ? items.map(i => `<div class="insight-item"><div class="insight-label medium">${i.type}</div>${esc(i.text)}</div>`).join('')
+        : '<div class="empty">No insights yet</div>';
+
+      // Competitors
+      const comps = Array.isArray(d.competitors) ? d.competitors.filter(c => c.status === 'analyzed') : [];
+      document.getElementById('competitorContainer').innerHTML = comps.length
+        ? comps.map(c => `<div class="comp-item">
+            <div class="comp-name">${esc(c.name)}</div>
+            ${(c.weaknesses || []).map(w => `<div class="comp-weakness">✗ ${esc(w)}</div>`).join('')}
+            ${(c.strengths || []).slice(0,2).map(s => `<div class="comp-strength">✓ ${esc(s)}</div>`).join('')}
+            <div class="comp-tags">${(c.areas || []).map(a => `<span class="comp-tag">${esc(a)}</span>`).join('')}</div>
+          </div>`).join('')
+        : '<div class="empty">Research agent runs twice daily — data coming</div>';
+
+      // Keywords
+      const kws = Array.isArray(d.keywords?.analysis) ? d.keywords.analysis : [];
+      document.getElementById('keywordsContainer').innerHTML = kws.length
+        ? `<table class="market-table"><thead><tr><th>Keyword</th><th>Intent</th><th>Competition</th></tr></thead><tbody>
+            ${kws.map(k => `<tr>
+              <td style="font-size:0.75rem">${esc(k.keyword || '')}</td>
+              <td><span style="font-size:0.65rem;color:var(--gold)">${esc(k.intent || '')}</span></td>
+              <td><span style="font-size:0.65rem;color:${k.competition==='high'?'var(--red)':k.competition==='medium'?'var(--orange)':'var(--green)'}">${esc(k.competition || '')}</span></td>
+            </tr>`).join('')}
+          </tbody></table>`
+        : '<div class="empty">Keyword analysis runs twice daily</div>';
+
+    } catch {
+      ['alertsContainer','insightsContainer','competitorContainer','keywordsContainer'].forEach(id => {
+        document.getElementById(id).innerHTML = '<div class="empty">Could not load research data</div>';
+      });
+    }
+  }
+
+  // ── AGENTS ─────────────────────────────────────────────────────────────────
+  async function loadAgents() {
+    try {
+      const r = await fetch('/api/admin/status', { headers: authHeaders() });
+      const d = await r.json();
+      const agents = d.agents || [];
+      const running = agents.filter(a => a.status === 'running').length;
+      document.getElementById('kpiAgents').textContent = `${running}/${agents.length}`;
+      document.getElementById('agentGrid').innerHTML = agents.map(a => {
+        const bClass = a.paused ? 'badge-paused' : a.status === 'running' ? 'badge-running' : a.status === 'error' ? 'badge-error' : 'badge-idle';
+        const label  = a.paused ? 'PAUSED' : a.status.toUpperCase();
+        const lastRun = a.lastRun ? new Date(a.lastRun).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : 'Never';
+        return `<div class="agent-card">
+          <div class="agent-top">
+            <div class="agent-name">${esc(a.name)}</div>
+            <span class="agent-badge ${bClass}">${label}</span>
+          </div>
+          <div class="agent-sched">${esc(a.schedule || '')}</div>
+          <div class="agent-last">Last run: ${lastRun}</div>
+          <div class="agent-actions">
+            <button class="agent-btn run" onclick="triggerAgent('${a.id}')">▶ Run now</button>
+            <button class="agent-btn" onclick="togglePause('${a.id}','${a.paused}')">${a.paused ? 'Resume' : 'Pause'}</button>
+          </div>
+        </div>`;
+      }).join('');
+    } catch {
+      document.getElementById('agentGrid').innerHTML = '<div class="empty" style="grid-column:1/-1">Could not load agent status</div>';
+    }
+  }
+
+  async function triggerAgent(id) {
+    await fetch(`/api/admin/agents/${id}/run`, { method: 'POST', headers: authHeaders() });
+    setTimeout(loadAgents, 2000);
+  }
+
+  async function togglePause(id, paused) {
+    const ep = paused === 'true' ? 'resume' : 'pause';
+    await fetch(`/api/admin/agents/${id}/${ep}`, { method: 'POST', headers: authHeaders() });
+    loadAgents();
+  }
+
+  // ── LOGS ───────────────────────────────────────────────────────────────────
+  async function loadLogs() {
+    try {
+      const r = await fetch('/api/admin/logs?limit=40', { headers: authHeaders() });
+      const d = await r.json();
+      const logs = (d.logs || []).slice(0, 40);
+      document.getElementById('logContainer').innerHTML = logs.length
+        ? logs.map(l => {
+            const t = new Date(l.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const lvlClass = l.level === 'success' ? 'log-level-success' : l.level === 'error' ? 'log-level-error' : l.level === 'warn' ? 'log-level-warn' : '';
+            return `<div class="log-entry"><span class="log-time">${t}</span><span class="log-agent">${esc(l.agentId || '')}</span><span class="log-msg ${lvlClass}">${esc(l.message || '')}</span></div>`;
+          }).join('')
+        : '<div class="empty">No logs yet</div>';
+    } catch {
+      document.getElementById('logContainer').innerHTML = '<div class="empty">Could not load logs</div>';
+    }
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── AUTO-LOGIN if token stored ─────────────────────────────────────────────
+  if (TOKEN) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    loadAll();
+    setInterval(loadAll, 30000);
+  }
+</script>
+</body>
+</html>

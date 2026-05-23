@@ -54,6 +54,11 @@ app.get('/', (_req, res) => {
   res.sendFile(path.join(__dirname, '..', '904garage.html'));
 });
 
+// 904 Garage Doors command dashboard
+app.get('/jax-command', (_req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'jax-command.html'));
+});
+
 // City landing pages — clean URLs without .html extension
 app.get('/garage-door-repair-:city', (req, res) => {
   const city = req.params.city.replace(/[^a-z0-9-]/g, '');
