@@ -44,6 +44,21 @@ app.use(express.static(path.join(__dirname, '..')));
 app.get('/', (_req, res) => {
   res.sendFile(path.join(__dirname, '..', '904garage.html'));
 });
+
+// City landing pages — clean URLs without .html extension
+app.get('/garage-door-repair-:city', (req, res) => {
+  const city = req.params.city.replace(/[^a-z0-9-]/g, '');
+  res.sendFile(
+    path.join(__dirname, '..', `garage-door-repair-${city}.html`),
+    err => { if (err) res.sendFile(path.join(__dirname, '..', '404.html')); }
+  );
+});
+
+// Sitemap
+app.get('/sitemap.xml', (_req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'sitemap.xml'));
+});
+
 app.get('*', (_req, res) => {
   res.sendFile(path.join(__dirname, '..', '404.html'));
 });
