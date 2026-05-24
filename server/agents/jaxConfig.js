@@ -5,9 +5,9 @@ module.exports = {
   businessName: 'Jacksonville Garage Pros',   // ← your business name
   phone:        '(904) 468-3428',              // ← your phone number
   website:      '',                            // ← your website (leave blank if none yet)
-  areas:        ['Jacksonville', 'Orange Park', 'Fleming Island', 'Mandarin', 'Southside', 'Arlington', 'Ponte Vedra', 'Middleburg', 'Jacksonville Beach', 'Neptune Beach', 'Atlantic Beach', 'Nocatee'],
+  areas:        ['Jacksonville', 'Orange Park', 'Fleming Island', 'Mandarin', 'Southside', 'Arlington', 'Ponte Vedra', 'Middleburg', 'Jacksonville Beach', 'Neptune Beach', 'Atlantic Beach', 'Nocatee', 'Palm Coast'],
   services:     ['garage door repair', 'broken spring replacement', 'opener installation', 'cable repair', 'new door installation', 'emergency service', 'maintenance tune-up', 'off-track door repair', 'hurricane-rated door installation', 'roller replacement'],
-  usp:          'Same-day service, licensed & insured, flat-rate pricing, no hidden fees — you get the owner directly, not a call center',
+  usp:          'Same-day service, fast response, 7 days a week — we connect Jacksonville homeowners with trusted local garage door pros',
   yearsExp:     5,
   license:      '',                            // ← your contractor license # (optional)
   reviewLink:   '',                            // ← Google Maps review link (optional)
@@ -16,6 +16,33 @@ module.exports = {
   pmCompanies:  ['Navy to Navy Homes', 'Nest Finders', 'Green River Property Management', 'First Place Management', 'Rental Guys Property Management', 'Suncoast Rentals'],
   hoaTargets:   ['Marsh Landing', 'Del Webb Ponte Vedra', 'Sawgrass Country Club', 'Fairfield', 'Plantation Oaks'],
   topZipCodes:  ['32082 (Ponte Vedra Beach)', '32250 (Jacksonville Beach)', '32233 (Atlantic Beach)', '32266 (Neptune Beach)'],
+
+  markets: {
+    'Ponte Vedra':        { zipCodes: ['32082','32081'], incomeLevel: 'premium', housingAge: 'mixed', notes: 'Sawgrass, Del Webb, Palm Valley — high-value replacement customers' },
+    'Jacksonville Beach': { zipCodes: ['32250'], incomeLevel: 'mid-high', housingAge: 'older-coastal', notes: 'Salt air destroys springs and cables faster — maintenance upsell opportunity' },
+    'Neptune Beach':      { zipCodes: ['32266'], incomeLevel: 'mid-high', housingAge: 'older-coastal', notes: 'Small tight community, word-of-mouth market' },
+    'Atlantic Beach':     { zipCodes: ['32233'], incomeLevel: 'mid-high', housingAge: 'older-coastal', notes: 'Coastal corrosion market — stainless hardware upsell' },
+    'Nocatee':            { zipCodes: ['32081'], incomeLevel: 'high', housingAge: 'new-construction', notes: 'New homes — opener installs, warranty work, HOA compliance' },
+    'Mandarin':           { zipCodes: ['32257','32258'], incomeLevel: 'mid', housingAge: 'mature', notes: '1990s-2000s homes — spring replacement cycle, opener upgrades' },
+    'Orange Park':        { zipCodes: ['32065','32073'], incomeLevel: 'mid', housingAge: 'mature', notes: 'Value-conscious market — speed and reliability messaging' },
+    'Palm Coast':         { zipCodes: ['32164','32137','32137'], incomeLevel: 'mid', housingAge: 'mixed', notes: 'Fast-growing retirement and family market, underserved by competitors' },
+    'Fleming Island':     { zipCodes: ['32003'], incomeLevel: 'mid-high', housingAge: 'mature', notes: 'Established families, quality-focused' },
+    'Arlington':          { zipCodes: ['32211'], incomeLevel: 'mid', housingAge: 'older', notes: 'Older homes, high repair demand' },
+    'Southside':          { zipCodes: ['32256','32224'], incomeLevel: 'mid-high', housingAge: 'mixed', notes: 'Town Center corridor, busy professionals want fast service' },
+  },
+
+  customerTypes: {
+    emergency:    { signals: ['won\'t open','stuck','broken spring','cable snapped','car trapped','right now','emergency'], message: 'speed, same-day, we answer now', scoreBoost: 10 },
+    replacement:  { signals: ['new door','replace','upgrade','renovation','remodel','planning','quote'], message: 'quality brands, professional install, curb appeal', scoreBoost: 6 },
+    maintenance:  { signals: ['tune-up','maintenance','inspection','noise','slow','check'], message: 'preventive care, extend life, avoid emergency costs', scoreBoost: 4 },
+    commercial:   { signals: ['warehouse','business','commercial','multiple doors','property manager','hoa'], message: 'reliability, contracts, fast turnaround, volume', scoreBoost: 8 },
+  },
+
+  leadScoring: {
+    urgency:  { 'Right now — emergency': 10, 'Today': 7, 'This week': 4, 'Just getting a quote': 1 },
+    service:  { 'Broken spring': 9, 'Door won\'t open at all': 10, 'Cable snapped': 9, 'Door off track': 8, 'Opener not working': 7, 'New door installation': 8, 'Tune-up / maintenance': 3, 'Not sure — needs inspection': 5 },
+    zipBonus: { '32082': 3, '32081': 3, '32250': 2, '32266': 2, '32233': 2, '32003': 2, '32256': 2 },
+  },
 
   // Seasonal focus — agents use this to tailor content to the time of year
   seasonalContext: {
