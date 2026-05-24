@@ -7,6 +7,7 @@ const checkoutRoutes = require('./routes/checkout');
 const webhookRoutes  = require('./routes/webhooks');
 const adminRoutes    = require('./routes/admin');
 const contactRoutes  = require('./routes/contact');
+const blogRoutes     = require('./routes/blog');
 const agentRunner    = require('./agents/agentRunner');
 
 const app = express();
@@ -27,6 +28,7 @@ app.use('/api/checkout', checkoutRoutes);
 app.use('/api/webhooks', webhookRoutes);
 app.use('/api/admin',    adminRoutes);
 app.use('/api/contact',  contactRoutes);
+app.use('/api/blog',     blogRoutes);
 
 // ── HEALTH CHECK ─────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {
