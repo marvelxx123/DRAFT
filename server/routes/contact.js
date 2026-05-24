@@ -2,6 +2,7 @@ const express = require('express');
 const router  = express.Router();
 const fs      = require('fs');
 const path    = require('path');
+const jaxConfig = require('../agents/jaxConfig');
 
 const LEADS_FILE = path.join(__dirname, '../../data/leads.json');
 
@@ -17,40 +18,78 @@ function saveLeads(leads) {
   fs.writeFileSync(LEADS_FILE, JSON.stringify(leads, null, 2));
 }
 
-function scoreLead({ urgency = '', service = '' }) {
+// ── Lead scoring using jaxConfig ─────────────────────────────────────────────
+function scoreLead({ urgency = '', service = '', name = '', message = '' }) {
+  const { leadScoring, customerTypes } = jaxConfig;
   let score = 0;
-  const u = urgency.toLowerCase();
-  const s = service.toLowerCase();
-  if (u.includes('emergency') || u.includes('right now')) score += 50;
-  else if (u.includes('today'))     score += 30;
-  else if (u.includes('this week')) score += 15;
-  if (s.includes('new door'))       score += 25;
-  if (s.includes('spring'))         score += 20;
-  if (s.includes('emergency'))      score += 20;
-  if (s.includes('opener'))         score += 15;
-  if (s.includes('cable'))          score += 15;
+
+  // Urgency score — exact match from dropdown values
+  const urgencyScore = leadScoring.urgency[urgency];
+  if (urgencyScore !== undefined) {
+    score += urgencyScore;
+  }
+
+  // Service score — exact match from dropdown values
+  const serviceScore = leadScoring.service[service];
+  if (serviceScore !== undefined) {
+    score += serviceScore;
+  }
+
+  // Zip bonus — scan full message text for known zip codes
+  const fullText = `${name} ${service} ${urgency} ${message}`;
+  for (const [zip, bonus] of Object.entries(leadScoring.zipBonus)) {
+    if (fullText.includes(zip)) {
+      score += bonus;
+      break; // only apply the highest zip bonus once
+    }
+  }
+
   return score;
+}
+
+// ── Customer type detection ───────────────────────────────────────────────────
+function detectCustomerType({ name = '', service = '', urgency = '', message = '' }) {
+  const { customerTypes } = jaxConfig;
+  const fullText = `${name} ${service} ${urgency} ${message}`.toLowerCase();
+
+  let bestType = 'general';
+  let bestBoost = -1;
+
+  for (const [type, data] of Object.entries(customerTypes)) {
+    const matched = data.signals.some(signal => fullText.includes(signal.toLowerCase()));
+    if (matched && data.scoreBoost > bestBoost) {
+      bestType  = type;
+      bestBoost = data.scoreBoost;
+    }
+  }
+
+  return bestType;
 }
 
 // POST /api/contact
 router.post('/', (req, res) => {
-  const { name, phone, service, urgency, city, source, page, cta } = req.body || {};
+  const { name, phone, service, urgency, city, source, page, cta, message } = req.body || {};
   if (!phone) return res.status(400).json({ error: 'Phone required' });
+
+  const leadScore    = scoreLead({ urgency: urgency || '', service: service || '', name: name || '', message: message || '' });
+  const customerType = detectCustomerType({ name: name || '', service: service || '', urgency: urgency || '', message: message || '' });
 
   const leads = readLeads();
   leads.unshift({
-    id:        Date.now(),
-    timestamp: new Date().toISOString(),
-    name:      name    || 'Unknown',
+    id:           Date.now(),
+    timestamp:    new Date().toISOString(),
+    name:         name    || 'Unknown',
     phone,
-    service:   service || 'Not specified',
-    urgency:   urgency || 'Not specified',
-    city:      city    || 'Jacksonville',
-    source:    source  || 'homepage',
-    page:      page    || '/',
-    cta:       cta     || 'form',
-    status:    'new',
-    score:     scoreLead({ urgency, service }),
+    service:      service || 'Not specified',
+    urgency:      urgency || 'Not specified',
+    city:         city    || 'Jacksonville',
+    source:       source  || 'homepage',
+    page:         page    || '/',
+    cta:          cta     || 'form',
+    message:      message || '',
+    status:       'new',
+    leadScore,
+    customerType,
   });
   saveLeads(leads.slice(0, 500));
   res.json({ success: true });
