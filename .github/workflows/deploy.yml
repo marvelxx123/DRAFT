@@ -26,6 +26,7 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           port: 21
+          protocol: ftp
           local-dir: ./deploy/
-          server-dir: /public_html/
+          server-dir: public_html/
           dangerous-clean-slate: false
