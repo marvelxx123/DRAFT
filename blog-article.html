@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Dynamic meta — filled by JS -->
+  <title>Loading… | 904 Garage Doors</title>
+  <meta name="description" content="" id="metaDesc" />
+  <link rel="canonical" href="" id="canonicalLink" />
+
+  <meta property="og:type"        content="article" />
+  <meta property="og:url"         content="" id="ogUrl" />
+  <meta property="og:title"       content="" id="ogTitle" />
+  <meta property="og:description" content="" id="ogDesc" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink:     #0d1117;
+      --ink-2:   #1c2333;
+      --ink-3:   #2d3748;
+      --white:   #ffffff;
+      --off:     #f7f8fa;
+      --light:   #eef0f4;
+      --border:  #dde1e8;
+      --sub:     #6b7280;
+      --red:     #d63b2f;
+      --red-d:   #b52e24;
+      --gold:    #c9a84c;
+      --green:   #16a34a;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--white); color: var(--ink); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.d1 { transition-delay: 0.1s; }
+    .reveal.d2 { transition-delay: 0.2s; }
+    .reveal.d3 { transition-delay: 0.3s; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── LAYOUT ── */
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+    .article-wrap { max-width: 740px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ── STICKY CALL BAR ── */
+    .call-bar {
+      display: none;
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 999;
+      background: var(--red); color: #fff;
+      padding: 1rem; text-align: center;
+      font-weight: 800; font-size: 1rem; letter-spacing: 0.04em;
+      box-shadow: 0 -4px 24px rgba(214,59,47,0.35);
+      animation: callBarIn 0.5s ease 1s both;
+    }
+    @keyframes callBarIn { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @media (max-width: 600px) { .call-bar { display: block; } }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(13,17,23,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 1.5rem;
+      height: 66px; display: flex; align-items: center; gap: 1rem;
+    }
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem; letter-spacing: 0.08em; color: #fff;
+      text-decoration: none; flex-shrink: 0;
+    }
+    .nav-logo em { color: var(--gold); font-style: normal; }
+    .nav-links {
+      display: flex; align-items: center; list-style: none;
+      gap: 0.25rem; margin-left: auto;
+    }
+    .nav-links a {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.875rem; font-weight: 500; letter-spacing: 0.01em;
+      color: rgba(255,255,255,0.6); padding: 0.5rem 0.85rem;
+      border-radius: 5px; transition: color 0.18s;
+      text-decoration: none;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-links a.active { color: #fff; }
+    .nav-call {
+      margin-left: 0.5rem;
+      background: var(--red); color: #fff !important;
+      padding: 0.5rem 1.2rem !important; border-radius: 6px;
+      font-family: 'Inter', sans-serif !important;
+      font-size: 0.875rem !important; font-weight: 700 !important;
+      letter-spacing: 0.01em !important;
+      transition: background 0.18s !important;
+    }
+    .nav-call:hover { background: var(--red-d) !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; margin-left: auto; padding: 8px; border-radius: 6px; transition: background 0.2s; }
+    .hamburger:hover { background: rgba(255,255,255,0.07); }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: transform 0.3s ease, opacity 0.2s ease; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 780px) {
+      .hamburger { display: flex; }
+      .nav-links {
+        display: flex;
+        position: fixed; top: 66px; left: 0; right: 0;
+        background: rgba(13,17,23,0.98);
+        backdrop-filter: blur(14px);
+        border-top: 2px solid var(--red);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        flex-direction: column; align-items: stretch;
+        padding: 1.25rem 1.75rem 2rem; gap: 0;
+        opacity: 0; pointer-events: none;
+        transform: translateY(-10px);
+        transition: opacity 0.25s ease, transform 0.25s ease;
+      }
+      .nav-links.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+      .nav-links li { border-bottom: 1px solid rgba(255,255,255,0.05); }
+      .nav-links li:last-child { border-bottom: none; }
+      .nav-links a { padding: 1rem 0.25rem; font-size: 1rem; display: block; }
+      .nav-call { margin-left: 0; text-align: center; margin-top: 0.75rem; padding: 0.9rem !important; border-radius: 7px !important; }
+    }
+
+    /* ── ARTICLE HEADER ── */
+    .article-header {
+      background: var(--ink);
+      padding: 130px 0 72px;
+      position: relative; overflow: hidden;
+    }
+    .article-header::before {
+      content: '';
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+    .article-header::after {
+      content: '';
+      position: absolute; top: 0; right: 0;
+      width: 50%; height: 100%;
+      background: linear-gradient(135deg, transparent 40%, rgba(214,59,47,0.07) 100%);
+      pointer-events: none;
+    }
+    .article-header-inner { position: relative; z-index: 1; }
+    .article-breadcrumb {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.35);
+      margin-bottom: 1.5rem;
+    }
+    .article-breadcrumb a { color: rgba(255,255,255,0.4); transition: color 0.18s; }
+    .article-breadcrumb a:hover { color: var(--gold); }
+    .article-breadcrumb span { color: rgba(255,255,255,0.2); }
+
+    .article-meta-row {
+      display: flex; align-items: center; gap: 0.75rem;
+      flex-wrap: wrap; margin-bottom: 1.25rem;
+    }
+    .badge {
+      font-size: 0.62rem; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+    }
+    .badge-emergency  { background: rgba(214,59,47,0.2); color: #f87171; }
+    .badge-replacement { background: rgba(201,168,76,0.2); color: var(--gold); }
+    .badge-maintenance { background: rgba(22,163,74,0.2); color: #4ade80; }
+    .badge-general    { background: rgba(107,114,128,0.2); color: rgba(255,255,255,0.4); }
+
+    .article-read-time {
+      font-size: 0.72rem; font-weight: 600;
+      color: rgba(255,255,255,0.35);
+      display: flex; align-items: center; gap: 0.35rem;
+    }
+    .article-read-time::before { content: '·'; font-size: 1rem; color: rgba(255,255,255,0.15); }
+
+    .article-date-tag {
+      font-size: 0.72rem; font-weight: 600;
+      color: rgba(255,255,255,0.35);
+      display: flex; align-items: center; gap: 0.35rem;
+    }
+    .article-date-tag::before { content: '·'; font-size: 1rem; color: rgba(255,255,255,0.15); }
+
+    .article-h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      line-height: 0.97; letter-spacing: 0.02em;
+      color: #fff; margin-bottom: 1.25rem;
+    }
+    .article-subtitle {
+      font-size: 1rem; color: rgba(255,255,255,0.5);
+      line-height: 1.75; max-width: 620px;
+    }
+    @media (max-width: 600px) {
+      .article-header { padding: 110px 0 56px; }
+      .article-h1 { font-size: 2.1rem; }
+    }
+
+    /* ── ARTICLE BODY ── */
+    .article-body-section { padding: 64px 0 48px; }
+
+    .article-content {
+      font-size: 1rem;
+      line-height: 1.85;
+      color: var(--ink-3);
+    }
+    .article-content h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.5rem, 3.5vw, 2rem);
+      letter-spacing: 0.03em; color: var(--ink);
+      margin: 2.25rem 0 0.85rem;
+    }
+    .article-content h3 {
+      font-size: 1rem; font-weight: 800; color: var(--ink);
+      margin: 1.75rem 0 0.6rem;
+    }
+    .article-content p { margin-bottom: 1.25rem; }
+    .article-content ul, .article-content ol {
+      margin: 0 0 1.25rem 1.5rem; padding: 0;
+    }
+    .article-content li { margin-bottom: 0.5rem; }
+    .article-content strong { color: var(--ink); font-weight: 700; }
+    .article-content a { color: var(--red); text-decoration: underline; text-underline-offset: 3px; }
+    .article-content a:hover { color: var(--red-d); }
+    .article-content blockquote {
+      border-left: 3px solid var(--red);
+      padding: 0.75rem 1.25rem;
+      margin: 1.5rem 0;
+      background: var(--off);
+      border-radius: 0 8px 8px 0;
+      color: var(--ink-3); font-style: italic;
+    }
+    .article-content hr {
+      border: none; border-top: 1px solid var(--border);
+      margin: 2rem 0;
+    }
+
+    /* ── CTA BLOCK ── */
+    .article-cta {
+      background: var(--ink);
+      border-radius: 14px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin-top: 3rem;
+      position: relative; overflow: hidden;
+    }
+    .article-cta::before {
+      content: '';
+      position: absolute; top: 0; right: 0;
+      width: 60%; height: 100%;
+      background: linear-gradient(135deg, transparent 30%, rgba(214,59,47,0.08) 100%);
+      pointer-events: none;
+    }
+    .article-cta-inner { position: relative; z-index: 1; }
+    .article-cta-label {
+      font-size: 0.65rem; font-weight: 800; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--red); margin-bottom: 0.75rem;
+    }
+    .article-cta h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      letter-spacing: 0.03em; color: #fff;
+      margin-bottom: 0.75rem; line-height: 1.05;
+    }
+    .article-cta p {
+      font-size: 0.88rem; color: rgba(255,255,255,0.45);
+      line-height: 1.7; max-width: 440px; margin: 0 auto 1.75rem;
+    }
+    .article-cta-actions { display: flex; align-items: center; justify-content: center; gap: 0.75rem; flex-wrap: wrap; }
+    .btn-red {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--red); color: #fff;
+      font-weight: 700; font-size: 0.88rem; letter-spacing: 0.04em;
+      padding: 0.85rem 1.75rem; border-radius: 7px;
+      transition: background 0.2s, transform 0.15s;
+      box-shadow: 0 4px 20px rgba(214,59,47,0.4);
+    }
+    .btn-red:hover { background: var(--red-d); transform: translateY(-2px); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: transparent; color: rgba(255,255,255,0.65);
+      font-weight: 600; font-size: 0.88rem; letter-spacing: 0.04em;
+      padding: 0.85rem 1.75rem; border-radius: 7px;
+      border: 1px solid rgba(255,255,255,0.15);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+    @media (max-width: 500px) {
+      .article-cta { padding: 2rem 1.25rem; }
+      .article-cta-actions { flex-direction: column; gap: 0.6rem; }
+      .article-cta-actions a { width: 100%; justify-content: center; }
+    }
+
+    /* ── BACK LINK ── */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.8rem; font-weight: 600; color: var(--sub);
+      margin-top: 2rem; transition: color 0.18s;
+    }
+    .back-link:hover { color: var(--red); }
+
+    /* ── LOADING / ERROR ── */
+    .page-loading {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.75rem; padding: 10rem 0;
+      color: var(--sub); font-size: 0.88rem; font-weight: 500;
+    }
+    .spinner {
+      width: 22px; height: 22px;
+      border: 2px solid var(--border);
+      border-top-color: var(--red);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .not-found {
+      text-align: center; padding: 8rem 1.5rem;
+    }
+    .not-found h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem; letter-spacing: 0.04em; color: var(--ink);
+      margin-bottom: 0.75rem;
+    }
+    .not-found p { font-size: 0.9rem; color: var(--sub); line-height: 1.7; max-width: 400px; margin: 0 auto 1.5rem; }
+
+    /* ── FOOTER ── */
+    .footer { background: var(--ink-2); border-top: 1px solid rgba(255,255,255,0.05); padding: 60px 0 0; }
+    .footer-inner { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 3rem; padding-bottom: 3rem; }
+    .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.1em; color: #fff; margin-bottom: 0.65rem; }
+    .footer-logo em { color: var(--gold); font-style: normal; }
+    .footer-tag { font-size: 0.8rem; color: rgba(255,255,255,0.35); line-height: 1.65; margin-bottom: 1rem; max-width: 240px; }
+    .footer-num a { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.06em; color: var(--gold); }
+    .footer-col-title { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 1rem; }
+    .footer-links-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .footer-links-list a { font-size: 0.8rem; color: rgba(255,255,255,0.4); transition: color 0.2s; }
+    .footer-links-list a:hover { color: #fff; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.05); padding: 1.25rem 0; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+    .footer-copy { font-size: 0.72rem; color: rgba(255,255,255,0.2); }
+    @media (max-width: 680px) { .footer-inner { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 420px) { .footer-inner { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) {
+      .wrap { padding: 0 1.25rem; }
+      .footer { padding: 48px 0 0; }
+      .footer-inner { gap: 2rem; padding-bottom: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<a class="call-bar" href="tel:9044683428">Call Now — (904) 468-3428</a>
+
+<!-- NAV -->
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">904 <em>Garage Doors</em></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/#services">Services</a></li>
+      <li><a href="/#how">How It Works</a></li>
+      <li><a href="/#reviews">Reviews</a></li>
+      <li><a href="/#areas">Areas</a></li>
+      <li><a href="/#faq">FAQ</a></li>
+      <li><a href="/blog" class="active">Blog</a></li>
+      <li><a class="nav-call" href="tel:9044683428">(904) 468-3428</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger" onclick="toggleNav()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- DYNAMIC CONTENT AREA -->
+<div id="pageContent">
+  <div class="page-loading" style="padding-top:120px;">
+    <div class="spinner"></div>
+    Loading article…
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">904 <em>Garage Doors</em></div>
+        <p class="footer-tag">Jacksonville's own garage door crew. Local, fast, and here when it matters.</p>
+        <div class="footer-num"><a href="tel:9044683428">(904) 468-3428</a></div>
+      </div>
+      <div>
+        <div class="footer-col-title">Services</div>
+        <ul class="footer-links-list">
+          <li><a href="/#services">Spring Replacement</a></li>
+          <li><a href="/#services">Opener Repair &amp; Install</a></li>
+          <li><a href="/#services">Emergency Repair</a></li>
+          <li><a href="/#services">Cable Repair</a></li>
+          <li><a href="/#services">New Door Installation</a></li>
+          <li><a href="/#services">Tune-Up &amp; Maintenance</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Areas</div>
+        <ul class="footer-links-list">
+          <li><a href="/garage-door-repair-ponte-vedra">Ponte Vedra</a></li>
+          <li><a href="/garage-door-repair-jacksonville-beach">Jacksonville Beach</a></li>
+          <li><a href="/garage-door-repair-mandarin">Mandarin</a></li>
+          <li><a href="/garage-door-repair-nocatee">Nocatee</a></li>
+          <li><a href="/garage-door-repair-orange-park">Orange Park</a></li>
+          <li><a href="/garage-door-repair-yulee">Yulee</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 904 Garage Doors · Jacksonville, FL</div>
+      <div class="footer-copy">Satisfaction Guaranteed · Serving Jacksonville Since 2017</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const API_BASE = 'https://draft-production-78c1.up.railway.app/api/blog';
+
+  // ── Mobile nav ─────────────────────────────────────────────────────────────
+  function toggleNav() {
+    document.getElementById('navLinks').classList.toggle('open');
+    document.getElementById('hamburger').classList.toggle('open');
+  }
+  function closeNav() {
+    document.getElementById('navLinks').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+  }
+  document.querySelectorAll('#navLinks a').forEach(a => a.addEventListener('click', closeNav));
+  document.addEventListener('click', e => { if (!e.target.closest('#mainNav')) closeNav(); });
+
+  window.addEventListener('scroll', () => {
+    document.getElementById('mainNav').style.background =
+      window.scrollY > 50 ? 'rgba(13,17,23,0.99)' : 'rgba(13,17,23,0.96)';
+  }, { passive: true });
+
+  // ── Scroll reveal ──────────────────────────────────────────────────────────
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+
+  function observeReveal() {
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  function badgeClass(type) {
+    const map = { emergency: 'badge-emergency', replacement: 'badge-replacement', maintenance: 'badge-maintenance' };
+    return map[type] || 'badge-general';
+  }
+  function badgeLabel(type) {
+    const map = { emergency: 'Emergency', replacement: 'Replacement', maintenance: 'Maintenance', general: 'General' };
+    return map[type] || (type ? type.charAt(0).toUpperCase() + type.slice(1) : 'General');
+  }
+  function fmtDate(iso) {
+    if (!iso) return '';
+    try { return new Date(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }); }
+    catch { return iso; }
+  }
+  function escHtml(str) {
+    return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── Set meta tags ──────────────────────────────────────────────────────────
+  function setMeta(article) {
+    const slug = article.slug || '';
+    const url  = `https://904garagedoors.com/blog/${slug}`;
+
+    document.title = `${article.title} | 904 Garage Doors`;
+
+    const desc = document.getElementById('metaDesc');
+    if (desc) desc.setAttribute('content', article.metaDescription || '');
+
+    const canonical = document.getElementById('canonicalLink');
+    if (canonical) canonical.setAttribute('href', url);
+
+    const ogUrl = document.getElementById('ogUrl');
+    if (ogUrl) ogUrl.setAttribute('content', url);
+    const ogTitle = document.getElementById('ogTitle');
+    if (ogTitle) ogTitle.setAttribute('content', article.title || '');
+    const ogDesc = document.getElementById('ogDesc');
+    if (ogDesc) ogDesc.setAttribute('content', article.metaDescription || '');
+  }
+
+  // ── Render article ─────────────────────────────────────────────────────────
+  function renderArticle(article) {
+    setMeta(article);
+
+    const html = `
+      <section class="article-header">
+        <div class="article-wrap">
+          <div class="article-header-inner">
+            <div class="article-breadcrumb reveal">
+              <a href="/">Home</a>
+              <span>/</span>
+              <a href="/blog">Blog</a>
+              <span>/</span>
+              <span>${escHtml(article.title || '')}</span>
+            </div>
+            <div class="article-meta-row reveal d1">
+              <span class="badge ${badgeClass(article.customerType)}">${escHtml(badgeLabel(article.customerType))}</span>
+              ${article.estimatedReadTime ? `<span class="article-read-time">${escHtml(String(article.estimatedReadTime))} min read</span>` : ''}
+              ${article.publishedAt ? `<span class="article-date-tag">${escHtml(fmtDate(article.publishedAt))}</span>` : ''}
+            </div>
+            <h1 class="article-h1 reveal d2">${escHtml(article.title || '')}</h1>
+            ${article.metaDescription ? `<p class="article-subtitle reveal d3">${escHtml(article.metaDescription)}</p>` : ''}
+          </div>
+        </div>
+      </section>
+
+      <section class="article-body-section">
+        <div class="article-wrap">
+          <div class="article-content reveal">
+            ${article.content || '<p>Content coming soon.</p>'}
+          </div>
+
+          <div class="article-cta reveal d1">
+            <div class="article-cta-inner">
+              <div class="article-cta-label">Jacksonville, FL — Same-Day Service</div>
+              <h2>Need garage door help<br>in Jacksonville?</h2>
+              <p>Springs, openers, cables, new doors — we cover all of the 904 and we're out to you the same day. Real person answers every call.</p>
+              <div class="article-cta-actions">
+                <a class="btn-red" href="tel:9044683428">(904) 468-3428</a>
+                <a class="btn-ghost" href="/">Get a Free Quote</a>
+              </div>
+            </div>
+          </div>
+
+          <a class="back-link reveal d2" href="/blog">← Back to all articles</a>
+        </div>
+      </section>`;
+
+    document.getElementById('pageContent').innerHTML = html;
+    observeReveal();
+  }
+
+  // ── Render not found ────────────────────────────────────────────────────────
+  function renderNotFound() {
+    document.title = 'Article Not Found | 904 Garage Doors';
+    document.getElementById('pageContent').innerHTML = `
+      <div class="not-found" style="padding-top:120px;">
+        <h2>Article Not Found</h2>
+        <p>We couldn't find that article. It may have been moved or removed. Browse all our guides below.</p>
+        <a class="btn-red" href="/blog">Browse All Articles</a>
+      </div>`;
+  }
+
+  // ── Bootstrap ──────────────────────────────────────────────────────────────
+  (async function init() {
+    // Extract slug: supports /blog/my-slug or /blog/my-slug.html or trailing slash
+    const raw    = window.location.pathname;
+    const parts  = raw.split('/blog/');
+    const slug   = parts[1] ? parts[1].replace(/\/$/, '').replace(/\.html$/, '') : '';
+
+    if (!slug) { renderNotFound(); return; }
+
+    try {
+      const res = await fetch(`${API_BASE}/${encodeURIComponent(slug)}`);
+      if (res.status === 404) { renderNotFound(); return; }
+      if (!res.ok) throw new Error('API error ' + res.status);
+      const article = await res.json();
+      renderArticle(article);
+    } catch (_err) {
+      renderNotFound();
+    }
+  })();
+</script>
+</body>
+</html>

@@ -112,6 +112,42 @@
     .urg-week      { background: rgba(59,130,246,0.12); color: var(--blue); }
     .urg-quote     { background: rgba(255,255,255,0.05); color: var(--sub); }
 
+    /* LEAD SCORE BADGES */
+    .lead-score { font-size: 0.6rem; font-weight: 700; padding: 0.2rem 0.45rem; border-radius: 4px; white-space: nowrap; margin-top: 0.25rem; display: inline-block; }
+    .score-blue { background: rgba(59,130,246,0.15); color: var(--blue); }
+    .score-gold { background: rgba(201,168,76,0.2); color: var(--gold); }
+    .score-red  { background: rgba(214,59,47,0.2); color: var(--red); }
+    .lead-type  { font-size: 0.6rem; font-weight: 700; padding: 0.2rem 0.45rem; border-radius: 4px; text-transform: uppercase; white-space: nowrap; display: inline-block; margin-top: 0.2rem; }
+    .type-emergency   { background: rgba(214,59,47,0.2); color: var(--red); }
+    .type-replacement { background: rgba(201,168,76,0.15); color: var(--gold); }
+    .type-maintenance { background: rgba(34,197,94,0.12); color: var(--green); }
+    .type-commercial  { background: rgba(59,130,246,0.15); color: var(--blue); }
+
+    /* LEAD FILTER BUTTONS */
+    .lead-filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+    .filter-btn { background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; color: var(--sub); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.3rem 0.7rem; cursor: pointer; font-family: inherit; text-transform: uppercase; transition: border-color 0.2s, color 0.2s, background 0.2s; }
+    .filter-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+    .filter-btn.active { background: rgba(201,168,76,0.12); border-color: var(--gold); color: var(--gold); }
+
+    /* LEADS STATS BAR */
+    .leads-stats { display: flex; gap: 1.25rem; flex-wrap: wrap; padding: 0.75rem 1rem; background: var(--bg3); border-radius: 8px; margin-bottom: 1rem; }
+    .ls-item { font-size: 0.7rem; color: var(--sub); }
+    .ls-item strong { color: var(--text); }
+    .ls-item.red strong { color: var(--red); }
+    .ls-item.gold strong { color: var(--gold); }
+
+    /* SEASONAL CAMPAIGN PANEL */
+    .seasonal-panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .seasonal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .seasonal-title { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sub); }
+    .campaign-active { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--green); background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); border-radius: 5px; padding: 0.25rem 0.6rem; }
+    .campaign-active-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+    .seasonal-context { font-size: 0.85rem; color: var(--text); line-height: 1.6; margin-bottom: 1rem; }
+    .seasonal-priority { font-size: 0.78rem; color: var(--gold); font-weight: 600; margin-bottom: 1rem; }
+    .months-row { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+    .month-pip { font-size: 0.6rem; font-weight: 700; padding: 0.25rem 0.5rem; border-radius: 4px; background: var(--bg3); border: 1px solid var(--border); color: var(--sub); text-transform: uppercase; letter-spacing: 0.05em; }
+    .month-pip.current { background: rgba(201,168,76,0.15); border-color: var(--gold); color: var(--gold); }
+
     /* RESEARCH */
     .insight-item { padding: 0.85rem 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; color: var(--text); line-height: 1.6; }
     .insight-item:last-child { border-bottom: none; }
@@ -221,6 +257,17 @@
       <a class="site-link" href="/adhd.html" target="_blank">ADHD Command Post</a>
     </div>
 
+    <!-- SEASONAL CAMPAIGN PANEL -->
+    <div class="seasonal-panel" id="seasonalPanel">
+      <div class="seasonal-header">
+        <div class="seasonal-title">Seasonal Campaign</div>
+        <div class="campaign-active"><span class="campaign-active-dot"></span>Active Campaign</div>
+      </div>
+      <div class="seasonal-context" id="seasonalContext">Loading campaign context…</div>
+      <div class="seasonal-priority" id="seasonalPriority"></div>
+      <div class="months-row" id="monthsRow"></div>
+    </div>
+
     <!-- KPIs -->
     <div class="kpi-row" id="kpiRow">
       <div class="kpi"><div class="kpi-label">Total Leads</div><div class="kpi-val gold" id="kpiLeads">—</div><div class="kpi-sub">All time</div></div>
@@ -239,6 +286,18 @@
         <div class="card-title">
           <span>Recent Leads</span>
           <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
+        </div>
+        <div class="leads-stats" id="leadsStats" style="display:none">
+          <div class="ls-item gold">Today: <strong id="statToday">—</strong></div>
+          <div class="ls-item">Avg Score: <strong id="statAvgScore">—</strong></div>
+          <div class="ls-item red">Emergency: <strong id="statEmergencyPct">—</strong></div>
+        </div>
+        <div class="lead-filters" id="leadFilters" style="display:none">
+          <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">All</button>
+          <button class="filter-btn" data-filter="emergency" onclick="setFilter('emergency')">Emergency</button>
+          <button class="filter-btn" data-filter="replacement" onclick="setFilter('replacement')">Replacement</button>
+          <button class="filter-btn" data-filter="maintenance" onclick="setFilter('maintenance')">Maintenance</button>
+          <button class="filter-btn" data-filter="highscore" onclick="setFilter('highscore')">High Score (16+)</button>
         </div>
         <div id="leadsContainer"><div class="empty">Loading leads…</div></div>
       </div>
