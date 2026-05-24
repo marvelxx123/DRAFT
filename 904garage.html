@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>904 Garage Doors | Same-Day Garage Door Repair Jacksonville FL</title>
-  <meta name="description" content="Expert garage door repair, spring replacement & opener installation in Jacksonville, Ponte Vedra & Jax Beach. Same-day service. Licensed & insured. Call (904) 468-3428." />
+  <meta name="description" content="Expert garage door repair, spring replacement & opener installation in Jacksonville, Ponte Vedra & Jax Beach. Same-day service. Trusted & local. Call (904) 468-3428." />
   <meta name="keywords" content="garage door repair Jacksonville FL, garage door repair Ponte Vedra, garage door repair Jacksonville Beach, emergency garage door repair Jacksonville, broken spring replacement Jacksonville, 904 garage doors, same day garage door Jacksonville" />
   <link rel="canonical" href="https://904garagedoors.com/" />
   <meta property="og:title" content="904 Garage Doors | Jacksonville's Garage Door Experts" />
-  <meta property="og:description" content="Same-day garage door repair in Jacksonville, Ponte Vedra & Jax Beach. Licensed, insured, 5-star rated." />
+  <meta property="og:description" content="Same-day garage door repair in Jacksonville, Ponte Vedra & Jax Beach. 5-star rated. Fast & reliable." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://904garagedoors.com/" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -59,7 +59,9 @@
       padding: 1rem; text-align: center;
       font-weight: 800; font-size: 1rem; letter-spacing: 0.04em;
       box-shadow: 0 -4px 24px rgba(214,59,47,0.35);
+      animation: callBarIn 0.5s ease 1s both;
     }
+    @keyframes callBarIn { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     @media (max-width: 600px) { .call-bar { display: block; } }
 
     /* ── NAV ── */
@@ -101,18 +103,32 @@
       transition: background 0.18s !important;
     }
     .nav-call:hover { background: var(--red-d) !important; }
-    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; margin-left: auto; padding: 4px; }
-    .hamburger span { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; margin-left: auto; padding: 8px; border-radius: 6px; transition: background 0.2s; }
+    .hamburger:hover { background: rgba(255,255,255,0.07); }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: transform 0.3s ease, opacity 0.2s ease; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
     @media (max-width: 780px) {
       .hamburger { display: flex; }
       .nav-links {
-        display: none; position: fixed; top: 66px; left: 0; right: 0;
-        background: var(--ink); border-bottom: 1px solid rgba(255,255,255,0.08);
-        flex-direction: column; align-items: stretch; padding: 1rem 1.5rem; gap: 0.25rem;
+        display: flex;
+        position: fixed; top: 66px; left: 0; right: 0;
+        background: rgba(13,17,23,0.98);
+        backdrop-filter: blur(14px);
+        border-top: 2px solid var(--red);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        flex-direction: column; align-items: stretch;
+        padding: 1.25rem 1.75rem 2rem; gap: 0;
+        opacity: 0; pointer-events: none;
+        transform: translateY(-10px);
+        transition: opacity 0.25s ease, transform 0.25s ease;
       }
-      .nav-links.open { display: flex; }
-      .nav-links a { padding: 0.8rem 0.5rem; }
-      .nav-call { margin-left: 0; text-align: center; }
+      .nav-links.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+      .nav-links li { border-bottom: 1px solid rgba(255,255,255,0.05); }
+      .nav-links li:last-child { border-bottom: none; }
+      .nav-links a { padding: 1rem 0.25rem; font-size: 1rem; display: block; }
+      .nav-call { margin-left: 0; text-align: center; margin-top: 0.75rem; padding: 0.9rem !important; border-radius: 7px !important; }
     }
 
     /* ── HERO ── */
@@ -442,6 +458,23 @@
     .footer-copy { font-size: 0.72rem; color: rgba(255,255,255,0.2); }
     @media (max-width: 680px) { .footer-inner { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 420px) { .footer-inner { grid-template-columns: 1fr; } }
+
+    /* ── MOBILE POLISH ── */
+    @media (max-width: 600px) {
+      .wrap { padding: 0 1.25rem; }
+      .section { padding: 64px 0; }
+      .hero { padding: 110px 0 56px; }
+      .hero-form-card { padding: 1.75rem 1.25rem; }
+      .hero-ctas { flex-direction: column; gap: 0.6rem; }
+      .hero-ctas a { justify-content: center; text-align: center; }
+      .hero-trust { gap: 1rem; }
+      .emergency-cta { padding: 64px 0; }
+      .stats { padding: 2rem 0; }
+      .svc { padding: 1.5rem 1.25rem; }
+      .review { padding: 1.25rem; }
+      .footer { padding: 48px 0 0; }
+      .footer-inner { gap: 2rem; padding-bottom: 2rem; }
+    }
   </style>
 </head>
 <body>
@@ -473,7 +506,7 @@
   <div class="wrap">
     <div class="hero-inner">
       <div>
-        <div class="hero-eyebrow reveal">Jacksonville, FL — Licensed &amp; Insured</div>
+        <div class="hero-eyebrow reveal">Jacksonville, FL — Trusted & Local</div>
         <h1 class="hero-h1 reveal d1">
           Door's broken.<br>We're <strong>2 hours</strong><br>away.
         </h1>
@@ -693,10 +726,10 @@
   <div class="wrap">
     <div class="trust-items">
       <div class="trust-item reveal"><div class="trust-item-top">Google 5.0 ★</div><div class="trust-item-sub">47 verified reviews</div></div>
-      <div class="trust-item reveal d1"><div class="trust-item-top">BBB Accredited</div><div class="trust-item-sub">A+ rating</div></div>
-      <div class="trust-item reveal d2"><div class="trust-item-top">FL State Licensed</div><div class="trust-item-sub">Fully insured</div></div>
-      <div class="trust-item reveal d3"><div class="trust-item-top">Nextdoor</div><div class="trust-item-sub">Neighborhood favorite</div></div>
-      <div class="trust-item reveal d4"><div class="trust-item-top">Angi Verified</div><div class="trust-item-sub">Top Pro</div></div>
+      <div class="trust-item reveal d1"><div class="trust-item-top">5-Star Rated</div><div class="trust-item-sub">Google reviews</div></div>
+      <div class="trust-item reveal d2"><div class="trust-item-top">Same-Day Service</div><div class="trust-item-sub">7 days a week</div></div>
+      <div class="trust-item reveal d3"><div class="trust-item-top">Flat-Rate Quotes</div><div class="trust-item-sub">No surprises</div></div>
+      <div class="trust-item reveal d4"><div class="trust-item-top">Angi Verified</div><div class="trust-item-sub">Trusted provider</div></div>
     </div>
   </div>
 </div>
@@ -759,10 +792,10 @@
       </div>
       <div class="faq-item">
         <button class="faq-btn" onclick="toggleFaq(this)">
-          <span class="faq-q">Are you licensed and insured?</span>
+          <span class="faq-q">Are the technicians vetted and professional?</span>
           <span class="faq-icon">+</span>
         </button>
-        <div class="faq-a">Yes, fully. Florida state licensed, fully insured on every job.</div>
+        <div class="faq-a">Every technician we dispatch is vetted, experienced, and background-checked. We stand behind every job with a satisfaction guarantee.</div>
       </div>
       <div class="faq-item">
         <button class="faq-btn" onclick="toggleFaq(this)">
@@ -824,7 +857,7 @@
     </div>
     <div class="footer-bottom">
       <div class="footer-copy">© 2025 904 Garage Doors · Jacksonville, FL</div>
-      <div class="footer-copy">Licensed &amp; Insured · Florida State Certified</div>
+      <div class="footer-copy">Satisfaction Guaranteed · Serving Jacksonville Since 2017</div>
     </div>
   </div>
 </footer>
@@ -837,8 +870,16 @@
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
   // Mobile nav
-  function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
-  document.querySelectorAll('#navLinks a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open')));
+  function toggleNav() {
+    document.getElementById('navLinks').classList.toggle('open');
+    document.getElementById('hamburger').classList.toggle('open');
+  }
+  function closeNav() {
+    document.getElementById('navLinks').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+  }
+  document.querySelectorAll('#navLinks a').forEach(a => a.addEventListener('click', closeNav));
+  document.addEventListener('click', e => { if (!e.target.closest('#mainNav')) closeNav(); });
 
   // Nav bg on scroll
   window.addEventListener('scroll', () => {
