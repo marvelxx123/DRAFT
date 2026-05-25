@@ -494,7 +494,120 @@
     await Promise.all([loadLeads(), loadResearch(), loadFunnel(), loadAgents(), loadLogs(), loadHealth()]);
   }
 
+  // ── SEASONAL CAMPAIGN ──────────────────────────────────────────────────────
+  const SEASONAL_CONTEXT = {
+    1:  { context: "January — Post-holiday homeowners reviewing home maintenance. Cold snaps can stress springs and cables. Good time to push tune-up messaging.", priority: "Push: Tune-Up & Maintenance · Mention winter wear on springs" },
+    2:  { context: "February — Valentine's season. Homeowners planning spring projects. Opener upgrades and smart door openers resonate well.", priority: "Push: Smart Opener Upgrades · Lead with convenience messaging" },
+    3:  { context: "March — Spring prep season begins. High intent for new door installations and tune-ups before summer heat arrives.", priority: "Push: New Door Installation + Spring Tune-Ups · Best conversion month for replacements" },
+    4:  { context: "April — Peak spring season. Homeowners active outdoors, garage doors get heavy use. Emergency repairs spike with increased activity.", priority: "Push: Emergency Response Speed · Same-day messaging front and center" },
+    5:  { context: "May — Pre-summer surge. New door installs at peak as homeowners finalize exterior upgrades before summer.", priority: "Push: New Door Installation · Curb appeal angle works well this month" },
+    6:  { context: "June — Summer begins. Heat causes opener motors to work harder. Spring tension issues increase in Florida heat.", priority: "Push: Opener Repair · Lead with 'heat stress on garage door systems' angle" },
+    7:  { context: "July — Peak summer heat in Florida. Highest rate of opener failures and spring breaks due to temperature stress. Emergency volume up.", priority: "Push: Emergency Repair + Spring Replacement · Urgency messaging converts best" },
+    8:  { context: "August — Hurricane prep season. Homeowners thinking about door strength and weatherproofing. Back-to-school means heavy morning garage use.", priority: "Push: Emergency readiness + New Storm-Ready Doors · Safety angle converts" },
+    9:  { context: "September — Hurricane season peak. Storm damage calls spike. Homeowners repairing doors damaged by high winds.", priority: "Push: Emergency Storm Repair · Fast response time is the #1 message" },
+    10: { context: "October — Post-hurricane season. Cooler temperatures returning. Homeowners catching up on deferred repairs and new installs.", priority: "Push: New Door Installation + Catch-Up Repairs · Relief tone after summer stress" },
+    11: { context: "November — Pre-holiday push. Families want everything working before Thanksgiving guests. High urgency for same-day service.", priority: "Push: Same-Day Repairs · 'Before the holidays' urgency works well" },
+    12: { context: "December — Holiday season. Emergency calls from people entertaining at home. Post-Christmas new door installs begin.", priority: "Push: Emergency Availability + New Door Quotes for January · 'We're open through the holidays'" },
+  };
+
+  const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  function initSeasonalPanel() {
+    const now = new Date();
+    const month = now.getMonth() + 1;
+    const data = SEASONAL_CONTEXT[month];
+    document.getElementById('seasonalContext').textContent = data.context;
+    document.getElementById('seasonalPriority').textContent = '→ ' + data.priority;
+    const html = MONTH_NAMES.map((m, i) =>
+      `<span class="month-pip${i + 1 === month ? ' current' : ''}">${m}</span>`
+    ).join('');
+    document.getElementById('monthsRow').innerHTML = html;
+  }
+
+  initSeasonalPanel();
+
   // ── LEADS ──────────────────────────────────────────────────────────────────
+  let allLeadsCache = [];
+  let activeFilter = 'all';
+
+  function scoreLeadType(l) {
+    const svc = (l.service || '').toLowerCase();
+    const urg = (l.urgency || '').toLowerCase();
+    if (urg.includes('emergency') || svc.includes('won\'t open') || svc.includes('emergency')) return 'EMERGENCY';
+    if (svc.includes('new door') || svc.includes('installation') || svc.includes('replace')) return 'REPLACEMENT';
+    if (svc.includes('tune') || svc.includes('maintenance') || svc.includes('inspection')) return 'MAINTENANCE';
+    return 'REPLACEMENT';
+  }
+
+  function calcLeadScore(l) {
+    let score = 0;
+    const urg = (l.urgency || '').toLowerCase();
+    const svc = (l.service || '').toLowerCase();
+    if (urg.includes('emergency')) score += 8;
+    else if (urg.includes('today')) score += 5;
+    else if (urg.includes('week')) score += 3;
+    else score += 1;
+    if (svc.includes('spring')) score += 5;
+    else if (svc.includes('cable')) score += 4;
+    else if (svc.includes('opener')) score += 4;
+    else if (svc.includes('new door')) score += 6;
+    else if (svc.includes('off track') || svc.includes('won\'t open')) score += 5;
+    else if (svc.includes('tune') || svc.includes('maintenance')) score += 2;
+    else score += 3;
+    if (l.city && (l.city.toLowerCase().includes('ponte vedra') || l.city.toLowerCase().includes('nocatee'))) score += 2;
+    return score;
+  }
+
+  function renderLeads(leads) {
+    if (!leads.length) {
+      document.getElementById('leadsContainer').innerHTML = '<div class="empty">No leads match this filter</div>';
+      return;
+    }
+    document.getElementById('leadsContainer').innerHTML = leads.map(l => {
+      const urgClass = (l.urgency || '').toLowerCase().includes('emergency') ? 'urg-emergency'
+        : (l.urgency || '').toLowerCase().includes('today') ? 'urg-today'
+        : (l.urgency || '').toLowerCase().includes('week') ? 'urg-week' : 'urg-quote';
+      const date = l.timestamp ? new Date(l.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+      const score = calcLeadScore(l);
+      const scoreClass = score >= 16 ? 'score-red' : score >= 11 ? 'score-gold' : 'score-blue';
+      const leadType = scoreLeadType(l);
+      const typeClass = leadType === 'EMERGENCY' ? 'type-emergency' : leadType === 'REPLACEMENT' ? 'type-replacement' : leadType === 'MAINTENANCE' ? 'type-maintenance' : 'type-commercial';
+      return `<div class="lead-row" data-type="${leadType.toLowerCase()}" data-score="${score}">
+        <div>
+          <div class="lead-name">${esc(l.name || '—')}</div>
+          <div class="lead-meta">${esc(l.service || '—')} · ${date}${l.city ? ' · ' + esc(l.city) : ''}</div>
+          <span class="lead-type ${typeClass}">${leadType}</span>
+        </div>
+        <div style="text-align:right">
+          <div class="lead-phone"><a href="tel:${esc(l.phone || '')}">${esc(l.phone || '—')}</a></div>
+          <div class="lead-urgency ${urgClass}">${esc(l.urgency || 'quote')}</div>
+          <div class="lead-score ${scoreClass}">Score: ${score}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function setFilter(filter) {
+    activeFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
+    applyFilter();
+  }
+
+  function applyFilter() {
+    const recent = [...allLeadsCache].reverse().slice(0, 20);
+    let filtered = recent;
+    if (activeFilter === 'emergency') {
+      filtered = recent.filter(l => scoreLeadType(l) === 'EMERGENCY');
+    } else if (activeFilter === 'replacement') {
+      filtered = recent.filter(l => scoreLeadType(l) === 'REPLACEMENT');
+    } else if (activeFilter === 'maintenance') {
+      filtered = recent.filter(l => scoreLeadType(l) === 'MAINTENANCE');
+    } else if (activeFilter === 'highscore') {
+      filtered = recent.filter(l => calcLeadScore(l) >= 16);
+    }
+    renderLeads(filtered);
+  }
+
   async function loadLeads() {
     try {
       const r = await fetch('/api/admin/leads', { headers: authHeaders() });
@@ -504,8 +617,12 @@
         document.getElementById('kpiLeads').textContent = '0';
         document.getElementById('kpiToday').textContent = '0';
         document.getElementById('kpiEmergency').textContent = '0';
+        document.getElementById('leadsStats').style.display = 'none';
+        document.getElementById('leadFilters').style.display = 'none';
         return;
       }
+
+      allLeadsCache = leads;
       const now = Date.now();
       const today = leads.filter(l => l.timestamp && (now - new Date(l.timestamp).getTime()) < 86400000);
       const emergency = leads.filter(l => l.urgency && l.urgency.toLowerCase().includes('emergency'));
@@ -513,23 +630,17 @@
       document.getElementById('kpiToday').textContent    = today.length;
       document.getElementById('kpiEmergency').textContent = emergency.length;
 
-      const recent = [...leads].reverse().slice(0, 8);
-      document.getElementById('leadsContainer').innerHTML = recent.map(l => {
-        const urgClass = (l.urgency || '').toLowerCase().includes('emergency') ? 'urg-emergency'
-          : (l.urgency || '').toLowerCase().includes('today') ? 'urg-today'
-          : (l.urgency || '').toLowerCase().includes('week') ? 'urg-week' : 'urg-quote';
-        const date = l.timestamp ? new Date(l.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
-        return `<div class="lead-row">
-          <div>
-            <div class="lead-name">${esc(l.name || '—')}</div>
-            <div class="lead-meta">${esc(l.service || '—')} · ${date}${l.city ? ' · ' + esc(l.city) : ''}</div>
-          </div>
-          <div style="text-align:right">
-            <div class="lead-phone"><a href="tel:${esc(l.phone || '')}">${esc(l.phone || '—')}</a></div>
-            <div class="lead-urgency ${urgClass}">${esc(l.urgency || 'quote')}</div>
-          </div>
-        </div>`;
-      }).join('');
+      // Stats bar
+      const scores = leads.map(l => calcLeadScore(l));
+      const avgScore = scores.length ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : '—';
+      const emergencyPct = leads.length ? Math.round((emergency.length / leads.length) * 100) + '%' : '—';
+      document.getElementById('statToday').textContent = today.length;
+      document.getElementById('statAvgScore').textContent = avgScore;
+      document.getElementById('statEmergencyPct').textContent = emergencyPct;
+      document.getElementById('leadsStats').style.display = 'flex';
+      document.getElementById('leadFilters').style.display = 'flex';
+
+      applyFilter();
     } catch (e) {
       document.getElementById('leadsContainer').innerHTML = '<div class="empty">Could not load leads</div>';
     }
