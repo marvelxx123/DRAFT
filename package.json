@@ -1,7 +1,7 @@
 {
-  "name": "wearit",
+  "name": "904-garage-doors",
   "version": "1.0.0",
-  "description": "Custom print-on-demand platform",
+  "description": "904 Garage Doors — Jacksonville lead generation and dispatch platform",
   "main": "server/index.js",
   "engines": {
     "node": ">=20.0.0"

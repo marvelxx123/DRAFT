@@ -2,9 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 
-const checkoutRoutes = require('./routes/checkout');
-const webhookRoutes  = require('./routes/webhooks');
 const adminRoutes    = require('./routes/admin');
 const contactRoutes  = require('./routes/contact');
 const blogRoutes     = require('./routes/blog');
@@ -12,9 +11,6 @@ const agentRunner    = require('./agents/agentRunner');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// ── STRIPE WEBHOOK: must receive raw body before any json() middleware ──────
-app.use('/api/webhooks/stripe', express.raw({ type: 'application/json' }));
 
 // ── MIDDLEWARE ───────────────────────────────────────────────────────────────
 app.use(cors({
@@ -24,8 +20,6 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 
 // ── API ROUTES ───────────────────────────────────────────────────────────────
-app.use('/api/checkout', checkoutRoutes);
-app.use('/api/webhooks', webhookRoutes);
 app.use('/api/admin',    adminRoutes);
 app.use('/api/contact',  contactRoutes);
 app.use('/api/blog',     blogRoutes);
@@ -34,9 +28,8 @@ app.use('/api/blog',     blogRoutes);
 app.get('/api/health', (_req, res) => {
   res.json({
     status: 'ok',
-    stripe:   !!process.env.STRIPE_SECRET_KEY,
-    printful: !!process.env.PRINTFUL_API_KEY,
-    agents:   agentRunner.getStatus().map(a => ({ id: a.id, status: a.status })),
+    agents:    agentRunner.getStatus().map(a => ({ id: a.id, status: a.status })),
+    anthropic: !!process.env.ANTHROPIC_API_KEY,
     timestamp: new Date().toISOString(),
   });
 });
@@ -86,12 +79,16 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
+// Ensure data directory exists
+const DATA_DIR = path.join(__dirname, '..', 'data');
+if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+
 app.listen(PORT, () => {
-  console.log(`\n WEARIT server running on http://localhost:${PORT}`);
-  console.log(`   Stripe:    ${process.env.STRIPE_SECRET_KEY ? '✓' : '✗ missing STRIPE_SECRET_KEY'}`);
-  console.log(`   Printful:  ${process.env.PRINTFUL_API_KEY  ? '✓' : '✗ missing PRINTFUL_API_KEY'}`);
-  console.log(`   Claude AI: ${process.env.ANTHROPIC_API_KEY ? '✓' : '✗ missing ANTHROPIC_API_KEY (agents need this)'}`);
-  console.log(`   Admin:     POST /api/admin/login  GET /api/admin/status\n`);
+  console.log(`\n 904 Garage Doors — server running on http://localhost:${PORT}`);
+  console.log(`   Claude AI:  ${process.env.ANTHROPIC_API_KEY ? '✓' : '✗ missing ANTHROPIC_API_KEY (agents need this)'}`);
+  console.log(`   Admin pwd:  ${process.env.ADMIN_PASSWORD    ? '✓ (from env)' : '⚠ using default password — set ADMIN_PASSWORD on Railway'}`);
+  console.log(`   Dashboard:  /jax-command`);
+  console.log(`   Health:     /api/health\n`);
 
   // Start autonomous agents
   agentRunner.startAll();
