@@ -7,11 +7,21 @@ module.exports = {
   phone:        '(904) 468-3428',
   website:      'https://904garagedoors.com',
   areas:        ['Jacksonville', 'Orange Park', 'Fleming Island', 'Mandarin', 'Southside', 'Arlington', 'Ponte Vedra', 'Middleburg', 'Jacksonville Beach', 'Neptune Beach', 'Atlantic Beach', 'Nocatee', 'Palm Coast'],
-  services:     ['garage door repair', 'broken spring replacement', 'opener installation', 'cable repair', 'new door installation', 'emergency service', 'maintenance tune-up', 'off-track door repair', 'hurricane-rated door installation', 'roller replacement'],
-  usp:          'Same-day service, fast response, 7 days a week — we connect Jacksonville homeowners with trusted local garage door pros',
-  yearsExp:     5,
-  license:      '',                            // ← your contractor license # (optional)
-  reviewLink:   '',                            // ← Google Maps review link (optional)
+  services:     ['new garage door installation', 'opener installation', 'garage door issues and troubleshooting', 'off-track door service', 'hurricane-rated door installation', 'garage door spring service', 'cable service', 'same-day garage door service'],
+  usp:          'We connect Jacksonville homeowners with trusted garage door pros — fast response, 7 days a week',
+  reviewLink:   '',
+
+  // AGENT AWARENESS — all agents must operate within these boundaries
+  platformRules: [
+    'We are a lead generation and dispatch platform, not a direct service company',
+    'Never say "we fix", "we repair", "our technician" or imply hands-on work by the platform',
+    'Always use language like: "we will get someone to you", "we connect you with a pro", "a technician will be dispatched"',
+    'Never promise specific outcomes, pricing, or timelines as guarantees',
+    'Never claim to be licensed, insured, or bonded as a platform',
+    'The customer experience is: they contact us → we dispatch a qualified pro → pro does the work',
+    'Tone: professional service platform, not a local handyman or buddy',
+    'Never create liability by making specific repair promises on behalf of technicians',
+  ],
 
   // Research-backed targets — real Jacksonville companies and communities
   pmCompanies:  ['Navy to Navy Homes', 'Nest Finders', 'Green River Property Management', 'First Place Management', 'Rental Guys Property Management', 'Suncoast Rentals'],
