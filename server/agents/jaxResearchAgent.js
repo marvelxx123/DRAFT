@@ -170,7 +170,7 @@ Key facts about the business:
 - Just launched, building reviews from zero
 - Has Google LSA (background check complete)
 - Has GMB profile (verification pending)
-- Same-day service, flat-rate pricing, 7 days/week
+- Same-day dispatch, professional service platform, 7 days/week
 - Phone: (904) 468-3428
 
 Based on current local SEO best practices and the Jacksonville garage door market, generate:

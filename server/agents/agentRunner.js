@@ -1,28 +1,20 @@
-const contentAgent      = require('./contentAgent');
-const adAgent           = require('./adAgent');
-const seoAgent          = require('./seoAgent');
-const googleAdsAgent    = require('./googleAdsAgent');
-const socialAgent       = require('./socialAgent');
-const emailAgent        = require('./emailAgent');
-const jaxProfileAgent   = require('./jaxProfileAgent');
-const jaxSocialAgent    = require('./jaxSocialAgent');
+const contentAgent       = require('./contentAgent');
+const seoAgent           = require('./seoAgent');
+const jaxProfileAgent    = require('./jaxProfileAgent');
+const jaxSocialAgent     = require('./jaxSocialAgent');
 const jaxCraigslistAgent = require('./jaxCraigslistAgent');
-const jaxOutreachAgent  = require('./jaxOutreachAgent');
-const jaxFollowupAgent  = require('./jaxFollowupAgent');
-const jaxResearchAgent  = require('./jaxResearchAgent');
-const funnelAgent       = require('./funnelAgent');
+const jaxOutreachAgent   = require('./jaxOutreachAgent');
+const jaxFollowupAgent   = require('./jaxFollowupAgent');
+const jaxResearchAgent   = require('./jaxResearchAgent');
+const funnelAgent        = require('./funnelAgent');
 const { log } = require('./logger');
 
 const SCHEDULES = {
-  content:        6  * 60 * 60 * 1000,
-  ads:            12 * 60 * 60 * 1000,
+  content:        12 * 60 * 60 * 1000, // twice daily
   seo:            24 * 60 * 60 * 1000,
-  googleads:      48 * 60 * 60 * 1000,
-  social:         8  * 60 * 60 * 1000,
-  email:          24 * 60 * 60 * 1000,
-  jaxprofile:     168 * 60 * 60 * 1000,
+  jaxprofile:    168 * 60 * 60 * 1000, // weekly
   jaxsocial:      24 * 60 * 60 * 1000,
-  jaxcraigslist:  48 * 60 * 60 * 1000,
+  jaxcraigslist:  12 * 60 * 60 * 1000, // twice daily
   jaxoutreach:    24 * 60 * 60 * 1000,
   jaxfollowup:    24 * 60 * 60 * 1000,
   jaxresearch:    12 * 60 * 60 * 1000, // twice daily
@@ -30,35 +22,27 @@ const SCHEDULES = {
 };
 
 const AGENT_NAMES = {
-  content:        'Content Agent',
-  ads:            'Ad Agent',
-  seo:            'SEO Agent',
-  googleads:      'Google Ads Agent',
-  social:         'Social Media Agent',
-  email:          'Email Agent',
-  jaxprofile:     'JAX Profile Agent',
-  jaxsocial:      'JAX Social Agent',
-  jaxcraigslist:  'JAX Craigslist Agent',
-  jaxoutreach:    'JAX Outreach Agent',
-  jaxfollowup:    'JAX Follow-Up Agent',
-  jaxresearch:    'JAX Research Agent',
-  funnel:         'Funnel Intelligence Agent',
+  content:       'Content Agent',
+  seo:           'SEO Agent',
+  jaxprofile:    'JAX Profile Agent',
+  jaxsocial:     'JAX Social Agent',
+  jaxcraigslist: 'JAX Craigslist Agent',
+  jaxoutreach:   'JAX Outreach Agent',
+  jaxfollowup:   'JAX Follow-Up Agent',
+  jaxresearch:   'JAX Research Agent',
+  funnel:        'Funnel Intelligence Agent',
 };
 
 const AGENT_SCHEDULES_LABEL = {
-  content:        'Every 6 hours',
-  ads:            'Every 12 hours',
-  seo:            'Every 24 hours',
-  googleads:      'Every 48 hours',
-  social:         'Every 8 hours',
-  email:          'Every 24 hours',
-  jaxprofile:     'Every 7 days',
-  jaxsocial:      'Every 24 hours',
-  jaxcraigslist:  'Every 48 hours',
-  jaxoutreach:    'Every 24 hours',
-  jaxfollowup:    'Every 24 hours',
-  jaxresearch:    'Twice daily (6 AM & 7 PM)',
-  funnel:         'Twice daily — funnel research & lead analytics',
+  content:       'Twice daily',
+  seo:           'Every 24 hours',
+  jaxprofile:    'Every 7 days',
+  jaxsocial:     'Every 24 hours',
+  jaxcraigslist: 'Twice daily',
+  jaxoutreach:   'Every 24 hours',
+  jaxfollowup:   'Every 24 hours',
+  jaxresearch:   'Twice daily',
+  funnel:        'Twice daily',
 };
 
 const agentState = {};
@@ -67,8 +51,7 @@ for (const id of Object.keys(SCHEDULES)) {
 }
 
 const agents = {
-  content: contentAgent, ads: adAgent, seo: seoAgent, googleads: googleAdsAgent,
-  social: socialAgent, email: emailAgent,
+  content: contentAgent, seo: seoAgent,
   jaxprofile: jaxProfileAgent, jaxsocial: jaxSocialAgent,
   jaxcraigslist: jaxCraigslistAgent, jaxoutreach: jaxOutreachAgent,
   jaxfollowup: jaxFollowupAgent, jaxresearch: jaxResearchAgent, funnel: funnelAgent,
@@ -92,9 +75,9 @@ function scheduleAgent(id) {
   const interval = SCHEDULES[id];
   const state = agentState[id];
   // Stagger starts so they don't all hit the API at once
-  const stagger = { content: 10, ads: 20, seo: 30, googleads: 40, social: 15, email: 25,
-    jaxprofile: 35, jaxsocial: 45, jaxcraigslist: 55, jaxoutreach: 65, jaxfollowup: 75,
-    jaxresearch: 90, funnel: 105 };
+  const stagger = { content: 10, seo: 25,
+    jaxprofile: 40, jaxsocial: 55, jaxcraigslist: 70, jaxoutreach: 85, jaxfollowup: 100,
+    jaxresearch: 115, funnel: 130 };
   setTimeout(() => runAgent(id), (stagger[id] || 10) * 1000);
   state.nextRun = new Date(Date.now() + interval).toISOString();
   state.timer = setInterval(async () => {
@@ -104,7 +87,7 @@ function scheduleAgent(id) {
 }
 
 function startAll() {
-  log('runner', 'info', 'Agent runner starting — 13 agents: 6 WEARIT + 5 JAX Lead Gen + 1 JAX Research + 1 Funnel');
+  log('runner', 'info', '904 Garage Doors agent runner starting — 9 active agents (twice-daily funnel cycle)');
   for (const id of Object.keys(agents)) scheduleAgent(id);
 }
 

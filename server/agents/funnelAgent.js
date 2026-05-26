@@ -76,7 +76,7 @@ async function researchFunnelTactics(leadsData) {
 
   const prompt = `You are a conversion rate optimization expert specializing in local service businesses (garage door repair, HVAC, plumbers) in the US.
 
-Business: 904 Garage Doors — Jacksonville FL metro, same-day service, flat-rate pricing
+Business: 904 Garage Doors — Jacksonville FL metro, same-day dispatch, professional service platform
 Current funnel state: ${context}
 
 Research and provide the TOP 5 highest-impact sales funnel improvements for a local garage door repair business RIGHT NOW in 2025. Focus on:

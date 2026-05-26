@@ -54,7 +54,7 @@ async function run() {
   seq.referralSms = await callClaude(
     `Write an SMS asking for referrals, from a Jacksonville garage door technician to a happy customer. ` +
     `${context} Max 160 chars. ` +
-    `Offer a small incentive ($20-25 off their next service call) for any neighbor or friend they refer. ` +
+    `Mention that referrals are appreciated and we prioritize past customers. ` +
     `Light, friendly. Not a mass-marketing text — sounds personal.`
   );
   log(AGENT_ID, 'success', 'Referral SMS generated');

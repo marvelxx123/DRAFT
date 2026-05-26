@@ -120,24 +120,25 @@ async function generateLeadReply(item) {
 
 // ── AD GENERATION ─────────────────────────────────────────────────────────────
 const AD_TYPES = [
-  { type: 'emergency', title: 'SAME DAY Garage Door Repair – Jacksonville' },
-  { type: 'spring',    title: 'Broken Spring? We Fix It Today – JAX Area' },
+  { type: 'emergency', title: 'SAME DAY Garage Door Service – Jacksonville' },
+  { type: 'spring',    title: 'Broken Spring? Same-Day Response – JAX Area' },
   { type: 'opener',   title: 'Garage Door Opener Install/Replace – Jacksonville' },
   { type: 'tune',     title: 'Garage Door Tune-Up Special – All Jacksonville Areas' },
   { type: 'new',      title: 'New Garage Door Installation – Jacksonville & Surrounding' },
-  { type: 'cable',    title: 'Garage Door Cable Repair – Fast Service Jacksonville FL' },
+  { type: 'cable',    title: 'Garage Door Cable Issue? Fast Response – Jacksonville FL' },
 ];
 
 const context = `Business: ${cfg.businessName}. Phone: ${cfg.phone}. Areas: ${cfg.areas.join(', ')}. USP: ${cfg.usp}. Services: ${cfg.services.join(', ')}.`;
 
 async function generateAd(adType) {
   return await callClaude(
-    `Write a Craigslist "Services" listing body for a garage door company in Jacksonville FL. ` +
+    `Write a Craigslist "Services" listing body for a garage door dispatch platform in Jacksonville FL. ` +
     `${context} Ad type: "${adType.type}" service. ` +
-    `Format: short punchy opening line, bullet list of 5-7 key service points, pricing approach (free estimates, flat-rate), ` +
-    `availability (same-day, emergency), service area, and call to action with phone. ` +
-    `Total max 200 words. Plain text, no markdown. Sound trustworthy and local. ` +
-    `Do NOT sound like a big chain — this is a local Jacksonville tech.`
+    `Format: short punchy opening line, bullet list of 5-7 key service points, ` +
+    `availability (same-day, 7 days a week), service area, and call to action with phone. ` +
+    `Total max 200 words. Plain text, no markdown. Sound professional and trustworthy. ` +
+    `Use language like "we dispatch a pro to you" not "we fix" or "we repair". ` +
+    `Never mention flat-rate pricing or guarantees. Do not claim licensed or insured.`
   );
 }
 

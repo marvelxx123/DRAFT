@@ -80,7 +80,7 @@ async function run() {
   pack.nextdoor = await callClaude(
     `Write a Nextdoor post for a local garage door technician in ${hood}, Jacksonville FL. ${context} ` +
     `Angle: "${angle}". Month: ${month}. Max 100 words. ` +
-    `Sound like a neighbor helping neighbors. Mention the specific neighborhood name. ` +
+    `Professional but approachable tone. Represent 904 Garage Doors as a reliable service platform. Mention the specific neighborhood. ` +
     `No sales pressure. End with phone number. First-person voice.`
   );
   pack.nextdoorNeighborhood = hood;

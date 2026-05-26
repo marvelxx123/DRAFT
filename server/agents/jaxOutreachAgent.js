@@ -66,8 +66,8 @@ function stripSubjectLine(rawText) {
   return rawText.replace(/^subject[:\s]+.+\n?/im, '').trim();
 }
 
-const context = `My name is ${cfg.ownerName}, owner of ${cfg.businessName} in Jacksonville FL. ` +
-  `Phone: ${cfg.phone}. Services: ${cfg.services.join(', ')}. USP: ${cfg.usp}. Years in business: ${cfg.yearsExp}.`;
+const context = `My name is ${cfg.ownerName}, with ${cfg.businessName} in Jacksonville FL. ` +
+  `Phone: ${cfg.phone}. Services: ${cfg.services.join(', ')}. USP: ${cfg.usp}.`;
 
 const month = String(new Date().getMonth() + 1);
 const seasonal = cfg.seasonalContext[month] || 'standard season';
@@ -151,7 +151,7 @@ async function run() {
       `Write a short message to the community manager at ${hoaTarget} HOA in Ponte Vedra / Jacksonville FL, from a local garage door technician. ` +
       `${context} Goal: get added to the HOA preferred vendor list and/or mentioned in the community newsletter. ` +
       `Max 100 words. Suggest sending their info in the HOA newsletter or vendor list. ` +
-      `Mention being local, licensed, and offering HOA-member discounts. Friendly and neighbor-like tone. ` +
+      `Mention fast response, professional service, and that we dispatch vetted garage door pros. Professional tone. ` +
       `Start your response with "Subject: " on the first line.`
     );
     const subject = extractSubject(rawHoa);

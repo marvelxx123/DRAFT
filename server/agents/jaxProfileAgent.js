@@ -44,7 +44,7 @@ async function run() {
   entry.nextdoorBio = await callClaude(
     `Write a Nextdoor business bio for a local garage door service company. ${context} ` +
     `Max 180 words. Neighborhood-friendly, trustworthy tone. Mention the specific neighborhoods served. ` +
-    `End with contact info. No corporate jargon — this is a local neighbor talking to neighbors.`
+    `End with contact info. Represent 904 Garage Doors as a professional service platform that dispatches trusted pros across Jacksonville.`
   );
   log(AGENT_ID, 'success', 'Nextdoor bio generated');
 
@@ -60,7 +60,7 @@ async function run() {
   entry.nextdoorIntro = await callClaude(
     `Write a short Nextdoor "business introduction" post for a garage door technician. ${context} ` +
     `Sound like a real local person, not a company. Max 100 words. First-person. ` +
-    `Mention being local to Jacksonville, available fast, and willing to help neighbors. ` +
+    `Mention fast response across Jacksonville and that we connect homeowners with trusted garage door pros. ` +
     `Soft intro — not a sales pitch. End with phone number.`
   );
   log(AGENT_ID, 'success', 'Nextdoor intro post generated');
