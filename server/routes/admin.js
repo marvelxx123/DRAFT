@@ -181,4 +181,79 @@ router.get('/leads', requireAdmin, (_req, res) => {
   }
 });
 
+// ── CRAIGSLIST ROUTES ──────────────────────────────────────────────────────────
+
+const CL_FILE      = path.join(ROOT, 'data/jax-craigslist.json');
+const OUTREACH_FILE = path.join(ROOT, 'data/jax-outreach.json');
+
+function readCL() {
+  try { return JSON.parse(fs.readFileSync(CL_FILE, 'utf8')); }
+  catch { return { foundLeads: [], ads: [], lastPostedAt: null, postingDue: false, lastRun: null }; }
+}
+
+function readOutreach() {
+  try { return JSON.parse(fs.readFileSync(OUTREACH_FILE, 'utf8')); }
+  catch { return { sendQueue: [], sent: [], contactedTargets: {}, lastRun: null }; }
+}
+
+// GET /api/admin/craigslist — return foundLeads + ads + postingDue
+router.get('/craigslist', requireAdmin, (_req, res) => {
+  const data = readCL();
+  res.json({
+    foundLeads:    data.foundLeads   || [],
+    ads:           data.ads          || [],
+    postingDue:    data.postingDue   || false,
+    lastPostedAt:  data.lastPostedAt || null,
+    lastRun:       data.lastRun      || null,
+  });
+});
+
+// POST /api/admin/craigslist/posted — mark that user posted to Craigslist today
+router.post('/craigslist/posted', requireAdmin, (_req, res) => {
+  const data = readCL();
+  data.lastPostedAt = new Date().toISOString();
+  data.postingDue   = false;
+  fs.writeFileSync(CL_FILE, JSON.stringify(data, null, 2));
+  log('admin', 'success', 'Craigslist posting marked as done');
+  res.json({ success: true, lastPostedAt: data.lastPostedAt });
+});
+
+// ── OUTREACH ROUTES ────────────────────────────────────────────────────────────
+
+// GET /api/admin/outreach — return pending queue + sent count
+router.get('/outreach', requireAdmin, (_req, res) => {
+  const data = readOutreach();
+  const pending = (data.sendQueue || []).filter(i => i.status === 'pending');
+  const sentAll = data.sent || [];
+  // Count sent this month
+  const now   = new Date();
+  const y     = now.getFullYear();
+  const m     = now.getMonth();
+  const sentThisMonth = sentAll.filter(i => {
+    if (!i.sentAt) return false;
+    const d = new Date(i.sentAt);
+    return d.getFullYear() === y && d.getMonth() === m;
+  }).length;
+  res.json({ sendQueue: pending, sentCount: sentAll.length, sentThisMonth });
+});
+
+// POST /api/admin/outreach/:id/sent — mark an outreach item as sent
+router.post('/outreach/:id/sent', requireAdmin, (req, res) => {
+  const { id } = req.params;
+  const data = readOutreach();
+  const idx = (data.sendQueue || []).findIndex(i => String(i.id) === String(id));
+  if (idx === -1) {
+    return res.status(404).json({ error: 'Outreach item not found' });
+  }
+  const [item] = data.sendQueue.splice(idx, 1);
+  item.status = 'sent';
+  item.sentAt = new Date().toISOString();
+  if (!data.sent) data.sent = [];
+  data.sent.unshift(item);
+  data.sent = data.sent.slice(0, 100);
+  fs.writeFileSync(OUTREACH_FILE, JSON.stringify(data, null, 2));
+  log('admin', 'success', `Outreach item ${id} marked sent`);
+  res.json({ success: true, item });
+});
+
 module.exports = router;

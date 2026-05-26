@@ -218,6 +218,53 @@
 
     /* LAST UPDATED */
     .last-updated { font-size: 0.62rem; color: var(--sub); }
+
+    /* CRAIGSLIST + OUTREACH PANELS */
+    .section-panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 1.5rem; overflow: hidden; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.5rem; cursor: pointer; user-select: none; }
+    .section-header:hover { background: rgba(255,255,255,0.02); }
+    .section-title { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sub); display: flex; align-items: center; gap: 0.6rem; }
+    .section-chevron { font-size: 0.75rem; color: var(--sub); transition: transform 0.2s; }
+    .section-chevron.open { transform: rotate(180deg); }
+    .section-body { padding: 0 1.5rem 1.5rem; display: none; }
+    .section-body.open { display: block; }
+    .overdue-badge { background: rgba(214,59,47,0.2); color: var(--red); border: 1px solid rgba(214,59,47,0.3); border-radius: 5px; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.2rem 0.55rem; }
+    .cl-actions { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .cl-btn { background: var(--red); color: #fff; border: none; border-radius: 7px; font-size: 0.78rem; font-weight: 700; padding: 0.55rem 1.1rem; cursor: pointer; font-family: inherit; transition: background 0.2s; }
+    .cl-btn:hover { background: #b52e24; }
+    .cl-btn.secondary { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
+    .cl-btn.secondary:hover { border-color: rgba(255,255,255,0.2); }
+    .lead-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.1rem; margin-bottom: 0.75rem; }
+    .lead-card:last-child { margin-bottom: 0; }
+    .lead-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.5rem; }
+    .lead-card-title { font-size: 0.85rem; font-weight: 700; line-height: 1.4; }
+    .lead-card-meta { font-size: 0.68rem; color: var(--sub); margin-top: 0.2rem; }
+    .lead-source-tag { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: rgba(59,130,246,0.12); color: var(--blue); border-radius: 4px; padding: 0.15rem 0.45rem; white-space: nowrap; flex-shrink: 0; }
+    .lead-desc { font-size: 0.75rem; color: var(--sub); margin-bottom: 0.6rem; line-height: 1.5; }
+    .reply-label { font-size: 0.58rem; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.3rem; }
+    .reply-textarea { width: 100%; background: rgba(0,0,0,0.25); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 0.75rem; font-family: inherit; line-height: 1.6; padding: 0.6rem 0.75rem; resize: vertical; min-height: 70px; }
+    .reply-textarea:focus { outline: none; border-color: rgba(201,168,76,0.4); }
+    .lead-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 0.6rem; flex-wrap: wrap; gap: 0.4rem; }
+    .outreach-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.1rem; margin-bottom: 0.75rem; }
+    .outreach-card:last-child { margin-bottom: 0; }
+    .outreach-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.5rem; }
+    .outreach-target { font-size: 0.85rem; font-weight: 700; }
+    .outreach-badges { display: flex; gap: 0.4rem; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+    .type-badge { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; padding: 0.15rem 0.45rem; }
+    .type-pm    { background: rgba(59,130,246,0.12); color: var(--blue); }
+    .type-re    { background: rgba(34,197,94,0.1);   color: var(--green); }
+    .type-hoa   { background: rgba(201,168,76,0.12); color: var(--gold); }
+    .type-apt   { background: rgba(249,115,22,0.12); color: var(--orange); }
+    .channel-badge { font-size: 0.58rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 4px; padding: 0.15rem 0.45rem; }
+    .ch-email { background: rgba(214,59,47,0.12); color: var(--red); }
+    .ch-dm    { background: rgba(139,92,246,0.12); color: #a78bfa; }
+    .outreach-subject { font-size: 0.7rem; color: var(--gold); margin-bottom: 0.5rem; font-weight: 600; }
+    .outreach-msg-textarea { width: 100%; background: rgba(0,0,0,0.25); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 0.75rem; font-family: inherit; line-height: 1.6; padding: 0.6rem 0.75rem; resize: vertical; min-height: 100px; }
+    .outreach-msg-textarea:focus { outline: none; border-color: rgba(201,168,76,0.4); }
+    .mark-sent-btn { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.3); border-radius: 6px; font-size: 0.7rem; font-weight: 700; padding: 0.3rem 0.75rem; cursor: pointer; font-family: inherit; transition: background 0.2s; }
+    .mark-sent-btn:hover { background: rgba(34,197,94,0.2); }
+    .sent-counter { font-size: 0.72rem; color: var(--sub); margin-bottom: 1rem; }
+    .sent-counter strong { color: var(--gold); }
   </style>
 </head>
 <body>
@@ -308,6 +355,40 @@
         <div id="alertsContainer"><div class="empty">Loading…</div></div>
       </div>
 
+    </div>
+
+    <!-- CRAIGSLIST LEADS PANEL -->
+    <div class="section-panel" id="clPanel">
+      <div class="section-header" onclick="toggleSection('clPanel')">
+        <div class="section-title">
+          <span>Craigslist Leads</span>
+          <span id="clOverdueBadge" style="display:none" class="overdue-badge">⚠ Ad posting overdue</span>
+        </div>
+        <span class="section-chevron" id="clChevron">▾</span>
+      </div>
+      <div class="section-body" id="clBody">
+        <div class="cl-actions">
+          <button class="cl-btn" onclick="postAdNow()">Post Ad Now ↗</button>
+          <button class="cl-btn secondary" onclick="copyLatestAd()">Copy Latest Ad</button>
+          <span class="last-updated" id="clLastPosted"></span>
+        </div>
+        <div id="clLeadsContainer"><div class="empty">Loading Craigslist leads…</div></div>
+      </div>
+    </div>
+
+    <!-- OUTREACH QUEUE PANEL -->
+    <div class="section-panel" id="outreachPanel">
+      <div class="section-header" onclick="toggleSection('outreachPanel')">
+        <div class="section-title">
+          <span>Outreach Queue</span>
+          <span id="outreachCount" style="color:var(--gold);font-size:0.65rem;letter-spacing:0.05em"></span>
+        </div>
+        <span class="section-chevron" id="outreachChevron">▾</span>
+      </div>
+      <div class="section-body" id="outreachBody">
+        <div class="sent-counter" id="outreachSentCounter"></div>
+        <div id="outreachContainer"><div class="empty">Loading outreach queue…</div></div>
+      </div>
     </div>
 
     <!-- STRATEGIC INSIGHTS + COMPETITOR INTEL -->
@@ -901,6 +982,178 @@
     } catch {
       document.getElementById('healthGrid').innerHTML = '<div class="empty" style="grid-column:1/-1">Health check failed — server may be restarting</div>';
     }
+  }
+
+  // ── COLLAPSIBLE SECTIONS ────────────────────────────────────────────────────
+  function toggleSection(panelId) {
+    const body    = document.getElementById(panelId).querySelector('.section-body');
+    const chevron = document.getElementById(panelId).querySelector('.section-chevron');
+    const isOpen  = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    chevron.classList.toggle('open', !isOpen);
+  }
+
+  // ── CRAIGSLIST ──────────────────────────────────────────────────────────────
+  let latestAdBody = '';
+
+  async function loadCraigslist() {
+    try {
+      const r = await fetch('/api/admin/craigslist', { headers: authHeaders() });
+      const d = await r.json();
+
+      // Posting due badge
+      const badge = document.getElementById('clOverdueBadge');
+      badge.style.display = d.postingDue ? 'inline-flex' : 'none';
+
+      // Last posted timestamp
+      const lp = document.getElementById('clLastPosted');
+      if (d.lastPostedAt) {
+        const ts = new Date(d.lastPostedAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        lp.textContent = `Last posted: ${ts}`;
+      } else {
+        lp.textContent = 'Never posted';
+      }
+
+      // Store latest ad for copy button
+      if (d.ads && d.ads.length > 0) {
+        latestAdBody = d.ads[0].body || '';
+      }
+
+      // Render leads
+      const leads = d.foundLeads || [];
+      const container = document.getElementById('clLeadsContainer');
+      if (!leads.length) {
+        container.innerHTML = '<div class="empty">No Craigslist leads yet — agent scans RSS feeds each run</div>';
+        return;
+      }
+      container.innerHTML = leads.map(lead => {
+        const date = lead.pubDate
+          ? new Date(lead.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+          : (lead.foundAt ? new Date(lead.foundAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—');
+        return `<div class="lead-card">
+          <div class="lead-card-top">
+            <div>
+              <div class="lead-card-title">${esc(lead.title || '—')}</div>
+              <div class="lead-card-meta">${date}</div>
+            </div>
+            <span class="lead-source-tag">${esc(lead.source || 'craigslist')}</span>
+          </div>
+          ${lead.description ? `<div class="lead-desc">${esc(lead.description)}</div>` : ''}
+          <div class="reply-label">AI Reply Template</div>
+          <textarea class="reply-textarea" id="reply-${lead.id}">${esc(lead.replyTemplate || '')}</textarea>
+          <div class="lead-card-footer">
+            <button class="cl-btn secondary" style="font-size:0.7rem;padding:0.3rem 0.7rem" onclick="copyReply('reply-${lead.id}')">Copy Reply</button>
+            ${lead.link ? `<a href="${esc(lead.link)}" target="_blank" style="font-size:0.7rem;color:var(--gold);font-weight:600">Open on Craigslist →</a>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+    } catch (e) {
+      document.getElementById('clLeadsContainer').innerHTML = '<div class="empty">Could not load Craigslist data</div>';
+    }
+  }
+
+  function copyReply(textareaId) {
+    const ta = document.getElementById(textareaId);
+    if (!ta) return;
+    navigator.clipboard.writeText(ta.value).catch(() => {
+      ta.select();
+      document.execCommand('copy');
+    });
+  }
+
+  function copyLatestAd() {
+    if (!latestAdBody) { alert('No ad generated yet — run the Craigslist agent first.'); return; }
+    navigator.clipboard.writeText(latestAdBody).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = latestAdBody;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    });
+  }
+
+  async function postAdNow() {
+    window.open('https://craigslist.org/post', '_blank');
+    try {
+      await fetch('/api/admin/craigslist/posted', { method: 'POST', headers: authHeaders() });
+      loadCraigslist();
+    } catch (e) { /* best effort */ }
+  }
+
+  // ── OUTREACH QUEUE ──────────────────────────────────────────────────────────
+  async function loadOutreach() {
+    try {
+      const r = await fetch('/api/admin/outreach', { headers: authHeaders() });
+      const d = await r.json();
+
+      const queue = d.sendQueue || [];
+      document.getElementById('outreachCount').textContent =
+        queue.length > 0 ? `${queue.length} pending` : 'queue empty';
+
+      // Sent counter
+      document.getElementById('outreachSentCounter').innerHTML =
+        `<strong>${d.sentThisMonth || 0}</strong> sent this month &nbsp;·&nbsp; ${d.sentCount || 0} total`;
+
+      const container = document.getElementById('outreachContainer');
+      if (!queue.length) {
+        container.innerHTML = '<div class="empty">No pending outreach — run the outreach agent to generate messages</div>';
+        return;
+      }
+
+      const TYPE_LABELS = { property_manager: 'Property Mgr', real_estate: 'Real Estate', hoa: 'HOA', apartment: 'Apartment' };
+      const TYPE_CLASSES = { property_manager: 'type-pm', real_estate: 'type-re', hoa: 'type-hoa', apartment: 'type-apt' };
+
+      container.innerHTML = queue.map(item => {
+        const typeLabel = TYPE_LABELS[item.type] || item.type;
+        const typeCls   = TYPE_CLASSES[item.type] || 'type-pm';
+        const chCls     = item.channel === 'dm' ? 'ch-dm' : 'ch-email';
+        const chLabel   = item.channel === 'dm' ? 'DM' : 'EMAIL';
+        return `<div class="outreach-card" id="outreach-card-${item.id}">
+          <div class="outreach-top">
+            <div class="outreach-target">${esc(item.target || '—')}</div>
+            <div class="outreach-badges">
+              <span class="type-badge ${typeCls}">${typeLabel}</span>
+              <span class="channel-badge ${chCls}">${chLabel}</span>
+            </div>
+          </div>
+          ${item.subject ? `<div class="outreach-subject">Subject: ${esc(item.subject)}</div>` : ''}
+          <textarea class="outreach-msg-textarea" id="outreach-msg-${item.id}">${esc(item.message || '')}</textarea>
+          <div style="display:flex;align-items:center;justify-content:flex-end;gap:0.6rem;margin-top:0.6rem">
+            <button class="cl-btn secondary" style="font-size:0.68rem;padding:0.28rem 0.65rem" onclick="copyReply('outreach-msg-${item.id}')">Copy</button>
+            <button class="mark-sent-btn" onclick="markSent('${item.id}')">✓ Mark Sent</button>
+          </div>
+        </div>`;
+      }).join('');
+    } catch (e) {
+      document.getElementById('outreachContainer').innerHTML = '<div class="empty">Could not load outreach data</div>';
+    }
+  }
+
+  async function markSent(id) {
+    try {
+      const r = await fetch(`/api/admin/outreach/${id}/sent`, { method: 'POST', headers: authHeaders() });
+      if (!r.ok) throw new Error();
+      const card = document.getElementById(`outreach-card-${id}`);
+      if (card) {
+        card.style.opacity = '0';
+        card.style.transition = 'opacity 0.3s';
+        setTimeout(() => { card.remove(); loadOutreach(); }, 300);
+      } else {
+        loadOutreach();
+      }
+    } catch {
+      alert('Could not mark as sent — please try again.');
+    }
+  }
+
+  // ── PATCH loadAll TO INCLUDE NEW PANELS ─────────────────────────────────────
+  const _origLoadAll = loadAll;
+  async function loadAll() {
+    await Promise.all([
+      loadLeads(), loadResearch(), loadFunnel(), loadAgents(), loadLogs(), loadHealth(),
+      loadCraigslist(), loadOutreach(),
+    ]);
   }
 
   // ── AUTO-LOGIN if token stored ─────────────────────────────────────────────
