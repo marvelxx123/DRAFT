@@ -66,7 +66,7 @@ function stripSubjectLine(rawText) {
   return rawText.replace(/^subject[:\s]+.+\n?/im, '').trim();
 }
 
-const context = `My name is [YOUR NAME], owner of ${cfg.businessName} in Jacksonville FL. ` +
+const context = `My name is ${cfg.ownerName}, owner of ${cfg.businessName} in Jacksonville FL. ` +
   `Phone: ${cfg.phone}. Services: ${cfg.services.join(', ')}. USP: ${cfg.usp}. Years in business: ${cfg.yearsExp}.`;
 
 const month = String(new Date().getMonth() + 1);

@@ -2,9 +2,10 @@
 // Edit this file once. All 5 lead gen agents read from here.
 
 module.exports = {
-  businessName: 'Jacksonville Garage Pros',   // ← your business name
-  phone:        '(904) 468-3428',              // ← your phone number
-  website:      '',                            // ← your website (leave blank if none yet)
+  businessName: '904 Garage Doors',
+  ownerName:    'Tal',
+  phone:        '(904) 468-3428',
+  website:      'https://904garagedoors.com',
   areas:        ['Jacksonville', 'Orange Park', 'Fleming Island', 'Mandarin', 'Southside', 'Arlington', 'Ponte Vedra', 'Middleburg', 'Jacksonville Beach', 'Neptune Beach', 'Atlantic Beach', 'Nocatee', 'Palm Coast'],
   services:     ['garage door repair', 'broken spring replacement', 'opener installation', 'cable repair', 'new door installation', 'emergency service', 'maintenance tune-up', 'off-track door repair', 'hurricane-rated door installation', 'roller replacement'],
   usp:          'Same-day service, fast response, 7 days a week — we connect Jacksonville homeowners with trusted local garage door pros',
