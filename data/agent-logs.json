@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "id": "1779839129133-68qup",
+    "agentId": "runner",
+    "level": "info",
+    "message": "904 Garage Doors agent runner starting — 9 active agents (twice-daily funnel cycle)",
+    "meta": {},
+    "timestamp": "2026-05-26T23:45:29.133Z"
+  }
+]
