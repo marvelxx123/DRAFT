@@ -17,7 +17,7 @@ jobs:
           cp garage-door-repair-*.html deploy/
           cp sitemap.xml robots.txt 404.html adhd.html daily.html deploy/
           cp siteground-upload/.htaccess deploy/
-          find deploy/ -name "*.html" -exec sed -i "s|fetch('/api/contact'|fetch('https://draft-production-78c1.up.railway.app/api/contact'|g" {} \;
+          find deploy/ -name "*.html" -exec sed -i "s|fetch('/api/contact'|fetch('https://nine04-garage-doors.onrender.com/api/contact'|g" {} \;
 
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
