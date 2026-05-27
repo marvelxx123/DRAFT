@@ -45,9 +45,19 @@ const AGENT_SCHEDULES_LABEL = {
   funnel:        'Twice daily',
 };
 
+// Agents paused until their prerequisites are ready:
+// content + seo — resume when blog/SEO push is a priority
+// jaxprofile   — resume when GMB is verified
+// jaxsocial    — resume when social accounts are active
+// jaxfollowup  — resume when lead volume justifies it
+const PAUSED_BY_DEFAULT = new Set(['content', 'seo', 'jaxprofile', 'jaxsocial', 'jaxfollowup']);
+
 const agentState = {};
 for (const id of Object.keys(SCHEDULES)) {
-  agentState[id] = { status: 'idle', lastRun: null, nextRun: null, paused: false, timer: null };
+  agentState[id] = {
+    status: 'idle', lastRun: null, nextRun: null,
+    paused: PAUSED_BY_DEFAULT.has(id), timer: null,
+  };
 }
 
 const agents = {
@@ -87,7 +97,7 @@ function scheduleAgent(id) {
 }
 
 function startAll() {
-  log('runner', 'info', '904 Garage Doors agent runner starting — 9 active agents (twice-daily funnel cycle)');
+  log('runner', 'info', '904 Garage Doors agent runner starting — 4 active: craigslist, outreach, research, funnel');
   for (const id of Object.keys(agents)) scheduleAgent(id);
 }
 
