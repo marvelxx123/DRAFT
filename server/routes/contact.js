@@ -3,6 +3,7 @@ const router  = express.Router();
 const fs      = require('fs');
 const path    = require('path');
 const jaxConfig = require('../agents/jaxConfig');
+const sms       = require('../services/sms');
 
 const LEADS_FILE = path.join(__dirname, '../../data/leads.json');
 
@@ -91,8 +92,15 @@ router.post('/', (req, res) => {
     leadScore,
     customerType,
   });
+  const saved = leads[0];
   saveLeads(leads.slice(0, 500));
   res.json({ success: true });
+
+  // SMS — fire and forget, never block the response
+  const firstName = (name || '').split(' ')[0];
+  sms.sendLeadConfirmation(phone, firstName);
+  sms.sendOwnerAlert(saved);
+  sms.scheduleFollowUp(phone, firstName);
 });
 
 // GET /api/contact
