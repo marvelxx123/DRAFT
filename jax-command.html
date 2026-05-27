@@ -532,7 +532,7 @@
 </div>
 
 <script>
-  let TOKEN = sessionStorage.getItem('jax_cmd_token') || '';
+  let TOKEN = '';
 
   // ── CLOCK ──────────────────────────────────────────────────────────────────
   function tick() {
@@ -1156,13 +1156,11 @@
     ]);
   }
 
-  // ── AUTO-LOGIN if token stored ─────────────────────────────────────────────
-  if (TOKEN) {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
-    loadAll();
-    setInterval(loadAll, 30000);
-  }
+  // AUTH DISABLED — load dashboard directly
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  loadAll();
+  setInterval(loadAll, 30000);
 </script>
 </body>
 </html>
