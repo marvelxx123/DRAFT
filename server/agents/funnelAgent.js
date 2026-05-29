@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const fs    = require('fs');
 const path  = require('path');
 const { log } = require('./logger');
+const { getInstructions, readMemory } = require('../services/memory');
 
 const AGENT_ID    = 'funnel';
 const DATA_FILE   = path.join(__dirname, '../../data/funnel-insights.json');
@@ -74,10 +75,15 @@ async function researchFunnelTactics(leadsData) {
     ? `Current data: ${leadsData.total} total leads, ${leadsData.last7d} in last 7 days, top service: ${leadsData.topService[0]?.[0]||'unknown'}, emergency rate: ${Math.round(leadsData.emergency/Math.max(leadsData.total,1)*100)}%`
     : 'No lead data yet — business just launched';
 
+  const memory = readMemory();
+  const learned = getInstructions('funnel');
+  const memStats = memory.winRate ? `Win rate: ${memory.winRate}%, avg job: $${memory.avgJobValue}, top loss: ${memory.topLossReasons?.[0]?.reason || 'unknown'}. ` : '';
+
   const prompt = `You are a conversion rate optimization expert specializing in local service businesses (garage door repair, HVAC, plumbers) in the US.
 
 Business: 904 Garage Doors — Jacksonville FL metro, same-day dispatch, professional service platform
 Current funnel state: ${context}
+REAL PERFORMANCE DATA: ${memStats}${learned}
 
 Research and provide the TOP 5 highest-impact sales funnel improvements for a local garage door repair business RIGHT NOW in 2025. Focus on:
 1. What's working in local service lead gen today (real tactics, not theory)

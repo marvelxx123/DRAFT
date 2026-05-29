@@ -7,6 +7,7 @@ const jaxOutreachAgent   = require('./jaxOutreachAgent');
 const jaxFollowupAgent   = require('./jaxFollowupAgent');
 const jaxResearchAgent   = require('./jaxResearchAgent');
 const funnelAgent        = require('./funnelAgent');
+const jaxLearningAgent   = require('./jaxLearningAgent');
 const { log } = require('./logger');
 
 const SCHEDULES = {
@@ -19,6 +20,7 @@ const SCHEDULES = {
   jaxfollowup:    24 * 60 * 60 * 1000,
   jaxresearch:    12 * 60 * 60 * 1000, // twice daily
   funnel:         12 * 60 * 60 * 1000, // twice daily
+  jaxlearning:    24 * 60 * 60 * 1000, // daily — runs after others have data
 };
 
 const AGENT_NAMES = {
@@ -31,6 +33,7 @@ const AGENT_NAMES = {
   jaxfollowup:   'JAX Follow-Up Agent',
   jaxresearch:   'JAX Research Agent',
   funnel:        'Funnel Intelligence Agent',
+  jaxlearning:   'Learning & Memory Agent',
 };
 
 const AGENT_SCHEDULES_LABEL = {
@@ -43,6 +46,7 @@ const AGENT_SCHEDULES_LABEL = {
   jaxfollowup:   'Every 24 hours',
   jaxresearch:   'Twice daily',
   funnel:        'Twice daily',
+  jaxlearning:   'Daily — evolves all agent instructions',
 };
 
 // Agents paused until their prerequisites are ready:
@@ -51,6 +55,7 @@ const AGENT_SCHEDULES_LABEL = {
 // jaxsocial    — resume when social accounts are active
 // jaxfollowup  — resume when lead volume justifies it
 const PAUSED_BY_DEFAULT = new Set(['content', 'seo', 'jaxprofile', 'jaxsocial', 'jaxfollowup']);
+// jaxlearning always runs — it's the brain, never pause it
 
 const agentState = {};
 for (const id of Object.keys(SCHEDULES)) {
@@ -64,7 +69,8 @@ const agents = {
   content: contentAgent, seo: seoAgent,
   jaxprofile: jaxProfileAgent, jaxsocial: jaxSocialAgent,
   jaxcraigslist: jaxCraigslistAgent, jaxoutreach: jaxOutreachAgent,
-  jaxfollowup: jaxFollowupAgent, jaxresearch: jaxResearchAgent, funnel: funnelAgent,
+  jaxfollowup: jaxFollowupAgent, jaxresearch: jaxResearchAgent,
+  funnel: funnelAgent, jaxlearning: jaxLearningAgent,
 };
 
 async function runAgent(id) {
@@ -87,7 +93,7 @@ function scheduleAgent(id) {
   // Stagger starts so they don't all hit the API at once
   const stagger = { content: 10, seo: 25,
     jaxprofile: 40, jaxsocial: 55, jaxcraigslist: 70, jaxoutreach: 85, jaxfollowup: 100,
-    jaxresearch: 115, funnel: 130 };
+    jaxresearch: 115, funnel: 130, jaxlearning: 150 };
   setTimeout(() => runAgent(id), (stagger[id] || 10) * 1000);
   state.nextRun = new Date(Date.now() + interval).toISOString();
   state.timer = setInterval(async () => {
@@ -97,7 +103,7 @@ function scheduleAgent(id) {
 }
 
 function startAll() {
-  log('runner', 'info', '904 Garage Doors agent runner starting — 4 active: craigslist, outreach, research, funnel');
+  log('runner', 'info', '904 Garage Doors agent runner starting — 5 active: craigslist, outreach, research, funnel, learning');
   for (const id of Object.keys(agents)) scheduleAgent(id);
 }
 

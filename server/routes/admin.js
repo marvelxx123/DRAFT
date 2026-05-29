@@ -256,4 +256,62 @@ router.post('/outreach/:id/sent', requireAdmin, (req, res) => {
   res.json({ success: true, item });
 });
 
+// ── LEAD OUTCOME TRACKING ──────────────────────────────────────────────────────
+
+const LEADS_FILE = path.join(ROOT, 'data/leads.json');
+
+function readLeadsAdmin() {
+  try {
+    const raw = JSON.parse(fs.readFileSync(LEADS_FILE, 'utf8'));
+    return Array.isArray(raw) ? raw : [];
+  } catch { return []; }
+}
+
+// PATCH /api/admin/leads/:id/outcome — mark closed or lost
+router.patch('/leads/:id/outcome', requireAdmin, (req, res) => {
+  const { status, jobValue, lossReason } = req.body || {};
+  if (!['closed', 'lost'].includes(status)) {
+    return res.status(400).json({ error: 'status must be "closed" or "lost"' });
+  }
+  const leads = readLeadsAdmin();
+  const lead  = leads.find(l => String(l.id) === String(req.params.id));
+  if (!lead) return res.status(404).json({ error: 'Lead not found' });
+
+  lead.status     = status;
+  lead.outcomeAt  = new Date().toISOString();
+  if (status === 'closed' && jobValue) lead.jobValue   = Number(jobValue);
+  if (status === 'lost'   && lossReason) lead.lossReason = lossReason;
+
+  fs.writeFileSync(LEADS_FILE, JSON.stringify(leads, null, 2));
+  log('admin', 'success', `Lead ${req.params.id} marked ${status}${status === 'closed' ? ` — $${jobValue}` : ` — ${lossReason}`}`);
+  res.json({ success: true, lead });
+});
+
+// ── AGENT MEMORY ───────────────────────────────────────────────────────────────
+
+const MEMORY_FILE = path.join(ROOT, 'data/agent-memory.json');
+
+function readMemoryAdmin() {
+  try { return JSON.parse(fs.readFileSync(MEMORY_FILE, 'utf8')); }
+  catch { return { version: 0, agentInstructions: {}, manualNotes: [] }; }
+}
+
+// GET /api/admin/memory — get current agent memory/brain
+router.get('/memory', requireAdmin, (_req, res) => {
+  res.json(readMemoryAdmin());
+});
+
+// POST /api/admin/memory/note — Tal adds a manual insight
+router.post('/memory/note', requireAdmin, (req, res) => {
+  const { note } = req.body || {};
+  if (!note) return res.status(400).json({ error: 'note required' });
+  const memory = readMemoryAdmin();
+  if (!memory.manualNotes) memory.manualNotes = [];
+  memory.manualNotes.unshift({ note, addedAt: new Date().toISOString() });
+  memory.manualNotes = memory.manualNotes.slice(0, 50);
+  fs.writeFileSync(MEMORY_FILE, JSON.stringify(memory, null, 2));
+  log('admin', 'success', `Manual insight added: "${note.slice(0, 60)}"`);
+  res.json({ success: true });
+});
+
 module.exports = router;

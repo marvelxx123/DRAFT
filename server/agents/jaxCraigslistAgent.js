@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { log } = require('./logger');
 const cfg = require('./jaxConfig');
+const { getInstructions } = require('../services/memory');
 
 const AGENT_ID = 'jaxcraigslist';
 const OUT_FILE = path.join(__dirname, '../../data/jax-craigslist.json');
@@ -131,6 +132,7 @@ const AD_TYPES = [
 const context = `Business: ${cfg.businessName}. Phone: ${cfg.phone}. Areas: ${cfg.areas.join(', ')}. USP: ${cfg.usp}. Services: ${cfg.services.join(', ')}.`;
 
 async function generateAd(adType) {
+  const learned = getInstructions('craigslist');
   return await callClaude(
     `Write a Craigslist "Services" listing body for a garage door dispatch platform in Jacksonville FL. ` +
     `${context} Ad type: "${adType.type}" service. ` +
@@ -138,7 +140,8 @@ async function generateAd(adType) {
     `availability (same-day, 7 days a week), service area, and call to action with phone. ` +
     `Total max 200 words. Plain text, no markdown. Sound professional and trustworthy. ` +
     `Use language like "we dispatch a pro to you" not "we fix" or "we repair". ` +
-    `Never mention flat-rate pricing or guarantees. Do not claim licensed or insured.`
+    `Never mention flat-rate pricing or guarantees. Do not claim licensed or insured.\n` +
+    `PERFORMANCE INTELLIGENCE (use this to sharpen targeting): ${learned}`
   );
 }
 

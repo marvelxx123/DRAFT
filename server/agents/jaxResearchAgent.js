@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const fs    = require('fs');
 const path  = require('path');
 const { log } = require('./logger');
+const { getInstructions } = require('../services/memory');
 
 const AGENT_ID   = 'jaxresearch';
 const DATA_FILE  = path.join(__dirname, '../../data/jax-research.json');
@@ -159,7 +160,9 @@ Return ONLY the JSON, no other text.`;
 
   // ── 3. STRATEGIC INSIGHTS ─────────────────────────────────────────────────
   try {
+    const learned = getInstructions('research');
     const insightPrompt = `You are the marketing strategist for 904 Garage Doors, a local garage door repair company in Jacksonville, FL targeting:
+PERFORMANCE INTELLIGENCE: ${learned}
 - Jacksonville metro (all neighborhoods)
 - Ponte Vedra / Ponte Vedra Beach (premium market)
 - Fernandina Beach / Amelia Island (Nassau County)

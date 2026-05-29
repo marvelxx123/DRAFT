@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { log } = require('./logger');
 const cfg = require('./jaxConfig');
+const { getInstructions } = require('../services/memory');
 
 const AGENT_ID = 'jaxoutreach';
 const OUT_FILE = path.join(__dirname, '../../data/jax-outreach.json');
@@ -69,6 +70,10 @@ function stripSubjectLine(rawText) {
 const context = `My name is ${cfg.ownerName}, with ${cfg.businessName} in Jacksonville FL. ` +
   `Phone: ${cfg.phone}. Services: ${cfg.services.join(', ')}. USP: ${cfg.usp}.`;
 
+function learnedContext() {
+  return `\nPERFORMANCE INTELLIGENCE (use to sharpen targeting and messaging): ${getInstructions('outreach')}`;
+}
+
 const month = String(new Date().getMonth() + 1);
 const seasonal = cfg.seasonalContext[month] || 'standard season';
 
@@ -88,7 +93,8 @@ async function run() {
       `Write a short cold DM/message to a Jacksonville FL real estate agent, from a local garage door technician. ` +
       `${context} Goal: become their go-to garage door vendor for buyers/sellers. ` +
       `Max 80 words. Friendly, not salesy. Mention we can do quick estimates before listings and same-day fixes for buyers. ` +
-      `End with a soft ask ("Would you be open to keeping my number on hand?"). First person. No corporate language.`
+      `End with a soft ask ("Would you be open to keeping my number on hand?"). First person. No corporate language.` +
+      learnedContext()
     );
     newItems.push({
       id: Date.now() + 1,
