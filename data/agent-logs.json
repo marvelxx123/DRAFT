@@ -1,5 +1,13 @@
 [
   {
+    "id": "1780110264362-g73x0",
+    "agentId": "runner",
+    "level": "info",
+    "message": "904 Garage Doors agent runner starting — 5 active: craigslist, outreach, research, funnel, learning",
+    "meta": {},
+    "timestamp": "2026-05-30T03:04:24.362Z"
+  },
+  {
     "id": "1779839129133-68qup",
     "agentId": "runner",
     "level": "info",
