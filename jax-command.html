@@ -510,6 +510,15 @@
 
     </div>
 
+    <!-- OBSERVABILITY / METRICS PANEL -->
+    <div class="card" style="margin-bottom:1.5rem">
+      <div class="card-title">
+        <span>📊 Observability — API Metrics & Health</span>
+        <span class="last-updated" id="metricsUpdated"></span>
+      </div>
+      <div id="metricsPanel"><div class="empty">Loading…</div></div>
+    </div>
+
     <!-- BRAIN / MEMORY PANEL -->
     <div class="card" style="margin-bottom:1.5rem">
       <div class="card-title">
@@ -1186,6 +1195,50 @@
     loadLeads(); loadMemory();
   }
 
+  // ── OBSERVABILITY / API METRICS ───────────────────────────────────────────
+  async function loadMetrics() {
+    try {
+      const r = await fetch('/api/admin/metrics', { headers: authHeaders() });
+      const m = await r.json();
+      const el = document.getElementById('metricsPanel');
+      if (!el || m.error) { if(el) el.innerHTML = '<div class="empty">No API calls recorded yet</div>'; return; }
+
+      const totalCost = (m.totalCostUsd || 0).toFixed(4);
+      const successRate = m.totalCalls > 0 ? Math.round(((m.totalCalls - (m.totalFailures||0)) / m.totalCalls) * 100) : 100;
+
+      const agentRows = Object.entries(m.byAgent || {}).map(([id, a]) =>
+        `<tr style="border-bottom:1px solid var(--border)">
+          <td style="padding:0.4rem 0.5rem;font-size:0.75rem;font-weight:600">${id}</td>
+          <td style="padding:0.4rem 0.5rem;font-size:0.75rem;text-align:center">${a.calls}</td>
+          <td style="padding:0.4rem 0.5rem;font-size:0.75rem;text-align:center;color:${a.successRate>=90?'#4ade80':a.successRate>=70?'#facc15':'#f87171'}">${a.successRate}%</td>
+          <td style="padding:0.4rem 0.5rem;font-size:0.75rem;text-align:center">${a.avgLatencyMs}ms</td>
+          <td style="padding:0.4rem 0.5rem;font-size:0.75rem;text-align:right;color:var(--gold)">$${(a.totalCostUsd||0).toFixed(4)}</td>
+        </tr>`
+      ).join('');
+
+      el.innerHTML = `
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin-bottom:1rem">
+          <div class="kpi" style="padding:0.7rem;text-align:center"><div class="kpi-label">Total Calls</div><div class="kpi-val" style="font-size:1.1rem">${m.totalCalls||0}</div></div>
+          <div class="kpi" style="padding:0.7rem;text-align:center"><div class="kpi-label">Success Rate</div><div class="kpi-val green" style="font-size:1.1rem">${successRate}%</div></div>
+          <div class="kpi" style="padding:0.7rem;text-align:center"><div class="kpi-label">Total Cost</div><div class="kpi-val gold" style="font-size:1.1rem">$${totalCost}</div></div>
+          <div class="kpi" style="padding:0.7rem;text-align:center"><div class="kpi-label">Failures</div><div class="kpi-val" style="font-size:1.1rem;color:${(m.totalFailures||0)>0?'#f87171':'#4ade80'}">${m.totalFailures||0}</div></div>
+        </div>
+        ${agentRows ? `<table style="width:100%;border-collapse:collapse">
+          <thead><tr style="border-bottom:1px solid var(--border)">
+            <th style="text-align:left;padding:0.3rem 0.5rem;font-size:0.65rem;color:var(--sub);text-transform:uppercase">Agent</th>
+            <th style="text-align:center;padding:0.3rem 0.5rem;font-size:0.65rem;color:var(--sub);text-transform:uppercase">Calls</th>
+            <th style="text-align:center;padding:0.3rem 0.5rem;font-size:0.65rem;color:var(--sub);text-transform:uppercase">Success</th>
+            <th style="text-align:center;padding:0.3rem 0.5rem;font-size:0.65rem;color:var(--sub);text-transform:uppercase">Avg Latency</th>
+            <th style="text-align:right;padding:0.3rem 0.5rem;font-size:0.65rem;color:var(--sub);text-transform:uppercase">Cost</th>
+          </tr></thead>
+          <tbody>${agentRows}</tbody>
+        </table>` : ''}`;
+    } catch {
+      const el = document.getElementById('metricsPanel');
+      if (el) el.innerHTML = '<div class="empty">Metrics loading…</div>';
+    }
+  }
+
   // ── AGENT MEMORY / BRAIN ───────────────────────────────────────────────────
   async function loadMemory() {
     try {
@@ -1243,7 +1296,7 @@
   async function loadAll() {
     await Promise.all([
       loadLeads(), loadResearch(), loadFunnel(), loadAgents(), loadLogs(), loadHealth(),
-      loadCraigslist(), loadOutreach(), loadMemory(),
+      loadCraigslist(), loadOutreach(), loadMemory(), loadMetrics(),
     ]);
   }
 

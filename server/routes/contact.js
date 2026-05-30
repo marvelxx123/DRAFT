@@ -4,6 +4,8 @@ const fs      = require('fs');
 const path    = require('path');
 const jaxConfig = require('../agents/jaxConfig');
 const sms       = require('../services/sms');
+const { sanitizeContactBody, detectInjection } = require('../utils/security');
+const { log } = require('../agents/logger');
 
 const LEADS_FILE = path.join(__dirname, '../../data/leads.json');
 
@@ -69,8 +71,13 @@ function detectCustomerType({ name = '', service = '', urgency = '', message = '
 
 // POST /api/contact
 router.post('/', (req, res) => {
-  const { name, phone, service, urgency, city, source, page, cta, message } = req.body || {};
-  if (!phone) return res.status(400).json({ error: 'Phone required' });
+  const raw = req.body || {};
+  const { cleaned, injectionAttempt } = sanitizeContactBody(raw);
+  const { name, phone, service, urgency, city, source, page, cta, message } = cleaned;
+  if (!phone || phone === '[filtered]') return res.status(400).json({ error: 'Phone required' });
+  if (injectionAttempt) {
+    log('security', 'warn', `Prompt injection attempt from ${phone} — fields sanitized`);
+  }
 
   const leadScore    = scoreLead({ urgency: urgency || '', service: service || '', name: name || '', message: message || '' });
   const customerType = detectCustomerType({ name: name || '', service: service || '', urgency: urgency || '', message: message || '' });

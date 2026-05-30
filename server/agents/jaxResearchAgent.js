@@ -3,6 +3,9 @@ const fs    = require('fs');
 const path  = require('path');
 const { log } = require('./logger');
 const { getInstructions } = require('../services/memory');
+const { callClaude } = require('../utils/claudeClient');
+const { addEntry, buildContext } = require('../utils/knowledgeBase');
+const { auditOutput } = require('../utils/security');
 
 const AGENT_ID   = 'jaxresearch';
 const DATA_FILE  = path.join(__dirname, '../../data/jax-research.json');
@@ -27,26 +30,6 @@ const CITY_KEYWORDS = [
   'same day garage door repair Jacksonville',
 ];
 
-async function callClaude(prompt) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 1200,
-      messages: [{ role: 'user', content: prompt }],
-    }),
-  });
-  if (!res.ok) throw new Error(`Claude API error: ${res.status}`);
-  const data = await res.json();
-  return data.content[0].text.trim();
-}
 
 async function fetchCompetitorPage(competitor) {
   try {
@@ -102,7 +85,7 @@ For each keyword, provide:
 Return as JSON array: [{"keyword":"...","intent":"...","competition":"...","angle":"...","needsPage":true/false}]
 Return ONLY the JSON array, no other text.`;
 
-    const kwRaw = await callClaude(kwPrompt);
+    const kwRaw = await callClaude(kwPrompt, { agentId: AGENT_ID, maxTokens: 1200 });
     try {
       report.keywords.analysis = JSON.parse(kwRaw);
     } catch {
@@ -142,7 +125,7 @@ Extract and analyze:
 Return as JSON: {"services":[],"pricing":"","areas":[],"trustSignals":[],"weaknesses":[],"strengths":[]}
 Return ONLY the JSON, no other text.`;
 
-      const compRaw = await callClaude(compPrompt);
+      const compRaw = await callClaude(compPrompt, { agentId: AGENT_ID, maxTokens: 1200 });
       let compData = {};
       try { compData = JSON.parse(compRaw); } catch { compData = { raw: compRaw }; }
 
@@ -152,6 +135,7 @@ Return ONLY the JSON, no other text.`;
         status:   'analyzed',
         ...compData,
       });
+      addEntry({ type: 'competitor_intel', content: `${comp.name}: weaknesses=${compData.weaknesses?.join(', ')||'unknown'}, strengths=${compData.strengths?.join(', ')||'unknown'}`, tags: [comp.name, 'jacksonville', 'competitor'], source: AGENT_ID });
       log(AGENT_ID, 'success', `${comp.name} analyzed`);
     } catch (err) {
       log(AGENT_ID, 'error', `Competitor ${comp.name} error: ${err.message}`);
@@ -185,7 +169,7 @@ Based on current local SEO best practices and the Jacksonville garage door marke
 Return as JSON: {"immediateActions":[],"contentGaps":[],"timingOpportunities":[],"nextCityPage":""}
 Return ONLY the JSON.`;
 
-    const insightRaw = await callClaude(insightPrompt);
+    const insightRaw = await callClaude(insightPrompt, { agentId: AGENT_ID, maxTokens: 1200 });
     try { report.insights = JSON.parse(insightRaw); } catch { report.insights = { raw: insightRaw }; }
     log(AGENT_ID, 'success', 'Strategic insights generated');
   } catch (err) {
@@ -203,8 +187,11 @@ Today is ${new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeri
 Return as JSON array: [{"alert":"...","action":"...","urgency":"high/medium/low"}]
 Return ONLY the JSON array.`;
 
-    const alertRaw = await callClaude(alertPrompt);
+    const alertRaw = await callClaude(alertPrompt, { agentId: AGENT_ID, maxTokens: 1200 });
     try { report.marketAlerts = JSON.parse(alertRaw); } catch { report.marketAlerts = [{ raw: alertRaw }]; }
+    for (const alert of (report.marketAlerts||[])) {
+      if (alert.alert) addEntry({ type: 'market_insight', content: `${alert.alert} — Action: ${alert.action}`, tags: ['jacksonville','market','alert'], source: AGENT_ID });
+    }
     log(AGENT_ID, 'success', 'Market alerts generated');
   } catch (err) {
     log(AGENT_ID, 'error', `Market alerts error: ${err.message}`);

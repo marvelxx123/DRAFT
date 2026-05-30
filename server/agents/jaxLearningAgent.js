@@ -1,24 +1,12 @@
-const fetch = require('node-fetch');
 const fs    = require('fs');
 const path  = require('path');
 const { log } = require('./logger');
+const { callClaudeJSON } = require('../utils/claudeClient');
+const { addEntry } = require('../utils/knowledgeBase');
 
 const AGENT_ID   = 'jaxlearning';
 const LEADS_FILE = path.join(__dirname, '../../data/leads.json');
 const MEMORY_FILE = path.join(__dirname, '../../data/agent-memory.json');
-
-async function callClaude(prompt, maxTokens = 1000) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-    body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: maxTokens,
-      messages: [{ role: 'user', content: prompt }] }),
-  });
-  if (!res.ok) throw new Error(`Claude API ${res.status}`);
-  return (await res.json()).content[0].text.trim();
-}
 
 function readLeads() {
   try {
@@ -111,16 +99,8 @@ Return JSON only:
   "research": "..."
 }`;
 
-  const raw = await callClaude(prompt, 900);
-  try { return JSON.parse(raw); }
-  catch {
-    return {
-      craigslist: `Focus on ${stats.serviceWinRates[0]?.name || 'emergency'} leads in ${stats.cityWinRates[0]?.name || 'Ponte Vedra'}. Win rate ${stats.winRate}%. Avoid leads that result in "${stats.topLossReasons[0]?.reason || 'no answer'}".`,
-      outreach:   `Target ${stats.cityWinRates[0]?.name || 'Ponte Vedra'} area. Avg job value $${stats.avgJobValue}. Best hours ${stats.bestHours[0]?.hour || 9}:00–${(stats.bestHours[0]?.hour||9)+2}:00.`,
-      funnel:     `Win rate ${stats.winRate}%. Main loss: "${stats.topLossReasons[0]?.reason}". Fix this gap first.`,
-      research:   `Avg job $${stats.avgJobValue}. Top service: ${stats.serviceWinRates[0]?.name}. Monitor competitors on this.`,
-    };
-  }
+  const raw = await callClaudeJSON(prompt, { agentId: AGENT_ID, maxTokens: 900, schema: { type: 'object', required: ['craigslist','outreach','funnel','research'] } });
+  return raw;
 }
 
 async function run() {
@@ -132,6 +112,10 @@ async function run() {
 
   if (stats) {
     log(AGENT_ID, 'info', `${stats.totalClosed} closed ($${stats.totalRevenue}), ${stats.totalLost} lost — win rate ${stats.winRate}%`);
+    addEntry({ type: 'win_pattern', content: `Win rate ${stats.winRate}% on ${stats.totalClosed+stats.totalLost} outcomes. Best service: ${stats.serviceWinRates[0]?.name}. Best city: ${stats.cityWinRates[0]?.name}. Avg job: $${stats.avgJobValue}`, tags: ['win','performance','jacksonville'], source: AGENT_ID });
+    if (stats.topLossReasons[0]) {
+      addEntry({ type: 'win_pattern', content: `Top loss reason: ${stats.topLossReasons[0].reason} (${stats.topLossReasons[0].count} times). Address this in all agent messaging.`, tags: ['loss','pattern','improve'], source: AGENT_ID });
+    }
   } else {
     log(AGENT_ID, 'info', 'No outcome data yet — writing default instructions');
   }

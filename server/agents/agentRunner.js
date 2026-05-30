@@ -9,6 +9,7 @@ const jaxResearchAgent   = require('./jaxResearchAgent');
 const funnelAgent        = require('./funnelAgent');
 const jaxLearningAgent   = require('./jaxLearningAgent');
 const { log } = require('./logger');
+const { recordRun } = require('./metrics');
 
 const SCHEDULES = {
   content:        12 * 60 * 60 * 1000, // twice daily
@@ -73,17 +74,47 @@ const agents = {
   funnel: funnelAgent, jaxlearning: jaxLearningAgent,
 };
 
+// ── CIRCUIT BREAKER ──────────────────────────────────────────────────────────
+const circuitState = {};
+const CB_OPEN_AFTER  = 3;        // failures before opening
+const CB_RESET_MS    = 30 * 60 * 1000; // 30 min before retry
+
+function cbIsOpen(id) {
+  const cb = circuitState[id];
+  if (!cb || cb.state !== 'open') return false;
+  if (Date.now() > cb.openedAt + CB_RESET_MS) { cb.state = 'half-open'; return false; }
+  return true;
+}
+function cbSuccess(id) { circuitState[id] = { state: 'closed', failures: 0 }; }
+function cbFailure(id) {
+  if (!circuitState[id]) circuitState[id] = { state: 'closed', failures: 0 };
+  circuitState[id].failures++;
+  if (circuitState[id].failures >= CB_OPEN_AFTER) {
+    circuitState[id].state    = 'open';
+    circuitState[id].openedAt = Date.now();
+    log(id, 'warn', `Circuit breaker OPEN — ${CB_OPEN_AFTER} consecutive failures. Auto-reset in 30 min.`);
+  }
+}
+
 async function runAgent(id) {
   const state = agentState[id];
   if (state.paused) { log(id, 'warn', `Agent ${id} paused — skipping`); return; }
-  state.status = 'running';
+  if (cbIsOpen(id)) { log(id, 'warn', `Circuit breaker open for ${id} — skipping until auto-reset`); return; }
+
+  state.status  = 'running';
   state.lastRun = new Date().toISOString();
+  const t0      = Date.now();
+
   try {
     await agents[id].run();
     state.status = 'idle';
+    cbSuccess(id);
+    recordRun({ agentId: id, success: true, durationMs: Date.now() - t0 });
   } catch (err) {
     log(id, 'error', `Unhandled error in ${id}: ${err.message}`);
     state.status = 'error';
+    cbFailure(id);
+    recordRun({ agentId: id, success: false, durationMs: Date.now() - t0, error: err.message });
   }
 }
 
@@ -111,6 +142,7 @@ function getStatus() {
   return Object.entries(agentState).map(([id, s]) => ({
     id, name: AGENT_NAMES[id], status: s.status, paused: s.paused,
     lastRun: s.lastRun, nextRun: s.nextRun, schedule: AGENT_SCHEDULES_LABEL[id],
+    circuit: circuitState[id]?.state || 'closed',
   }));
 }
 

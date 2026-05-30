@@ -314,4 +314,24 @@ router.post('/memory/note', requireAdmin, (req, res) => {
   res.json({ success: true });
 });
 
+// GET /api/admin/metrics — observability dashboard
+router.get('/metrics', requireAdmin, (_req, res) => {
+  try {
+    const { readMetrics } = require('../agents/metrics');
+    res.json(readMetrics());
+  } catch {
+    res.json({ error: 'No metrics yet' });
+  }
+});
+
+// GET /api/admin/kb — knowledge base stats
+router.get('/kb', requireAdmin, (_req, res) => {
+  try {
+    const kb = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/knowledge-base.json'), 'utf8'));
+    const byType = {};
+    for (const e of kb.entries) { byType[e.type] = (byType[e.type]||0)+1; }
+    res.json({ total: kb.entries.length, byType, lastUpdated: kb.lastUpdated, recent: kb.entries.slice(0,5) });
+  } catch { res.json({ total: 0, byType: {}, entries: [] }); }
+});
+
 module.exports = router;
