@@ -4,6 +4,7 @@ const { log } = require('./logger');
 const cfg = require('./jaxConfig');
 const { getInstructions } = require('../services/memory');
 const { callClaude } = require('../utils/claudeClient');
+const { sendEmail } = require('../services/email');
 
 const AGENT_ID = 'jaxoutreach';
 const OUT_FILE = path.join(__dirname, '../../data/jax-outreach.json');
@@ -213,13 +214,55 @@ async function run() {
     log(AGENT_ID, 'info', 'Skipping apartment pitch — recently contacted within 60 days');
   }
 
+  // ── AUTO-SEND NEW ITEMS ───────────────────────────────────────────────────
+  // Match each new item to a contact with a verified email and send
+  const contacts = cfg.outreachContacts || [];
+  let autoSent = 0;
+
+  for (const item of newItems) {
+    if (!item.subject || !item.message) continue;
+
+    // Find a matching contact by type that has a real email
+    const match = contacts.find(c =>
+      c.type === item.type &&
+      c.email &&
+      !wasRecentlyContacted(data, `email:${c.email}`)
+    );
+    if (!match) continue;
+
+    const result = await sendEmail({
+      to:      match.email,
+      subject: item.subject,
+      body:    item.message,
+      agentId: AGENT_ID,
+    });
+
+    if (result.sent) {
+      item.status     = 'sent';
+      item.sentAt     = new Date().toISOString();
+      item.sentTo     = match.email;
+      item.sentToName = match.name;
+      markContacted(data, `email:${match.email}`);
+      autoSent++;
+      if (!data.sent) data.sent = [];
+      data.sent.unshift(item);
+    }
+  }
+
+  if (autoSent > 0) {
+    log(AGENT_ID, 'success', `Auto-sent ${autoSent} outreach email(s) via garageworld2025@gmail.com`);
+  } else {
+    log(AGENT_ID, 'info', 'No auto-sends this run (GMAIL_APP_PASSWORD not set or all contacts on cooldown)');
+  }
+
   // ── MERGE INTO QUEUE ──────────────────────────────────────────────────────
-  // Pending items first (new ones at front), keep max 50 total
-  data.sendQueue = [...newItems, ...data.sendQueue.filter(i => i.status === 'pending')].slice(0, 50);
+  const unsent = newItems.filter(i => i.status === 'pending');
+  data.sendQueue = [...unsent, ...data.sendQueue.filter(i => i.status === 'pending')].slice(0, 50);
+  data.sent      = (data.sent || []).slice(0, 100);
 
   data.lastRun = new Date().toISOString();
   fs.writeFileSync(OUT_FILE, JSON.stringify(data, null, 2));
-  log(AGENT_ID, 'success', `Outreach agent complete. ${newItems.length} item(s) added to send queue.`);
+  log(AGENT_ID, 'success', `Outreach agent complete. ${autoSent} auto-sent, ${unsent.length} queued for manual send.`);
 }
 
 module.exports = { run, AGENT_ID };

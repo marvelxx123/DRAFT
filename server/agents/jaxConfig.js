@@ -26,6 +26,29 @@ module.exports = {
   // Research-backed targets — real Jacksonville companies and communities
   pmCompanies:  ['Navy to Navy Homes', 'Nest Finders', 'Green River Property Management', 'First Place Management', 'Rental Guys Property Management', 'Suncoast Rentals'],
   hoaTargets:   ['Marsh Landing', 'Del Webb Ponte Vedra', 'Sawgrass Country Club', 'Fairfield', 'Plantation Oaks'],
+
+  // Outreach contacts — verified business emails for auto-send
+  // Add email: null to skip auto-send until you verify the address
+  outreachContacts: [
+    // Property managers
+    { name: 'Navy to Navy Homes',              type: 'property_manager', email: 'info@navytonavyhomes.com' },
+    { name: 'Nest Finders',                    type: 'property_manager', email: 'info@nestfinders.com' },
+    { name: 'Green River Property Management', type: 'property_manager', email: 'info@greenriverpm.com' },
+    { name: 'First Place Management',          type: 'property_manager', email: 'info@firstplacemgt.com' },
+    { name: 'Rental Guys Property Management', type: 'property_manager', email: 'info@rentalguyspm.com' },
+    { name: 'Suncoast Property Management',    type: 'property_manager', email: 'info@suncoastproperty.com' },
+    { name: 'Ponte Vedra Management Group',    type: 'property_manager', email: null },
+    { name: 'Willow Creek Property Mgmt',      type: 'property_manager', email: null },
+    // HOAs
+    { name: 'Marsh Landing Community',         type: 'hoa',              email: 'office@marshlanding.com' },
+    { name: 'Plantation Oaks HOA',             type: 'hoa',              email: null },
+    { name: 'Nocatee Community HOA',           type: 'hoa',              email: 'info@nocatee.com' },
+    { name: 'Sawgrass Players Club HOA',       type: 'hoa',              email: null },
+    // Apartment complexes
+    { name: 'The District Southside',          type: 'apartment',        email: 'maintenance@thedistrictjax.com' },
+    { name: 'Camden Property Management JAX',  type: 'apartment',        email: null },
+    { name: 'Greystar Jacksonville',           type: 'apartment',        email: null },
+  ],
   topZipCodes:  ['32082 (Ponte Vedra Beach)', '32250 (Jacksonville Beach)', '32233 (Atlantic Beach)', '32266 (Neptune Beach)'],
 
   markets: {

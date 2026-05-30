@@ -58,4 +58,15 @@ async function scheduleFollowUp(phone, firstName) {
   }, 45 * 60 * 1000);
 }
 
-module.exports = { sendLeadConfirmation, sendOwnerAlert, scheduleFollowUp };
+// Review request — sent after lead is marked Closed
+async function sendReviewRequest(phone, firstName, reviewLink) {
+  const name = firstName ? ` ${firstName}` : '';
+  const link = reviewLink || 'https://search.google.com/local/writereview?placeid=904garagedoors';
+  await send(phone,
+    `Hi${name}, thank you for choosing 904 Garage Doors! ` +
+    `If the service was good, a quick Google review means the world to a small business: ${link} ` +
+    `— We really appreciate it!`
+  );
+}
+
+module.exports = { sendLeadConfirmation, sendOwnerAlert, scheduleFollowUp, sendReviewRequest };

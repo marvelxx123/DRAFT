@@ -6,6 +6,7 @@ const { execSync } = require('child_process');
 const { checkPassword, createSession, requireAdmin } = require('../middleware/adminAuth');
 const { readLogs, log } = require('../agents/logger');
 const agentRunner = require('../agents/agentRunner');
+const sms = require('../services/sms');
 
 const ROOT = path.join(__dirname, '../..');
 
@@ -285,6 +286,13 @@ router.patch('/leads/:id/outcome', requireAdmin, (req, res) => {
   fs.writeFileSync(LEADS_FILE, JSON.stringify(leads, null, 2));
   log('admin', 'success', `Lead ${req.params.id} marked ${status}${status === 'closed' ? ` — $${jobValue}` : ` — ${lossReason}`}`);
   res.json({ success: true, lead });
+
+  // Fire review request SMS after closed job — fire and forget
+  if (status === 'closed' && lead.phone) {
+    const firstName = (lead.name || '').split(' ')[0];
+    const reviewLink = require('../agents/jaxConfig').reviewLink || '';
+    sms.sendReviewRequest(lead.phone, firstName, reviewLink);
+  }
 });
 
 // ── AGENT MEMORY ───────────────────────────────────────────────────────────────
