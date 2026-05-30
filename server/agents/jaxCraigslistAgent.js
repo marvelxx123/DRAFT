@@ -1,25 +1,12 @@
-const fetch = require('node-fetch');
 const fs = require('fs');
 const path = require('path');
 const { log } = require('./logger');
 const cfg = require('./jaxConfig');
 const { getInstructions } = require('../services/memory');
+const { callClaude } = require('../utils/claudeClient');
 
 const AGENT_ID = 'jaxcraigslist';
 const OUT_FILE = path.join(__dirname, '../../data/jax-craigslist.json');
-
-async function callClaude(prompt) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-    body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 500,
-      messages: [{ role: 'user', content: prompt }] }),
-  });
-  if (!res.ok) throw new Error(`Claude API ${res.status}`);
-  return (await res.json()).content[0].text.trim();
-}
 
 function readData() {
   try { return JSON.parse(fs.readFileSync(OUT_FILE, 'utf8')); }
@@ -112,7 +99,7 @@ async function generateLeadReply(item) {
     `Never promise specific pricing or outcomes. Use "we can get someone out to you" not "we fix" or "we repair". ` +
     `Sign off as 904 Garage Doors.`;
   try {
-    return await callClaude(prompt);
+    return await callClaude(prompt, { agentId: AGENT_ID, maxTokens: 500 });
   } catch (err) {
     log(AGENT_ID, 'warn', `Reply gen failed for lead "${item.title}": ${err.message}`);
     return `Hi, saw your post — 904 Garage Doors here. We can get someone out to you same day or tomorrow to take a look. Give us a call at (904) 468-3428 and we'll get it sorted. — 904 Garage Doors`;
@@ -141,7 +128,8 @@ async function generateAd(adType) {
     `Total max 200 words. Plain text, no markdown. Sound professional and trustworthy. ` +
     `Use language like "we dispatch a pro to you" not "we fix" or "we repair". ` +
     `Never mention flat-rate pricing or guarantees. Do not claim licensed or insured.\n` +
-    `PERFORMANCE INTELLIGENCE (use this to sharpen targeting): ${learned}`
+    `PERFORMANCE INTELLIGENCE (use this to sharpen targeting): ${learned}`,
+    { agentId: AGENT_ID, maxTokens: 500 }
   );
 }
 
@@ -196,8 +184,14 @@ async function run() {
 
   // ── B) GENERATE AD COPY ───────────────────────────────────────────────────
   const adType = AD_TYPES[Math.floor(Math.random() * AD_TYPES.length)];
-  const adBody = await generateAd(adType);
-  log(AGENT_ID, 'success', `Craigslist ad generated: "${adType.title}"`);
+  let adBody = '';
+  try {
+    adBody = await generateAd(adType);
+    log(AGENT_ID, 'success', `Craigslist ad generated: "${adType.title}"`);
+  } catch (err) {
+    log(AGENT_ID, 'error', `Ad generation failed: ${err.message}`);
+    adBody = `Same-day garage door service in Jacksonville FL. Call (904) 468-3428 — 904 Garage Doors`;
+  };
 
   const adEntry = {
     id: Date.now(),

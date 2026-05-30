@@ -1,29 +1,13 @@
-const fetch = require('node-fetch');
 const fs    = require('fs');
 const path  = require('path');
 const { log } = require('./logger');
 const { getInstructions, readMemory } = require('../services/memory');
+const { callClaude } = require('../utils/claudeClient');
 
 const AGENT_ID    = 'funnel';
 const DATA_FILE   = path.join(__dirname, '../../data/funnel-insights.json');
 const LEADS_FILE  = path.join(__dirname, '../../data/leads.json');
 const CHANGE_LOG  = path.join(__dirname, '../../data/funnel-changelog.json');
-
-async function callClaude(prompt, maxTokens = 1000) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: maxTokens,
-      messages: [{ role: 'user', content: prompt }],
-    }),
-  });
-  if (!res.ok) throw new Error(`Claude API ${res.status}`);
-  return (await res.json()).content[0].text.trim();
-}
 
 function readLeads() {
   try {
@@ -96,7 +80,7 @@ For each tactic: what it is, why it works NOW, and exactly how to implement it.
 Return as JSON array: [{"tactic":"","why":"","implement":"","impact":"high/medium","effort":"low/medium/high"}]
 Return ONLY the JSON array.`;
 
-  const raw = await callClaude(prompt, 1500);
+  const raw = await callClaude(prompt, { agentId: AGENT_ID, maxTokens: 1500 });
   try { return JSON.parse(raw); } catch { return [{ tactic: raw, why: '', implement: '', impact: 'medium', effort: 'medium' }]; }
 }
 
@@ -111,7 +95,7 @@ Consider: landing page structure, CTA placement, trust signals, urgency triggers
 Return as JSON: {"winnerTactics":[],"commonMistakes":[],"quickWins":[],"emergingTrends":[]}
 Return ONLY the JSON.`;
 
-  const raw = await callClaude(prompt, 1200);
+  const raw = await callClaude(prompt, { agentId: AGENT_ID, maxTokens: 1200 });
   try { return JSON.parse(raw); } catch { return { raw }; }
 }
 
@@ -138,7 +122,7 @@ Generate specific micro-copy improvements for these elements. Be concrete and sp
 Return as JSON: {"formHeadlines":[],"submitButtons":[],"heroSub":"","trustItems":[],"emergencyHeadline":""}
 Return ONLY the JSON.`;
 
-  const raw = await callClaude(prompt, 800);
+  const raw = await callClaude(prompt, { agentId: AGENT_ID, maxTokens: 800 });
   try { return JSON.parse(raw); } catch { return null; }
 }
 
