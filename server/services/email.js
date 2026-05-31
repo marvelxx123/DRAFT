@@ -1,32 +1,38 @@
-const nodemailer = require('nodemailer');
+const fetch = require('node-fetch');
 const { log } = require('../agents/logger');
 
-const FROM_ADDRESS = 'garageworld2025@gmail.com';
+const FROM_ADDRESS = 'outreach@904garagedoors.com';
 const FROM_NAME    = '904 Garage Doors';
-
-function getTransport() {
-  const pass = process.env.GMAIL_APP_PASSWORD;
-  if (!pass) return null;
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user: FROM_ADDRESS, pass },
-  });
-}
+const REPLY_TO     = 'garageworld2025@gmail.com';
 
 async function sendEmail({ to, subject, body, agentId = 'email' }) {
-  const transport = getTransport();
-  if (!transport) {
-    log(agentId, 'warn', `GMAIL_APP_PASSWORD not set — skipping email to ${to}`);
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    log(agentId, 'warn', `RESEND_API_KEY not set — skipping email to ${to}`);
     return { sent: false, reason: 'not_configured' };
   }
+
   try {
-    await transport.sendMail({
-      from:     `"${FROM_NAME}" <${FROM_ADDRESS}>`,
-      to,
-      subject,
-      text:     body,
-      replyTo:  FROM_ADDRESS,
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from:     `${FROM_NAME} <${FROM_ADDRESS}>`,
+        to:       [to],
+        subject,
+        text:     body,
+        reply_to: REPLY_TO,
+      }),
     });
+
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error(`Resend ${res.status}: ${err}`);
+    }
+
     log(agentId, 'success', `Email sent → ${to} | "${subject}"`);
     return { sent: true };
   } catch (err) {
