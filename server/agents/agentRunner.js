@@ -8,20 +8,22 @@ const jaxFollowupAgent   = require('./jaxFollowupAgent');
 const jaxResearchAgent   = require('./jaxResearchAgent');
 const funnelAgent        = require('./funnelAgent');
 const jaxLearningAgent   = require('./jaxLearningAgent');
+const jaxCFOAgent        = require('./jaxCFOAgent');
 const { log } = require('./logger');
 const { recordRun } = require('./metrics');
 
 const SCHEDULES = {
-  content:        12 * 60 * 60 * 1000, // twice daily
+  content:        12 * 60 * 60 * 1000,
   seo:            24 * 60 * 60 * 1000,
-  jaxprofile:    168 * 60 * 60 * 1000, // weekly
+  jaxprofile:    168 * 60 * 60 * 1000,
   jaxsocial:      24 * 60 * 60 * 1000,
-  jaxcraigslist:  12 * 60 * 60 * 1000, // twice daily
+  jaxcraigslist:  12 * 60 * 60 * 1000,
   jaxoutreach:    24 * 60 * 60 * 1000,
   jaxfollowup:    24 * 60 * 60 * 1000,
-  jaxresearch:    12 * 60 * 60 * 1000, // twice daily
-  funnel:         12 * 60 * 60 * 1000, // twice daily
-  jaxlearning:    24 * 60 * 60 * 1000, // daily — runs after others have data
+  jaxresearch:    12 * 60 * 60 * 1000,
+  funnel:         12 * 60 * 60 * 1000,
+  jaxlearning:    24 * 60 * 60 * 1000,
+  jaxcfo:         24 * 60 * 60 * 1000, // daily financial briefing
 };
 
 const AGENT_NAMES = {
@@ -35,6 +37,7 @@ const AGENT_NAMES = {
   jaxresearch:   'JAX Research Agent',
   funnel:        'Funnel Intelligence Agent',
   jaxlearning:   'Learning & Memory Agent',
+  jaxcfo:        'CFO — Strategic & Financial Agent',
 };
 
 const AGENT_SCHEDULES_LABEL = {
@@ -48,6 +51,7 @@ const AGENT_SCHEDULES_LABEL = {
   jaxresearch:   'Twice daily',
   funnel:        'Twice daily',
   jaxlearning:   'Daily — evolves all agent instructions',
+  jaxcfo:        'Daily — financial briefing + strategic priorities',
 };
 
 // Agents paused until their prerequisites are ready:
@@ -72,6 +76,7 @@ const agents = {
   jaxcraigslist: jaxCraigslistAgent, jaxoutreach: jaxOutreachAgent,
   jaxfollowup: jaxFollowupAgent, jaxresearch: jaxResearchAgent,
   funnel: funnelAgent, jaxlearning: jaxLearningAgent,
+  jaxcfo: jaxCFOAgent,
 };
 
 // ── CIRCUIT BREAKER ──────────────────────────────────────────────────────────
@@ -124,7 +129,7 @@ function scheduleAgent(id) {
   // Stagger starts so they don't all hit the API at once
   const stagger = { content: 10, seo: 25,
     jaxprofile: 40, jaxsocial: 55, jaxcraigslist: 70, jaxoutreach: 85, jaxfollowup: 100,
-    jaxresearch: 115, funnel: 130, jaxlearning: 150 };
+    jaxresearch: 115, funnel: 130, jaxlearning: 150, jaxcfo: 170 };
   setTimeout(() => runAgent(id), (stagger[id] || 10) * 1000);
   state.nextRun = new Date(Date.now() + interval).toISOString();
   state.timer = setInterval(async () => {

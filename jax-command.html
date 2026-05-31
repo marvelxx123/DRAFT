@@ -510,10 +510,19 @@
 
     </div>
 
+    <!-- CFO STRATEGIC BRIEFING PANEL -->
+    <div class="card" style="margin-bottom:1.5rem">
+      <div class="card-title">
+        <span>💼 CFO — Strategic &amp; Financial Briefing</span>
+        <span class="last-updated" id="cfoUpdated"></span>
+      </div>
+      <div id="cfoPanel"><div class="empty">Loading…</div></div>
+    </div>
+
     <!-- OBSERVABILITY / METRICS PANEL -->
     <div class="card" style="margin-bottom:1.5rem">
       <div class="card-title">
-        <span>📊 Observability — API Metrics & Health</span>
+        <span>📊 Observability — API Metrics &amp; Health</span>
         <span class="last-updated" id="metricsUpdated"></span>
       </div>
       <div id="metricsPanel"><div class="empty">Loading…</div></div>
@@ -1292,11 +1301,62 @@
     loadMemory();
   }
 
+  async function loadCFO() {
+    try {
+      const res  = await fetch('/api/admin/cfo', { headers: authHeaders() });
+      const data = await res.json();
+      const el   = document.getElementById('cfoPanel');
+      const upd  = document.getElementById('cfoUpdated');
+      if (data.error) { el.innerHTML = `<div class="empty">${data.error}</div>`; return; }
+      if (upd) upd.textContent = data.lastRun ? new Date(data.lastRun).toLocaleString() : '';
+      const f = data.financials || {};
+      const b = data.briefing   || {};
+      const score = b.healthScore || '—';
+      const scoreColor = score >= 7 ? '#22c55e' : score >= 4 ? '#f59e0b' : '#ef4444';
+      el.innerHTML = `
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.75rem;margin-bottom:1rem">
+          <div style="background:#1e293b;padding:0.75rem;border-radius:8px;text-align:center">
+            <div style="font-size:1.6rem;font-weight:700;color:${scoreColor}">${score}/10</div>
+            <div style="font-size:0.7rem;color:#94a3b8">Health Score</div>
+          </div>
+          <div style="background:#1e293b;padding:0.75rem;border-radius:8px;text-align:center">
+            <div style="font-size:1.4rem;font-weight:700;color:#22c55e">$${(f.totalRevenue||0).toLocaleString()}</div>
+            <div style="font-size:0.7rem;color:#94a3b8">Total Revenue</div>
+          </div>
+          <div style="background:#1e293b;padding:0.75rem;border-radius:8px;text-align:center">
+            <div style="font-size:1.4rem;font-weight:700;color:${(f.profitLoss||0)>=0?'#22c55e':'#ef4444'}">$${(f.profitLoss||0).toLocaleString()}</div>
+            <div style="font-size:0.7rem;color:#94a3b8">Profit / Loss</div>
+          </div>
+          <div style="background:#1e293b;padding:0.75rem;border-radius:8px;text-align:center">
+            <div style="font-size:1.4rem;font-weight:700;color:#60a5fa">${f.conversionRate||0}%</div>
+            <div style="font-size:0.7rem;color:#94a3b8">Conversion Rate</div>
+          </div>
+          <div style="background:#1e293b;padding:0.75rem;border-radius:8px;text-align:center">
+            <div style="font-size:1.4rem;font-weight:700;color:#a78bfa">$${(f.avgJobValue||0).toLocaleString()}</div>
+            <div style="font-size:0.7rem;color:#94a3b8">Avg Job Value</div>
+          </div>
+        </div>
+        ${b.healthReason ? `<div style="background:#1e293b;padding:0.75rem;border-radius:8px;margin-bottom:0.75rem;color:#94a3b8;font-size:0.85rem">📋 ${b.healthReason}</div>` : ''}
+        ${b.weeklyPriorities?.length ? `
+        <div style="background:#1e293b;padding:0.75rem;border-radius:8px;margin-bottom:0.75rem">
+          <div style="font-size:0.75rem;color:#f59e0b;font-weight:600;margin-bottom:0.5rem">🎯 THIS WEEK'S PRIORITIES</div>
+          ${b.weeklyPriorities.map((p,i) => `<div style="font-size:0.85rem;color:#e2e8f0;margin-bottom:0.3rem">${i+1}. ${p}</div>`).join('')}
+        </div>` : ''}
+        ${b.doTodayFree ? `<div style="background:#052e16;border:1px solid #22c55e;padding:0.75rem;border-radius:8px;margin-bottom:0.75rem;font-size:0.85rem;color:#22c55e">⚡ DO TODAY (FREE): ${b.doTodayFree}</div>` : ''}
+        ${b.biggestRisk ? `<div style="background:#450a0a;border:1px solid #ef4444;padding:0.75rem;border-radius:8px;margin-bottom:0.75rem;font-size:0.85rem;color:#ef4444">⚠️ BIGGEST RISK: ${b.biggestRisk}</div>` : ''}
+        ${b.investmentRecommendation?.what ? `<div style="background:#1e293b;padding:0.75rem;border-radius:8px;margin-bottom:0.75rem;font-size:0.85rem;color:#94a3b8">💰 INVEST: $${b.investmentRecommendation.amount} on ${b.investmentRecommendation.what} — ${b.investmentRecommendation.why}</div>` : ''}
+        ${b.expansionReason ? `<div style="background:#1e293b;padding:0.75rem;border-radius:8px;font-size:0.85rem;color:#94a3b8">🗺️ EXPANSION: ${b.expansionReady ? '✅ Ready' : '🔴 Not yet'} — ${b.expansionReason}</div>` : ''}
+      `;
+    } catch (err) {
+      document.getElementById('cfoPanel').innerHTML = `<div class="empty">Error loading CFO data</div>`;
+    }
+  }
+
   // ── PATCH loadAll TO INCLUDE NEW PANELS ─────────────────────────────────────
   async function loadAll() {
     await Promise.all([
       loadLeads(), loadResearch(), loadFunnel(), loadAgents(), loadLogs(), loadHealth(),
-      loadCraigslist(), loadOutreach(), loadMemory(), loadMetrics(),
+      loadCraigslist(), loadOutreach(), loadMemory(), loadMetrics(), loadCFO(),
     ]);
   }
 

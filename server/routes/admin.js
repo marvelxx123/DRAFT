@@ -161,6 +161,16 @@ router.get('/research', requireAdmin, (_req, res) => {
   }
 });
 
+// GET /api/admin/cfo — CFO strategic briefing
+router.get('/cfo', requireAdmin, (_req, res) => {
+  try {
+    const data = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/jax-cfo.json'), 'utf8'));
+    res.json(data);
+  } catch {
+    res.json({ error: 'CFO agent has not run yet' });
+  }
+});
+
 // GET /api/admin/funnel — funnel intelligence
 router.get('/funnel', requireAdmin, (_req, res) => {
   try {
