@@ -9,6 +9,7 @@ const jaxResearchAgent   = require('./jaxResearchAgent');
 const funnelAgent        = require('./funnelAgent');
 const jaxLearningAgent   = require('./jaxLearningAgent');
 const jaxCFOAgent        = require('./jaxCFOAgent');
+const jaxReviewAgent     = require('./jaxReviewAgent');
 const { log } = require('./logger');
 const { recordRun } = require('./metrics');
 
@@ -23,7 +24,8 @@ const SCHEDULES = {
   jaxresearch:    12 * 60 * 60 * 1000,
   funnel:         12 * 60 * 60 * 1000,
   jaxlearning:    24 * 60 * 60 * 1000,
-  jaxcfo:         24 * 60 * 60 * 1000, // daily financial briefing
+  jaxcfo:         24 * 60 * 60 * 1000,
+  jaxreview:      24 * 60 * 60 * 1000,
 };
 
 const AGENT_NAMES = {
@@ -38,6 +40,7 @@ const AGENT_NAMES = {
   funnel:        'Funnel Intelligence Agent',
   jaxlearning:   'Learning & Memory Agent',
   jaxcfo:        'CFO — Strategic & Financial Agent',
+  jaxreview:     'Review Velocity — Jacksonville Domination Tracker',
 };
 
 const AGENT_SCHEDULES_LABEL = {
@@ -52,6 +55,7 @@ const AGENT_SCHEDULES_LABEL = {
   funnel:        'Twice daily',
   jaxlearning:   'Daily — evolves all agent instructions',
   jaxcfo:        'Daily — financial briefing + strategic priorities',
+  jaxreview:     'Daily — review velocity + Jacksonville domination tracker',
 };
 
 // Agents paused until their prerequisites are ready:
@@ -76,7 +80,7 @@ const agents = {
   jaxcraigslist: jaxCraigslistAgent, jaxoutreach: jaxOutreachAgent,
   jaxfollowup: jaxFollowupAgent, jaxresearch: jaxResearchAgent,
   funnel: funnelAgent, jaxlearning: jaxLearningAgent,
-  jaxcfo: jaxCFOAgent,
+  jaxcfo: jaxCFOAgent, jaxreview: jaxReviewAgent,
 };
 
 // ── CIRCUIT BREAKER ──────────────────────────────────────────────────────────
@@ -129,7 +133,7 @@ function scheduleAgent(id) {
   // Stagger starts so they don't all hit the API at once
   const stagger = { content: 10, seo: 25,
     jaxprofile: 40, jaxsocial: 55, jaxcraigslist: 70, jaxoutreach: 85, jaxfollowup: 100,
-    jaxresearch: 115, funnel: 130, jaxlearning: 150, jaxcfo: 170 };
+    jaxresearch: 115, funnel: 130, jaxlearning: 150, jaxcfo: 170, jaxreview: 190 };
   setTimeout(() => runAgent(id), (stagger[id] || 10) * 1000);
   state.nextRun = new Date(Date.now() + interval).toISOString();
   state.timer = setInterval(async () => {

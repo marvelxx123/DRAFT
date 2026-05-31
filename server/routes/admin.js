@@ -161,6 +161,27 @@ router.get('/research', requireAdmin, (_req, res) => {
   }
 });
 
+// GET /api/admin/reviews — review velocity + JAX domination tracker
+router.get('/reviews', requireAdmin, (_req, res) => {
+  try {
+    const data = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/jax-reviews.json'), 'utf8'));
+    res.json(data);
+  } catch {
+    res.json({ error: 'Review agent has not run yet' });
+  }
+});
+
+// POST /api/admin/reviews/count — manually update Google review count
+router.post('/reviews/count', requireAdmin, (req, res) => {
+  const { count } = req.body || {};
+  if (typeof count !== 'number') return res.status(400).json({ error: 'count required (number)' });
+  const { updateReviewCount } = require('../agents/jaxReviewAgent');
+  const ok = updateReviewCount(count);
+  if (!ok) return res.status(500).json({ error: 'Failed to update' });
+  log('admin', 'success', `Google review count manually updated to ${count}`);
+  res.json({ success: true, count });
+});
+
 // GET /api/admin/cfo — CFO strategic briefing
 router.get('/cfo', requireAdmin, (_req, res) => {
   try {

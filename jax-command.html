@@ -510,6 +510,15 @@
 
     </div>
 
+    <!-- JACKSONVILLE DOMINATION TRACKER -->
+    <div class="card" style="margin-bottom:1.5rem;border:2px solid #dc2626">
+      <div class="card-title">
+        <span>🏆 Jacksonville Domination Tracker — 6-Month Mission</span>
+        <span class="last-updated" id="reviewUpdated"></span>
+      </div>
+      <div id="reviewPanel"><div class="empty">Loading…</div></div>
+    </div>
+
     <!-- CFO STRATEGIC BRIEFING PANEL -->
     <div class="card" style="margin-bottom:1.5rem">
       <div class="card-title">
@@ -1301,6 +1310,72 @@
     loadMemory();
   }
 
+  async function updateReviewCount() {
+    const count = prompt('Enter your current Google review count:');
+    if (count === null || isNaN(Number(count))) return;
+    await fetch('/api/admin/reviews/count', {
+      method: 'POST', headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ count: Number(count) }),
+    });
+    loadReviews();
+  }
+
+  async function loadReviews() {
+    try {
+      const res  = await fetch('/api/admin/reviews', { headers: authHeaders() });
+      const data = await res.json();
+      const el   = document.getElementById('reviewPanel');
+      const upd  = document.getElementById('reviewUpdated');
+      if (data.error) { el.innerHTML = `<div class="empty">${data.error} — <button onclick="loadAll()" class="btn-sm">Trigger agent first</button></div>`; return; }
+      if (upd) upd.textContent = data.lastRun ? new Date(data.lastRun).toLocaleString() : '';
+      const m = data.metrics || {};
+      const s = data.strategy || {};
+      const milestones = m.milestones || [];
+      el.innerHTML = `
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0.75rem;margin-bottom:1rem">
+          <div style="background:#1e293b;padding:0.75rem;border-radius:8px;text-align:center">
+            <div style="font-size:2rem;font-weight:800;color:#fbbf24">${m.currentReviews || 0}</div>
+            <div style="font-size:0.7rem;color:#94a3b8">Google Reviews</div>
+            <button onclick="updateReviewCount()" style="margin-top:0.4rem;font-size:0.65rem;padding:2px 8px;background:#334155;border:none;border-radius:4px;color:#e2e8f0;cursor:pointer">Update</button>
+          </div>
+          <div style="background:#1e293b;padding:0.75rem;border-radius:8px;text-align:center">
+            <div style="font-size:2rem;font-weight:800;color:${m.onTrack?'#22c55e':'#ef4444'}">${m.onTrack ? '✅' : '⚠️'}</div>
+            <div style="font-size:0.7rem;color:#94a3b8">${m.onTrack ? 'On Track' : 'Behind Target'}</div>
+          </div>
+          <div style="background:#1e293b;padding:0.75rem;border-radius:8px;text-align:center">
+            <div style="font-size:2rem;font-weight:800;color:#60a5fa">${m.weeklyTarget || 0}</div>
+            <div style="font-size:0.7rem;color:#94a3b8">Reviews Needed/Week</div>
+          </div>
+          <div style="background:#1e293b;padding:0.75rem;border-radius:8px;text-align:center">
+            <div style="font-size:2rem;font-weight:800;color:#a78bfa">${m.monthsIn || 1}</div>
+            <div style="font-size:0.7rem;color:#94a3b8">Month Into Plan</div>
+          </div>
+        </div>
+        <div style="margin-bottom:1rem">
+          <div style="font-size:0.7rem;color:#94a3b8;margin-bottom:0.5rem;font-weight:600">6-MONTH MILESTONES</div>
+          <div style="display:flex;gap:0.4rem;flex-wrap:wrap">
+            ${milestones.map(m => `
+              <div style="padding:0.4rem 0.75rem;border-radius:20px;font-size:0.75rem;font-weight:600;
+                background:${m.achieved?'#052e16':m.current?'#1e3a5f':'#1e293b'};
+                border:1px solid ${m.achieved?'#22c55e':m.current?'#3b82f6':'#334155'};
+                color:${m.achieved?'#22c55e':m.current?'#60a5fa':'#64748b'}">
+                ${m.achieved?'✓':m.current?'▶':''} M${m.month}: ${m.target} reviews<br>
+                <span style="font-weight:400;font-size:0.65rem">${m.label}</span>
+              </div>`).join('')}
+          </div>
+        </div>
+        ${s.keyInsight ? `<div style="background:#1e3a5f;border:1px solid #3b82f6;padding:0.75rem;border-radius:8px;margin-bottom:0.75rem;font-size:0.85rem;color:#93c5fd">💡 ${s.keyInsight}</div>` : ''}
+        ${s.tactics?.length ? `
+        <div style="background:#1e293b;padding:0.75rem;border-radius:8px">
+          <div style="font-size:0.7rem;color:#f59e0b;font-weight:600;margin-bottom:0.5rem">🎯 GET MORE REVIEWS THIS WEEK</div>
+          ${s.tactics.map((t,i) => `<div style="font-size:0.82rem;color:#e2e8f0;margin-bottom:0.4rem">${i+1}. ${t}</div>`).join('')}
+        </div>` : ''}
+      `;
+    } catch {
+      document.getElementById('reviewPanel').innerHTML = `<div class="empty">Error loading review data</div>`;
+    }
+  }
+
   async function loadCFO() {
     try {
       const res  = await fetch('/api/admin/cfo', { headers: authHeaders() });
@@ -1356,7 +1431,7 @@
   async function loadAll() {
     await Promise.all([
       loadLeads(), loadResearch(), loadFunnel(), loadAgents(), loadLogs(), loadHealth(),
-      loadCraigslist(), loadOutreach(), loadMemory(), loadMetrics(), loadCFO(),
+      loadCraigslist(), loadOutreach(), loadMemory(), loadMetrics(), loadCFO(), loadReviews(),
     ]);
   }
 
