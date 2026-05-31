@@ -83,10 +83,20 @@ Current status:
 
 Context: Owner has ADHD. Needs specific, simple actions. Goal is top 3 Jacksonville Local Pack in 6 months.
 
+Review best practices to apply:
+- Text converts at 98% open rate vs 20% for email — always use SMS
+- Best moment: ask face-to-face BEFORE leaving the job site (highest conversion)
+- Second ask: text within 5-10 minutes of leaving while the job is fresh in their mind
+- Ask customers to include a photo in their review — photo reviews appear at the top of the listing
+- Target 4.7-4.8 stars, not 5.0 — a perfect score looks fake to Google and customers
+- Respond to EVERY review (positive and negative) — shows engagement and improves ranking
+- Never ask multiple people from the same job — Google flags it
+- Review link must go directly to the Google review form, not just the GMB page
+
 Give 3 specific tactics to get more Google reviews THIS WEEK. Be concrete — exact words to say, exact timing, exact channel.
 Also flag: is the current review velocity enough to hit month 6 goal?
 
-Return as JSON: {"onTrack": true/false, "urgency": "high/medium/low", "tactics": ["...", "...", "..."], "keyInsight": "one sentence"}
+Return as JSON: {"onTrack": true/false, "urgency": "high/medium/low", "tactics": ["...", "...", "..."], "respondToReviews": "one reminder about responding", "keyInsight": "one sentence"}
 Return ONLY the JSON.`;
 
   try {
@@ -98,11 +108,12 @@ Return ONLY the JSON.`;
       onTrack:    metrics.onTrack,
       urgency:    metrics.currentReviews < 5 ? 'high' : 'medium',
       tactics:    [
-        'After every closed job, text the customer: "Hi [name], glad we could help! If you have 60 seconds, a Google review means everything to a small business: [link]"',
-        'Ask in person before you leave — "Would you mind leaving us a quick Google review? It really helps us grow."',
-        'Follow up 24 hours after job via SMS if no review yet.',
+        'Before leaving the job site, say: "Would you mind leaving us a quick Google review? It takes 60 seconds and honestly means everything to a small business trying to grow in Jacksonville. I can send you the link right now." — then text it immediately.',
+        'Within 5 minutes of leaving, text: "Hi [name]! Glad we could get that fixed for you. If you have 60 seconds, a Google review would mean the world — and if you add a photo of the door, it keeps your review at the top: [link]"',
+        'Respond to every review within 24 hours — Google uses owner responsiveness as a ranking signal. For 5-star: thank them + mention the city. For any negative: apologize, offer to make it right, keep it professional.',
       ],
-      keyInsight: `You need ${metrics.weeklyTarget} reviews per week to stay on track for Jacksonville domination.`,
+      respondToReviews: 'Respond to every review — even 5-star ones. This signals engagement to Google and improves ranking.',
+      keyInsight: `You need ${metrics.weeklyTarget} reviews per week to stay on track for Jacksonville domination. Text converts 5x better than email — always send the review link via SMS within minutes of the job.`,
     };
   }
 }

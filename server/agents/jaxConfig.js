@@ -78,6 +78,61 @@ module.exports = {
     zipBonus: { '32082': 3, '32081': 3, '32250': 2, '32266': 2, '32233': 2, '32003': 2, '32256': 2 },
   },
 
+  // ── GMB SETUP GUIDE (Google Business Profile) ────────────────────────────
+  // Based on Wes McDowell / Semrush local SEO best practices
+  gmbSetup: {
+    primaryCategory:     'Garage Door Supplier',
+    secondaryCategories: ['Garage Door Service and Repair Company', 'Overhead Door Supplier'],
+    descriptionNote:     'Write a natural business description. Do NOT keyword-stuff — the description is NOT a ranking factor.',
+    photoNote:           'Upload real job photos. Do NOT geotag — not a ranking factor and looks manipulative.',
+    reviewTargetRange:   '4.7–4.8 stars is the sweet spot. 5.0 looks fake to Google and customers.',
+    respondToAllReviews: true,
+    offerIdea:           'Add a recurring GMB "offer" — e.g. "Free inspection with any spring replacement" — refresh monthly',
+    coworkingTactic:     'A co-working space address near Jacksonville city center (Regus, WeWork, Industrious, etc.) improves proximity ranking for Jacksonville searches. Cost: ~$50-350/month. Discuss with CFO before committing.',
+    qnaTemplates: [
+      { q: 'Do you offer same-day garage door repair in Jacksonville?', a: 'Yes — we dispatch technicians same day across all Jacksonville neighborhoods, 7 days a week.' },
+      { q: 'Do you service Ponte Vedra?', a: 'Yes, Ponte Vedra Beach and Ponte Vedra are among our primary service areas.' },
+      { q: 'What types of garage door problems do you fix?', a: 'Springs, cables, openers, panels, tracks, and full door replacements — all brands.' },
+      { q: 'Are you available on weekends and holidays?', a: 'Yes — 7 days a week including weekends.' },
+      { q: 'How do I get a free estimate?', a: 'Call (904) 468-3428 or submit the form at 904garagedoors.com — we respond fast.' },
+      { q: 'Do you handle emergency garage door repairs?', a: 'Yes — emergency same-day service is our specialty. Call (904) 468-3428 right now.' },
+    ],
+  },
+
+  // ── ON-PAGE SEO CHECKLIST (apply to every city page) ─────────────────────
+  onPageSeoChecklist: [
+    'Primary keyword in <title> tag (e.g. "Garage Door Repair Ponte Vedra FL | 904 Garage Doors")',
+    'Primary keyword in H1',
+    'Secondary keywords in H2/H3 (e.g. "Garage Door Spring Replacement Ponte Vedra")',
+    'Primary keyword in first 100 words of body copy',
+    'NAP (Business Name, Phone, Service Area) in footer with LocalBusiness schema markup',
+    'Google Map embed showing Jacksonville service area',
+    'Image alt text: keyword + city name (e.g. "garage door repair ponte vedra fl")',
+    'FAQ section using exact long-tail questions from keyword research',
+    'Internal links to other city pages',
+    'Video on page (even a 60-second explainer improves time-on-page)',
+  ],
+
+  // ── CITATION DIRECTORIES (NAP must be 100% consistent) ───────────────────
+  // Name: 904 Garage Doors | Phone: (904) 468-3428 | Website: 904garagedoors.com
+  citationDirectories: [
+    { name: 'Google Business Profile', priority: 1, status: 'pending-verification' },
+    { name: 'Bing Places',             priority: 1, status: 'todo' },
+    { name: 'Apple Maps',              priority: 1, status: 'todo' },
+    { name: 'Yelp',                    priority: 1, status: 'todo' },
+    { name: 'Facebook Business',       priority: 1, status: 'todo' },
+    { name: 'Angi (Angie\'s List)',    priority: 2, status: 'todo' },
+    { name: 'HomeAdvisor',             priority: 2, status: 'todo' },
+    { name: 'Thumbtack',               priority: 2, status: 'todo' },
+    { name: 'Better Business Bureau',  priority: 2, status: 'todo' },
+    { name: 'Nextdoor Business',       priority: 2, status: 'todo' },
+    { name: 'YellowPages.com',         priority: 3, status: 'todo' },
+    { name: 'Foursquare',              priority: 3, status: 'todo' },
+    { name: 'Manta',                   priority: 3, status: 'todo' },
+    { name: 'Alignable',               priority: 3, status: 'todo' },
+    { name: 'Jacksonville Chamber of Commerce', priority: 2, status: 'todo' },
+  ],
+
   // Seasonal focus — agents use this to tailor content to the time of year
   seasonalContext: {
     '1': 'post-holiday, snowbirds settling in, real estate season starting',

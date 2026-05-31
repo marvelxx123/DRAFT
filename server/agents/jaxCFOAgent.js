@@ -145,6 +145,9 @@ PHASE ROADMAP:
 - Phase 2: Scale Jacksonville with paid Google LSA, hit $5k/month
 - Phase 3: Copy playbook to Tampa/Orlando
 
+STRATEGIC OPTION TO EVALUATE WHEN JUSTIFIED:
+- Co-working space near Jacksonville city center ($50-350/month) — improves Google Local Pack proximity ranking for downtown Jacksonville searches. Not urgent until revenue is consistent. Worth recommending when health score ≥ 6 and 10+ closed jobs.
+
 As CFO, give a sharp, specific, honest strategic briefing. No generic advice.
 
 Return as JSON:
