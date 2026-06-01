@@ -163,6 +163,9 @@ TARGET MARKETS:
 - Yulee FL (fastest-growing suburb, 30%+ growth since 2019)
 - Nocatee, Mandarin, Orange Park, Fleming Island
 
+CORE STRATEGY:
+We do NOT try to beat Precision Garage Door or OGD. We want ONE slice of Jacksonville — 1-2% of the market is enough. Our edge is speed, lean cost structure, and smart targeting: premium zip codes, property managers, HOAs, emergency jobs. Once the slice is proven, we replicate to Tampa and Orlando. Every insight should help us own our slice faster — not fight a war against giants.
+
 KEY FACTS:
 - Just launched, building reviews from zero
 - Has Google LSA (background check complete)
