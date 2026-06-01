@@ -30,12 +30,21 @@ function readMetricsData() {
   catch { return {}; }
 }
 
+const DISPATCH_CUT = 0.67; // owner keeps 67% on dispatched jobs (tech gets 33%)
+
 function calcFinancials(leads, metricsData) {
   const closed = leads.filter(l => l.status === 'closed');
   const lost   = leads.filter(l => l.status === 'lost');
   const active = leads.filter(l => l.status === 'new' || l.status === 'called');
 
-  const totalRevenue   = closed.reduce((s, l) => s + (l.jobValue || 0), 0);
+  // Split personal vs dispatched jobs
+  const personalJobs    = closed.filter(l => l.jobType === 'personal');
+  const dispatchedJobs  = closed.filter(l => l.jobType === 'dispatched' || !l.jobType);
+
+  const personalRevenue   = personalJobs.reduce((s, l) => s + (l.jobValue || 0), 0);
+  const dispatchedRevenue = dispatchedJobs.reduce((s, l) => s + Math.round((l.jobValue || 0) * DISPATCH_CUT), 0);
+  const totalRevenue      = personalRevenue + dispatchedRevenue;
+
   const avgJobValue    = closed.length ? Math.round(totalRevenue / closed.length) : 0;
   const conversionRate = leads.length  ? Math.round((closed.length / leads.length) * 100) : 0;
 
@@ -74,10 +83,14 @@ function calcFinancials(leads, metricsData) {
   const revLast30    = closedLast30.reduce((s, l) => s + (l.jobValue || 0), 0);
 
   return {
-    totalLeads:     leads.length,
-    totalClosed:    closed.length,
-    totalLost:      lost.length,
-    totalActive:    active.length,
+    totalLeads:       leads.length,
+    totalClosed:      closed.length,
+    totalLost:        lost.length,
+    totalActive:      active.length,
+    personalJobs:     personalJobs.length,
+    dispatchedJobs:   dispatchedJobs.length,
+    personalRevenue,
+    dispatchedRevenue,
     totalRevenue,
     avgJobValue,
     conversionRate,
@@ -113,18 +126,26 @@ async function run() {
     const topCities     = fin.topCities.map(([c, d]) => `${c}: $${d.revenue}`).join(', ') || 'no closed jobs yet';
     const lossReasons   = fin.topLossReasons.map(([r, c]) => `${r} (${c}x)`).join(', ') || 'none recorded';
     const memoryContext = memory.agentInstructions?.research || 'No performance data yet';
+    const jobSplit      = `Personal jobs: ${fin.personalJobs || 0} ($${fin.personalRevenue || 0} full margin) | Dispatched jobs: ${fin.dispatchedJobs || 0} ($${fin.dispatchedRevenue || 0} at 67% cut)`;
 
     const prompt = `You are the CFO and strategic advisor for 904 Garage Doors — a garage door lead generation and dispatch platform in Jacksonville, FL. You think like a Harvard MBA with real street-level business instinct. You are direct, honest, and never generic.
 
 FOUNDATIONAL STRATEGY — READ THIS FIRST:
-We do NOT compete with Precision Garage Door, OGD, or Overhead Door. We do not want their whole market. We want ONE profitable slice of Jacksonville — 1-2% of the market is enough. Big players are slow and expensive. Our edge is speed, lean operations, and smart targeting (premium zips, property managers, HOAs, emergency jobs). Once we own our slice in Jacksonville, we copy the exact playbook to Tampa → Orlando → Miami. Every CFO recommendation must answer: does this help us own our slice faster, or does it try to beat everyone at once? Focused beats scattered every time.
+We do NOT compete with Precision Garage Door, OGD, or Overhead Door. We want ONE profitable slice of Jacksonville — 1-2% of the market is enough. Our edge is speed, lean operations, and smart targeting. Once we own the slice in Jacksonville, we copy the exact playbook to Tampa → Orlando → Miami. Every recommendation must answer: does this help us own our slice faster, or does it try to beat everyone at once?
 
-CORE VALUES:
-1. Speed — respond faster than every competitor
-2. Focus — one city, one slice, prove it, replicate
-3. Honesty — dispatch platform, never overstate what we are
-4. Simplicity — if the owner can't explain it in one sentence, it's too complicated
-5. Momentum — small consistent wins beat big swings
+CORE VALUES: Speed. Focus. Honesty. Simplicity. Momentum.
+
+BUSINESS MODEL — TWO REVENUE STREAMS:
+(A) Personal jobs: Owner (Tal) does the work himself. Highest margin — full job revenue minus platform costs. Target: at least 1 personal job per day.
+(B) Dispatched jobs: Independent tech does the work, collects from customer, sends owner 65-70% cut. Tech keeps 30-35%.
+PRIMARY ASSET: Not labor — the ability to consistently generate quality leads.
+
+THREE-PHASE ROADMAP:
+Phase 1 (NOW): Prove Jacksonville. Consistent lead gen, predictable profit, reliable tech network, repeatable processes. Min bar: 10 closed jobs, 5+ reviews, positive cash flow.
+Phase 2: Multi-market. Replicate lead system to Tampa, Orlando, Miami. Build tech networks in each city.
+Phase 3: Vertical SaaS. Build software platform for garage door companies based on real operational experience — lead management, dispatch, follow-up, marketing tracking. Nationwide.
+
+PHASE 1 IS NOT COMPLETE UNTIL: consistent leads flowing, profitable month achieved, 1-2 reliable techs on standby, operating procedures documented.
 
 LIVE FINANCIAL SNAPSHOT:
 - Total leads all time: ${fin.totalLeads}
@@ -132,6 +153,7 @@ LIVE FINANCIAL SNAPSHOT:
 - Total revenue: $${fin.totalRevenue}
 - Average job value: $${fin.avgJobValue}
 - Conversion rate: ${fin.conversionRate}%
+- Job split: ${jobSplit}
 - Last 30 days: ${fin.last30Days.leads} leads, ${fin.last30Days.closed} closed, $${fin.last30Days.revenue} revenue
 - Last 7 days: ${fin.last7Days.leads} leads, ${fin.last7Days.closed} closed
 - API costs to date: $${fin.apiCostTotal}

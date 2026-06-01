@@ -3,23 +3,7 @@
   "agentInstructions": {},
   "manualNotes": [
     {
-      "note": "TWILIO CONTEXT: Budget is tight. Twilio costs $20 to start + ~$3/month for SMS volume. Owner needs to decide if this is worth it now vs later.",
-      "addedAt": "2026-05-31T18:57:15.195Z"
-    },
-    {
-      "note": "END GOAL: Best lead generation machine in the garage door market. Then copy-paste to Tampa, Orlando, Miami, and expand to HVAC, plumbing, locksmith verticals.",
-      "addedAt": "2026-05-31T18:57:15.195Z"
-    },
-    {
-      "note": "ADHD ACCOUNTABILITY: Tal has ADHD. All recommendations must be specific, focused, one thing at a time. Weekly north star metric. No overwhelm. Momentum is critical — small wins compound.",
-      "addedAt": "2026-05-31T18:57:15.195Z"
-    },
-    {
-      "note": "BUSINESS MODEL EVOLUTION: Phase 1 = personal lead gen. Phase 2 = sell leads to other techs. Phase 3 = license the full platform as vertical SaaS to other cities and services. The system must be built for leads from day one.",
-      "addedAt": "2026-05-31T18:57:15.195Z"
-    },
-    {
-      "note": "TIMELINE: 3-6 months to build a fully automated lead machine. Month 1-2: close first jobs, refine system. Month 3-4: start selling leads to other techs. Month 5-6: vertical SaaS, license to other garage door companies.",
+      "note": "OWNER PROFILE: Tal is a garage door technician working as sub-contractor. Currently doing jobs himself while building the system.",
       "addedAt": "2026-05-31T18:57:15.195Z"
     },
     {
@@ -27,15 +11,35 @@
       "addedAt": "2026-05-31T18:57:15.195Z"
     },
     {
-      "note": "OWNER PROFILE: Tal is a garage door technician working as sub-contractor. Currently doing jobs himself while building the system.",
+      "note": "ADHD ACCOUNTABILITY: Tal has ADHD. All recommendations must be specific, focused, one thing at a time. Weekly north star metric. No overwhelm. Momentum is critical — small wins compound.",
       "addedAt": "2026-05-31T18:57:15.195Z"
     },
     {
-      "note": "CORE STRATEGY — THE SLICE PHILOSOPHY: We do NOT compete with Precision Garage Door, OGD, or Overhead Door. We do not need to beat them. We do not want their whole market. We want ONE profitable slice of Jacksonville — 1-2% of the market is enough to build a real business. Big players are slow, expensive, and arrogant. We are fast, lean, and local. Our edge is speed of response, personal attention, and smart targeting (premium zips, property managers, HOAs, emergency jobs). Once we own one slice in Jacksonville, we copy the exact same playbook to Tampa, then Orlando, then Miami. We are building a replication machine — not a war against giants. The CFO must always evaluate decisions through this lens: does this help us own our slice faster, or does it try to beat everyone at once? Focused beats scattered every time.",
+      "note": "TWILIO CONTEXT: Budget is tight. Twilio costs $20 to start + ~$3/month for SMS volume. A2P registration submitted with EIN, under review.",
+      "addedAt": "2026-05-31T18:57:15.195Z"
+    },
+    {
+      "note": "CORE STRATEGY — THE SLICE PHILOSOPHY: We do NOT compete with Precision Garage Door, OGD, or Overhead Door. We do not need to beat them. We want ONE profitable slice of Jacksonville — 1-2% of the market is enough. Big players are slow, expensive, and arrogant. We are fast, lean, and local. Our edge is speed of response, personal attention, and smart targeting (premium zips, property managers, HOAs, emergency jobs). Once we own one slice in Jacksonville, we copy the exact same playbook to Tampa, then Orlando, then Miami. Focused beats scattered every time.",
       "addedAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "note": "CORE VALUES: (1) Speed — respond faster than every competitor. (2) Focus — one city, one slice, prove it, then replicate. (3) Honesty — we are a dispatch platform, we never overstate what we are. (4) Simplicity — if the owner can't explain it in one sentence, it's too complicated. (5) Momentum — small consistent wins beat big swings. A closed job today is worth more than a perfect strategy tomorrow.",
+      "addedAt": "2026-06-01T00:00:00.000Z"
+    },
+    {
+      "note": "FULL BUSINESS PLAN — PHASE 1 (Current): Build a profitable local operation. Tal personally completes at least one job per day when possible — personal jobs generate the highest profit margin. Additional jobs are dispatched to independent garage door technicians who receive 30-35% of total job revenue; company keeps 65-70% to cover lead generation, operations, marketing, and profit. The PRIMARY ASSET is not labor — it is the ability to consistently generate quality leads. Operations: answer calls fast, excellent customer service, schedule efficiently, dispatch qualified techs, follow up for quality control. Financial targets: positive cash flow, healthy margins, customer acquisition cost under control, scale tech capacity only when lead volume supports it, build cash reserve before expansion. Phase 1 is complete when: consistent lead generation, predictable profitability, reliable tech network, repeatable operating procedures.",
+      "addedAt": "2026-06-01T00:00:00.000Z"
+    },
+    {
+      "note": "FULL BUSINESS PLAN — PHASE 2 (Multi-Market Expansion): Once local model is proven, expand into additional cities. Replicate the lead-generation system. Build networks of trusted garage door technicians in each market. Standardize dispatching, sales, and customer service processes. Prove the model works in multiple markets, not just Jacksonville.",
+      "addedAt": "2026-06-01T00:00:00.000Z"
+    },
+    {
+      "note": "FULL BUSINESS PLAN — PHASE 3 (Vertical SaaS): After lead-generation and dispatch is proven and producing consistent profits, develop a software platform for garage door companies covering: lead management, job tracking, tech dispatching, customer follow-up, marketing performance, estimates and invoices, conversion rate optimization. Software must be built from REAL operational experience — solving actual industry problems, not guesses. Long-term vision: evolve from local garage door service company into a technology-enabled lead-generation and software company serving garage door businesses nationwide. Sequence: (1) profitable local operation → (2) master lead generation → (3) multi-market scale → (4) build software from real experience → (5) nationwide vertical SaaS.",
+      "addedAt": "2026-06-01T00:00:00.000Z"
+    },
+    {
+      "note": "REVENUE MODEL — TWO STREAMS: (A) Personal jobs: Tal does the work himself — highest margin, full revenue minus platform costs. Target: at least 1 personal job per day. (B) Dispatched jobs: independent tech does the work, tech collects payment from customer, tech sends Tal his cut (65-70% of job value). CFO must track both streams separately. When calculating financials, dispatched job revenue = job value × 0.67 (Tal's cut). Personal job revenue = full job value.",
       "addedAt": "2026-06-01T00:00:00.000Z"
     }
   ]
