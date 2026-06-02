@@ -4,374 +4,418 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LePierre Roofing | Where Roofing Experience Meets Excellence</title>
-<meta name="description" content="LePierre Roofing — GAF Elite Certified. Serving Fernandina Beach, Yulee & Jacksonville for 40+ years. Free estimates. Call (904) 277-3000.">
+<meta name="description" content="LePierre Roofing — GAF Elite Certified. Serving Fernandina Beach, Yulee & Jacksonville for 40+ years. Free estimates. (904) 277-3000.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --navy:#0d2137;
-  --navy2:#162f4a;
-  --gold:#d4821a;
-  --gold2:#f0a030;
-  --cream:#fdf8f0;
-  --light:#f7f8fa;
-  --text:#1e293b;
-  --muted:#64748b;
-  --white:#fff;
-  --border:#e2e8f0;
-  --r:14px;
-  --rl:22px;
-  --sh:0 4px 16px rgba(0,0,0,.08);
-  --shh:0 20px 48px rgba(0,0,0,.16);
-  --tr:all .3s cubic-bezier(.4,0,.2,1);
-}
 html{scroll-behavior:smooth}
+:root{
+  --sky:#0EA5E9;
+  --sky2:#38BDF8;
+  --sky3:#7DD3FC;
+  --skybg:#F0F9FF;
+  --orange:#F97316;
+  --orange2:#FB923C;
+  --orangebg:#FFF7ED;
+  --coral:#F43F5E;
+  --teal:#0D9488;
+  --dark:#050914;
+  --slate:#0F172A;
+  --text:#111827;
+  --muted:#6B7280;
+  --border:#E5E7EB;
+  --light:#F9FAFB;
+  --white:#FFFFFF;
+  --r:12px;--rl:20px;
+  --tr:all .28s cubic-bezier(.4,0,.2,1);
+}
 body{font-family:'Inter',sans-serif;color:var(--text);background:var(--white);overflow-x:hidden;line-height:1.6}
-h1,h2,h3,h4,h5{font-family:'Montserrat',sans-serif;line-height:1.2}
+h1,h2,h3,h4,h5{font-family:'Sora',sans-serif;line-height:1.15}
 a{text-decoration:none;color:inherit}
-img{max-width:100%;height:auto;display:block}
+img{max-width:100%;display:block}
+.container{max-width:1220px;margin:0 auto;padding:0 28px}
+.sec{padding:96px 0}
 
-/* ── utils ── */
-.container{max-width:1200px;margin:0 auto;padding:0 24px}
-.sec{padding:88px 0}
-.tag{display:inline-block;font-family:'Montserrat',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
-.h2{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:800;color:var(--navy);margin-bottom:14px}
-.sub{font-size:1.05rem;color:var(--muted);line-height:1.8;max-width:560px}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 30px;border-radius:50px;font-family:'Sora',sans-serif;font-weight:700;font-size:.88rem;letter-spacing:.3px;cursor:pointer;transition:var(--tr);border:2px solid transparent;white-space:nowrap}
+.btn-sky{background:var(--sky);color:#fff;border-color:var(--sky)}
+.btn-sky:hover{background:#0284C7;border-color:#0284C7;transform:translateY(-2px);box-shadow:0 8px 32px rgba(14,165,233,.45)}
+.btn-orange{background:var(--orange);color:#fff;border-color:var(--orange)}
+.btn-orange:hover{background:#EA580C;transform:translateY(-2px);box-shadow:0 8px 32px rgba(249,115,22,.5)}
+.btn-white{background:#fff;color:var(--sky);border-color:#fff}
+.btn-white:hover{background:var(--skybg);transform:translateY(-2px)}
+.btn-outline-white{background:transparent;color:#fff;border-color:rgba(255,255,255,.6)}
+.btn-outline-white:hover{background:#fff;color:var(--sky)}
+.btn-outline-orange{background:transparent;color:var(--orange);border-color:var(--orange)}
+.btn-outline-orange:hover{background:var(--orange);color:#fff}
+
+/* LABELS */
+.eyebrow{font-family:'Sora',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--sky);margin-bottom:10px;display:inline-block}
+.eyebrow-orange{color:var(--orange)}
+.eyebrow-white{color:rgba(255,255,255,.7)}
+.h2{font-size:clamp(2rem,3.8vw,3rem);font-weight:800;margin-bottom:14px}
+.sub{font-size:1rem;color:var(--muted);line-height:1.8;max-width:540px}
 .center{text-align:center}.center .sub{margin:0 auto}
 
-/* buttons */
-.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 30px;border-radius:50px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.88rem;letter-spacing:.4px;cursor:pointer;transition:var(--tr);border:2px solid transparent;white-space:nowrap}
-.btn-gold{background:var(--gold);color:var(--white);border-color:var(--gold)}
-.btn-gold:hover{background:#b86b10;border-color:#b86b10;transform:translateY(-2px);box-shadow:0 8px 28px rgba(212,130,26,.45)}
-.btn-ghost{background:transparent;color:var(--white);border-color:rgba(255,255,255,.6)}
-.btn-ghost:hover{background:var(--white);color:var(--navy);transform:translateY(-2px)}
-.btn-outline{background:transparent;color:var(--navy);border-color:var(--navy)}
-.btn-outline:hover{background:var(--navy);color:var(--white);transform:translateY(-2px)}
-.btn-white{background:var(--white);color:var(--gold);border-color:var(--white)}
-.btn-white:hover{background:rgba(255,255,255,.9);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.2)}
-
-/* ── TOPBAR ── */
-.topbar{background:var(--navy);padding:9px 0;font-size:.78rem;font-family:'Montserrat',sans-serif;font-weight:500}
+/* ── TOP BAR ── */
+.topbar{background:var(--orange);padding:10px 0}
 .topbar .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-.tb-item{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.75)}
-.tb-item a{color:var(--gold2);font-weight:700;transition:var(--tr)}
-.tb-item a:hover{color:#fff}
-.tb-sep{color:rgba(255,255,255,.2);margin:0 4px}
-.tb-right{display:flex;align-items:center;gap:0}
-.tb-license{background:rgba(212,130,26,.15);border:1px solid rgba(212,130,26,.35);border-radius:50px;padding:3px 12px;font-size:.7rem;color:var(--gold2);font-weight:700;letter-spacing:.5px}
+.tb-items{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.tb-item{display:flex;align-items:center;gap:6px;color:#fff;font-family:'Sora',sans-serif;font-size:.78rem;font-weight:500}
+.tb-item a{color:#fff;font-weight:700;text-decoration:underline;text-underline-offset:2px}
+.tb-badge{background:rgba(0,0,0,.15);border-radius:50px;padding:3px 14px;font-family:'Sora',sans-serif;font-size:.7rem;font-weight:700;color:#fff;letter-spacing:.5px}
 
 /* ── NAV ── */
-.navbar{position:sticky;top:0;z-index:900;background:var(--white);box-shadow:0 2px 24px rgba(0,0,0,.07);transition:var(--tr)}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
-.logo{display:flex;align-items:center;gap:10px}
-.logo-icon{width:42px;height:42px;background:var(--navy);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.logo-icon svg{width:24px;height:24px;color:var(--gold2)}
-.logo-text{display:flex;flex-direction:column;line-height:1}
-.logo-name{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.05rem;color:var(--navy)}
-.logo-sub{font-family:'Montserrat',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold)}
+.navbar{position:sticky;top:0;z-index:900;background:#fff;box-shadow:0 1px 0 var(--border),0 4px 20px rgba(0,0,0,.06);transition:var(--tr)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:70px}
+.logo{display:flex;align-items:center;gap:11px}
+.logo-mark{width:44px;height:44px;background:linear-gradient(135deg,var(--sky),var(--sky2));border-radius:12px;display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:24px;height:24px;color:#fff}
+.logo-name{font-family:'Sora',sans-serif;font-weight:800;font-size:1.1rem;color:var(--text);line-height:1}
+.logo-sub{font-family:'Sora',sans-serif;font-size:.58rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
 nav ul{display:flex;align-items:center;gap:2px;list-style:none}
-nav ul a{font-family:'Montserrat',sans-serif;font-size:.78rem;font-weight:600;color:var(--text);padding:6px 10px;border-radius:8px;transition:var(--tr);letter-spacing:.2px}
-nav ul a:hover{color:var(--gold);background:var(--cream)}
-.nav-right{display:flex;align-items:center;gap:12px}
-.nav-phone{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.9rem;color:var(--navy);display:flex;align-items:center;gap:6px;transition:var(--tr)}
-.nav-phone:hover{color:var(--gold)}
-.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none}
-.hamburger span{display:block;width:24px;height:2px;background:var(--navy);border-radius:2px;transition:var(--tr)}
+nav a{font-family:'Sora',sans-serif;font-size:.8rem;font-weight:600;color:var(--text);padding:7px 12px;border-radius:8px;transition:var(--tr)}
+nav a:hover{color:var(--sky);background:var(--skybg)}
+.nav-right{display:flex;align-items:center;gap:14px}
+.nav-call{font-family:'Sora',sans-serif;font-weight:700;font-size:.88rem;color:var(--text);display:flex;align-items:center;gap:6px;transition:var(--tr)}
+.nav-call:hover{color:var(--orange)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:6px}
+.hamburger span{display:block;width:24px;height:2px;background:var(--text);border-radius:2px;transition:var(--tr)}
 
 /* ── HERO ── */
-.hero{position:relative;min-height:94vh;display:flex;align-items:center;overflow:hidden;background:var(--navy)}
-.hero-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?w=1920&q=80&auto=format&fit=crop');background-size:cover;background-position:center;opacity:.28}
-.hero-grad{position:absolute;inset:0;background:linear-gradient(120deg,rgba(13,33,55,.98) 0%,rgba(13,33,55,.82) 55%,rgba(13,33,55,.35) 100%)}
-.hero-content{position:relative;z-index:2;padding:100px 0 80px;max-width:700px}
-.hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(212,130,26,.12);border:1px solid rgba(212,130,26,.35);border-radius:50px;padding:6px 18px;margin-bottom:28px}
-.hero-pill-dot{width:8px;height:8px;background:var(--gold);border-radius:50%;animation:blink 2s infinite}
-@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
-.hero-pill span{font-family:'Montserrat',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold2)}
-.hero h1{font-size:clamp(2.6rem,5.5vw,4.4rem);font-weight:900;color:var(--white);margin-bottom:8px;line-height:1.08}
-.hero h1 em{color:var(--gold2);font-style:normal}
-.hero-tag{font-family:'Montserrat',sans-serif;font-size:clamp(.95rem,1.8vw,1.25rem);color:rgba(255,255,255,.88);font-weight:500;font-style:italic;margin-bottom:20px}
-.hero-desc{font-size:1rem;color:rgba(255,255,255,.7);margin-bottom:38px;line-height:1.85;max-width:560px}
-.hero-btns{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:52px}
-.hero-trust{display:flex;flex-wrap:wrap;gap:20px}
-.trust-item{display:flex;align-items:center;gap:7px;color:rgba(255,255,255,.75);font-size:.83rem;font-family:'Montserrat',sans-serif;font-weight:500}
-.trust-item svg{color:var(--gold2);flex-shrink:0;width:15px;height:15px}
-/* floating stats card */
-.hero-cards{position:absolute;bottom:0;right:0;display:flex;z-index:2}
-.hcard{padding:22px 30px;text-align:center;background:rgba(255,255,255,.06);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.1);border-left:1px solid rgba(255,255,255,.08)}
-.hcard:first-child{border-radius:var(--r) 0 0 0}
-.hcard:last-child{border-radius:0 var(--r) 0 0}
-.hcard-num{font-family:'Montserrat',sans-serif;font-weight:900;font-size:2.2rem;color:var(--gold2);line-height:1;display:block}
-.hcard-lbl{font-size:.72rem;color:rgba(255,255,255,.65);font-weight:500;letter-spacing:.3px;margin-top:2px}
+.hero{min-height:92vh;background:linear-gradient(140deg,var(--sky) 0%,#0369A1 55%,#075985 100%);display:flex;align-items:center;position:relative;overflow:hidden;padding:80px 0 120px}
+/* decorative circles */
+.hero::before{content:'';position:absolute;top:-120px;right:-100px;width:600px;height:600px;border-radius:50%;background:rgba(255,255,255,.05);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-160px;left:-80px;width:480px;height:480px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
+.hero-deco{position:absolute;top:60px;right:220px;width:80px;height:80px;border:2px solid rgba(255,255,255,.15);border-radius:50%;pointer-events:none}
+.hero-deco2{position:absolute;bottom:120px;right:380px;width:40px;height:40px;background:var(--orange);border-radius:50%;opacity:.7;pointer-events:none}
+.hero-deco3{position:absolute;top:160px;left:48%;width:12px;height:12px;background:var(--sky2);border-radius:50%;pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative;z-index:2}
+.hero-left{}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:50px;padding:6px 18px;margin-bottom:28px;backdrop-filter:blur(8px)}
+.hero-pill-dot{width:8px;height:8px;background:var(--orange);border-radius:50%;animation:hblink 2s infinite}
+@keyframes hblink{0%,100%{opacity:1}50%{opacity:.3;transform:scale(1.5)}}
+.hero-pill span{font-family:'Sora',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.9)}
+.hero h1{font-size:clamp(3rem,5.5vw,5.2rem);font-weight:800;color:#fff;margin-bottom:4px;letter-spacing:-1px}
+.hero h1 .stroke{-webkit-text-stroke:2px #fff;color:transparent}
+.hero h1 .orange{color:var(--orange);-webkit-text-stroke:0}
+.hero-tagline{font-family:'Sora',sans-serif;font-size:1.05rem;color:rgba(255,255,255,.8);font-weight:500;margin-bottom:16px;font-style:italic}
+.hero-desc{font-size:1rem;color:rgba(255,255,255,.72);line-height:1.85;margin-bottom:36px;max-width:480px}
+.hero-btns{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:44px}
+.hero-trust{display:flex;flex-wrap:wrap;gap:18px}
+.ht{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.8);font-size:.82rem;font-family:'Sora',sans-serif;font-weight:500}
+.ht svg{color:var(--orange2);width:15px;height:15px;flex-shrink:0}
+.hero-right{position:relative}
+.hero-img-frame{position:relative;border-radius:24px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.35)}
+.hero-img-frame img{width:100%;height:500px;object-fit:cover;display:block}
+.hero-img-frame::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(5,9,20,.6) 100%)}
+.hero-img-badge{position:absolute;bottom:20px;left:20px;z-index:2;background:rgba(255,255,255,.12);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:14px 18px}
+.hero-img-badge-num{font-family:'Sora',sans-serif;font-weight:800;font-size:1.8rem;color:#fff;line-height:1}
+.hero-img-badge-txt{font-size:.72rem;color:rgba(255,255,255,.75);font-weight:500}
+.hero-img-chip{position:absolute;top:20px;right:20px;z-index:2;background:var(--orange);border-radius:50px;padding:6px 14px;font-family:'Sora',sans-serif;font-size:.74rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:5px}
+/* floating stats below hero */
+.hero-stats{position:absolute;bottom:0;left:0;right:0;transform:translateY(50%);z-index:10;display:flex;justify-content:center}
+.hero-stats-inner{display:flex;background:#fff;border-radius:var(--rl);box-shadow:0 20px 60px rgba(0,0,0,.14);overflow:hidden;border:1px solid var(--border)}
+.hstat{padding:22px 40px;text-align:center;border-right:1px solid var(--border);transition:var(--tr)}
+.hstat:last-child{border-right:none}
+.hstat:hover{background:var(--skybg)}
+.hstat-n{font-family:'Sora',sans-serif;font-weight:800;font-size:2rem;color:var(--sky);line-height:1;display:block}
+.hstat-l{font-size:.76rem;color:var(--muted);font-weight:500;margin-top:3px}
 
-/* ── CERT STRIP ── */
-.cert-strip{background:var(--navy2);padding:18px 0;overflow:hidden}
-.cert-strip .container{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:0}
-.cert-item{display:flex;align-items:center;gap:9px;padding:8px 28px;border-right:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.82);font-family:'Montserrat',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.4px}
-.cert-item:last-child{border-right:none}
-.cert-dot{width:28px;height:28px;background:rgba(212,130,26,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.cert-dot svg{width:14px;height:14px;color:var(--gold2)}
+/* ── CERTS ── */
+.certs-sec{background:var(--dark);padding:28px 0;margin-top:40px}
+.certs-inner{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:0}
+.cert{display:flex;align-items:center;gap:8px;padding:10px 30px;border-right:1px solid rgba(255,255,255,.07);font-family:'Sora',sans-serif;font-size:.8rem;font-weight:600;color:rgba(255,255,255,.7)}
+.cert:last-child{border-right:none}
+.cert-dot{width:7px;height:7px;border-radius:50%;background:var(--orange);flex-shrink:0}
 
 /* ── SERVICES ── */
-.services-sec{background:var(--light)}
-.services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:52px}
-.scard{background:var(--white);border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh);transition:var(--tr);display:flex;flex-direction:column;position:relative;border:1px solid var(--border)}
-.scard:hover{transform:translateY(-10px);box-shadow:var(--shh);border-color:rgba(212,130,26,.25)}
-.scard-top{height:180px;position:relative;overflow:hidden}
-.scard-top-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
-.scard-ico{width:64px;height:64px;background:rgba(255,255,255,.15);border-radius:16px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2)}
-.scard-ico svg{width:34px;height:34px;color:#fff}
-.scard-body{padding:22px 20px 20px;flex:1;display:flex;flex-direction:column}
-.scard-body h3{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:8px}
-.scard-body p{font-size:.84rem;color:var(--muted);line-height:1.7;flex:1}
-.scard-link{margin-top:14px;font-family:'Montserrat',sans-serif;font-size:.76rem;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:5px;transition:var(--tr)}
-.scard-link:hover{gap:9px}
-/* gradient tops per card */
-.s1 .scard-top{background:linear-gradient(135deg,#1e3a5f,#2a5298)}
-.s2 .scard-top{background:linear-gradient(135deg,#1a3a2a,#2d6a4f)}
-.s3 .scard-top{background:linear-gradient(135deg,#3a1a1a,#8b2020)}
-.s4 .scard-top{background:linear-gradient(135deg,#2a1a3a,#6a2d8b)}
-.s5 .scard-top{background:linear-gradient(135deg,#1a2a3a,#1a4a6a)}
-.s6 .scard-top{background:linear-gradient(135deg,#2a3a1a,#4a6a1a)}
-.s7 .scard-top{background:linear-gradient(135deg,#3a2a1a,#8b5a1a)}
-.s8 .scard-top{background:linear-gradient(135deg,#1a3a3a,#1a6a6a)}
+.services-sec{background:var(--white)}
+.svc-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;flex-wrap:wrap;gap:24px}
+.svc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.scard{border-radius:var(--rl);overflow:hidden;background:var(--white);border:1px solid var(--border);transition:var(--tr);display:flex;flex-direction:column}
+.scard:hover{transform:translateY(-8px);box-shadow:0 24px 60px rgba(0,0,0,.1);border-color:transparent}
+.scard-top{height:9px}
+.s1 .scard-top{background:linear-gradient(90deg,var(--sky),var(--sky2))}
+.s2 .scard-top{background:linear-gradient(90deg,var(--orange),var(--orange2))}
+.s3 .scard-top{background:linear-gradient(90deg,var(--coral),#FB7185)}
+.s4 .scard-top{background:linear-gradient(90deg,var(--teal),#2DD4BF)}
+.s5 .scard-top{background:linear-gradient(90deg,#8B5CF6,#A78BFA)}
+.s6 .scard-top{background:linear-gradient(90deg,#EC4899,#F472B6)}
+.s7 .scard-top{background:linear-gradient(90deg,#F59E0B,#FCD34D)}
+.s8 .scard-top{background:linear-gradient(90deg,#10B981,#34D399)}
+.scard-body{padding:24px;flex:1;display:flex;flex-direction:column}
+.scard-num{font-family:'Sora',sans-serif;font-weight:800;font-size:.7rem;color:var(--muted);letter-spacing:2px;margin-bottom:16px}
+.scard-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.s1 .scard-icon{background:#E0F2FE} .s1 .scard-icon svg{color:var(--sky)}
+.s2 .scard-icon{background:#FFF7ED} .s2 .scard-icon svg{color:var(--orange)}
+.s3 .scard-icon{background:#FFF1F2} .s3 .scard-icon svg{color:var(--coral)}
+.s4 .scard-icon{background:#F0FDFA} .s4 .scard-icon svg{color:var(--teal)}
+.s5 .scard-icon{background:#F5F3FF} .s5 .scard-icon svg{color:#7C3AED}
+.s6 .scard-icon{background:#FDF2F8} .s6 .scard-icon svg{color:#DB2777}
+.s7 .scard-icon{background:#FFFBEB} .s7 .scard-icon svg{color:#D97706}
+.s8 .scard-icon{background:#ECFDF5} .s8 .scard-icon svg{color:#059669}
+.scard-icon svg{width:24px;height:24px}
+.scard h3{font-size:.98rem;font-weight:700;color:var(--text);margin-bottom:8px}
+.scard p{font-size:.83rem;color:var(--muted);line-height:1.7;flex:1}
+.scard-cta{margin-top:16px;font-family:'Sora',sans-serif;font-size:.76rem;font-weight:700;color:var(--sky);display:flex;align-items:center;gap:5px;transition:var(--tr)}
+.scard-cta:hover{gap:10px}
 
 /* ── STATS ── */
-.stats-sec{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);padding:80px 0;position:relative;overflow:hidden}
-.stats-sec::after{content:'';position:absolute;top:-60%;right:-8%;width:700px;height:700px;border-radius:50%;background:rgba(212,130,26,.04);pointer-events:none}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;position:relative;z-index:1}
-.stat{text-align:center;padding:36px 20px;border-radius:var(--r);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);transition:var(--tr)}
-.stat:hover{background:rgba(255,255,255,.08);transform:translateY(-4px)}
-.stat-n{font-family:'Montserrat',sans-serif;font-weight:900;font-size:3.2rem;color:var(--gold2);line-height:1;display:block;margin-bottom:6px}
-.stat-l{font-family:'Montserrat',sans-serif;font-size:.88rem;font-weight:600;color:rgba(255,255,255,.8);letter-spacing:.3px}
-.stat-d{font-size:.75rem;color:rgba(255,255,255,.38);margin-top:4px}
+.stats-sec{background:var(--dark);padding:88px 0;position:relative;overflow:hidden}
+.stats-sec::before{content:'QUALITY';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Sora',sans-serif;font-size:18rem;font-weight:800;color:rgba(255,255,255,.02);white-space:nowrap;pointer-events:none;letter-spacing:-10px}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;z-index:1}
+.stat{padding:40px 20px;text-align:center;border-right:1px solid rgba(255,255,255,.06)}
+.stat:last-child{border-right:none}
+.stat:hover .stat-n{color:var(--orange2)}
+.stat-n{font-family:'Sora',sans-serif;font-weight:800;font-size:4.5rem;color:var(--sky2);line-height:1;transition:var(--tr)}
+.stat-suffix{font-size:2rem}
+.stat-l{font-family:'Sora',sans-serif;font-size:.9rem;font-weight:600;color:rgba(255,255,255,.8);margin-top:8px}
+.stat-d{font-size:.75rem;color:rgba(255,255,255,.35);margin-top:4px}
 
-/* ── WHY CHOOSE US ── */
+/* ── WHY US ── */
 .why-sec{background:var(--white)}
-.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
-.why-img-wrap{position:relative}
-.why-img{width:100%;height:520px;object-fit:cover;border-radius:var(--rl)}
-.why-badge{position:absolute;bottom:24px;left:24px;background:var(--gold);color:var(--white);padding:18px 22px;border-radius:var(--r);font-family:'Montserrat',sans-serif}
-.why-badge-n{font-size:2.4rem;font-weight:900;line-height:1}
-.why-badge-t{font-size:.72rem;font-weight:700;opacity:.9;letter-spacing:.4px;margin-top:2px}
-.why-features{display:flex;flex-direction:column;gap:16px;margin-top:28px}
-.wf{display:flex;gap:14px;padding:18px;border-radius:var(--r);background:var(--light);border:1px solid var(--border);transition:var(--tr)}
-.wf:hover{border-color:rgba(212,130,26,.3);background:var(--cream);transform:translateX(5px)}
-.wf-icon{width:44px;height:44px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.wf-icon svg{width:22px;height:22px;color:#fff}
-.wf h4{font-size:.9rem;font-weight:700;color:var(--navy);margin-bottom:3px}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.why-img-stack{position:relative;height:560px}
+.why-img-main{width:78%;height:460px;object-fit:cover;border-radius:var(--rl);position:absolute;top:0;left:0;box-shadow:0 20px 60px rgba(0,0,0,.12)}
+.why-img-accent{width:55%;height:260px;object-fit:cover;border-radius:var(--rl);position:absolute;bottom:0;right:0;box-shadow:0 20px 60px rgba(0,0,0,.15);border:4px solid #fff}
+.why-badge{position:absolute;top:32px;right:10px;background:var(--orange);color:#fff;border-radius:var(--r);padding:16px 20px;font-family:'Sora',sans-serif;text-align:center;z-index:2}
+.why-badge-n{font-size:2.2rem;font-weight:800;line-height:1}
+.why-badge-t{font-size:.7rem;font-weight:700;opacity:.9;letter-spacing:.4px}
+.why-features{display:flex;flex-direction:column;gap:14px;margin-top:28px}
+.wf{display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border-radius:var(--r);background:var(--light);border:1px solid var(--border);transition:var(--tr)}
+.wf:hover{border-color:var(--sky3);background:var(--skybg);transform:translateX(6px)}
+.wf-ico{width:42px;height:42px;background:var(--sky);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.wf-ico svg{width:20px;height:20px;color:#fff}
+.wf-ico.orange{background:var(--orange)}
+.wf-ico.coral{background:var(--coral)}
+.wf-ico.teal{background:var(--teal)}
+.wf h4{font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:3px}
 .wf p{font-size:.82rem;color:var(--muted);line-height:1.65}
 
 /* ── PROCESS ── */
-.process-sec{background:var(--cream)}
-.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:24px;margin-top:56px;position:relative}
-.steps::before{content:'';position:absolute;top:36px;left:10%;right:10%;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold));z-index:0}
-.step{position:relative;z-index:1;text-align:center;padding:0 10px}
-.step-circle{width:72px;height:72px;border-radius:50%;background:var(--white);border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.3rem;color:var(--gold);box-shadow:0 0 0 6px rgba(212,130,26,.1);transition:var(--tr)}
-.step:hover .step-circle{background:var(--gold);color:#fff;transform:scale(1.12)}
-.step h4{font-size:.88rem;font-weight:700;color:var(--navy);margin-bottom:6px;line-height:1.35}
-.step p{font-size:.78rem;color:var(--muted);line-height:1.6}
+.process-sec{background:var(--skybg);padding:96px 0}
+.steps-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:56px;position:relative}
+.steps-row::before{content:'';position:absolute;top:32px;left:10%;right:10%;height:2px;background:linear-gradient(90deg,var(--sky),var(--orange),var(--sky));z-index:0}
+.step{text-align:center;padding:0 8px;position:relative;z-index:1}
+.step-ring{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-family:'Sora',sans-serif;font-weight:800;font-size:1.2rem;color:#fff;transition:var(--tr);position:relative}
+.step:nth-child(1) .step-ring{background:var(--sky)}
+.step:nth-child(2) .step-ring{background:var(--orange)}
+.step:nth-child(3) .step-ring{background:var(--sky)}
+.step:nth-child(4) .step-ring{background:var(--orange)}
+.step:nth-child(5) .step-ring{background:var(--sky)}
+.step:hover .step-ring{transform:scale(1.15);box-shadow:0 8px 24px rgba(14,165,233,.4)}
+.step h4{font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:7px;line-height:1.3}
+.step p{font-size:.78rem;color:var(--muted);line-height:1.65}
 
 /* ── TESTIMONIALS ── */
-.testimonials-sec{background:var(--white)}
-.rating-bar{display:flex;align-items:center;justify-content:center;gap:24px;margin-bottom:40px}
-.rating-big{font-family:'Montserrat',sans-serif;font-weight:900;font-size:4rem;color:var(--navy);line-height:1}
-.rating-big span{font-size:1.6rem;color:var(--muted)}
-.rating-right{}
-.stars-row{display:flex;gap:4px;margin-bottom:4px}
-.stars-row svg{width:22px;height:22px;color:#f59e0b}
-.rating-lbl{font-size:.82rem;color:var(--muted)}
-.t-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
-.tcard{background:var(--white);border-radius:var(--rl);padding:30px;box-shadow:var(--sh);border:1px solid var(--border);transition:var(--tr);position:relative}
-.tcard:hover{box-shadow:var(--shh);transform:translateY(-4px);border-color:rgba(212,130,26,.2)}
-.tcard-q{position:absolute;top:14px;right:22px;font-size:4.5rem;font-family:Georgia,serif;color:rgba(212,130,26,.08);line-height:1}
-.t-stars{display:flex;gap:3px;margin-bottom:14px}
-.t-stars svg{width:16px;height:16px;color:#f59e0b}
-.t-text{font-size:.88rem;color:var(--text);line-height:1.8;font-style:italic;margin-bottom:20px}
-.t-author{display:flex;align-items:center;gap:11px}
-.t-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--navy2));display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.9rem;color:#fff;flex-shrink:0}
-.t-name{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.88rem;color:var(--navy)}
-.t-loc{font-size:.75rem;color:var(--muted)}
+.testi-sec{background:var(--white)}
+.testi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:52px;flex-wrap:wrap;gap:24px}
+.rating-block{display:flex;align-items:center;gap:16px}
+.rating-num{font-family:'Sora',sans-serif;font-weight:800;font-size:3.8rem;color:var(--text);line-height:1}
+.rating-num span{font-size:1.4rem;color:var(--muted)}
+.stars-row{display:flex;gap:3px;margin-bottom:4px}
+.stars-row svg{width:20px;height:20px;color:#FBBF24}
+.rating-lbl{font-size:.78rem;color:var(--muted)}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.tcard{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:28px;transition:var(--tr);position:relative;overflow:hidden}
+.tcard::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+.tcard:nth-child(1)::before{background:linear-gradient(90deg,var(--sky),var(--sky2))}
+.tcard:nth-child(2)::before{background:linear-gradient(90deg,var(--orange),var(--orange2))}
+.tcard:nth-child(3)::before{background:linear-gradient(90deg,var(--teal),#2DD4BF)}
+.tcard:hover{box-shadow:0 20px 50px rgba(0,0,0,.09);transform:translateY(-5px);border-color:transparent}
+.tcard-quote{font-size:3.5rem;font-family:Georgia,serif;color:var(--sky3);line-height:1;margin-bottom:8px}
+.tcard-text{font-size:.88rem;color:var(--text);line-height:1.8;font-style:italic;margin-bottom:20px}
+.tcard-stars{display:flex;gap:3px;margin-bottom:16px}
+.tcard-stars svg{width:15px;height:15px;color:#FBBF24}
+.tauthor{display:flex;align-items:center;gap:10px}
+.tavatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;font-size:.85rem;color:#fff;flex-shrink:0}
+.tcard:nth-child(1) .tavatar{background:linear-gradient(135deg,var(--sky),var(--sky2))}
+.tcard:nth-child(2) .tavatar{background:linear-gradient(135deg,var(--orange),var(--orange2))}
+.tcard:nth-child(3) .tavatar{background:linear-gradient(135deg,var(--teal),#2DD4BF)}
+.tname{font-family:'Sora',sans-serif;font-weight:700;font-size:.88rem;color:var(--text)}
+.tloc{font-size:.74rem;color:var(--muted)}
 
 /* ── AREAS ── */
-.areas-sec{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);padding:80px 0}
+.areas-sec{background:linear-gradient(135deg,var(--orange) 0%,#EA580C 100%);padding:88px 0}
 .areas-sec .h2{color:#fff}
-.areas-sec .sub{color:rgba(255,255,255,.65)}
-.areas-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:36px;justify-content:center}
-.area-chip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:50px;padding:10px 22px;font-family:'Montserrat',sans-serif;font-size:.8rem;font-weight:600;color:rgba(255,255,255,.82);transition:var(--tr);cursor:default}
-.area-chip:hover{background:rgba(212,130,26,.2);border-color:rgba(212,130,26,.45);color:#fff;transform:translateY(-2px)}
+.areas-sec .sub{color:rgba(255,255,255,.75)}
+.areas-wrap{display:flex;flex-wrap:wrap;gap:10px;margin-top:36px;justify-content:center}
+.achip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:50px;padding:10px 22px;font-family:'Sora',sans-serif;font-size:.8rem;font-weight:600;color:#fff;transition:var(--tr)}
+.achip:hover{background:rgba(255,255,255,.25);transform:translateY(-2px)}
 
 /* ── CONTACT ── */
 .contact-sec{background:var(--light)}
-.contact-grid{display:grid;grid-template-columns:1fr 1.5fr;gap:60px;align-items:start}
-.c-info-items{display:flex;flex-direction:column;gap:18px;margin-top:28px}
-.ci{display:flex;gap:14px;align-items:flex-start}
-.ci-icon{width:50px;height:50px;background:var(--navy);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.ci-icon svg{width:22px;height:22px;color:var(--gold2)}
-.ci-lbl{font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
-.ci-val{font-weight:600;color:var(--navy);font-size:.92rem}
-.ci-val a{color:var(--navy);transition:var(--tr)}
-.ci-val a:hover{color:var(--gold)}
-.cform{background:var(--white);border-radius:var(--rl);padding:38px;box-shadow:var(--shh)}
-.cform h3{font-size:1.45rem;font-weight:800;color:var(--navy);margin-bottom:6px}
-.cform p{font-size:.88rem;color:var(--muted);margin-bottom:26px}
+.contact-grid{display:grid;grid-template-columns:1fr 1.5fr;gap:0;border-radius:var(--rl);overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.12)}
+.contact-left{background:linear-gradient(160deg,var(--sky),#0369A1);padding:52px 44px;display:flex;flex-direction:column;gap:32px}
+.contact-left .h2{color:#fff;font-size:clamp(1.6rem,3vw,2.2rem)}
+.contact-left .sub{color:rgba(255,255,255,.75);max-width:none}
+.ci-list{display:flex;flex-direction:column;gap:20px}
+.ci{display:flex;align-items:flex-start;gap:12px}
+.ci-ico{width:44px;height:44px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ci-ico svg{width:20px;height:20px;color:#fff}
+.ci-lbl{font-family:'Sora',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:3px}
+.ci-val{font-family:'Sora',sans-serif;font-weight:600;font-size:.92rem;color:#fff}
+.ci-val a{color:#fff}
+.contact-right{background:#fff;padding:52px 44px}
+.contact-right h3{font-family:'Sora',sans-serif;font-size:1.5rem;font-weight:800;color:var(--text);margin-bottom:6px}
+.contact-right>p{font-size:.88rem;color:var(--muted);margin-bottom:28px}
 .frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .fg{margin-bottom:14px}
-.fg label{display:block;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:700;color:var(--text);margin-bottom:7px;letter-spacing:.2px}
+.fg label{display:block;font-family:'Sora',sans-serif;font-size:.72rem;font-weight:700;color:var(--text);margin-bottom:7px;letter-spacing:.2px}
 .fg input,.fg select,.fg textarea{width:100%;padding:11px 15px;border:2px solid var(--border);border-radius:10px;font-family:'Inter',sans-serif;font-size:.88rem;color:var(--text);background:var(--white);transition:var(--tr);outline:none}
-.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,130,26,.12)}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--sky);box-shadow:0 0 0 3px rgba(14,165,233,.12)}
 .fg textarea{resize:vertical;min-height:96px}
 
 /* ── CTA BAND ── */
-.cta-band{background:linear-gradient(135deg,var(--gold) 0%,#b86b10 100%);padding:56px 0}
-.cta-band .container{display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap}
-.cta-band h2{font-size:clamp(1.4rem,2.8vw,2.1rem);font-weight:800;color:#fff;margin-bottom:6px}
-.cta-band p{font-size:.95rem;color:rgba(255,255,255,.85)}
-.cta-acts{display:flex;gap:12px;flex-wrap:wrap}
+.cta-band{background:var(--dark);padding:72px 0;position:relative;overflow:hidden}
+.cta-band::before{content:'';position:absolute;top:-50%;right:-5%;width:500px;height:500px;border-radius:50%;background:rgba(14,165,233,.07);pointer-events:none}
+.cta-inner{display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;position:relative;z-index:1}
+.cta-inner h2{font-size:clamp(1.5rem,3vw,2.4rem);font-weight:800;color:#fff;margin-bottom:8px}
+.cta-inner p{font-size:.95rem;color:rgba(255,255,255,.65)}
+.cta-acts{display:flex;gap:14px;flex-wrap:wrap}
 
 /* ── FOOTER ── */
-.footer{background:#070e1a;color:rgba(255,255,255,.6);padding:68px 0 0}
-.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:44px;margin-bottom:48px}
-.foot-brand{display:flex;flex-direction:column;gap:14px}
-.foot-logo{display:flex;align-items:center;gap:10px}
-.fl-icon{width:42px;height:42px;background:var(--gold);border-radius:10px;display:flex;align-items:center;justify-content:center}
-.fl-icon svg{width:24px;height:24px;color:#fff}
-.fl-name{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.05rem;color:#fff}
-.fl-sub{font-family:'Montserrat',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold2)}
-.foot-desc{font-size:.84rem;line-height:1.85;color:rgba(255,255,255,.45)}
+.footer{background:#030712;color:rgba(255,255,255,.55);padding:72px 0 0}
+.foot-grid{display:grid;grid-template-columns:1.7fr 1fr 1fr 1fr;gap:48px;margin-bottom:52px}
+.foot-logo-wrap{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.fl-mark{width:40px;height:40px;background:linear-gradient(135deg,var(--sky),var(--sky2));border-radius:10px;display:flex;align-items:center;justify-content:center}
+.fl-mark svg{width:22px;height:22px;color:#fff}
+.fl-name{font-family:'Sora',sans-serif;font-weight:800;font-size:1rem;color:#fff}
+.fl-sub{font-size:.58rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--sky3)}
+.foot-desc{font-size:.84rem;line-height:1.85;color:rgba(255,255,255,.4);margin-bottom:16px}
 .foot-social{display:flex;gap:8px}
-.soc{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;transition:var(--tr);color:rgba(255,255,255,.5)}
-.soc:hover{background:var(--gold);border-color:var(--gold);color:#fff;transform:translateY(-2px)}
-.soc svg{width:16px;height:16px}
-.foot-col h4{font-family:'Montserrat',sans-serif;font-size:.75rem;font-weight:700;color:#fff;letter-spacing:2px;text-transform:uppercase;margin-bottom:18px}
+.fsoc{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;transition:var(--tr);color:rgba(255,255,255,.45)}
+.fsoc:hover{background:var(--sky);border-color:var(--sky);color:#fff;transform:translateY(-2px)}
+.fsoc svg{width:15px;height:15px}
+.foot-col h4{font-family:'Sora',sans-serif;font-size:.73rem;font-weight:700;color:#fff;letter-spacing:2px;text-transform:uppercase;margin-bottom:18px}
 .foot-links{list-style:none;display:flex;flex-direction:column;gap:9px}
-.foot-links a{font-size:.84rem;color:rgba(255,255,255,.5);transition:var(--tr);display:flex;align-items:center;gap:5px}
-.foot-links a:hover{color:var(--gold2);padding-left:4px}
-.foot-ci{display:flex;gap:9px;margin-bottom:12px;font-size:.84rem}
-.foot-ci svg{color:var(--gold);flex-shrink:0;margin-top:2px;width:15px;height:15px}
-.foot-ci a{color:rgba(255,255,255,.5);transition:var(--tr)}
-.foot-ci a:hover{color:var(--gold2)}
-.foot-bottom{border-top:1px solid rgba(255,255,255,.06);padding:22px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:.78rem;color:rgba(255,255,255,.3)}
-.foot-bot-links{display:flex;gap:20px}
-.foot-bot-links a{color:rgba(255,255,255,.3);transition:var(--tr)}
-.foot-bot-links a:hover{color:rgba(255,255,255,.65)}
+.foot-links a{font-size:.84rem;color:rgba(255,255,255,.45);transition:var(--tr)}
+.foot-links a:hover{color:var(--sky2);padding-left:4px}
+.fci{display:flex;gap:9px;align-items:flex-start;margin-bottom:12px;font-size:.84rem}
+.fci svg{color:var(--sky);flex-shrink:0;margin-top:2px;width:14px;height:14px}
+.fci a{color:rgba(255,255,255,.45);transition:var(--tr)}
+.fci a:hover{color:var(--sky2)}
+.foot-bottom{border-top:1px solid rgba(255,255,255,.05);padding:22px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:.78rem}
+.fbot-links{display:flex;gap:20px}
+.fbot-links a{color:rgba(255,255,255,.3);transition:var(--tr)}
+.fbot-links a:hover{color:rgba(255,255,255,.65)}
 
 /* ── CHATBOT ── */
-.chat-btn{position:fixed;bottom:28px;right:28px;z-index:9999;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#e8941c);border:none;cursor:pointer;box-shadow:0 4px 28px rgba(212,130,26,.55);display:flex;align-items:center;justify-content:center;transition:var(--tr)}
-.chat-btn:hover{transform:scale(1.1);box-shadow:0 8px 40px rgba(212,130,26,.7)}
-.chat-btn svg{width:26px;height:26px;color:#fff;transition:var(--tr)}
-.chat-notif{position:absolute;top:-4px;right:-4px;width:20px;height:20px;background:#ef4444;border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;color:#fff;font-family:'Montserrat',sans-serif;animation:notifBounce .6s ease infinite alternate}
-@keyframes notifBounce{from{transform:scale(1)}to{transform:scale(1.2)}}
-.chat-panel{position:fixed;bottom:106px;right:28px;z-index:9998;width:380px;max-height:560px;background:#fff;border-radius:22px;box-shadow:0 24px 80px rgba(0,0,0,.22),0 8px 32px rgba(0,0,0,.1);display:flex;flex-direction:column;overflow:hidden;transform:scale(.85) translateY(24px);opacity:0;pointer-events:none;transform-origin:bottom right;transition:all .35s cubic-bezier(.34,1.56,.64,1)}
+.chat-fab{position:fixed;bottom:28px;right:28px;z-index:9999;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--sky),var(--sky2));border:none;cursor:pointer;box-shadow:0 4px 24px rgba(14,165,233,.6);display:flex;align-items:center;justify-content:center;transition:var(--tr)}
+.chat-fab:hover{transform:scale(1.1);box-shadow:0 8px 40px rgba(14,165,233,.8)}
+.chat-fab.is-open{background:linear-gradient(135deg,#475569,#334155);box-shadow:none}
+.chat-fab svg{width:26px;height:26px;color:#fff;transition:var(--tr)}
+.chat-badge{position:absolute;top:-3px;right:-3px;width:20px;height:20px;background:var(--orange);border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;color:#fff;font-family:'Sora',sans-serif;animation:badgePop .6s ease infinite alternate}
+@keyframes badgePop{from{transform:scale(1)}to{transform:scale(1.2)}}
+
+.chat-panel{position:fixed;bottom:104px;right:28px;z-index:9998;width:384px;max-height:570px;background:#fff;border-radius:22px;box-shadow:0 32px 80px rgba(0,0,0,.22);display:flex;flex-direction:column;overflow:hidden;transform:scale(.8) translateY(28px);opacity:0;pointer-events:none;transform-origin:bottom right;transition:all .35s cubic-bezier(.34,1.56,.64,1)}
 .chat-panel.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all}
-.chat-head{background:linear-gradient(135deg,var(--navy),var(--navy2));padding:18px 20px;display:flex;align-items:center;gap:12px}
-.chat-head-av{width:42px;height:42px;background:rgba(255,255,255,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0}
-.chat-head-av svg{width:22px;height:22px;color:var(--gold2)}
-.online-dot{position:absolute;bottom:1px;right:1px;width:10px;height:10px;background:#22c55e;border-radius:50%;border:2px solid var(--navy)}
+
+.chat-head{background:linear-gradient(135deg,var(--sky),#0369A1);padding:18px 20px;display:flex;align-items:center;gap:12px}
+.chat-av{width:44px;height:44px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0}
+.chat-av svg{width:22px;height:22px;color:#fff}
+.online{position:absolute;bottom:1px;right:1px;width:11px;height:11px;background:#22C55E;border-radius:50%;border:2px solid var(--sky)}
 .chat-head-info{flex:1}
-.chat-head-name{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.92rem;color:#fff}
-.chat-head-st{font-size:.72rem;color:rgba(255,255,255,.55);display:flex;align-items:center;gap:4px}
-.chat-head-st::before{content:'';width:6px;height:6px;background:#22c55e;border-radius:50%;display:inline-block}
-.chat-x{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.5);padding:4px;border-radius:6px;transition:var(--tr);display:flex;align-items:center;justify-content:center}
-.chat-x:hover{background:rgba(255,255,255,.1);color:#fff}
+.chat-head-name{font-family:'Sora',sans-serif;font-weight:700;font-size:.92rem;color:#fff}
+.chat-head-st{font-size:.72rem;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:4px}
+.chat-head-st::before{content:'';width:6px;height:6px;background:#22C55E;border-radius:50%;flex-shrink:0}
+.chat-x{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.5);padding:4px;border-radius:6px;transition:var(--tr);display:flex}
+.chat-x:hover{background:rgba(255,255,255,.12);color:#fff}
 .chat-x svg{width:18px;height:18px}
-.chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#f8fafc;scroll-behavior:smooth}
+
+.chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#F8FAFC;scroll-behavior:smooth}
 .chat-msgs::-webkit-scrollbar{width:3px}
 .chat-msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
 .cmsg{display:flex;gap:7px;align-items:flex-end;animation:msgIn .3s ease}
-@keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .cmsg.user{flex-direction:row-reverse}
-.cmsg-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--navy2));display:flex;align-items:center;justify-content:center;font-size:.62rem;color:#fff;font-weight:700;font-family:'Montserrat',sans-serif;flex-shrink:0}
+.cmsg-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--sky),var(--sky2));display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-size:.6rem;font-weight:700;color:#fff;flex-shrink:0}
 .bubble{max-width:82%;padding:10px 14px;border-radius:16px;font-size:.83rem;line-height:1.65;white-space:pre-line}
-.cmsg.bot .bubble{background:#fff;color:var(--text);border-radius:16px 16px 16px 4px;box-shadow:0 1px 4px rgba(0,0,0,.09);border:1px solid var(--border)}
-.cmsg.user .bubble{background:linear-gradient(135deg,var(--gold),#e8941c);color:#fff;border-radius:16px 16px 4px 16px}
+.cmsg.bot .bubble{background:#fff;color:var(--text);border-radius:16px 16px 16px 4px;box-shadow:0 1px 4px rgba(0,0,0,.08);border:1px solid var(--border)}
+.cmsg.user .bubble{background:linear-gradient(135deg,var(--sky),#0369A1);color:#fff;border-radius:16px 16px 4px 16px}
+
 .qr-wrap{display:flex;flex-wrap:wrap;gap:6px;padding:2px 0 6px 33px}
-.qr{background:#fff;border:1.5px solid var(--gold);color:var(--gold);border-radius:50px;padding:5px 13px;font-size:.74rem;font-family:'Montserrat',sans-serif;font-weight:600;cursor:pointer;transition:var(--tr)}
-.qr:hover{background:var(--gold);color:#fff}
-.typing{display:flex;align-items:center;gap:4px;padding:10px 14px;background:#fff;border-radius:16px 16px 16px 4px;width:fit-content;box-shadow:0 1px 4px rgba(0,0,0,.09);border:1px solid var(--border)}
-.tdot{width:6px;height:6px;background:var(--muted);border-radius:50%;animation:tdot 1.2s infinite}
-.tdot:nth-child(2){animation-delay:.2s}
-.tdot:nth-child(3){animation-delay:.4s}
-@keyframes tdot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-7px)}}
+.qr{background:#fff;border:1.5px solid var(--sky);color:var(--sky);border-radius:50px;padding:5px 13px;font-size:.74rem;font-family:'Sora',sans-serif;font-weight:600;cursor:pointer;transition:var(--tr)}
+.qr:hover{background:var(--sky);color:#fff}
+
+.typing-wrap{display:flex;align-items:center;gap:4px;padding:10px 14px;background:#fff;border-radius:16px 16px 16px 4px;width:fit-content;box-shadow:0 1px 4px rgba(0,0,0,.08);border:1px solid var(--border)}
+.td{width:6px;height:6px;background:var(--muted);border-radius:50%;animation:td 1.2s infinite}
+.td:nth-child(2){animation-delay:.2s}.td:nth-child(3){animation-delay:.4s}
+@keyframes td{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-7px)}}
+
 .chat-input-wrap{padding:12px 14px;background:#fff;border-top:1px solid var(--border)}
 .chat-row{display:flex;gap:8px;align-items:center}
 .chat-in{flex:1;border:2px solid var(--border);border-radius:50px;padding:9px 16px;font-family:'Inter',sans-serif;font-size:.84rem;color:var(--text);outline:none;transition:var(--tr);background:var(--light)}
-.chat-in:focus{border-color:var(--gold);background:#fff}
+.chat-in:focus{border-color:var(--sky);background:#fff}
 .chat-in::placeholder{color:var(--muted)}
-.chat-send{width:38px;height:38px;border-radius:50%;background:var(--gold);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr);flex-shrink:0}
-.chat-send:hover{background:#b86b10;transform:scale(1.08)}
-.chat-send svg{width:16px;height:16px;color:#fff}
+.chat-send-btn{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--orange2));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr);flex-shrink:0}
+.chat-send-btn:hover{transform:scale(1.08);box-shadow:0 4px 14px rgba(249,115,22,.5)}
+.chat-send-btn svg{width:16px;height:16px;color:#fff}
 .chat-disc{font-size:.66rem;color:var(--muted);text-align:center;margin-top:6px}
 
-/* ── SCROLL ANIMATIONS ── */
-.reveal{opacity:0;transform:translateY(32px);transition:opacity .65s ease,transform .65s ease}
-.reveal.visible{opacity:1;transform:translateY(0)}
-.reveal-l{opacity:0;transform:translateX(-32px);transition:opacity .65s ease,transform .65s ease}
-.reveal-l.visible{opacity:1;transform:translateX(0)}
-.reveal-r{opacity:0;transform:translateX(32px);transition:opacity .65s ease,transform .65s ease}
-.reveal-r.visible{opacity:1;transform:translateX(0)}
-.delay-1{transition-delay:.1s}
-.delay-2{transition-delay:.2s}
-.delay-3{transition-delay:.3s}
-.delay-4{transition-delay:.4s}
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+.reveal-l{opacity:0;transform:translateX(-28px);transition:opacity .6s ease,transform .6s ease}
+.reveal-l.in{opacity:1;transform:translateX(0)}
+.reveal-r{opacity:0;transform:translateX(28px);transition:opacity .6s ease,transform .6s ease}
+.reveal-r.in{opacity:1;transform:translateX(0)}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
 
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){
-  .services-grid{grid-template-columns:repeat(2,1fr)}
+  .hero-grid{grid-template-columns:1fr;gap:40px}.hero-right{display:none}
+  .svc-grid{grid-template-columns:repeat(2,1fr)}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
-  .why-grid{grid-template-columns:1fr;gap:40px}
-  .why-img{height:360px}
-  .steps{grid-template-columns:repeat(3,1fr)}
-  .steps::before{display:none}
+  .why-grid{grid-template-columns:1fr;gap:48px}.why-img-stack{height:340px}
+  .steps-row{grid-template-columns:repeat(3,1fr)}.steps-row::before{display:none}
   .foot-grid{grid-template-columns:1fr 1fr}
+  .contact-grid{grid-template-columns:1fr}
+  .hero-stats-inner{flex-wrap:wrap}
 }
 @media(max-width:768px){
-  .topbar .tb-right,.topbar .tb-sep{display:none}
-  nav ul{display:none}
-  .hamburger{display:flex}
-  nav ul.open{display:flex;flex-direction:column;position:absolute;top:68px;left:0;right:0;background:#fff;padding:16px;box-shadow:var(--shh);z-index:99;gap:4px}
-  .hero-cards{display:none}
-  .cert-item{border-right:none}
-  .t-grid{grid-template-columns:1fr}
-  .contact-grid{grid-template-columns:1fr}
+  nav ul{display:none}.hamburger{display:flex}
+  nav ul.open{display:flex;flex-direction:column;position:absolute;top:70px;left:0;right:0;background:#fff;padding:14px;box-shadow:0 12px 40px rgba(0,0,0,.12);z-index:99;gap:4px}
+  .hero-stats{display:none}
+  .tgrid{grid-template-columns:1fr}
   .foot-grid{grid-template-columns:1fr}
   .frow{grid-template-columns:1fr}
-  .chat-panel{width:calc(100vw - 24px);right:12px;bottom:90px}
-  .chat-btn{right:12px;bottom:12px}
-  .steps{grid-template-columns:1fr}
-  .hero-btns{flex-direction:column;align-items:flex-start}
+  .chat-panel{width:calc(100vw - 24px);right:12px;bottom:86px}
+  .chat-fab{right:12px;bottom:12px}
+  .cta-inner{flex-direction:column;text-align:center}
+  .cta-acts{justify-content:center}
+  .tb-badge{display:none}
 }
 @media(max-width:580px){
-  .services-grid{grid-template-columns:1fr}
+  .svc-grid{grid-template-columns:1fr}
   .stats-grid{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
 <body>
 
-<!-- ══ TOP BAR ══ -->
+<!-- ══ TOPBAR ══ -->
 <div class="topbar">
   <div class="container">
-    <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+    <div class="tb-items">
       <div class="tb-item">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.93 19.79 19.79 0 01.01 1.26 2 2 0 012 .01h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.16z"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.93 19.79 19.79 0 01.01 1.26 2 2 0 012 .01h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.16z"/></svg>
         <a href="tel:9042773000">(904) 277-3000</a>
       </div>
-      <span class="tb-sep">|</span>
       <div class="tb-item">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         Mon–Fri: 7:00 AM – 7:00 PM
       </div>
-      <span class="tb-sep">|</span>
       <div class="tb-item">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
         Fernandina Beach, FL
       </div>
     </div>
-    <div class="tb-right">
-      <span class="tb-license">License #CCC1326391</span>
-    </div>
+    <span class="tb-badge">⭐ License #CCC1326391</span>
   </div>
 </div>
 
@@ -379,12 +423,12 @@ nav ul a:hover{color:var(--gold);background:var(--cream)}
 <header class="navbar">
   <div class="container nav-inner">
     <a href="#" class="logo">
-      <div class="logo-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       </div>
-      <div class="logo-text">
-        <span class="logo-name">LePierre Roofing</span>
-        <span class="logo-sub">Est. 40+ Years</span>
+      <div>
+        <div class="logo-name">LePierre Roofing</div>
+        <div class="logo-sub">40+ Years · Fernandina Beach</div>
       </div>
     </a>
     <nav>
@@ -398,206 +442,179 @@ nav ul a:hover{color:var(--gold);background:var(--cream)}
       </ul>
     </nav>
     <div class="nav-right">
-      <a href="tel:9042773000" class="nav-phone">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.93 19.79 19.79 0 01.01 1.26 2 2 0 012 .01h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.16z"/></svg>
+      <a href="tel:9042773000" class="nav-call">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.93 19.79 19.79 0 01.01 1.26 2 2 0 012 .01h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.16z"/></svg>
         (904) 277-3000
       </a>
-      <a href="#contact" class="btn btn-gold" style="padding:10px 22px;font-size:.78rem">Free Estimate</a>
-      <button class="hamburger" id="ham" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
+      <a href="#contact" class="btn btn-orange" style="padding:10px 22px;font-size:.78rem">Free Estimate</a>
+      <button class="hamburger" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
   </div>
 </header>
 
 <!-- ══ HERO ══ -->
 <section class="hero" id="home">
-  <div class="hero-bg"></div>
-  <div class="hero-grad"></div>
+  <div class="hero-deco"></div>
+  <div class="hero-deco2"></div>
+  <div class="hero-deco3"></div>
   <div class="container">
-    <div class="hero-content">
-      <div class="hero-pill">
-        <div class="hero-pill-dot"></div>
-        <span>GAF Elite Certified · Mule-Hide · Tamko · Atlas</span>
+    <div class="hero-grid">
+      <div class="hero-left">
+        <div class="hero-pill">
+          <div class="hero-pill-dot"></div>
+          <span>GAF Elite Certified · Mule-Hide · Tamko · Atlas</span>
+        </div>
+        <h1>LePierre<br><span class="stroke">Roofing</span><br><span class="orange">Experts.</span></h1>
+        <p class="hero-tagline">"Where Roofing Experience Meets Excellence"</p>
+        <p class="hero-desc">Serving Fernandina Beach, Yulee &amp; Jacksonville with pride for over 4 decades. Premium roofing, extended warranties, and a promise — no payment until you're completely satisfied.</p>
+        <div class="hero-btns">
+          <a href="#contact" class="btn btn-orange">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Get FREE Estimate
+          </a>
+          <a href="tel:9042773000" class="btn btn-outline-white">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.93 19.79 19.79 0 01.01 1.26 2 2 0 012 .01h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.16z"/></svg>
+            Call Now
+          </a>
+        </div>
+        <div class="hero-trust">
+          <div class="ht"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Free Estimates</div>
+          <div class="ht"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>No Pay Until Satisfied</div>
+          <div class="ht"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>20+ Year Warranties</div>
+          <div class="ht"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Licensed &amp; Insured</div>
+        </div>
       </div>
-      <h1>Where Roofing<br><em>Experience Meets</em><br>Excellence</h1>
-      <p class="hero-tag">"Protecting Homes Across Fernandina Beach for Over 4 Decades"</p>
-      <p class="hero-desc">LePierre Roofing delivers premium residential and commercial roofing services with unmatched craftsmanship, extended warranties, and a simple promise — no payments until you're completely satisfied.</p>
-      <div class="hero-btns">
-        <a href="#contact" class="btn btn-gold">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.93"/><path d="M16 2a15.5 15.5 0 016 6"/><path d="M11.5 2.5a10 10 0 019 9"/></svg>
-          Get FREE Estimate
-        </a>
-        <a href="tel:9042773000" class="btn btn-ghost">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.93 19.79 19.79 0 01.01 1.26 2 2 0 012 .01h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.16z"/></svg>
-          Call Now
-        </a>
-      </div>
-      <div class="hero-trust">
-        <div class="trust-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          Free Estimates
-        </div>
-        <div class="trust-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          No Payment Until Satisfied
-        </div>
-        <div class="trust-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          20+ Year Warranties
-        </div>
-        <div class="trust-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          Fully Licensed & Insured
+      <div class="hero-right">
+        <div class="hero-img-frame">
+          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80&auto=format&fit=crop" alt="Beautiful Florida home with premium roof" onerror="this.style.background='linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,.05))';this.style.height='500px';this.removeAttribute('src')">
+          <div class="hero-img-badge">
+            <div class="hero-img-badge-num">4.7★</div>
+            <div class="hero-img-badge-txt">Customer Rating</div>
+          </div>
+          <div class="hero-img-chip">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            GAF Elite Certified
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="hero-cards">
-    <div class="hcard">
-      <span class="hcard-num">40+</span>
-      <div class="hcard-lbl">Years Experience</div>
-    </div>
-    <div class="hcard">
-      <span class="hcard-num">4.7★</span>
-      <div class="hcard-lbl">Customer Rating</div>
-    </div>
-    <div class="hcard">
-      <span class="hcard-num">20yr+</span>
-      <div class="hcard-lbl">Warranty Coverage</div>
+  <!-- floating stats -->
+  <div class="hero-stats">
+    <div class="hero-stats-inner">
+      <div class="hstat"><span class="hstat-n">40+</span><div class="hstat-l">Years Experience</div></div>
+      <div class="hstat"><span class="hstat-n">4.7★</span><div class="hstat-l">Customer Rating</div></div>
+      <div class="hstat"><span class="hstat-n">20yr+</span><div class="hstat-l">Warranty Coverage</div></div>
+      <div class="hstat"><span class="hstat-n">100%</span><div class="hstat-l">Satisfaction Guaranteed</div></div>
     </div>
   </div>
 </section>
 
-<!-- ══ CERT STRIP ══ -->
-<div class="cert-strip">
+<!-- ══ CERTS ══ -->
+<div class="certs-sec">
   <div class="container">
-    <div class="cert-item">
-      <div class="cert-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      GAF Elite Certified
-    </div>
-    <div class="cert-item">
-      <div class="cert-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      Mule-Hide Certified
-    </div>
-    <div class="cert-item">
-      <div class="cert-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      Tamko Certified
-    </div>
-    <div class="cert-item">
-      <div class="cert-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      Atlas Corporate Partner
-    </div>
-    <div class="cert-item">
-      <div class="cert-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-      4.7 / 5 Star Rated
+    <div class="certs-inner">
+      <div class="cert"><div class="cert-dot"></div>GAF Elite Certified</div>
+      <div class="cert"><div class="cert-dot"></div>Mule-Hide Certified</div>
+      <div class="cert"><div class="cert-dot"></div>Tamko Certified</div>
+      <div class="cert"><div class="cert-dot"></div>Atlas Corporate Partner</div>
+      <div class="cert"><div class="cert-dot"></div>4.7 / 5 Stars · Nassau County's Best</div>
     </div>
   </div>
 </div>
 
 <!-- ══ SERVICES ══ -->
-<section class="services-sec sec" id="services">
+<section class="services-sec sec" id="services" style="padding-top:100px">
   <div class="container">
-    <div class="center reveal">
-      <span class="tag">Our Services</span>
-      <h2 class="h2">Complete Roofing Solutions</h2>
-      <p class="sub">From minor repairs to full replacements, we handle every roofing need with the same commitment to quality and craftsmanship.</p>
+    <div class="svc-header reveal">
+      <div>
+        <span class="eyebrow">What We Do</span>
+        <h2 class="h2">Complete Roofing<br>Solutions for Every Need</h2>
+      </div>
+      <div>
+        <p class="sub">From a leaking shingle to a full commercial reroof — we handle it all with the same passion and precision that's made us Nassau County's #1 roofer for 40+ years.</p>
+        <a href="#contact" class="btn btn-sky" style="margin-top:20px">Get a Free Quote</a>
+      </div>
     </div>
-    <div class="services-grid">
-      <div class="scard s1 reveal delay-1">
-        <div class="scard-top">
-          <div class="scard-top-inner">
-            <div class="scard-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
-          </div>
-        </div>
+    <div class="svc-grid">
+      <div class="scard s1 reveal d1">
+        <div class="scard-top"></div>
         <div class="scard-body">
+          <div class="scard-num">01</div>
+          <div class="scard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
           <h3>Residential Roofing</h3>
-          <p>Expert installation and replacement for all residential properties. We treat your home like our own — quality materials, clean workmanship, lasting results.</p>
-          <a href="#contact" class="scard-link">Get Free Estimate <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <p>Full installation & replacement for all home types. We treat your home like our own — superior materials, clean crews, lasting results.</p>
+          <a href="#contact" class="scard-cta">Get estimate <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
         </div>
       </div>
-      <div class="scard s2 reveal delay-2">
-        <div class="scard-top">
-          <div class="scard-top-inner">
-            <div class="scard-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg></div>
-          </div>
-        </div>
+      <div class="scard s2 reveal d2">
+        <div class="scard-top"></div>
         <div class="scard-body">
+          <div class="scard-num">02</div>
+          <div class="scard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></div>
           <h3>Commercial Roofing</h3>
-          <p>Reliable roofing solutions for commercial and industrial buildings. Minimal disruption to your business with maximum durability guaranteed.</p>
-          <a href="#contact" class="scard-link">Get Free Estimate <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <p>Reliable roofing for commercial & industrial buildings. Minimal business disruption, maximum durability guaranteed.</p>
+          <a href="#contact" class="scard-cta">Get estimate <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
         </div>
       </div>
-      <div class="scard s3 reveal delay-3">
-        <div class="scard-top">
-          <div class="scard-top-inner">
-            <div class="scard-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg></div>
-          </div>
-        </div>
+      <div class="scard s3 reveal d3">
+        <div class="scard-top"></div>
         <div class="scard-body">
+          <div class="scard-num">03</div>
+          <div class="scard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg></div>
           <h3>Roof Replacement</h3>
-          <p>Full tear-off and replacement with premium materials. We handle everything from permits to final inspection with a spotless property cleanup.</p>
-          <a href="#contact" class="scard-link">Get Free Estimate <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <p>Full tear-off & replacement with premium materials. We handle permits, scheduling and complete property cleanup.</p>
+          <a href="#contact" class="scard-cta">Get estimate <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
         </div>
       </div>
-      <div class="scard s4 reveal delay-4">
-        <div class="scard-top">
-          <div class="scard-top-inner">
-            <div class="scard-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div>
-          </div>
-        </div>
+      <div class="scard s4 reveal d4">
+        <div class="scard-top"></div>
         <div class="scard-body">
+          <div class="scard-num">04</div>
+          <div class="scard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div>
           <h3>Roof Repairs</h3>
-          <p>Fast, reliable repairs for leaks, missing shingles, flashing issues and more. Most repairs completed same-day or within 24–48 hours.</p>
-          <a href="#contact" class="scard-link">Get Free Estimate <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <p>Fast fixes for leaks, missing shingles, flashing & more. Most repairs completed same-day or within 24–48 hours.</p>
+          <a href="#contact" class="scard-cta">Get estimate <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
         </div>
       </div>
-      <div class="scard s5 reveal delay-1">
-        <div class="scard-top">
-          <div class="scard-top-inner">
-            <div class="scard-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-          </div>
-        </div>
+      <div class="scard s5 reveal d1">
+        <div class="scard-top"></div>
         <div class="scard-body">
+          <div class="scard-num">05</div>
+          <div class="scard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
           <h3>Storm Damage Repair</h3>
-          <p>Emergency storm, hail, and wind damage response. We work directly with insurance companies and guide you through the entire claims process.</p>
-          <a href="#contact" class="scard-link">Get Free Estimate <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <p>Emergency storm, hail & wind response. We work with insurance companies and guide you through the claims process.</p>
+          <a href="#contact" class="scard-cta">Get estimate <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
         </div>
       </div>
-      <div class="scard s6 reveal delay-2">
-        <div class="scard-top">
-          <div class="scard-top-inner">
-            <div class="scard-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
-          </div>
-        </div>
+      <div class="scard s6 reveal d2">
+        <div class="scard-top"></div>
         <div class="scard-body">
+          <div class="scard-num">06</div>
+          <div class="scard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
           <h3>Asphalt Shingle Roofing</h3>
-          <p>The most popular choice in our region. Cost-effective, durable, and beautiful — available in dozens of styles and colors to match your home.</p>
-          <a href="#contact" class="scard-link">Get Free Estimate <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <p>Florida's most popular choice — cost-effective, durable & beautiful. Dozens of styles and colors to match your home.</p>
+          <a href="#contact" class="scard-cta">Get estimate <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
         </div>
       </div>
-      <div class="scard s7 reveal delay-3">
-        <div class="scard-top">
-          <div class="scard-top-inner">
-            <div class="scard-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div>
-          </div>
-        </div>
+      <div class="scard s7 reveal d3">
+        <div class="scard-top"></div>
         <div class="scard-body">
+          <div class="scard-num">07</div>
+          <div class="scard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div>
           <h3>Metal Roofing</h3>
-          <p>Premium metal roofing with a 40–70 year lifespan. Energy-efficient, hurricane-resistant, and striking in appearance — a long-term investment.</p>
-          <a href="#contact" class="scard-link">Get Free Estimate <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <p>Premium metal roofing with a 40–70 year lifespan. Energy-efficient, hurricane-resistant and strikingly beautiful.</p>
+          <a href="#contact" class="scard-cta">Get estimate <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
         </div>
       </div>
-      <div class="scard s8 reveal delay-4">
-        <div class="scard-top">
-          <div class="scard-top-inner">
-            <div class="scard-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9h18v4a8 8 0 01-8 8h-2a8 8 0 01-8-8V9z"/><path d="M9 9V7a3 3 0 016 0v2"/></svg></div>
-          </div>
-        </div>
+      <div class="scard s8 reveal d4">
+        <div class="scard-top"></div>
         <div class="scard-body">
-          <h3>Gutter Installation & Repair</h3>
-          <p>Complete gutter systems that protect your foundation and landscaping. Installation, repair, replacement, and cleaning — all handled by our team.</p>
-          <a href="#contact" class="scard-link">Get Free Estimate <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          <div class="scard-num">08</div>
+          <div class="scard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9h18v4a8 8 0 01-8 8h-2a8 8 0 01-8-8V9z"/><path d="M9 9V7a3 3 0 016 0v2"/></svg></div>
+          <h3>Gutter Installation &amp; Repair</h3>
+          <p>Complete gutter systems protecting your foundation & landscaping. Installation, repair, replacement and cleaning.</p>
+          <a href="#contact" class="scard-cta">Get estimate <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
         </div>
       </div>
     </div>
@@ -608,24 +625,24 @@ nav ul a:hover{color:var(--gold);background:var(--cream)}
 <section class="stats-sec">
   <div class="container">
     <div class="stats-grid">
-      <div class="stat reveal delay-1">
-        <span class="stat-n" data-target="40">0</span><span style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:3.2rem;color:var(--gold2)">+</span>
+      <div class="stat reveal d1">
+        <div class="stat-n"><span data-target="40">0</span><span class="stat-suffix">+</span></div>
         <div class="stat-l">Years of Experience</div>
         <div class="stat-d">Serving NE Florida since the 1980s</div>
       </div>
-      <div class="stat reveal delay-2">
-        <span class="stat-n">4.7</span><span style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:3.2rem;color:var(--gold2)">★</span>
+      <div class="stat reveal d2">
+        <div class="stat-n">4.7<span class="stat-suffix">★</span></div>
         <div class="stat-l">Customer Satisfaction</div>
-        <div class="stat-d">Average rating across all reviews</div>
+        <div class="stat-d">Verified rating across all platforms</div>
       </div>
-      <div class="stat reveal delay-3">
-        <span class="stat-n" data-target="20">0</span><span style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:3.2rem;color:var(--gold2)">yr+</span>
+      <div class="stat reveal d3">
+        <div class="stat-n"><span data-target="20">0</span><span class="stat-suffix">yr+</span></div>
         <div class="stat-l">Warranty Coverage</div>
-        <div class="stat-d">With extension options available</div>
+        <div class="stat-d">With manufacturer extension options</div>
       </div>
-      <div class="stat reveal delay-4">
-        <span class="stat-n">100</span><span style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:3.2rem;color:var(--gold2)">%</span>
-        <div class="stat-l">Satisfaction Guarantee</div>
+      <div class="stat reveal d4">
+        <div class="stat-n">100<span class="stat-suffix">%</span></div>
+        <div class="stat-l">Satisfaction Guaranteed</div>
         <div class="stat-d">No payment until completely satisfied</div>
       </div>
     </div>
@@ -636,44 +653,45 @@ nav ul a:hover{color:var(--gold);background:var(--cream)}
 <section class="why-sec sec" id="about">
   <div class="container">
     <div class="why-grid">
-      <div class="why-img-wrap reveal-l">
-        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=700&q=80&auto=format&fit=crop" alt="Beautiful home with premium roof" class="why-img" onerror="this.style.background='linear-gradient(135deg,#1e3a5f,#2a5298)';this.style.height='520px';this.removeAttribute('src')">
+      <div class="why-img-stack reveal-l">
+        <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&q=80&auto=format&fit=crop" alt="Beautiful home" class="why-img-main" onerror="this.style.background='linear-gradient(135deg,#0EA5E9,#0369A1)';this.style.display='block';this.removeAttribute('src')">
+        <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=80&auto=format&fit=crop" alt="Roofing crew at work" class="why-img-accent" onerror="this.style.background='linear-gradient(135deg,#F97316,#EA580C)';this.style.display='block';this.removeAttribute('src')">
         <div class="why-badge">
           <div class="why-badge-n">40+</div>
           <div class="why-badge-t">Years of Excellence</div>
         </div>
       </div>
       <div class="reveal-r">
-        <span class="tag">Why Choose Us</span>
-        <h2 class="h2">Safety & Quality Are Our<br>Top Priority</h2>
-        <p class="sub">With over four decades of roofing experience in Fernandina Beach and the greater Jacksonville area, LePierre Roofing has built a reputation on trust, quality, and unparalleled customer service.</p>
+        <span class="eyebrow">Why Choose Us</span>
+        <h2 class="h2">Safety &amp; Quality Are<br>Our Top Priority</h2>
+        <p class="sub">With four decades of roofing experience in Fernandina Beach and the greater Jacksonville area, LePierre Roofing has built its reputation on trust, craftsmanship, and customers who come back generation after generation.</p>
         <div class="why-features">
           <div class="wf">
-            <div class="wf-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div class="wf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
             <div>
-              <h4>Extended Warranties Available</h4>
-              <p>Most installations covered for 20+ years with manufacturer-backed warranty extensions through our certified partnerships.</p>
+              <h4>Extended Warranties — Up to 50 Years</h4>
+              <p>Manufacturer-backed warranties through our GAF Elite, Mule-Hide & Tamko certifications. Most installations covered 20+ years.</p>
             </div>
           </div>
           <div class="wf">
-            <div class="wf-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+            <div class="wf-ico orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
             <div>
-              <h4>Free Estimates — No Obligation</h4>
-              <p>We provide honest, transparent quotes at zero cost. Know exactly what your project will cost before committing to anything.</p>
+              <h4>Free Estimates — Fully Transparent Pricing</h4>
+              <p>We provide honest, itemized quotes at zero cost. Know exactly what your project will cost before committing to anything.</p>
             </div>
           </div>
           <div class="wf">
-            <div class="wf-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wf-ico coral"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
             <div>
-              <h4>No Payment Until Completely Satisfied</h4>
-              <p>We stand behind every job. If you're not 100% happy with our work, you don't pay. It's that simple.</p>
+              <h4>No Payment Until You're 100% Satisfied</h4>
+              <p>We stand behind every single job. If you're not completely happy, you don't pay. That's the LePierre promise.</p>
             </div>
           </div>
           <div class="wf">
-            <div class="wf-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <div class="wf-ico teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
             <div>
-              <h4>Local Fernandina Beach Experts</h4>
-              <p>We know Florida's climate, building codes, and insurance requirements — no out-of-town contractors learning on your dime.</p>
+              <h4>True Local Experts — We Know Florida</h4>
+              <p>No out-of-town storm chasers. We know Florida's climate, building codes, and insurance requirements inside and out.</p>
             </div>
           </div>
         </div>
@@ -683,117 +701,83 @@ nav ul a:hover{color:var(--gold);background:var(--cream)}
 </section>
 
 <!-- ══ PROCESS ══ -->
-<section class="process-sec sec" id="process">
+<section class="process-sec" id="process">
   <div class="container">
     <div class="center reveal">
-      <span class="tag">How It Works</span>
+      <span class="eyebrow">How It Works</span>
       <h2 class="h2">Our Simple 5-Step Process</h2>
-      <p class="sub">Getting a new roof is stress-free with LePierre. Here's exactly what to expect from first call to final cleanup.</p>
+      <p class="sub">Getting a new roof is completely stress-free with LePierre. Here's exactly what happens from your first call to our final cleanup.</p>
     </div>
-    <div class="steps">
-      <div class="step reveal delay-1">
-        <div class="step-circle">1</div>
+    <div class="steps-row">
+      <div class="step reveal d1">
+        <div class="step-ring">1</div>
         <h4>Contact &amp; Schedule</h4>
-        <p>Call us or fill out our online form to schedule your free inspection at a time that works for you.</p>
+        <p>Call or fill out our form to book your free, no-obligation inspection at your convenience.</p>
       </div>
-      <div class="step reveal delay-2">
-        <div class="step-circle">2</div>
-        <h4>Inspection &amp; Quote</h4>
-        <p>Our expert performs a comprehensive evaluation of your roof and provides a detailed, honest quote — no surprises.</p>
+      <div class="step reveal d2">
+        <div class="step-ring">2</div>
+        <h4>Expert Inspection</h4>
+        <p>Our certified roofer inspects your property thoroughly and delivers a detailed, transparent quote.</p>
       </div>
-      <div class="step reveal delay-3">
-        <div class="step-circle">3</div>
+      <div class="step reveal d3">
+        <div class="step-ring">3</div>
         <h4>Installation Day</h4>
-        <p>Our certified crew arrives on schedule and completes your roof with precision and care, using only top-grade materials.</p>
+        <p>Our crew arrives on schedule, works efficiently, and installs your new roof with precision.</p>
       </div>
-      <div class="step reveal delay-4">
-        <div class="step-circle">4</div>
-        <h4>Property Cleanup</h4>
-        <p>We leave your property cleaner than we found it — full debris removal and thorough inspection of surrounding areas.</p>
+      <div class="step reveal d4">
+        <div class="step-ring">4</div>
+        <h4>Full Cleanup</h4>
+        <p>We leave your property cleaner than we found it — complete debris removal guaranteed.</p>
       </div>
-      <div class="step reveal delay-4">
-        <div class="step-circle">5</div>
-        <h4>100% Satisfaction</h4>
-        <p>Final walkthrough with you to ensure everything is perfect. Payment only when you're completely happy with the results.</p>
+      <div class="step reveal d4">
+        <div class="step-ring">5</div>
+        <h4>You're 100% Happy</h4>
+        <p>Final walkthrough together. You only pay when you're completely satisfied with the results.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ══ TESTIMONIALS ══ -->
-<section class="testimonials-sec sec" id="reviews">
+<section class="testi-sec sec" id="reviews">
   <div class="container">
-    <div class="center reveal">
-      <span class="tag">Customer Reviews</span>
-      <h2 class="h2">What Our Customers Say</h2>
-    </div>
-    <div class="rating-bar reveal">
-      <div class="rating-big">4.7<span>/5</span></div>
-      <div class="rating-right">
-        <div class="stars-row">
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" style="clip-path:inset(0 30% 0 0)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    <div class="testi-top reveal">
+      <div>
+        <span class="eyebrow">Customer Reviews</span>
+        <h2 class="h2">What Our Customers Say</h2>
+      </div>
+      <div class="rating-block">
+        <div class="rating-num">4.7<span>/5</span></div>
+        <div>
+          <div class="stars-row">
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="rating-lbl">Based on verified customer reviews</div>
         </div>
-        <div class="rating-lbl">Based on verified customer reviews</div>
       </div>
     </div>
-    <div class="t-grid">
-      <div class="tcard reveal delay-1">
-        <div class="tcard-q">"</div>
-        <div class="t-stars">
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </div>
-        <p class="t-text">"The work was thorough and fast. The workers were very diligent and professional. The whole project was completed in just a couple of days and the results look fantastic. Highly recommend LePierre Roofing!"</p>
-        <div class="t-author">
-          <div class="t-avatar">JM</div>
-          <div>
-            <div class="t-name">James M.</div>
-            <div class="t-loc">Fernandina Beach, FL</div>
-          </div>
-        </div>
+    <div class="tgrid">
+      <div class="tcard reveal d1">
+        <div class="tcard-quote">"</div>
+        <div class="tcard-stars"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <p class="tcard-text">"The work was thorough and incredibly fast. The crew was diligent and professional. The whole project was done in just two days and the results look absolutely fantastic. Highly recommend LePierre!"</p>
+        <div class="tauthor"><div class="tavatar">JM</div><div><div class="tname">James M.</div><div class="tloc">Fernandina Beach, FL</div></div></div>
       </div>
-      <div class="tcard reveal delay-2">
-        <div class="tcard-q">"</div>
-        <div class="t-stars">
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </div>
-        <p class="t-text">"From start to finish — absolutely fantastic. The team handled everything in a completely professional and timely manner. They even helped me navigate my insurance claim after the storm. Could not be more grateful!"</p>
-        <div class="t-author">
-          <div class="t-avatar">ST</div>
-          <div>
-            <div class="t-name">Sandra T.</div>
-            <div class="t-loc">Yulee, FL</div>
-          </div>
-        </div>
+      <div class="tcard reveal d2">
+        <div class="tcard-quote">"</div>
+        <div class="tcard-stars"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <p class="tcard-text">"From start to finish — absolutely fantastic. Professional, timely, and they even helped navigate my insurance claim after storm damage. Could not be more grateful for the LePierre team!"</p>
+        <div class="tauthor"><div class="tavatar">ST</div><div><div class="tname">Sandra T.</div><div class="tloc">Yulee, FL</div></div></div>
       </div>
-      <div class="tcard reveal delay-3">
-        <div class="tcard-q">"</div>
-        <div class="t-stars">
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </div>
-        <p class="t-text">"I couldn't be happier with the results. Excellent customer service from the moment I called for a quote. The crew was respectful, efficient, and the new roof looks incredible. Worth every penny!"</p>
-        <div class="t-author">
-          <div class="t-avatar">RK</div>
-          <div>
-            <div class="t-name">Robert K.</div>
-            <div class="t-loc">Amelia Island, FL</div>
-          </div>
-        </div>
+      <div class="tcard reveal d3">
+        <div class="tcard-quote">"</div>
+        <div class="tcard-stars"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <p class="tcard-text">"I couldn't be happier with the results. Excellent customer service from the very first call. The new roof looks incredible and the crew left everything spotless. Worth every penny!"</p>
+        <div class="tauthor"><div class="tavatar">RK</div><div><div class="tname">Robert K.</div><div class="tloc">Amelia Island, FL</div></div></div>
       </div>
     </div>
   </div>
@@ -803,28 +787,28 @@ nav ul a:hover{color:var(--gold);background:var(--cream)}
 <section class="areas-sec" id="areas">
   <div class="container">
     <div class="center reveal">
-      <span class="tag" style="color:var(--gold2)">Service Areas</span>
+      <span class="eyebrow eyebrow-white">Service Areas</span>
       <h2 class="h2">We Serve All of Nassau &amp; Duval County</h2>
-      <p class="sub" style="margin:0 auto">From Amelia Island to North Jacksonville, our team is ready to protect your home anywhere in our service region.</p>
+      <p class="sub" style="margin:0 auto">From Amelia Island to North Jacksonville — if you're in our region, we've got you covered.</p>
     </div>
-    <div class="areas-grid reveal">
-      <div class="area-chip">Fernandina Beach</div>
-      <div class="area-chip">Yulee</div>
-      <div class="area-chip">Amelia Island</div>
-      <div class="area-chip">Jacksonville</div>
-      <div class="area-chip">North Jacksonville</div>
-      <div class="area-chip">Callahan</div>
-      <div class="area-chip">Hilliard</div>
-      <div class="area-chip">Nassauville</div>
-      <div class="area-chip">Black Hammock Island</div>
-      <div class="area-chip">Franklintown</div>
-      <div class="area-chip">O'Neil</div>
-      <div class="area-chip">Nassau County</div>
+    <div class="areas-wrap reveal">
+      <div class="achip">Fernandina Beach</div>
+      <div class="achip">Yulee</div>
+      <div class="achip">Amelia Island</div>
+      <div class="achip">Jacksonville</div>
+      <div class="achip">North Jacksonville</div>
+      <div class="achip">Callahan</div>
+      <div class="achip">Hilliard</div>
+      <div class="achip">Nassauville</div>
+      <div class="achip">Black Hammock Island</div>
+      <div class="achip">Franklintown</div>
+      <div class="achip">O'Neil</div>
+      <div class="achip">Nassau County</div>
     </div>
     <div style="text-align:center;margin-top:36px" class="reveal">
-      <p style="color:rgba(255,255,255,.6);font-size:.88rem;margin-bottom:20px">Not sure if we cover your area? Give us a call!</p>
+      <p style="color:rgba(255,255,255,.75);margin-bottom:18px;font-size:.9rem">Not sure if we cover your area? Just call us!</p>
       <a href="tel:9042773000" class="btn btn-white">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.93 19.79 19.79 0 01.01 1.26 2 2 0 012 .01h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.16z"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.93 19.79 19.79 0 01.01 1.26 2 2 0 012 .01h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.16z"/></svg>
         (904) 277-3000
       </a>
     </div>
@@ -834,86 +818,69 @@ nav ul a:hover{color:var(--gold);background:var(--cream)}
 <!-- ══ CONTACT ══ -->
 <section class="contact-sec sec" id="contact">
   <div class="container">
-    <div class="contact-grid">
-      <div class="reveal-l">
-        <span class="tag">Get In Touch</span>
-        <h2 class="h2">Schedule Your FREE Estimate Today</h2>
-        <p class="sub">Ready to get started? Contact us and we'll schedule your free, no-obligation inspection at your earliest convenience.</p>
-        <div class="c-info-items">
+    <div class="contact-grid reveal">
+      <div class="contact-left">
+        <div>
+          <span class="eyebrow eyebrow-white">Get In Touch</span>
+          <h2 class="h2">Schedule Your FREE Estimate</h2>
+          <p class="sub">Ready to get started? We'll schedule your free, no-obligation inspection at your convenience — and have a quote ready the same day.</p>
+        </div>
+        <div class="ci-list">
           <div class="ci">
-            <div class="ci-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.93 19.79 19.79 0 01.01 1.26 2 2 0 012 .01h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.16z"/></svg></div>
-            <div>
-              <div class="ci-lbl">Phone</div>
-              <div class="ci-val"><a href="tel:9042773000">(904) 277-3000</a></div>
-            </div>
+            <div class="ci-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.93 19.79 19.79 0 01.01 1.26 2 2 0 012 .01h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.16z"/></svg></div>
+            <div><div class="ci-lbl">Phone</div><div class="ci-val"><a href="tel:9042773000">(904) 277-3000</a></div></div>
           </div>
           <div class="ci">
-            <div class="ci-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-            <div>
-              <div class="ci-lbl">Address</div>
-              <div class="ci-val">1 N 4th St, Fernandina Beach, FL 32034</div>
-            </div>
+            <div class="ci-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <div><div class="ci-lbl">Address</div><div class="ci-val">1 N 4th St, Fernandina Beach, FL 32034</div></div>
           </div>
           <div class="ci">
-            <div class="ci-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-            <div>
-              <div class="ci-lbl">Office Hours</div>
-              <div class="ci-val">Monday–Friday: 7:00 AM – 7:00 PM</div>
-            </div>
+            <div class="ci-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div><div class="ci-lbl">Office Hours</div><div class="ci-val">Monday–Friday: 7:00 AM – 7:00 PM</div></div>
           </div>
           <div class="ci">
-            <div class="ci-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-            <div>
-              <div class="ci-lbl">License</div>
-              <div class="ci-val">#CCC1326391 — Fully Insured</div>
-            </div>
+            <div class="ci-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div><div class="ci-lbl">License</div><div class="ci-val">#CCC1326391 — Fully Insured</div></div>
           </div>
         </div>
       </div>
-      <div class="cform reveal-r">
+      <div class="contact-right">
         <h3>Book A Free Estimate</h3>
-        <p>Fill out the form and we'll reach out within 1 business day to confirm your inspection time.</p>
+        <p>Fill out the form and we'll confirm your inspection time within 1 business day.</p>
         <div class="frow">
           <div class="fg"><label>First Name</label><input type="text" placeholder="John"></div>
           <div class="fg"><label>Last Name</label><input type="text" placeholder="Smith"></div>
         </div>
         <div class="frow">
-          <div class="fg"><label>Phone Number</label><input type="tel" placeholder="(904) 000-0000"></div>
-          <div class="fg"><label>Email Address</label><input type="email" placeholder="john@example.com"></div>
+          <div class="fg"><label>Phone</label><input type="tel" placeholder="(904) 000-0000"></div>
+          <div class="fg"><label>Email</label><input type="email" placeholder="john@email.com"></div>
         </div>
         <div class="fg"><label>Service Needed</label>
-          <select>
-            <option value="">Select a service...</option>
-            <option>Roof Replacement</option>
-            <option>Roof Repair</option>
-            <option>Storm Damage Repair</option>
-            <option>Commercial Roofing</option>
-            <option>Metal Roofing</option>
-            <option>Gutter Installation / Repair</option>
-            <option>Other / Not Sure</option>
-          </select>
+          <select><option value="">Select a service...</option><option>Roof Replacement</option><option>Roof Repair</option><option>Storm Damage Repair</option><option>Commercial Roofing</option><option>Metal Roofing</option><option>Gutter Installation / Repair</option><option>Other / Not Sure</option></select>
         </div>
-        <div class="fg"><label>Message (Optional)</label><textarea placeholder="Tell us a bit about your project..."></textarea></div>
-        <button type="button" class="btn btn-gold" style="width:100%;justify-content:center;font-size:.95rem;padding:15px">
+        <div class="fg"><label>Message (Optional)</label><textarea placeholder="Tell us about your project..."></textarea></div>
+        <button class="btn btn-orange" style="width:100%;justify-content:center;font-size:.95rem;padding:15px 24px">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           Submit — Get My Free Estimate
         </button>
-        <p style="font-size:.75rem;color:var(--muted);text-align:center;margin-top:12px">No obligation · Respond within 1 business day · 100% free</p>
+        <p style="font-size:.74rem;color:var(--muted);text-align:center;margin-top:12px">No obligation · Reply within 1 business day · 100% free</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ CTA BAND ══ -->
+<!-- ══ CTA ══ -->
 <section class="cta-band">
   <div class="container">
-    <div>
-      <h2>Ready to Protect Your Home?</h2>
-      <p>Get a FREE estimate from Fernandina Beach's most trusted roofing company.</p>
-    </div>
-    <div class="cta-acts">
-      <a href="#contact" class="btn btn-white">Get FREE Estimate</a>
-      <a href="tel:9042773000" class="btn btn-ghost">Call (904) 277-3000</a>
+    <div class="cta-inner reveal">
+      <div>
+        <h2>Ready to Protect Your Home?</h2>
+        <p>Get a FREE, no-obligation estimate from Fernandina Beach's most trusted roofer.</p>
+      </div>
+      <div class="cta-acts">
+        <a href="#contact" class="btn btn-sky">Get FREE Estimate</a>
+        <a href="tel:9042773000" class="btn btn-outline-white">Call (904) 277-3000</a>
+      </div>
     </div>
   </div>
 </section>
@@ -922,22 +889,15 @@ nav ul a:hover{color:var(--gold);background:var(--cream)}
 <footer class="footer">
   <div class="container">
     <div class="foot-grid">
-      <div class="foot-brand">
-        <div class="foot-logo">
-          <div class="fl-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
-          <div>
-            <div class="fl-name">LePierre Roofing</div>
-            <div class="fl-sub">Est. 40+ Years · Fernandina Beach</div>
-          </div>
+      <div>
+        <div class="foot-logo-wrap">
+          <div class="fl-mark"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div><div class="fl-name">LePierre Roofing</div><div class="fl-sub">Fernandina Beach · Est. 40+ Yrs</div></div>
         </div>
-        <p class="foot-desc">Where Roofing Experience Meets Excellence. Serving Nassau &amp; Duval County with pride for over four decades. GAF Elite Certified · Licensed #CCC1326391</p>
+        <p class="foot-desc">Where Roofing Experience Meets Excellence. GAF Elite Certified · Mule-Hide · Tamko · Atlas. License #CCC1326391. Proudly serving Nassau &amp; Duval County for over four decades.</p>
         <div class="foot-social">
-          <a href="https://instagram.com/lepierreroofinginc" class="soc" title="Instagram" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-          </a>
-          <a href="https://youtube.com/@lepierreroofing2229" class="soc" title="YouTube" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
-          </a>
+          <a href="https://instagram.com/lepierreroofinginc" class="fsoc" target="_blank" rel="noopener" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a href="https://youtube.com/@lepierreroofing2229" class="fsoc" target="_blank" rel="noopener" title="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg></a>
         </div>
       </div>
       <div class="foot-col">
@@ -965,288 +925,217 @@ nav ul a:hover{color:var(--gold);background:var(--cream)}
       </div>
       <div class="foot-col">
         <h4>Contact</h4>
-        <div class="foot-ci">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.93 19.79 19.79 0 01.01 1.26 2 2 0 012 .01h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.16z"/></svg>
-          <a href="tel:9042773000">(904) 277-3000</a>
-        </div>
-        <div class="foot-ci">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span>1 N 4th St<br>Fernandina Beach, FL 32034</span>
-        </div>
-        <div class="foot-ci">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          <span>Mon–Fri: 7:00 AM – 7:00 PM</span>
-        </div>
+        <div class="fci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.93 19.79 19.79 0 01.01 1.26 2 2 0 012 .01h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.16z"/></svg><a href="tel:9042773000">(904) 277-3000</a></div>
+        <div class="fci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg><span>1 N 4th St, Fernandina Beach, FL 32034</span></div>
+        <div class="fci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Mon–Fri: 7:00 AM – 7:00 PM</span></div>
       </div>
     </div>
     <div class="foot-bottom">
       <span>© 2025 LePierre Roofing, Inc. All rights reserved. License #CCC1326391</span>
-      <div class="foot-bot-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Sitemap</a>
-      </div>
+      <div class="fbot-links"><a href="#">Privacy Policy</a><a href="#">Sitemap</a></div>
     </div>
   </div>
 </footer>
 
 <!-- ══ CHATBOT ══ -->
-<button class="chat-btn" id="chatBtn" aria-label="Open chat">
-  <svg id="chatIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-  <span class="chat-notif" id="chatNotif">1</span>
+<button class="chat-fab" id="chatFab" aria-label="Open chat assistant">
+  <svg id="chatFabIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+  <span class="chat-badge" id="chatBadge">1</span>
 </button>
 
 <div class="chat-panel" id="chatPanel">
   <div class="chat-head">
-    <div class="chat-head-av">
+    <div class="chat-av">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-      <div class="online-dot"></div>
+      <div class="online"></div>
     </div>
     <div class="chat-head-info">
-      <div class="chat-head-name">LePierre Roofing Assistant</div>
-      <div class="chat-head-st">Online — typically replies instantly</div>
+      <div class="chat-head-name">LePierre Virtual Assistant</div>
+      <div class="chat-head-st">Online — answers instantly</div>
     </div>
-    <button class="chat-x" id="chatClose" aria-label="Close chat">
+    <button class="chat-x" id="chatClose" aria-label="Close">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
   </div>
   <div class="chat-msgs" id="chatMsgs"></div>
   <div class="chat-input-wrap">
     <div class="chat-row">
-      <input class="chat-in" id="chatInput" type="text" placeholder="Type your question..." autocomplete="off">
-      <button class="chat-send" id="chatSend" aria-label="Send">
+      <input class="chat-in" id="chatIn" type="text" placeholder="Ask us anything..." autocomplete="off">
+      <button class="chat-send-btn" id="chatSend" aria-label="Send">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
       </button>
     </div>
-    <div class="chat-disc">Questions are answered by our virtual assistant · Call (904) 277-3000 for immediate help</div>
+    <div class="chat-disc">Virtual assistant · Call <a href="tel:9042773000" style="color:var(--sky)">(904) 277-3000</a> for immediate help</div>
   </div>
 </div>
 
 <script>
-// ── NAV HAMBURGER ──
+// ── NAV ──
 const ham = document.getElementById('ham');
 const navMenu = document.getElementById('navMenu');
 ham.addEventListener('click', () => navMenu.classList.toggle('open'));
 navMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navMenu.classList.remove('open')));
 
-// ── SCROLL REVEAL ──
-const revealEls = document.querySelectorAll('.reveal,.reveal-l,.reveal-r');
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }});
-}, {threshold:.12});
-revealEls.forEach(el => io.observe(el));
+// ── REVEAL ──
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
+}, {threshold:.1});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el => io.observe(el));
 
-// ── COUNTER ──
+// ── COUNTERS ──
 document.querySelectorAll('[data-target]').forEach(el => {
-  const target = +el.dataset.target;
   const obs = new IntersectionObserver(entries => {
     if(!entries[0].isIntersecting) return;
     obs.disconnect();
+    const target = +el.dataset.target, step = target/40;
     let cur = 0;
-    const step = target / 40;
-    const t = setInterval(() => {
-      cur = Math.min(cur + step, target);
-      el.textContent = Math.round(cur);
-      if(cur >= target) clearInterval(t);
-    }, 40);
+    const t = setInterval(() => { cur = Math.min(cur+step, target); el.textContent = Math.round(cur); if(cur >= target) clearInterval(t); }, 40);
   }, {threshold:.5});
   obs.observe(el);
 });
 
 // ── CHATBOT ──
-const chatBtn  = document.getElementById('chatBtn');
-const chatPanel = document.getElementById('chatPanel');
-const chatClose = document.getElementById('chatClose');
-const chatMsgs  = document.getElementById('chatMsgs');
-const chatInput = document.getElementById('chatInput');
-const chatSend  = document.getElementById('chatSend');
-const chatNotif = document.getElementById('chatNotif');
-const chatIcon  = document.getElementById('chatIcon');
+const fab   = document.getElementById('chatFab');
+const panel = document.getElementById('chatPanel');
+const closeBtn = document.getElementById('chatClose');
+const msgs  = document.getElementById('chatMsgs');
+const input = document.getElementById('chatIn');
+const send  = document.getElementById('chatSend');
+const badge = document.getElementById('chatBadge');
 
-let chatOpen = false;
-let welcomed = false;
+let isOpen = false, welcomed = false;
 
-const CLOSE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="26" height="26"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
-const CHAT_SVG  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="26" height="26"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>`;
+const OPEN_ICON  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="24" height="24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+const CLOSE_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="26" height="26"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>`;
 
-function toggleChat(forceOpen) {
-  chatOpen = (forceOpen !== undefined) ? forceOpen : !chatOpen;
-  chatPanel.classList.toggle('open', chatOpen);
-  chatIcon.innerHTML = chatOpen ? CLOSE_SVG.replace('svg ','svg ') : '';
-  chatBtn.innerHTML = chatOpen
-    ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="26" height="26"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`
-    : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="26" height="26"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="chat-notif" id="chatNotif" style="display:${chatOpen?'none':'flex'}">1</span>`;
-  if(chatOpen && !welcomed) { welcomed = true; startWelcome(); }
+function toggleChat(force) {
+  isOpen = force !== undefined ? force : !isOpen;
+  panel.classList.toggle('open', isOpen);
+  fab.classList.toggle('is-open', isOpen);
+  document.getElementById('chatFab').innerHTML = (isOpen ? OPEN_ICON : CLOSE_ICON + '<span class="chat-badge" id="chatBadge" style="display:'+(isOpen?'none':'flex')+'">1</span>');
+  if(isOpen && !welcomed){ welcomed = true; startWelcome(); }
 }
 
-chatBtn.addEventListener('click', () => toggleChat());
-chatClose.addEventListener('click', () => toggleChat(false));
+fab.addEventListener('click', () => toggleChat());
+closeBtn.addEventListener('click', () => toggleChat(false));
+setTimeout(() => { if(!isOpen) toggleChat(true); }, 5000);
 
-// Auto-open after 5s
-setTimeout(() => { if(!chatOpen) toggleChat(true); }, 5000);
+function scrollDown(){ setTimeout(() => msgs.scrollTop = msgs.scrollHeight, 60); }
 
-function scrollBottom() {
-  setTimeout(() => chatMsgs.scrollTop = chatMsgs.scrollHeight, 50);
+function addBot(text, qrs){
+  const d = document.createElement('div');
+  d.className = 'cmsg bot';
+  d.innerHTML = `<div class="cmsg-av">LP</div><div class="bubble">${text.replace(/\n/g,'<br>')}</div>`;
+  msgs.appendChild(d);
+  if(qrs) addQR(qrs);
+  scrollDown();
 }
 
-function addBotMsg(text, showQR) {
-  const wrap = document.createElement('div');
-  wrap.className = 'cmsg bot';
-  wrap.innerHTML = `<div class="cmsg-av">LP</div><div class="bubble">${text.replace(/\n/g,'<br>')}</div>`;
-  chatMsgs.appendChild(wrap);
-  if(showQR) addQuickReplies(showQR);
-  scrollBottom();
+function addUser(text){
+  const d = document.createElement('div');
+  d.className = 'cmsg user';
+  d.innerHTML = `<div class="bubble">${text}</div>`;
+  msgs.appendChild(d);
+  scrollDown();
 }
 
-function addUserMsg(text) {
-  const wrap = document.createElement('div');
-  wrap.className = 'cmsg user';
-  wrap.innerHTML = `<div class="bubble">${text}</div>`;
-  chatMsgs.appendChild(wrap);
-  scrollBottom();
-}
-
-function showTyping() {
-  const el = document.createElement('div');
-  el.className = 'cmsg bot'; el.id = 'typing';
-  el.innerHTML = `<div class="cmsg-av">LP</div><div class="typing"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div>`;
-  chatMsgs.appendChild(el);
-  scrollBottom();
-  return el;
-}
-
-function removeTyping() {
-  const t = document.getElementById('typing');
-  if(t) t.remove();
-}
-
-function addQuickReplies(options) {
+function addQR(opts){
   const wrap = document.createElement('div');
   wrap.className = 'qr-wrap';
-  options.forEach(opt => {
+  opts.forEach(o => {
     const b = document.createElement('button');
-    b.className = 'qr'; b.textContent = opt;
-    b.addEventListener('click', () => { wrap.remove(); handleUserMessage(opt); });
+    b.className = 'qr'; b.textContent = o;
+    b.onclick = () => { wrap.remove(); handleMsg(o); };
     wrap.appendChild(b);
   });
-  chatMsgs.appendChild(wrap);
-  scrollBottom();
+  msgs.appendChild(wrap); scrollDown();
 }
 
+function showTyping(){
+  const el = document.createElement('div');
+  el.id = 'tp'; el.className = 'cmsg bot';
+  el.innerHTML = `<div class="cmsg-av">LP</div><div class="typing-wrap"><div class="td"></div><div class="td"></div><div class="td"></div></div>`;
+  msgs.appendChild(el); scrollDown(); return el;
+}
+function hideTyping(){ const t=document.getElementById('tp'); if(t) t.remove(); }
+
 const MAIN_QR = [
-  '💰 New roof cost?',
+  '💰 How much is a new roof?',
   '⏱️ Turnaround time?',
-  '📋 Free estimate?',
-  '🏗️ Roofing materials',
-  '⛈️ Storm damage',
-  '🛡️ Warranties',
-  '📍 Service areas',
-  '💳 Financing?',
-  '🔒 Licensed & insured?',
-  '🚀 How to get started'
+  '📋 Get a free estimate',
+  '🏗️ What materials do you use?',
+  '⛈️ I have storm damage',
+  '🛡️ Tell me about warranties',
+  '📍 Do you serve my area?',
+  '💳 Do you offer financing?',
+  '🔒 Are you licensed?',
+  '🚀 How do I get started?'
 ];
 
 const QA = [
-  {
-    keys: ['cost','price','much','roof cost','how much','estimate cost','expensive','affordable'],
-    a: `Great question! Roof costs vary based on size, pitch, and materials. Here's a general range for our area:\n\n🏠 Asphalt Shingle: $8,000 – $15,000\n🔩 Metal Roofing: $14,000 – $28,000+\n🏢 Commercial: Custom quote\n\nThe best way to get an exact price is a FREE on-site estimate — no obligation. We'll give you a transparent, itemized quote.\n\n📞 Call us: (904) 277-3000`,
-    qr: ['📋 Schedule free estimate','🏗️ Roofing materials','⏱️ Turnaround time?']
-  },
-  {
-    keys: ['turnaround','how long','timeline','days','completion','finish','done','quick'],
-    a: `We work efficiently and respect your time! Here's what to expect:\n\n🔧 Minor Repairs: Same day or 24–48 hrs\n🏠 Full Replacement: 1–3 days\n🏢 Commercial: Varies by project size\n⛈️ Storm Damage: Priority scheduling\n\nOnce we start, we don't stop until it's done right. We'll give you a specific timeline during your free estimate.`,
-    qr: ['📋 Schedule free estimate','💰 New roof cost?','⛈️ Storm damage']
-  },
-  {
-    keys: ['free estimate','estimate','quote','inspection','visit','no obligation','free'],
-    a: `Absolutely — 100% FREE with zero obligation! Here's how it works:\n\n1️⃣ Call (904) 277-3000 or fill out our form\n2️⃣ We schedule at your convenience (Mon–Fri, 7AM–7PM)\n3️⃣ Expert inspects your roof thoroughly\n4️⃣ You receive a detailed, honest quote\n5️⃣ No pressure, no surprises\n\nReady to book? 👇`,
-    qr: ['🚀 How to get started','📍 Service areas','📞 Call now']
-  },
-  {
-    keys: ['material','shingle','asphalt','metal','tile','type of roof','options','best roof'],
-    a: `We work with all major roofing materials:\n\n🟤 Asphalt Shingles — Most popular, cost-effective, 20–30 yr lifespan\n🔩 Metal Roofing — Premium, 40–70 yr lifespan, energy-efficient\n🏢 TPO / EPDM — Flat & commercial roofs\n🧱 Tile — Beautiful, long-lasting for FL homes\n\nOur experts will recommend the best fit for your home, budget & Florida's climate. Ask us during your free estimate!`,
-    qr: ['💰 New roof cost?','🛡️ Warranties','📋 Schedule free estimate']
-  },
-  {
-    keys: ['storm','hurricane','hail','wind','damage','insurance','claim','emergency'],
-    a: `Storm damage is one of our specialties — and we act fast!\n\n⚡ Emergency assessments available\n🤝 We work directly with ALL insurance companies\n📋 We help you navigate the claims process\n✅ No out-of-pocket surprises\n\nIf you've had recent storm damage, call us immediately for an emergency assessment:\n\n📞 (904) 277-3000\n\nDon't wait — delays can lead to more damage!`,
-    qr: ['📋 Schedule free estimate','💰 New roof cost?','🔒 Licensed & insured?']
-  },
-  {
-    keys: ['warrant','guarantee','coverage','protect'],
-    a: `We offer some of the best warranties in the business:\n\n🛡️ Workmanship Warranty: Covered by LePierre\n📄 Manufacturer Warranty: 20–50+ years depending on product\n✨ Extended options available through our certifications\n\nAs GAF Elite Certified, Mule-Hide Certified & Tamko Certified contractors, we offer top-tier manufacturer-backed warranties that most roofers can't provide.\n\nAsk us about warranty options during your free estimate!`,
-    qr: ['🏗️ Roofing materials','💰 New roof cost?','📋 Schedule free estimate']
-  },
-  {
-    keys: ['area','location','serve','cover','where','fernandina','jacksonville','yulee','nassau','amelia'],
-    a: `We proudly serve Nassau & Duval County, including:\n\n📍 Fernandina Beach  📍 Yulee\n📍 Amelia Island     📍 Jacksonville\n📍 North Jacksonville 📍 Callahan\n📍 Hilliard          📍 Nassauville\n📍 Black Hammock Island 📍 O'Neil\n📍 Franklintown\n\nNot sure if we cover your area? Just call us!\n📞 (904) 277-3000`,
-    qr: ['📋 Schedule free estimate','💰 New roof cost?','🚀 How to get started']
-  },
-  {
-    keys: ['financ','payment','pay','afford','monthly','loan','credit'],
-    a: `We make roofing affordable for everyone!\n\n💳 Flexible financing options available\n🤝 No payments until completely satisfied\n💵 Ask about our current financing offers\n📋 We also help with insurance claims to minimize out-of-pocket costs\n\nDon't let budget concerns delay protecting your home. Talk to us — we'll find a solution that works for you.\n\n📞 (904) 277-3000`,
-    qr: ['📋 Schedule free estimate','💰 New roof cost?','🛡️ Warranties']
-  },
-  {
-    keys: ['licens','insur','certified','qualified','legal','gaf','tamko'],
-    a: `Absolutely — fully licensed, insured & certified!\n\n✅ License #CCC1326391\n🏅 GAF Elite Certified\n🏅 Mule-Hide Certified\n🏅 Tamko Certified\n🤝 Atlas Corporate Partner\n⭐ 4.7/5 Star Customer Rating\n\nWith 40+ years of experience in Fernandina Beach, your home is in the safest possible hands!`,
-    qr: ['📋 Schedule free estimate','💰 New roof cost?','⏱️ Turnaround time?']
-  },
-  {
-    keys: ['start','begin','get started','next step','contact','book','schedule','appointment'],
-    a: `Getting started is super easy! Here's your path:\n\n1️⃣ Call (904) 277-3000\n   OR fill out our form on the website\n2️⃣ We schedule your FREE inspection\n3️⃣ Receive your honest, detailed quote\n4️⃣ We handle permits, materials & scheduling\n5️⃣ Your new roof is installed & cleaned up\n6️⃣ You only pay when 100% satisfied!\n\nReady? Call us now 👇\n📞 (904) 277-3000`,
-    qr: ['💰 New roof cost?','⏱️ Turnaround time?','📍 Service areas']
-  },
-  {
-    keys: ['hello','hi','hey','good morning','good afternoon','good evening','howdy'],
-    a: null, // handled in startWelcome flow
-    qr: null
-  },
+  { keys:['cost','price','much','how much','expensive','cheap','afford','quote','estimate cost'],
+    a:`Great question! Roof replacement costs vary based on size, materials & pitch. Here's a general guide for our area:\n\n🏠 Asphalt Shingle: $8,000 – $15,000\n🔩 Metal Roofing: $14,000 – $28,000+\n🏢 Commercial: Custom quote\n\nThe best way to know your exact cost is a FREE on-site estimate — no obligation at all.\n\n📞 Call us: (904) 277-3000`,
+    qr:['📋 Get a free estimate','⏱️ Turnaround time?','🏗️ What materials do you use?'] },
+  { keys:['turnaround','how long','timeline','days','quick','complete','finish','long'],
+    a:`We work fast without cutting corners!\n\n🔧 Minor Repairs: Same day or 24–48 hrs\n🏠 Full Replacement: 1–3 days\n🏢 Commercial: Varies by project\n⛈️ Storm Damage: Priority scheduling\n\nOnce we start, we don't stop until it's done perfectly. We'll give you a specific timeline during your FREE estimate.`,
+    qr:['📋 Get a free estimate','💰 How much is a new roof?','⛈️ I have storm damage'] },
+  { keys:['free estimate','free quote','estimate','inspection','visit','obligation','book'],
+    a:`Yes — 100% FREE with zero obligation! Here's how it works:\n\n1️⃣ Call (904) 277-3000 or fill out our online form\n2️⃣ We schedule at YOUR convenience (Mon–Fri, 7AM–7PM)\n3️⃣ Our expert inspects your roof thoroughly\n4️⃣ You receive a detailed, honest quote same day\n5️⃣ Zero pressure, zero surprises\n\nReady to book? 👇`,
+    qr:['🚀 How do I get started?','📍 Do you serve my area?','💳 Do you offer financing?'] },
+  { keys:['material','shingle','asphalt','metal','tile','type','options','best','recommend'],
+    a:`We work with all major roofing materials:\n\n🟤 Asphalt Shingles — Most popular, budget-friendly, 20–30yr life\n🔩 Metal Roofing — Premium, 40–70yr life, hurricane-resistant\n🏢 TPO / EPDM — Flat & commercial roofs\n🧱 Tile — Beautiful, long-lasting for FL homes\n\nOur experts recommend the best fit for your home, budget & Florida's climate during your free estimate!`,
+    qr:['💰 How much is a new roof?','🛡️ Tell me about warranties','📋 Get a free estimate'] },
+  { keys:['storm','hurricane','hail','wind','damage','insurance','claim','emergency','hit'],
+    a:`Storm damage is one of our specialties — and we act fast! ⚡\n\n✅ Emergency assessments available\n🤝 We work with ALL major insurance companies\n📋 We guide you through the full claims process\n💰 Minimize your out-of-pocket costs\n\nDon't wait — delays cause more damage!\n\n📞 Call us NOW: (904) 277-3000`,
+    qr:['📋 Get a free estimate','💰 How much is a new roof?','🔒 Are you licensed?'] },
+  { keys:['warrant','guarantee','coverage','protect','years','year'],
+    a:`We offer some of the best warranties in the industry:\n\n🛡️ Workmanship Warranty: Covered by LePierre\n📄 Manufacturer Warranty: 20–50+ years by product\n✨ Extended options via our elite certifications\n\nAs GAF Elite, Mule-Hide & Tamko Certified, we access manufacturer warranties most roofers simply cannot offer. Ask us during your free estimate!`,
+    qr:['🏗️ What materials do you use?','💰 How much is a new roof?','📋 Get a free estimate'] },
+  { keys:['area','location','serve','cover','where','fernandina','jacksonville','yulee','nassau','amelia','callahan'],
+    a:`We proudly serve Nassau & Duval County:\n\n📍 Fernandina Beach  📍 Yulee\n📍 Amelia Island       📍 Jacksonville\n📍 North Jacksonville  📍 Callahan\n📍 Hilliard             📍 Nassauville\n📍 Black Hammock Is.  📍 O'Neil\n📍 Franklintown\n\nNot sure? Just call us — (904) 277-3000`,
+    qr:['📋 Get a free estimate','💰 How much is a new roof?','🚀 How do I get started?'] },
+  { keys:['financ','payment','pay','afford','loan','monthly','credit','no money'],
+    a:`We make roofing affordable for every budget!\n\n💳 Flexible financing options available\n🤝 No payment until 100% satisfied\n🏦 Ask about our current financing offers\n📋 We also help with insurance claims to reduce out-of-pocket cost\n\nDon't let budget concerns delay protecting your home. Call us — we'll find a solution!\n\n📞 (904) 277-3000`,
+    qr:['📋 Get a free estimate','💰 How much is a new roof?','🛡️ Tell me about warranties'] },
+  { keys:['licens','insur','certified','qualified','legal','legit','gaf','tamko','trust'],
+    a:`Absolutely — fully licensed, insured & certified! ✅\n\n📜 License #CCC1326391\n🏅 GAF Elite Certified\n🏅 Mule-Hide Certified\n🏅 Tamko Certified\n🤝 Atlas Corporate Partner\n⭐ 4.7/5 Star Rated\n\n40+ years in business in Fernandina Beach. Your home is in the safest hands possible!`,
+    qr:['📋 Get a free estimate','💰 How much is a new roof?','⏱️ Turnaround time?'] },
+  { keys:['start','begin','next step','get going','contact','book','schedule','appoint','how do'],
+    a:`Getting started is super easy! Here's your path:\n\n1️⃣ Call (904) 277-3000\n   OR fill out our online form\n2️⃣ We schedule your FREE inspection\n3️⃣ Get your detailed, honest quote\n4️⃣ We handle everything — permits, materials, scheduling\n5️⃣ Installation done in 1–3 days\n6️⃣ You pay only when 100% happy!\n\nCall us now 👇\n📞 (904) 277-3000`,
+    qr:['💰 How much is a new roof?','⏱️ Turnaround time?','📍 Do you serve my area?'] },
 ];
 
-function findAnswer(msg) {
-  const lower = msg.toLowerCase();
-  // strip emoji prefix if quick-reply button
-  const clean = lower.replace(/^[^\w\s]+\s*/,'');
-  for(const qa of QA) {
-    if(qa.a && qa.keys.some(k => clean.includes(k) || lower.includes(k))) {
-      return qa;
-    }
+function findAnswer(text){
+  const lo = text.toLowerCase().replace(/^[^\w]+/,'');
+  for(const qa of QA){
+    if(qa.keys.some(k => lo.includes(k))) return qa;
   }
   return null;
 }
 
-function handleUserMessage(text) {
-  addUserMsg(text);
-  const typing = showTyping();
-  const qa = findAnswer(text);
+function handleMsg(text){
+  addUser(text);
+  showTyping();
   setTimeout(() => {
-    removeTyping();
-    if(qa) {
-      addBotMsg(qa.a, qa.qr || MAIN_QR.slice(0,6));
-    } else {
-      addBotMsg(`Thanks for reaching out! For the most accurate answer, I recommend:\n\n📞 Call us directly: <a href="tel:9042773000" style="color:var(--gold);font-weight:700">(904) 277-3000</a>\n🕐 Mon–Fri: 7:00 AM – 7:00 PM\n\nOr choose a common question below and I'll answer right away!`, MAIN_QR.slice(0,6));
-    }
-  }, 900 + Math.random()*400);
+    hideTyping();
+    const qa = findAnswer(text);
+    if(qa){ addBot(qa.a, qa.qr); }
+    else { addBot(`Thanks for reaching out! For the best help, please call us directly:\n\n📞 <a href="tel:9042773000" style="color:var(--sky);font-weight:700">(904) 277-3000</a>\n🕐 Mon–Fri: 7:00 AM – 7:00 PM\n\nOr pick a common question below:`, MAIN_QR.slice(0,6)); }
+  }, 800 + Math.random()*500);
 }
 
-function startWelcome() {
-  const typing = showTyping();
+function startWelcome(){
+  showTyping();
   setTimeout(() => {
-    removeTyping();
-    addBotMsg(`👋 Hey there! Welcome to <strong>LePierre Roofing</strong>!\n\nI'm your virtual assistant — here to answer your roofing questions instantly. What would you like to know?`);
-    addQuickReplies(MAIN_QR);
-  }, 1200);
+    hideTyping();
+    addBot(`👋 Hey there! Welcome to <strong>LePierre Roofing!</strong>\n\nI'm your virtual assistant — here to answer roofing questions instantly. What can I help you with today?`);
+    addQR(MAIN_QR);
+  }, 1400);
 }
 
-chatSend.addEventListener('click', sendMsg);
-chatInput.addEventListener('keydown', e => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }});
-
-function sendMsg() {
-  const v = chatInput.value.trim();
-  if(!v) return;
-  chatInput.value = '';
-  handleUserMessage(v);
-}
+send.addEventListener('click', sendMsg);
+input.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); sendMsg(); }});
+function sendMsg(){ const v = input.value.trim(); if(!v) return; input.value=''; handleMsg(v); }
 </script>
 </body>
 </html>
