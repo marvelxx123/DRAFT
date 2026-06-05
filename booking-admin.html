@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Booking Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--primary:#4F46E5;--primary-dark:#3730A3;--primary-light:#EEF2FF;--text:#111827;--muted:#6B7280;--border:#E5E7EB;--bg:#F3F4F6;--white:#fff;--green:#10B981;--red:#EF4444;--yellow:#F59E0B;--blue:#3B82F6;--radius:12px;--sidebar:240px}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);margin:0}
+
+/* ── Login ── */
+#loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%)}
+.login-box{background:#fff;border-radius:20px;padding:48px 40px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.login-logo{font-size:28px;font-weight:800;color:var(--primary);letter-spacing:-1px;margin-bottom:8px}
+.login-sub{color:var(--muted);font-size:15px;margin-bottom:32px}
+.login-label{font-size:13px;font-weight:500;margin-bottom:6px;display:block}
+.login-input{width:100%;border:2px solid var(--border);border-radius:10px;padding:12px 16px;font-size:15px;font-family:inherit;outline:none;transition:.15s}
+.login-input:focus{border-color:var(--primary)}
+.login-btn{width:100%;margin-top:16px;background:var(--primary);color:#fff;border:none;border-radius:10px;padding:14px;font-size:16px;font-weight:600;cursor:pointer;transition:.15s}
+.login-btn:hover{background:var(--primary-dark)}
+.login-error{color:var(--red);font-size:13px;margin-top:10px;text-align:center}
+
+/* ── App shell ── */
+#app{display:none}
+.shell{display:flex;min-height:100vh}
+
+/* ── Sidebar ── */
+.sidebar{width:var(--sidebar);background:#1E1B4B;color:#fff;flex-shrink:0;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:50}
+.sidebar-logo{padding:24px 20px 20px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar-logo-text{font-size:20px;font-weight:800;letter-spacing:-.5px}
+.sidebar-logo-sub{font-size:12px;opacity:.5;margin-top:2px}
+.nav{flex:1;padding:12px 8px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:500;color:rgba(255,255,255,.65);transition:.15s;margin-bottom:2px;white-space:nowrap;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav-item.active{background:rgba(255,255,255,.12);color:#fff}
+.nav-item svg{flex-shrink:0;opacity:.7}
+.nav-item.active svg{opacity:1}
+.nav-divider{border:none;border-top:1px solid rgba(255,255,255,.08);margin:8px 0}
+.sidebar-bottom{padding:16px 8px;border-top:1px solid rgba(255,255,255,.08)}
+.biz-switcher{padding:10px 14px;border-radius:10px;display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,.65)}
+.biz-avatar{width:32px;height:32px;border-radius:8px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+
+/* ── Main ── */
+.main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40}
+.topbar-title{font-size:18px;font-weight:700}
+.topbar-actions{display:flex;gap:10px;align-items:center}
+.content{padding:28px;flex:1}
+
+/* ── View panels ── */
+.view{display:none}
+.view.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Stats ── */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+.stat-card{background:var(--white);border-radius:var(--radius);padding:20px 24px;display:flex;flex-direction:column;gap:4px}
+.stat-label{font-size:13px;color:var(--muted)}
+.stat-value{font-size:28px;font-weight:700}
+.stat-sub{font-size:12px;color:var(--muted)}
+.stat-card.green .stat-value{color:var(--green)}
+.stat-card.blue .stat-value{color:var(--blue)}
+.stat-card.yellow .stat-value{color:var(--yellow)}
+.stat-card.red .stat-value{color:var(--red)}
+
+/* ── Table ── */
+.card{background:var(--white);border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.card-header{padding:18px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);gap:12px;flex-wrap:wrap}
+.card-title{font-size:16px;font-weight:700}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{padding:12px 16px;text-align:left;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:#FAFAFA;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:14px 16px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border:none}
+tr:hover td{background:#FAFAFA}
+.table-empty{text-align:center;padding:48px;color:var(--muted)}
+
+/* ── Badges ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.badge-green{background:#D1FAE5;color:#065F46}
+.badge-red{background:#FEE2E2;color:#991B1B}
+.badge-yellow{background:#FEF3C7;color:#92400E}
+.badge-gray{background:#F3F4F6;color:#374151}
+.badge-blue{background:#DBEAFE;color:#1E40AF}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s;border:none;text-decoration:none;white-space:nowrap;font-family:inherit}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-secondary{background:var(--white);color:var(--text);border:1.5px solid var(--border)}
+.btn-secondary:hover{border-color:var(--primary);color:var(--primary)}
+.btn-danger{background:#FEE2E2;color:var(--red)}
+.btn-danger:hover{background:var(--red);color:#fff}
+.btn-sm{padding:6px 12px;font-size:13px;border-radius:6px}
+.btn-ghost{background:none;border:none;color:var(--muted);cursor:pointer;padding:4px 8px;border-radius:6px;font-size:13px}
+.btn-ghost:hover{background:var(--bg);color:var(--text)}
+
+/* ── Forms ── */
+.form-grid{display:grid;gap:16px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:13px;font-weight:500;color:var(--text)}
+.field input,.field select,.field textarea{border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-size:14px;font-family:inherit;outline:none;background:var(--white);color:var(--text);transition:.15s;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary)}
+.field textarea{resize:vertical;min-height:80px}
+
+/* ── Search / Filters ── */
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.search-wrap{position:relative;flex:1;min-width:200px;max-width:340px}
+.search-wrap input{padding-left:36px;width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px 9px 36px;font-size:14px;outline:none}
+.search-wrap input:focus{border-color:var(--primary)}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted)}
+select.filter-sel{border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;background:var(--white);cursor:pointer;outline:none}
+
+/* ── Calendar view ── */
+.cal-grid-admin{display:grid;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.cal-day-cell{background:var(--white);min-height:110px;padding:8px;vertical-align:top;cursor:pointer;transition:.15s;position:relative}
+.cal-day-cell:hover{background:#FAFAFA}
+.cal-day-cell.today{background:var(--primary-light)}
+.cal-day-cell.other-month{background:#FAFAFA;opacity:.5}
+.cal-day-num{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px}
+.cal-day-cell.today .cal-day-num{color:var(--primary)}
+.cal-event{font-size:11px;padding:3px 7px;border-radius:4px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;cursor:pointer}
+.cal-more{font-size:11px;color:var(--muted);padding:2px 7px}
+.cal-header-row{display:grid;grid-template-columns:repeat(7,1fr);background:var(--bg)}
+.cal-header-dow{padding:10px;text-align:center;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase}
+.cal-week{display:grid;grid-template-columns:repeat(7,1fr)}
+
+/* ── Today's schedule ── */
+.today-schedule{display:flex;flex-direction:column;gap:10px}
+.appt-card{display:flex;gap:16px;align-items:flex-start;background:var(--white);border-radius:var(--radius);padding:16px 20px;border-left:4px solid var(--primary)}
+.appt-time{font-size:13px;font-weight:700;color:var(--muted);min-width:70px;padding-top:2px}
+.appt-body{flex:1;min-width:0}
+.appt-name{font-weight:600;font-size:15px}
+.appt-service{font-size:13px;color:var(--muted)}
+.appt-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
+
+/* ── Chart ── */
+.chart-wrap{padding:20px;overflow-x:auto}
+.chart-bar-group{display:flex;align-items:flex-end;gap:2px;height:120px;padding-top:8px}
+.chart-bar{flex:1;min-width:6px;background:var(--primary);border-radius:3px 3px 0 0;opacity:.8;transition:.3s;cursor:pointer;position:relative}
+.chart-bar:hover{opacity:1}
+.chart-bar-tip{position:absolute;top:-28px;left:50%;transform:translateX(-50%);background:#1F2937;color:#fff;font-size:11px;padding:3px 7px;border-radius:4px;white-space:nowrap;pointer-events:none;display:none}
+.chart-bar:hover .chart-bar-tip{display:block}
+.chart-labels{display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--muted)}
+
+/* ── Donut chart ── */
+.donut-wrap{display:flex;align-items:center;gap:24px;padding:16px 20px;flex-wrap:wrap}
+.donut-legend{display:flex;flex-direction:column;gap:8px}
+.donut-legend-item{display:flex;align-items:center;gap:8px;font-size:13px}
+.donut-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* ── Services / Staff ── */
+.items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.item-card{background:var(--white);border-radius:var(--radius);padding:20px;border:1.5px solid var(--border);display:flex;flex-direction:column;gap:12px;position:relative}
+.item-card-actions{position:absolute;top:16px;right:16px;display:flex;gap:6px}
+.item-color-bar{height:4px;border-radius:999px;margin-bottom:4px}
+.item-name{font-size:16px;font-weight:700}
+.item-meta{font-size:13px;color:var(--muted)}
+.toggle-switch{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toggle-track{width:36px;height:20px;border-radius:999px;background:var(--border);transition:.2s;position:relative;flex-shrink:0}
+.toggle-track.on{background:var(--green)}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:.2s}
+.toggle-track.on .toggle-thumb{left:19px}
+
+/* ── Hours grid ── */
+.hours-grid{display:grid;gap:12px}
+.hours-row{display:flex;align-items:center;gap:16px;padding:14px 16px;background:var(--bg);border-radius:10px;flex-wrap:wrap}
+.hours-day{font-size:14px;font-weight:600;min-width:90px}
+.hours-inputs{display:flex;gap:10px;align-items:center;flex:1}
+.hours-inputs input{width:110px;border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;font-size:14px;font-family:inherit;outline:none}
+.hours-inputs input:focus{border-color:var(--primary)}
+
+/* ── Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:.2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--white);border-radius:20px;padding:32px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;transform:scale(.95);transition:.2s}
+.modal-overlay.open .modal{transform:scale(1)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.modal-title{font-size:20px;font-weight:700}
+.modal-close{background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;border-radius:6px;font-size:20px;line-height:1}
+.modal-close:hover{background:var(--bg);color:var(--text)}
+
+/* ── Tab bar ── */
+.tab-bar{display:flex;gap:2px;background:var(--bg);border-radius:10px;padding:4px;margin-bottom:20px;width:fit-content}
+.tab-btn{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:none;border:none;color:var(--muted);transition:.15s;font-family:inherit}
+.tab-btn.active{background:var(--white);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+/* ── Pagination ── */
+.pagination{display:flex;align-items:center;gap:8px;padding:16px 20px;border-top:1px solid var(--border);justify-content:flex-end}
+.page-btn{width:34px;height:34px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--text)}
+.page-btn:hover{border-color:var(--primary);color:var(--primary)}
+.page-btn.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.page-info{font-size:13px;color:var(--muted)}
+
+/* ── Misc ── */
+.avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.flex{display:flex} .items-center{align-items:center} .gap-8{gap:8px} .gap-12{gap:12px} .gap-16{gap:16px}
+.flex-wrap{flex-wrap:wrap} .justify-between{justify-content:space-between} .ml-auto{margin-left:auto}
+.mt-16{margin-top:16px} .mt-20{margin-top:20px} .mt-24{margin-top:24px}
+.text-muted{color:var(--muted)} .text-sm{font-size:13px} .font-bold{font-weight:700}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;background:var(--bg);color:var(--muted);font-weight:500}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-state svg{opacity:.3;margin-bottom:16px}
+.empty-state h3{font-size:18px;font-weight:600;color:var(--text);margin-bottom:8px}
+.toast{position:fixed;bottom:24px;right:24px;background:#1F2937;color:#fff;padding:12px 20px;border-radius:10px;font-size:14px;z-index:999;transition:.3s;transform:translateX(120px);max-width:340px}
+.toast.show{transform:translateX(0)}
+.toast.success{background:var(--green)}
+.toast.error{background:var(--red)}
+@media(max-width:768px){.sidebar{transform:translateX(-100%)}.main{margin-left:0}}
+</style>
+</head>
+<body>
+
+<!-- ── Login ── -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">BookingPro</div>
+    <div class="login-sub">Admin Dashboard</div>
+    <label class="login-label">Password</label>
+    <input type="password" id="loginPwd" class="login-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()">
+    <button class="login-btn" onclick="login()">Sign In</button>
+    <div class="login-error" id="loginErr"></div>
+    <p style="text-align:center;font-size:13px;color:var(--muted);margin-top:20px">
+      <a href="/booking" style="color:var(--primary)">View booking page →</a>
+    </p>
+  </div>
+</div>
+
+<!-- ── App ── -->
+<div id="app">
+<div class="shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-text" id="sbBizName">BookingPro</div>
+      <div class="sidebar-logo-sub">Admin Dashboard</div>
+    </div>
+    <nav class="nav">
+      <button class="nav-item active" onclick="showView('dashboard')" id="nav-dashboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-item" onclick="showView('calendar')" id="nav-calendar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </button>
+      <button class="nav-item" onclick="showView('appointments')" id="nav-appointments">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Appointments
+      </button>
+      <button class="nav-item" onclick="showView('customers')" id="nav-customers">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Customers
+      </button>
+      <hr class="nav-divider">
+      <button class="nav-item" onclick="showView('services')" id="nav-services">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Services
+      </button>
+      <button class="nav-item" onclick="showView('staff')" id="nav-staff">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Staff
+      </button>
+      <button class="nav-item" onclick="showView('analytics')" id="nav-analytics">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Analytics
+      </button>
+      <button class="nav-item" onclick="showView('settings')" id="nav-settings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 005 19.07M4.93 4.93A10 10 0 0019 19.07"/></svg>
+        Settings
+      </button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="biz-switcher">
+        <div class="biz-avatar" id="sbAvatar">B</div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#fff" id="sbBizName2">Business</div>
+          <div style="font-size:11px;opacity:.5">Admin</div>
+        </div>
+        <button class="btn-ghost" onclick="logout()" style="margin-left:auto;color:rgba(255,255,255,.4);font-size:12px">Out</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <!-- Top bar -->
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">Dashboard</div>
+      <div class="topbar-actions">
+        <a href="/booking" target="_blank" class="btn btn-secondary btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Booking Page
+        </a>
+        <button class="btn btn-primary btn-sm" onclick="openNewBookingModal()">+ New Booking</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ── Dashboard ── -->
+      <div class="view active" id="view-dashboard">
+        <div class="stats-row" id="statsRow"></div>
+        <div style="display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start" id="dashGrid">
+          <div class="card">
+            <div class="card-header"><span class="card-title">Today's Schedule</span><span id="todayDate" class="text-sm text-muted"></span></div>
+            <div style="padding:16px" id="todaySchedule"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">Upcoming</span></div>
+            <div style="padding:16px" id="upcomingList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Calendar ── -->
+      <div class="view" id="view-calendar">
+        <div class="card">
+          <div class="card-header">
+            <div class="flex items-center gap-12">
+              <button class="btn btn-secondary btn-sm" onclick="changeAdminMonth(-1)">&#8249;</button>
+              <span class="card-title" id="adminCalTitle"></span>
+              <button class="btn btn-secondary btn-sm" onclick="changeAdminMonth(1)">&#8250;</button>
+            </div>
+            <div class="tab-bar" style="margin-bottom:0">
+              <button class="tab-btn active" id="calViewDay" onclick="setCalView('month')">Month</button>
+              <button class="tab-btn" id="calViewWeek" onclick="setCalView('week')">Week</button>
+            </div>
+          </div>
+          <div id="adminCalBody"></div>
+        </div>
+      </div>
+
+      <!-- ── Appointments ── -->
+      <div class="view" id="view-appointments">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">All Appointments</span>
+            <div class="filters">
+              <div class="search-wrap">
+                <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" placeholder="Search name, email…" id="apptSearch" oninput="debounce(loadAppointments,400)()">
+              </div>
+              <select class="filter-sel" id="apptStatus" onchange="loadAppointments()">
+                <option value="all">All Statuses</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="pending_payment">Pending Payment</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+              <input type="date" class="filter-sel" id="apptFrom" onchange="loadAppointments()" title="From date">
+              <input type="date" class="filter-sel" id="apptTo" onchange="loadAppointments()" title="To date">
+              <button class="btn btn-secondary btn-sm" onclick="exportCSV()">Export CSV</button>
+            </div>
+          </div>
+          <div class="table-wrap"><table id="apptTable">
+            <thead><tr>
+              <th>Customer</th><th>Service</th><th>Staff</th><th>Date & Time</th><th>Status</th><th>Price</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="apptBody"></tbody>
+          </table></div>
+          <div class="pagination" id="apptPagination"></div>
+        </div>
+      </div>
+
+      <!-- ── Customers ── -->
+      <div class="view" id="view-customers">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Customers</span>
+            <div class="filters">
+              <div class="search-wrap">
+                <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" placeholder="Search…" id="custSearch" oninput="debounce(loadCustomers,400)()">
+              </div>
+            </div>
+          </div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Bookings</th><th>Total Spent</th><th>Member Since</th><th>Actions</th></tr></thead>
+            <tbody id="custBody"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- ── Services ── -->
+      <div class="view" id="view-services">
+        <div class="flex justify-between items-center" style="margin-bottom:20px">
+          <h2>Services</h2>
+          <button class="btn btn-primary" onclick="openServiceModal()">+ Add Service</button>
+        </div>
+        <div class="items-grid" id="servicesGrid"></div>
+      </div>
+
+      <!-- ── Staff ── -->
+      <div class="view" id="view-staff">
+        <div class="flex justify-between items-center" style="margin-bottom:20px">
+          <h2>Staff</h2>
+          <button class="btn btn-primary" onclick="openStaffModal()">+ Add Staff</button>
+        </div>
+        <div class="items-grid" id="staffGrid"></div>
+      </div>
+
+      <!-- ── Analytics ── -->
+      <div class="view" id="view-analytics">
+        <div class="stats-row" id="analyticsStats"></div>
+        <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start">
+          <div class="card">
+            <div class="card-header"><span class="card-title">Bookings — Last 30 Days</span></div>
+            <div class="chart-wrap" id="dailyChart"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="card">
+              <div class="card-header"><span class="card-title">By Service</span></div>
+              <div id="serviceChart"></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><span class="card-title">By Staff</span></div>
+              <div id="staffChart"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Settings ── -->
+      <div class="view" id="view-settings">
+        <div class="tab-bar" id="settingsTabBar">
+          <button class="tab-btn active" onclick="showSettingsTab('business')">Business</button>
+          <button class="tab-btn" onclick="showSettingsTab('hours')">Hours</button>
+          <button class="tab-btn" onclick="showSettingsTab('booking')">Booking Rules</button>
+          <button class="tab-btn" onclick="showSettingsTab('blocks')">Block Time</button>
+        </div>
+        <div id="settingsContent"></div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+</div><!-- /app -->
+
+<!-- ── Modals ── -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalBox">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Modal</div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ──────────────────────────────────────────────────────────
+//  STATE
+// ──────────────────────────────────────────────────────────
+let token = null;
+let config = null;
+let currentView = 'dashboard';
+let apptPage = 1;
+let adminCalYear, adminCalMonth;
+let analyticsData = null;
+
+// ──────────────────────────────────────────────────────────
+//  AUTH
+// ──────────────────────────────────────────────────────────
+async function login() {
+  const pwd = document.getElementById('loginPwd').value;
+  try {
+    const res = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pwd }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    token = data.token;
+    sessionStorage.setItem('admin_token', token);
+    showApp();
+  } catch(e) {
+    document.getElementById('loginErr').textContent = e.message || 'Invalid password';
+  }
+}
+
+function logout() {
+  token = null;
+  sessionStorage.removeItem('admin_token');
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+}
+
+// ──────────────────────────────────────────────────────────
+//  INIT
+// ──────────────────────────────────────────────────────────
+async function showApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  await loadConfig();
+  const now = new Date();
+  adminCalYear = now.getFullYear();
+  adminCalMonth = now.getMonth() + 1;
+  showView('dashboard');
+}
+
+async function loadConfig() {
+  try {
+    config = await api('/api/booking/admin/config');
+    const name = config.business?.name || 'Business';
+    document.getElementById('sbBizName').textContent = name;
+    document.getElementById('sbBizName2').textContent = name;
+    document.getElementById('sbAvatar').textContent = name[0] || 'B';
+    document.title = name + ' — Admin';
+    const color = config.business?.primaryColor || '#4F46E5';
+    document.documentElement.style.setProperty('--primary', color);
+  } catch(e) {}
+}
+
+// ──────────────────────────────────────────────────────────
+//  NAVIGATION
+// ──────────────────────────────────────────────────────────
+const VIEW_TITLES = { dashboard:'Dashboard', calendar:'Calendar', appointments:'Appointments', customers:'Customers', services:'Services', staff:'Staff', analytics:'Analytics', settings:'Settings' };
+
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('view-' + name)?.classList.add('active');
+  document.getElementById('nav-' + name)?.classList.add('active');
+  document.getElementById('topbarTitle').textContent = VIEW_TITLES[name] || name;
+  currentView = name;
+
+  // Load data for view
+  if (name === 'dashboard') loadDashboard();
+  else if (name === 'calendar') renderAdminCalendar();
+  else if (name === 'appointments') loadAppointments();
+  else if (name === 'customers') loadCustomers();
+  else if (name === 'services') renderServices();
+  else if (name === 'staff') renderStaff();
+  else if (name === 'analytics') loadAnalytics();
+  else if (name === 'settings') renderSettings('business');
+}
+
+// ──────────────────────────────────────────────────────────
+//  DASHBOARD
+// ──────────────────────────────────────────────────────────
+async function loadDashboard() {
+  try {
+    const [analytics, bookings] = await Promise.all([
+      api('/api/booking/admin/analytics'),
+      api('/api/booking/admin/bookings?limit=100'),
+    ]);
+
+    const s = analytics.summary;
+    document.getElementById('statsRow').innerHTML = [
+      { label: "Today's Bookings", value: s.todayBookings, sub: 'appointments', cls: 'blue' },
+      { label: 'This Month', value: s.monthBookings, sub: 'confirmed bookings' },
+      { label: 'Monthly Revenue', value: '$' + s.monthRevenue.toFixed(2), sub: 'this month', cls: 'green' },
+      { label: 'Total Customers', value: s.totalCustomers, sub: 'all time' },
+    ].map(c => `<div class="stat-card ${c.cls||''}">
+      <div class="stat-label">${c.label}</div>
+      <div class="stat-value">${c.value}</div>
+      <div class="stat-sub">${c.sub}</div>
+    </div>`).join('');
+
+    // Today's schedule
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+    const todayBk = bookings.bookings.filter(b => b.start.startsWith(today) && b.status !== 'cancelled');
+    todayBk.sort((a, b) => a.start.localeCompare(b.start));
+
+    document.getElementById('todaySchedule').innerHTML = todayBk.length ? todayBk.map(b => `
+      <div class="appt-card" style="border-color:${b.serviceColor||'var(--primary)'};margin-bottom:10px">
+        <div class="appt-time">${fmt12(b.start)}</div>
+        <div class="appt-body">
+          <div class="appt-name">${b.customer.name}</div>
+          <div class="appt-service">${b.serviceName} &bull; ${b.staffName}</div>
+          ${b.customer.phone ? `<div class="text-sm text-muted">${b.customer.phone}</div>` : ''}
+        </div>
+        <div class="appt-actions">
+          ${b.status === 'confirmed' ? `<button class="btn-ghost btn-sm" onclick="quickNoShow('${b.id}')">No Show</button>` : ''}
+          <button class="btn-ghost btn-sm" onclick="viewApptDetail('${b.id}')">View</button>
+        </div>
+      </div>`).join('') : '<p class="text-muted text-sm" style="padding:20px 0;text-align:center">No appointments today</p>';
+
+    // Upcoming (next 7 days, excluding today)
+    const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+    const upcoming = bookings.bookings.filter(b => {
+      const bdt = new Date(b.start);
+      return bdt >= tomorrow && b.status === 'confirmed';
+    }).slice(0, 8);
+    upcoming.sort((a, b) => a.start.localeCompare(b.start));
+    document.getElementById('upcomingList').innerHTML = upcoming.length ? upcoming.map(b => {
+      const d = new Date(b.start);
+      return `<div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+        <div style="min-width:44px;text-align:center;font-size:11px;font-weight:600;color:var(--muted)">
+          ${d.toLocaleDateString('en-US',{month:'short'}).toUpperCase()}<br>
+          <span style="font-size:20px;font-weight:700;color:var(--text)">${d.getDate()}</span>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;font-size:14px">${b.customer.name}</div>
+          <div class="text-sm text-muted">${b.serviceName} at ${fmt12(b.start)}</div>
+        </div>
+      </div>`;
+    }).join('') : '<p class="text-muted text-sm" style="padding:20px 0;text-align:center">No upcoming appointments</p>';
+
+  } catch(e) { console.error(e); }
+}
+
+async function quickNoShow(id) {
+  await api(`/api/booking/admin/bookings/${id}`, 'PUT', { noShow: true });
+  showToast('Marked as no-show');
+  loadDashboard();
+}
+
+// ──────────────────────────────────────────────────────────
+//  CALENDAR
+// ──────────────────────────────────────────────────────────
+function changeAdminMonth(dir) {
+  adminCalMonth += dir;
+  if (adminCalMonth > 12) { adminCalMonth = 1; adminCalYear++; }
+  if (adminCalMonth < 1) { adminCalMonth = 12; adminCalYear--; }
+  renderAdminCalendar();
+}
+
+function setCalView(v) { renderAdminCalendar(); }
+
+async function renderAdminCalendar() {
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('adminCalTitle').textContent = `${months[adminCalMonth - 1]} ${adminCalYear}`;
+
+  const fromDate = `${adminCalYear}-${String(adminCalMonth).padStart(2,'0')}-01`;
+  const toDate = `${adminCalYear}-${String(adminCalMonth).padStart(2,'0')}-31`;
+  const data = await api(`/api/booking/admin/bookings?from=${fromDate}&to=${toDate}&limit=500`);
+  const bookings = data.bookings || [];
+
+  const byDay = {};
+  bookings.forEach(b => {
+    const k = b.start.split('T')[0];
+    (byDay[k] = byDay[k] || []).push(b);
+  });
+
+  const firstDay = new Date(adminCalYear, adminCalMonth - 1, 1).getDay();
+  const daysInMonth = new Date(adminCalYear, adminCalMonth, 0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+  const todayStr = today.toISOString().split('T')[0];
+
+  const colors = ['#4F46E5','#10B981','#F59E0B','#EF4444','#8B5CF6','#0EA5E9'];
+  const serviceColors = {};
+
+  let header = `<div class="cal-header-row">` + ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => `<div class="cal-header-dow">${d}</div>`).join('') + `</div>`;
+
+  let weeks = '<div class="cal-week">';
+  let col = 0;
+
+  // Empty cells
+  for (let i = 0; i < firstDay; i++) {
+    weeks += `<div class="cal-day-cell other-month"></div>`;
+    col++;
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    if (col > 0 && col % 7 === 0) weeks += `</div><div class="cal-week">`;
+    const ds = `${adminCalYear}-${String(adminCalMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = ds === todayStr;
+    const dayBk = (byDay[ds] || []).filter(b => b.status !== 'cancelled').sort((a,b) => a.start.localeCompare(b.start));
+    const shown = dayBk.slice(0, 3);
+    const more = dayBk.length - shown.length;
+
+    let evHtml = shown.map(b => {
+      if (!serviceColors[b.serviceName]) serviceColors[b.serviceName] = b.serviceColor || colors[Object.keys(serviceColors).length % colors.length];
+      const c = serviceColors[b.serviceName];
+      return `<div class="cal-event" style="background:${c}18;color:${c}" onclick="viewApptDetail('${b.id}')">${fmt12(b.start)} ${b.customer.name}</div>`;
+    }).join('');
+    if (more > 0) evHtml += `<div class="cal-more">+${more} more</div>`;
+
+    weeks += `<div class="cal-day-cell${isToday ? ' today' : ''}">
+      <div class="cal-day-num">${d}</div>${evHtml}
+    </div>`;
+    col++;
+  }
+
+  // Fill remaining
+  const remaining = 7 - (col % 7);
+  if (remaining < 7) for (let i = 0; i < remaining; i++) weeks += `<div class="cal-day-cell other-month"></div>`;
+  weeks += `</div>`;
+
+  document.getElementById('adminCalBody').innerHTML = header + `<div class="cal-grid-admin">${weeks}</div>`;
+}
+
+// ──────────────────────────────────────────────────────────
+//  APPOINTMENTS
+// ──────────────────────────────────────────────────────────
+async function loadAppointments() {
+  const search  = document.getElementById('apptSearch')?.value || '';
+  const status  = document.getElementById('apptStatus')?.value || 'all';
+  const from    = document.getElementById('apptFrom')?.value || '';
+  const to      = document.getElementById('apptTo')?.value || '';
+  const params  = new URLSearchParams({ search, status, page: apptPage, limit: 50 });
+  if (from) params.set('from', from);
+  if (to) params.set('to', to);
+
+  const data = await api(`/api/booking/admin/bookings?${params}`);
+  const rows = data.bookings || [];
+
+  if (!rows.length) {
+    document.getElementById('apptBody').innerHTML = `<tr><td colspan="7" class="table-empty">No appointments found</td></tr>`;
+    document.getElementById('apptPagination').innerHTML = '';
+    return;
+  }
+
+  document.getElementById('apptBody').innerHTML = rows.map(b => {
+    const d = new Date(b.start);
+    return `<tr>
+      <td><div class="font-bold">${b.customer.name}</div><div class="text-sm text-muted">${b.customer.email}</div>${b.customer.phone ? `<div class="text-sm text-muted">${b.customer.phone}</div>` : ''}</td>
+      <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${b.serviceColor||'#4F46E5'};margin-right:6px"></span>${b.serviceName}<br><span class="text-sm text-muted">${b.duration} min</span></td>
+      <td>${b.staffName}</td>
+      <td>${d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}<br><span class="text-sm text-muted">${fmt12(b.start)}</span></td>
+      <td>${statusBadge(b)}</td>
+      <td>${b.price > 0 ? '$' + b.price : 'Free'}${b.amountPaid > 0 && b.amountPaid < b.price ? `<br><span class="text-sm text-muted">Paid: $${b.amountPaid}</span>` : ''}</td>
+      <td>
+        <div class="flex gap-8">
+          <button class="btn-ghost btn-sm" onclick="viewApptDetail('${b.id}')">View</button>
+          ${b.status === 'confirmed' ? `<button class="btn-ghost btn-sm" onclick="sendReminder('${b.id}')">Remind</button>` : ''}
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  // Pagination
+  const total = data.total || rows.length;
+  const pages = Math.ceil(total / 50);
+  document.getElementById('apptPagination').innerHTML = pages > 1 ? `
+    <span class="page-info">${total} total</span>
+    ${apptPage > 1 ? `<button class="page-btn" onclick="changePage(${apptPage-1})">‹</button>` : ''}
+    ${Array.from({length:pages},(_,i)=>`<button class="page-btn ${i+1===apptPage?'active':''}" onclick="changePage(${i+1})">${i+1}</button>`).join('')}
+    ${apptPage < pages ? `<button class="page-btn" onclick="changePage(${apptPage+1})">›</button>` : ''}
+  ` : `<span class="page-info">${total} total</span>`;
+}
+
+function changePage(p) { apptPage = p; loadAppointments(); }
+
+function statusBadge(b) {
+  if (b.noShow) return `<span class="badge badge-red">No Show</span>`;
+  if (b.status === 'confirmed') return `<span class="badge badge-green">Confirmed</span>`;
+  if (b.status === 'cancelled') return `<span class="badge badge-red">Cancelled</span>`;
+  if (b.status === 'pending_payment') return `<span class="badge badge-yellow">Pending Payment</span>`;
+  return `<span class="badge badge-gray">${b.status}</span>`;
+}
+
+async function viewApptDetail(id) {
+  const data = await api(`/api/booking/admin/bookings?search=${id}&limit=1`);
+  // Alternative: we can pull it from already loaded data
+  let b = data.bookings?.[0];
+  if (!b) return;
+
+  openModal('Appointment Details', `
+    <div class="form-grid">
+      ${statusBadge(b)}
+      ${detailRow('Customer', b.customer.name)}
+      ${detailRow('Email', b.customer.email)}
+      ${detailRow('Phone', b.customer.phone || '—')}
+      ${detailRow('Service', b.serviceName + ' (' + b.duration + ' min)')}
+      ${detailRow('Staff', b.staffName)}
+      ${detailRow('Date', new Date(b.start).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}))}
+      ${detailRow('Time', fmt12(b.start))}
+      ${detailRow('Price', b.price > 0 ? '$' + b.price : 'Free')}
+      ${detailRow('Paid', b.amountPaid > 0 ? '$' + b.amountPaid : '—')}
+      ${b.notes ? detailRow('Notes', b.notes) : ''}
+      ${detailRow('Booking ID', b.id)}
+      ${detailRow('Source', b.source)}
+      <hr style="border:none;border-top:1px solid var(--border)">
+      <div class="flex gap-12 flex-wrap">
+        ${b.status !== 'cancelled' ? `<button class="btn btn-danger btn-sm" onclick="cancelAppt('${b.id}')">Cancel</button>` : ''}
+        ${!b.noShow && b.status === 'confirmed' ? `<button class="btn btn-secondary btn-sm" onclick="markNoShow('${b.id}')">No Show</button>` : ''}
+        ${b.status === 'confirmed' ? `<button class="btn btn-secondary btn-sm" onclick="sendReminder('${b.id}');closeModal()">Send Reminder</button>` : ''}
+        <button class="btn btn-danger btn-sm" onclick="deleteAppt('${b.id}')">Delete</button>
+      </div>
+    </div>
+  `);
+}
+
+function detailRow(l, v) {
+  return `<div class="flex justify-between" style="padding:8px 0;border-bottom:1px solid var(--border);font-size:14px"><span class="text-muted">${l}</span><span class="font-bold" style="text-align:right;max-width:60%">${v}</span></div>`;
+}
+
+async function cancelAppt(id) {
+  if (!confirm('Cancel this appointment?')) return;
+  await api(`/api/booking/admin/bookings/${id}`, 'PUT', { status: 'cancelled', cancelledAt: new Date().toISOString() });
+  closeModal(); loadAppointments(); showToast('Appointment cancelled');
+}
+
+async function markNoShow(id) {
+  await api(`/api/booking/admin/bookings/${id}`, 'PUT', { noShow: true });
+  closeModal(); loadAppointments(); showToast('Marked as no-show');
+}
+
+async function deleteAppt(id) {
+  if (!confirm('Permanently delete this appointment?')) return;
+  await api(`/api/booking/admin/bookings/${id}`, 'DELETE');
+  closeModal(); loadAppointments(); showToast('Deleted');
+}
+
+async function sendReminder(id) {
+  await api(`/api/booking/admin/bookings/${id}/reminder`, 'POST');
+  showToast('Reminder sent!', 'success');
+}
+
+// ──────────────────────────────────────────────────────────
+//  CUSTOMERS
+// ──────────────────────────────────────────────────────────
+async function loadCustomers() {
+  const search = document.getElementById('custSearch')?.value || '';
+  const data = await api(`/api/booking/admin/customers?search=${search}`);
+  const rows = data.customers || [];
+
+  document.getElementById('custBody').innerHTML = rows.length ? rows.map(c => `<tr>
+    <td><div class="flex items-center gap-8">
+      <div class="avatar" style="background:var(--primary)">${c.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2)}</div>
+      <div><div class="font-bold">${c.name}</div></div>
+    </div></td>
+    <td>${c.email}</td>
+    <td>${c.phone || '—'}</td>
+    <td>${c.totalBookings || 0}</td>
+    <td>$${(c.totalSpend || 0).toFixed(2)}</td>
+    <td>${new Date(c.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</td>
+    <td><button class="btn-ghost btn-sm" onclick="editCustomer(${JSON.stringify(c).replace(/"/g,'&quot;')})">Edit</button></td>
+  </tr>`).join('') : `<tr><td colspan="7" class="table-empty">No customers found</td></tr>`;
+}
+
+function editCustomer(c) {
+  openModal('Edit Customer', `
+    <div class="form-grid">
+      <div class="field"><label>Name</label><input id="ec-name" value="${c.name}"></div>
+      <div class="field"><label>Email</label><input id="ec-email" value="${c.email}"></div>
+      <div class="field"><label>Phone</label><input id="ec-phone" value="${c.phone||''}"></div>
+      <div class="field"><label>Notes</label><textarea id="ec-notes">${c.notes||''}</textarea></div>
+      <button class="btn btn-primary" onclick="saveCustomer('${c.id}')">Save Changes</button>
+    </div>
+  `);
+}
+
+async function saveCustomer(id) {
+  await api(`/api/booking/admin/customers/${id}`, 'PUT', {
+    name: val('ec-name'), email: val('ec-email'), phone: val('ec-phone'), notes: val('ec-notes'),
+  });
+  closeModal(); loadCustomers(); showToast('Customer updated');
+}
+
+// ──────────────────────────────────────────────────────────
+//  SERVICES
+// ──────────────────────────────────────────────────────────
+function renderServices() {
+  const svcs = config?.services || [];
+  document.getElementById('servicesGrid').innerHTML = svcs.length ? svcs.map(s => `
+    <div class="item-card">
+      <div class="item-card-actions">
+        <button class="btn-ghost btn-sm" onclick="openServiceModal(${JSON.stringify(s).replace(/"/g,'&quot;')})">Edit</button>
+        <button class="btn-ghost btn-sm" style="color:var(--red)" onclick="deleteService('${s.id}')">Del</button>
+      </div>
+      <div class="item-color-bar" style="background:${s.color||'#4F46E5'}"></div>
+      <div class="item-name">${s.name}</div>
+      <div class="item-meta">${s.duration} min &bull; ${s.price > 0 ? '$' + s.price : 'Free'} &bull; ${s.category||'Services'}</div>
+      <div class="text-sm text-muted" style="font-size:12px">${s.description||''}</div>
+      <label class="toggle-switch" onclick="toggleService('${s.id}', ${!s.active})">
+        <div class="toggle-track ${s.active ? 'on' : ''}"><div class="toggle-thumb"></div></div>
+        <span class="text-sm">${s.active ? 'Active' : 'Inactive'}</span>
+      </label>
+    </div>`).join('') : `<div class="empty-state"><h3>No services yet</h3><p>Add your first service to get started.</p></div>`;
+}
+
+function openServiceModal(s = null) {
+  openModal(s ? 'Edit Service' : 'Add Service', `
+    <div class="form-grid">
+      <div class="form-row">
+        <div class="field"><label>Service Name</label><input id="sv-name" value="${s?.name||''}" placeholder="e.g. Initial Consultation"></div>
+        <div class="field"><label>Category</label><input id="sv-cat" value="${s?.category||''}" placeholder="e.g. Consultations"></div>
+      </div>
+      <div class="field"><label>Description</label><textarea id="sv-desc">${s?.description||''}</textarea></div>
+      <div class="form-row">
+        <div class="field"><label>Duration (minutes)</label><input id="sv-dur" type="number" value="${s?.duration||60}" min="5" step="5"></div>
+        <div class="field"><label>Price ($)</label><input id="sv-price" type="number" value="${s?.price||0}" min="0" step="0.01"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Deposit Required ($, 0 = none)</label><input id="sv-deposit" type="number" value="${s?.depositRequired||0}" min="0" step="0.01"></div>
+        <div class="field"><label>Color</label><input id="sv-color" type="color" value="${s?.color||'#4F46E5'}" style="height:40px;border-radius:8px;cursor:pointer"></div>
+      </div>
+      <button class="btn btn-primary" onclick="saveService('${s?.id||''}')">Save Service</button>
+    </div>
+  `);
+}
+
+async function saveService(id) {
+  const data = {
+    name: val('sv-name'), category: val('sv-cat'), description: val('sv-desc'),
+    duration: parseInt(val('sv-dur')), price: parseFloat(val('sv-price')),
+    depositRequired: parseFloat(val('sv-deposit')), color: val('sv-color'),
+  };
+  if (id) await api(`/api/booking/admin/services/${id}`, 'PUT', data);
+  else await api('/api/booking/admin/services', 'POST', data);
+  await loadConfig(); closeModal(); renderServices(); showToast('Service saved!');
+}
+
+async function deleteService(id) {
+  if (!confirm('Delete this service?')) return;
+  await api(`/api/booking/admin/services/${id}`, 'DELETE');
+  await loadConfig(); renderServices(); showToast('Service deleted');
+}
+
+async function toggleService(id, active) {
+  await api(`/api/booking/admin/services/${id}`, 'PUT', { active });
+  await loadConfig(); renderServices();
+}
+
+// ──────────────────────────────────────────────────────────
+//  STAFF
+// ──────────────────────────────────────────────────────────
+function renderStaff() {
+  const staff = config?.staff || [];
+  document.getElementById('staffGrid').innerHTML = staff.length ? staff.map(s => `
+    <div class="item-card">
+      <div class="item-card-actions">
+        <button class="btn-ghost btn-sm" onclick="openStaffModal(${JSON.stringify(s).replace(/"/g,'&quot;')})">Edit</button>
+        <button class="btn-ghost btn-sm" style="color:var(--red)" onclick="deleteStaff('${s.id}')">Del</button>
+      </div>
+      <div class="flex items-center gap-12">
+        <div class="avatar" style="background:${s.color||'#8B5CF6'};width:48px;height:48px;font-size:16px">${s.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2)}</div>
+        <div>
+          <div class="item-name">${s.name}</div>
+          <div class="text-sm text-muted">${s.title||''}</div>
+        </div>
+      </div>
+      ${s.bio ? `<div class="text-sm text-muted">${s.bio}</div>` : ''}
+      <label class="toggle-switch" onclick="toggleStaff('${s.id}', ${!s.active})">
+        <div class="toggle-track ${s.active ? 'on' : ''}"><div class="toggle-thumb"></div></div>
+        <span class="text-sm">${s.active ? 'Active' : 'Inactive'}</span>
+      </label>
+    </div>`).join('') : `<div class="empty-state"><h3>No staff yet</h3></div>`;
+}
+
+function openStaffModal(s = null) {
+  openModal(s ? 'Edit Staff Member' : 'Add Staff Member', `
+    <div class="form-grid">
+      <div class="form-row">
+        <div class="field"><label>Full Name</label><input id="sf-name" value="${s?.name||''}" placeholder="e.g. Jane Smith"></div>
+        <div class="field"><label>Title</label><input id="sf-title" value="${s?.title||''}" placeholder="e.g. Senior Specialist"></div>
+      </div>
+      <div class="field"><label>Bio</label><textarea id="sf-bio">${s?.bio||''}</textarea></div>
+      <div class="field" style="max-width:120px"><label>Color</label><input id="sf-color" type="color" value="${s?.color||'#8B5CF6'}" style="height:40px;border-radius:8px;cursor:pointer"></div>
+      <button class="btn btn-primary" onclick="saveStaff('${s?.id||''}')">Save</button>
+    </div>
+  `);
+}
+
+async function saveStaff(id) {
+  const data = { name: val('sf-name'), title: val('sf-title'), bio: val('sf-bio'), color: val('sf-color') };
+  if (id) await api(`/api/booking/admin/staff/${id}`, 'PUT', data);
+  else await api('/api/booking/admin/staff', 'POST', data);
+  await loadConfig(); closeModal(); renderStaff(); showToast('Staff saved!');
+}
+
+async function deleteStaff(id) {
+  if (!confirm('Delete this staff member?')) return;
+  await api(`/api/booking/admin/staff/${id}`, 'DELETE');
+  await loadConfig(); renderStaff(); showToast('Staff deleted');
+}
+
+async function toggleStaff(id, active) {
+  await api(`/api/booking/admin/staff/${id}`, 'PUT', { active });
+  await loadConfig(); renderStaff();
+}
+
+// ──────────────────────────────────────────────────────────
+//  ANALYTICS
+// ──────────────────────────────────────────────────────────
+async function loadAnalytics() {
+  analyticsData = await api('/api/booking/admin/analytics');
+  const s = analyticsData.summary;
+
+  document.getElementById('analyticsStats').innerHTML = [
+    { label: 'Total Bookings', value: s.totalBookings },
+    { label: 'Total Revenue', value: '$' + s.totalRevenue.toFixed(2), cls: 'green' },
+    { label: 'This Month Revenue', value: '$' + s.monthRevenue.toFixed(2) },
+    { label: 'Cancellation Rate', value: s.cancelRate + '%', cls: s.cancelRate > 20 ? 'red' : 'yellow' },
+    { label: 'No-Show Rate', value: s.noShowRate + '%', cls: s.noShowRate > 15 ? 'red' : 'yellow' },
+    { label: 'Total Customers', value: s.totalCustomers },
+  ].map(c => `<div class="stat-card ${c.cls||''}"><div class="stat-label">${c.label}</div><div class="stat-value">${c.value}</div></div>`).join('');
+
+  // Daily bar chart
+  const daily = analyticsData.daily;
+  const keys = Object.keys(daily);
+  const vals = Object.values(daily);
+  const max = Math.max(...vals, 1);
+  document.getElementById('dailyChart').innerHTML = `
+    <div class="chart-bar-group">
+      ${vals.map((v, i) => `<div class="chart-bar" style="height:${Math.max(v/max*100, v>0?4:1)}%">
+        <div class="chart-bar-tip">${keys[i].slice(5)}: ${v}</div>
+      </div>`).join('')}
+    </div>
+    <div class="chart-labels">
+      <span>${keys[0]?.slice(5)||''}</span><span>${keys[Math.floor(keys.length/2)]?.slice(5)||''}</span><span>${keys[keys.length-1]?.slice(5)||''}</span>
+    </div>`;
+
+  // By Service
+  const bySvc = analyticsData.byService;
+  const svcTotal = Object.values(bySvc).reduce((a,b)=>a+b,0)||1;
+  const colors = ['#4F46E5','#10B981','#F59E0B','#EF4444','#8B5CF6','#0EA5E9','#F97316'];
+  document.getElementById('serviceChart').innerHTML = `<div style="padding:16px;display:flex;flex-direction:column;gap:10px">` +
+    Object.entries(bySvc).map(([k,v],i) => `<div>
+      <div class="flex justify-between text-sm" style="margin-bottom:4px"><span>${k}</span><span class="font-bold">${v}</span></div>
+      <div style="height:6px;background:var(--border);border-radius:999px"><div style="height:100%;background:${colors[i%colors.length]};border-radius:999px;width:${v/svcTotal*100}%"></div></div>
+    </div>`).join('') + `</div>`;
+
+  // By Staff
+  const byStaff = analyticsData.byStaff;
+  const staffTotal = Object.values(byStaff).reduce((a,b)=>a+b,0)||1;
+  document.getElementById('staffChart').innerHTML = `<div style="padding:16px;display:flex;flex-direction:column;gap:10px">` +
+    Object.entries(byStaff).map(([k,v],i) => `<div>
+      <div class="flex justify-between text-sm" style="margin-bottom:4px"><span>${k}</span><span class="font-bold">${v}</span></div>
+      <div style="height:6px;background:var(--border);border-radius:999px"><div style="height:100%;background:${colors[(i+2)%colors.length]};border-radius:999px;width:${v/staffTotal*100}%"></div></div>
+    </div>`).join('') + `</div>`;
+}
+
+// ──────────────────────────────────────────────────────────
+//  SETTINGS
+// ──────────────────────────────────────────────────────────
+let settingsTab = 'business';
+
+function showSettingsTab(tab) {
+  settingsTab = tab;
+  document.querySelectorAll('#settingsTabBar .tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['business','hours','booking','blocks'][i] === tab);
+  });
+  renderSettings(tab);
+}
+
+function renderSettings(tab) {
+  const biz = config?.business || {};
+  const hours = config?.hours || {};
+  const blocks = config?.blockedTimes || [];
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  if (tab === 'business') {
+    document.getElementById('settingsContent').innerHTML = `
+      <div class="card" style="max-width:700px">
+        <div class="card-header"><span class="card-title">Business Details</span></div>
+        <div style="padding:24px">
+          <div class="form-grid">
+            <div class="form-row">
+              <div class="field"><label>Business Name</label><input id="s-name" value="${biz.name||''}"></div>
+              <div class="field"><label>Tagline</label><input id="s-tagline" value="${biz.tagline||''}" placeholder="Professional Services"></div>
+            </div>
+            <div class="form-row">
+              <div class="field"><label>Phone</label><input id="s-phone" value="${biz.phone||''}"></div>
+              <div class="field"><label>Email</label><input id="s-email" type="email" value="${biz.email||''}"></div>
+            </div>
+            <div class="field"><label>Address</label><input id="s-address" value="${biz.address||''}"></div>
+            <div class="form-row">
+              <div class="field"><label>Primary Color</label><input id="s-color" type="color" value="${biz.primaryColor||'#4F46E5'}" style="height:40px;border-radius:8px;cursor:pointer"></div>
+              <div class="field"><label>Timezone</label><select id="s-tz">
+                ${['America/New_York','America/Chicago','America/Denver','America/Los_Angeles','America/Phoenix','Europe/London','Europe/Paris','Asia/Tokyo','Australia/Sydney'].map(tz=>`<option ${biz.timezone===tz?'selected':''}>${tz}</option>`).join('')}
+              </select></div>
+            </div>
+            <div class="field">
+              <label>Booking Page Title</label>
+              <input id="s-bptitle" value="${biz.bookingPage?.title||''}" placeholder="Book an Appointment">
+            </div>
+            <div class="field">
+              <label>Booking Page Description</label>
+              <textarea id="s-bpdesc">${biz.bookingPage?.description||''}</textarea>
+            </div>
+            <button class="btn btn-primary" style="max-width:200px" onclick="saveBusiness()">Save Changes</button>
+          </div>
+        </div>
+      </div>`;
+  } else if (tab === 'hours') {
+    document.getElementById('settingsContent').innerHTML = `
+      <div class="card" style="max-width:600px">
+        <div class="card-header"><span class="card-title">Business Hours</span></div>
+        <div style="padding:24px">
+          <div class="hours-grid">
+            ${days.map((d, i) => {
+              const h = hours[i] || { open: false, start: '09:00', end: '17:00' };
+              return `<div class="hours-row">
+                <div class="hours-day">${d}</div>
+                <label class="toggle-switch" onclick="toggleDay(${i})">
+                  <div class="toggle-track ${h.open ? 'on' : ''}" id="day-track-${i}"><div class="toggle-thumb"></div></div>
+                  <span class="text-sm" id="day-label-${i}">${h.open ? 'Open' : 'Closed'}</span>
+                </label>
+                <div class="hours-inputs" id="day-inputs-${i}" style="${h.open ? '' : 'opacity:.3;pointer-events:none'}">
+                  <input type="time" id="day-start-${i}" value="${h.start||'09:00'}">
+                  <span class="text-muted">to</span>
+                  <input type="time" id="day-end-${i}" value="${h.end||'17:00'}">
+                </div>
+              </div>`;
+            }).join('')}
+          </div>
+          <button class="btn btn-primary mt-24" onclick="saveHours()">Save Hours</button>
+        </div>
+      </div>`;
+  } else if (tab === 'booking') {
+    const cp = biz.cancellationPolicy || {};
+    const bw = biz.bookingWindow || {};
+    document.getElementById('settingsContent').innerHTML = `
+      <div class="card" style="max-width:600px">
+        <div class="card-header"><span class="card-title">Booking Rules</span></div>
+        <div style="padding:24px">
+          <div class="form-grid">
+            <div class="form-row">
+              <div class="field"><label>Min Advance Booking (hours)</label><input id="s-minadv" type="number" value="${bw.minAdvanceHours||2}" min="0"></div>
+              <div class="field"><label>Max Advance Booking (days)</label><input id="s-maxadv" type="number" value="${bw.maxAdvanceDays||60}" min="1"></div>
+            </div>
+            <div class="field"><label>Buffer Between Appointments (minutes)</label><input id="s-buffer" type="number" value="${biz.bufferMinutes||0}" min="0" step="5"></div>
+            <div class="field"><label>Cancellation Notice Required (hours)</label><input id="s-cancel" type="number" value="${cp.notice||24}" min="0"></div>
+            <div class="field">
+              <label class="toggle-switch" style="gap:12px">
+                <div class="toggle-track ${cp.allowCustomerCancel ? 'on' : ''}" id="cancel-track"><div class="toggle-thumb"></div></div>
+                Allow customers to cancel online
+              </label>
+            </div>
+            <div class="field">
+              <label class="toggle-switch" style="gap:12px">
+                <div class="toggle-track ${cp.allowCustomerReschedule ? 'on' : ''}" id="reschedule-track"><div class="toggle-thumb"></div></div>
+                Allow customers to reschedule online
+              </label>
+            </div>
+            <button class="btn btn-primary" style="max-width:200px" onclick="saveBookingRules()">Save Rules</button>
+          </div>
+        </div>
+      </div>`;
+
+    // Add click handlers after render
+    setTimeout(() => {
+      ['cancel-track','reschedule-track'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.parentElement.addEventListener('click', () => el.classList.toggle('on'));
+      });
+    }, 50);
+  } else if (tab === 'blocks') {
+    document.getElementById('settingsContent').innerHTML = `
+      <div style="max-width:700px;display:flex;flex-direction:column;gap:20px">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Block Time Off</span><button class="btn btn-primary btn-sm" onclick="openBlockModal()">+ Add Block</button></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Staff</th><th>Start</th><th>End</th><th>Reason</th><th></th></tr></thead>
+            <tbody>${blocks.length ? blocks.map(b => `<tr>
+              <td>${b.staffId === '*' ? 'All Staff' : config?.staff?.find(s=>s.id===b.staffId)?.name || b.staffId}</td>
+              <td>${b.start}</td><td>${b.end}</td><td>${b.reason||'—'}</td>
+              <td><button class="btn-ghost btn-sm" style="color:var(--red)" onclick="deleteBlock('${b.id}')">Remove</button></td>
+            </tr>`).join('') : `<tr><td colspan="5" class="table-empty">No blocked times</td></tr>`}</tbody>
+          </table></div>
+        </div>
+      </div>`;
+  }
+}
+
+function toggleDay(i) {
+  const track = document.getElementById(`day-track-${i}`);
+  const label = document.getElementById(`day-label-${i}`);
+  const inputs = document.getElementById(`day-inputs-${i}`);
+  const isOn = track.classList.toggle('on');
+  label.textContent = isOn ? 'Open' : 'Closed';
+  inputs.style.opacity = isOn ? '1' : '.3';
+  inputs.style.pointerEvents = isOn ? '' : 'none';
+}
+
+async function saveBusiness() {
+  await api('/api/booking/admin/config', 'PUT', {
+    business: {
+      name: val('s-name'), tagline: val('s-tagline'), phone: val('s-phone'),
+      email: val('s-email'), address: val('s-address'), primaryColor: val('s-color'),
+      timezone: val('s-tz'),
+      bookingPage: { title: val('s-bptitle'), description: val('s-bpdesc') },
+    }
+  });
+  await loadConfig(); showToast('Business settings saved!', 'success');
+}
+
+async function saveHours() {
+  const hours = {};
+  for (let i = 0; i < 7; i++) {
+    const open = document.getElementById(`day-track-${i}`)?.classList.contains('on') || false;
+    hours[i] = { open, start: val(`day-start-${i}`)||'09:00', end: val(`day-end-${i}`)||'17:00' };
+  }
+  await api('/api/booking/admin/config', 'PUT', { hours });
+  await loadConfig(); showToast('Hours saved!', 'success');
+}
+
+async function saveBookingRules() {
+  const cancelAllow = document.getElementById('cancel-track')?.classList.contains('on');
+  const reschedAllow = document.getElementById('reschedule-track')?.classList.contains('on');
+  await api('/api/booking/admin/config', 'PUT', {
+    business: {
+      bufferMinutes: parseInt(val('s-buffer')||0),
+      bookingWindow: { minAdvanceHours: parseInt(val('s-minadv')||2), maxAdvanceDays: parseInt(val('s-maxadv')||60) },
+      cancellationPolicy: { notice: parseInt(val('s-cancel')||24), allowCustomerCancel: cancelAllow, allowCustomerReschedule: reschedAllow },
+    }
+  });
+  await loadConfig(); showToast('Booking rules saved!', 'success');
+}
+
+function openBlockModal() {
+  const staff = config?.staff || [];
+  openModal('Block Time Off', `
+    <div class="form-grid">
+      <div class="field"><label>Staff Member</label>
+        <select id="blk-staff">
+          <option value="*">All Staff</option>
+          ${staff.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Start</label><input id="blk-start" type="datetime-local"></div>
+        <div class="field"><label>End</label><input id="blk-end" type="datetime-local"></div>
+      </div>
+      <div class="field"><label>Reason (optional)</label><input id="blk-reason" placeholder="e.g. Lunch break, Vacation…"></div>
+      <button class="btn btn-primary" onclick="saveBlock()">Add Block</button>
+    </div>
+  `);
+}
+
+async function saveBlock() {
+  const start = val('blk-start');
+  const end = val('blk-end');
+  if (!start || !end) { showToast('Start and end required', 'error'); return; }
+  await api('/api/booking/admin/blocks', 'POST', { staffId: val('blk-staff'), start, end, reason: val('blk-reason') });
+  await loadConfig(); closeModal(); renderSettings('blocks'); showToast('Block added');
+}
+
+async function deleteBlock(id) {
+  await api(`/api/booking/admin/blocks/${id}`, 'DELETE');
+  await loadConfig(); renderSettings('blocks'); showToast('Block removed');
+}
+
+// ──────────────────────────────────────────────────────────
+//  NEW BOOKING MODAL
+// ──────────────────────────────────────────────────────────
+function openNewBookingModal() {
+  const svcs = config?.services?.filter(s=>s.active) || [];
+  const staff = config?.staff?.filter(s=>s.active) || [];
+  openModal('New Booking', `
+    <div class="form-grid">
+      <div class="form-row">
+        <div class="field"><label>Customer Name</label><input id="nb-name" placeholder="Jane Smith"></div>
+        <div class="field"><label>Email</label><input id="nb-email" type="email" placeholder="jane@example.com"></div>
+      </div>
+      <div class="field"><label>Phone</label><input id="nb-phone" placeholder="(555) 000-0000"></div>
+      <div class="form-row">
+        <div class="field"><label>Service</label>
+          <select id="nb-service">
+            <option value="">— Select —</option>
+            ${svcs.map(s=>`<option value="${s.id}">${s.name} (${s.duration} min)</option>`).join('')}
+          </select>
+        </div>
+        <div class="field"><label>Staff</label>
+          <select id="nb-staff">
+            <option value="any">Any Available</option>
+            ${staff.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Date</label><input id="nb-date" type="date" min="${new Date().toISOString().split('T')[0]}"></div>
+        <div class="field"><label>Time</label><input id="nb-time" type="time"></div>
+      </div>
+      <div class="field"><label>Notes</label><textarea id="nb-notes"></textarea></div>
+      <label class="toggle-switch" style="gap:12px">
+        <div class="toggle-track on" id="nb-email-track"><div class="toggle-thumb"></div></div>
+        Send confirmation email
+      </label>
+      <button class="btn btn-primary" onclick="createAdminBooking()">Create Booking</button>
+    </div>
+  `);
+  setTimeout(() => {
+    const track = document.getElementById('nb-email-track');
+    if (track) track.parentElement.addEventListener('click', () => track.classList.toggle('on'));
+  }, 50);
+}
+
+async function createAdminBooking() {
+  const name = val('nb-name'), email = val('nb-email');
+  const serviceId = val('nb-service'), date = val('nb-date'), time = val('nb-time');
+  if (!name || !email || !serviceId || !date || !time) {
+    showToast('Please fill all required fields', 'error'); return;
+  }
+  const sendEmail = document.getElementById('nb-email-track')?.classList.contains('on');
+  await api('/api/booking/admin/bookings', 'POST', {
+    customer: { name, email, phone: val('nb-phone') },
+    serviceId, staffId: val('nb-staff'), date, time,
+    notes: val('nb-notes'), sendConfirmEmail: sendEmail,
+  });
+  closeModal(); loadAppointments(); showToast('Booking created!', 'success');
+  if (currentView === 'dashboard') loadDashboard();
+  if (currentView === 'calendar') renderAdminCalendar();
+}
+
+// ──────────────────────────────────────────────────────────
+//  CSV EXPORT
+// ──────────────────────────────────────────────────────────
+async function exportCSV() {
+  const data = await api('/api/booking/admin/bookings?limit=10000');
+  const rows = data.bookings || [];
+  const header = 'ID,Name,Email,Phone,Service,Staff,Date,Time,Duration,Price,Paid,Status,Notes,Created';
+  const lines = rows.map(b => [
+    b.id, b.customer.name, b.customer.email, b.customer.phone||'',
+    b.serviceName, b.staffName,
+    b.start.split('T')[0], b.start.split('T')[1]?.slice(0,5)||'',
+    b.duration, b.price, b.amountPaid||0, b.status,
+    (b.notes||'').replace(/,/g,';'), b.createdAt,
+  ].map(v => `"${v}"`).join(',')).join('\n');
+  const blob = new Blob([header + '\n' + lines], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `bookings-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+}
+
+// ──────────────────────────────────────────────────────────
+//  MODAL
+// ──────────────────────────────────────────────────────────
+function openModal(title, html) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+
+// ──────────────────────────────────────────────────────────
+//  UTILS
+// ──────────────────────────────────────────────────────────
+async function api(path, method = 'GET', body) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  const opts = { method, headers };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(path, opts);
+  if (res.status === 401) { logout(); throw new Error('Session expired'); }
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Request failed');
+  return data;
+}
+
+function val(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+
+function fmt12(iso) {
+  return new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+}
+
+let debounceTimers = {};
+function debounce(fn, delay) {
+  return (...args) => {
+    const key = fn.name;
+    clearTimeout(debounceTimers[key]);
+    debounceTimers[key] = setTimeout(() => fn(...args), delay);
+  };
+}
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+// ──────────────────────────────────────────────────────────
+//  BOOT
+// ──────────────────────────────────────────────────────────
+(function boot() {
+  const saved = sessionStorage.getItem('admin_token');
+  if (saved) { token = saved; showApp(); }
+})();
+</script>
+</body>
+</html>

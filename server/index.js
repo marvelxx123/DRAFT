@@ -7,6 +7,7 @@ const fs = require('fs');
 const adminRoutes    = require('./routes/admin');
 const contactRoutes  = require('./routes/contact');
 const blogRoutes     = require('./routes/blog');
+const bookingRoutes  = require('./routes/booking');
 const agentRunner    = require('./agents/agentRunner');
 
 const app = express();
@@ -15,7 +16,7 @@ const PORT = process.env.PORT || 3000;
 // ── MIDDLEWARE ───────────────────────────────────────────────────────────────
 app.use(cors({
   origin: process.env.SITE_URL || '*',
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 app.use(express.json({ limit: '10mb' }));
 
@@ -23,6 +24,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use('/api/admin',    adminRoutes);
 app.use('/api/contact',  contactRoutes);
 app.use('/api/blog',     blogRoutes);
+app.use('/api/booking',  bookingRoutes);
 
 // ── HEALTH CHECK ─────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {
@@ -48,6 +50,17 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname, '..'), { index: false }));
 app.get('/', (_req, res) => {
   res.sendFile(path.join(__dirname, '..', '904garage.html'));
+});
+
+// ── BOOKING APP ROUTES ───────────────────────────────────────────────────────
+app.get('/booking', (_req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'booking.html'));
+});
+app.get('/booking/manage', (_req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'booking.html'));
+});
+app.get('/booking/admin', (_req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'booking-admin.html'));
 });
 
 // 904 Garage Doors command dashboard
