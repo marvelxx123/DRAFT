@@ -36,15 +36,16 @@ function genToken() {
 // ── Default seed config ──────────────────────────────────────
 const DEFAULT_CONFIG = {
   business: {
-    name: 'My Business',
-    tagline: 'Professional Services',
+    name: 'Lumen Studio',
+    tagline: 'Book your glow-up in seconds',
     phone: '(555) 000-0000',
-    email: 'hello@mybusiness.com',
+    email: 'hello@lumenstudio.com',
     address: '123 Main St, City, ST 12345',
     timezone: 'America/New_York',
     currency: 'usd',
     logo: '',
-    primaryColor: '#4F46E5',
+    primaryColor: '#7C3AED',
+    accentColor: '#EC4899',
     bookingPage: {
       title: 'Book an Appointment',
       description: 'Select a service and time that works for you.',
@@ -72,7 +73,7 @@ const DEFAULT_CONFIG = {
       id: 'svc_1', name: 'Initial Consultation',
       description: 'A comprehensive introductory session to understand your needs and goals.',
       duration: 60, price: 150, depositRequired: 0,
-      color: '#4F46E5', category: 'Consultations',
+      color: '#7C3AED', category: 'Consultations',
       intakeQuestions: [
         { id: 'q1', label: 'What brings you in today?', type: 'textarea', required: false },
       ],
@@ -82,7 +83,7 @@ const DEFAULT_CONFIG = {
       id: 'svc_2', name: 'Follow-Up Session',
       description: 'A focused 30-minute follow-up to review progress and next steps.',
       duration: 30, price: 75, depositRequired: 0,
-      color: '#0EA5E9', category: 'Follow-Ups',
+      color: '#EC4899', category: 'Follow-Ups',
       intakeQuestions: [],
       staffIds: ['*'], active: true,
     },
@@ -90,7 +91,7 @@ const DEFAULT_CONFIG = {
       id: 'svc_3', name: 'Deep Dive Workshop',
       description: 'A comprehensive 2-hour workshop session.',
       duration: 120, price: 299, depositRequired: 100,
-      color: '#10B981', category: 'Workshops',
+      color: '#F97316', category: 'Workshops',
       intakeQuestions: [
         { id: 'q1', label: 'What specific outcomes are you hoping to achieve?', type: 'textarea', required: true },
         { id: 'q2', label: 'Experience level?', type: 'select', options: ['Beginner', 'Intermediate', 'Advanced'], required: false },
@@ -102,12 +103,12 @@ const DEFAULT_CONFIG = {
     {
       id: 'staff_1', name: 'Alex Johnson', title: 'Senior Specialist',
       bio: 'Over 8 years of experience delivering exceptional results.',
-      color: '#8B5CF6', hours: null, active: true,
+      color: '#7C3AED', hours: null, active: true,
     },
     {
       id: 'staff_2', name: 'Maria Santos', title: 'Certified Consultant',
       bio: 'Specializing in tailored solutions for every client.',
-      color: '#F59E0B', hours: null, active: true,
+      color: '#06B6D4', hours: null, active: true,
     },
   ],
   blockedTimes: [],

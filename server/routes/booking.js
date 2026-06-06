@@ -270,7 +270,7 @@ function buildICS(b, config) {
   const icsDate = d => new Date(d).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z?$/, '') + 'Z';
   return [
     'BEGIN:VCALENDAR', 'VERSION:2.0',
-    'PRODID:-//BookingPro//EN', 'CALSCALE:GREGORIAN', 'METHOD:REQUEST',
+    'PRODID:-//Sparq//EN', 'CALSCALE:GREGORIAN', 'METHOD:REQUEST',
     'BEGIN:VEVENT',
     `DTSTART:${icsDate(b.start)}`,
     `DTEND:${icsDate(b.end)}`,
