@@ -9,6 +9,11 @@ const { requireAdmin: adminAuth } = require('../middleware/adminAuth');
 //  PUBLIC
 // ─────────────────────────────────────────────
 
+// Stripe publishable key (safe to expose)
+router.get('/stripe-pk', (_req, res) => {
+  res.json({ publishableKey: process.env.STRIPE_PUBLISHABLE_KEY || null });
+});
+
 // Business config for booking widget
 router.get('/config', (_req, res) => {
   const c = store.getConfig();
@@ -30,7 +35,7 @@ router.get('/availability', (req, res) => {
   res.json({ slots });
 });
 
-// Which dates have any availability in a given month
+// Which dates have availability in a given month
 router.get('/available-dates', (req, res) => {
   const { year, month, serviceId, staffId } = req.query;
   if (!year || !month || !serviceId) {
@@ -40,7 +45,8 @@ router.get('/available-dates', (req, res) => {
   const y = parseInt(year), m = parseInt(month);
   const days = new Date(y, m, 0).getDate();
   const today = new Date(); today.setHours(0, 0, 0, 0);
-  const maxDt = new Date(); maxDt.setDate(maxDt.getDate() + (config.business.bookingWindow.maxAdvanceDays || 60));
+  const maxDt = new Date();
+  maxDt.setDate(maxDt.getDate() + (config.business.bookingWindow?.maxAdvanceDays || 60));
 
   const available = [];
   for (let d = 1; d <= days; d++) {
@@ -63,7 +69,7 @@ router.post('/', async (req, res) => {
     const service = config.services.find(s => s.id === serviceId && s.active);
     if (!service) return res.status(404).json({ error: 'Service not found' });
 
-    // Validate slot is still open
+    // Re-validate slot is still open
     const slots = store.getAvailableSlots(date, serviceId, staffId);
     if (!slots.some(s => s.time24 === time)) {
       return res.status(409).json({ error: 'That time slot is no longer available. Please choose another.' });
@@ -75,12 +81,12 @@ router.post('/', async (req, res) => {
       const slot = slots.find(s => s.time24 === time);
       assignedStaffId = slot?.availableStaff?.[0] || null;
     }
-    const assignedStaff = config.staff.find(s => s.id === assignedStaffId);
+    const assignedStaff = assignedStaffId ? config.staff.find(s => s.id === assignedStaffId) : null;
 
     const cust = store.findOrCreateCustomer(customer);
     const startIso = `${date}T${time}:00`;
     const endMs    = new Date(startIso).getTime() + service.duration * 60000;
-    const endIso   = new Date(endMs).toISOString().replace('Z', '');
+    const endIso   = new Date(endMs).toISOString().replace(/\.\d{3}Z$/, '');
 
     const requiresPayment = service.price > 0;
     const chargeAmount = service.depositRequired > 0 ? service.depositRequired : service.price;
@@ -109,12 +115,19 @@ router.post('/', async (req, res) => {
         });
         store.updateBooking(booking.id, { paymentIntentId: pi.id });
         paymentIntent = { clientSecret: pi.client_secret, amount: chargeAmount };
-      } catch (e) { console.error('[booking] Stripe:', e.message); }
+      } catch (e) {
+        console.error('[booking] Stripe create intent error:', e.message);
+        // Treat as free booking (no payment collected) rather than fail
+        store.updateBooking(booking.id, { status: 'confirmed' });
+      }
     }
 
-    if (!requiresPayment) {
+    if (!requiresPayment || !paymentIntent) {
       store.incrementCustomerStats(cust.id, 0);
-      notify.sendConfirmation(booking, config).catch(console.error);
+      const finalBooking = store.getBookingById(booking.id);
+      notify.sendConfirmation(finalBooking, config).catch(console.error);
+      notify.sendSMS(finalBooking, config, 'confirmation').catch(console.error);
+      return res.json({ booking: finalBooking, paymentIntent: null });
     }
 
     res.json({ booking, paymentIntent });
@@ -142,6 +155,7 @@ router.post('/confirm-payment', async (req, res) => {
     const updated = store.updateBooking(bookingId, { status: 'confirmed', paymentIntentId, amountPaid });
     store.incrementCustomerStats(booking.customerId, amountPaid);
     notify.sendConfirmation(updated, config).catch(console.error);
+    notify.sendSMS(updated, config, 'confirmation').catch(console.error);
     res.json({ booking: updated });
   } catch (e) {
     console.error('[booking] confirm-payment:', e);
@@ -149,7 +163,7 @@ router.post('/confirm-payment', async (req, res) => {
   }
 });
 
-// Customer: view booking (via token)
+// Customer: view booking via token
 router.get('/manage/:id', (req, res) => {
   const { token } = req.query;
   const b = store.getBookingById(req.params.id);
@@ -171,7 +185,7 @@ router.post('/manage/:id/cancel', async (req, res) => {
 
     const config = store.getConfig();
     if (!config.business.cancellationPolicy?.allowCustomerCancel) {
-      return res.status(403).json({ error: 'Customer cancellations are disabled. Please contact us.' });
+      return res.status(403).json({ error: 'Online cancellations are disabled. Please contact us.' });
     }
     const noticeH = config.business.cancellationPolicy.notice || 24;
     const hoursUntil = (new Date(b.start) - Date.now()) / 3600000;
@@ -179,23 +193,29 @@ router.post('/manage/:id/cancel', async (req, res) => {
       return res.status(400).json({ error: `Cancellations require at least ${noticeH} hours notice.` });
     }
 
-    const updated = store.updateBooking(b.id, { status: 'cancelled', cancelledAt: new Date().toISOString(), cancelReason: reason || '' });
+    const updated = store.updateBooking(b.id, {
+      status: 'cancelled',
+      cancelledAt: new Date().toISOString(),
+      cancelReason: reason || '',
+    });
     notify.sendCancellation(updated, config).catch(console.error);
     res.json({ booking: updated });
   } catch (e) { res.status(500).json({ error: 'Cancellation failed' }); }
 });
 
-// Customer: reschedule — step 1: get available dates/times
+// Customer: get availability for reschedule
 router.get('/manage/:id/availability', (req, res) => {
   const { token, date } = req.query;
   const b = store.getBookingById(req.params.id);
-  if (!b || token !== b.rescheduleToken) return res.status(403).json({ error: 'Invalid' });
+  if (!b || (token !== b.cancelToken && token !== b.rescheduleToken)) {
+    return res.status(403).json({ error: 'Invalid' });
+  }
   if (!date) return res.status(400).json({ error: 'date required' });
   const slots = store.getAvailableSlots(date, b.serviceId, b.staffId);
   res.json({ slots });
 });
 
-// Customer: reschedule — step 2: confirm new time
+// Customer: reschedule
 router.post('/manage/:id/reschedule', async (req, res) => {
   try {
     const { token, date, time } = req.body;
@@ -206,7 +226,7 @@ router.post('/manage/:id/reschedule', async (req, res) => {
 
     const config = store.getConfig();
     if (!config.business.cancellationPolicy?.allowCustomerReschedule) {
-      return res.status(403).json({ error: 'Customer rescheduling is disabled. Please contact us.' });
+      return res.status(403).json({ error: 'Online rescheduling is disabled. Please contact us.' });
     }
 
     const slots = store.getAvailableSlots(date, b.serviceId, b.staffId);
@@ -216,7 +236,7 @@ router.post('/manage/:id/reschedule', async (req, res) => {
 
     const startIso = `${date}T${time}:00`;
     const endMs = new Date(startIso).getTime() + b.duration * 60000;
-    const endIso = new Date(endMs).toISOString().replace('Z', '');
+    const endIso = new Date(endMs).toISOString().replace(/\.\d{3}Z$/, '');
     const updated = store.updateBooking(b.id, { start: startIso, end: endIso, status: 'confirmed' });
     notify.sendReschedule(updated, config).catch(console.error);
     res.json({ booking: updated });
@@ -238,20 +258,19 @@ router.get('/manage/:id/ics', (req, res) => {
   const { token } = req.query;
   const b = store.getBookingById(req.params.id);
   if (!b || (token !== b.cancelToken && token !== b.rescheduleToken)) {
-    return res.status(403).json({ error: 'Invalid' });
+    return res.status(403).send('Invalid');
   }
   const config = store.getConfig();
-  const ics = buildICS(b, config);
   res.setHeader('Content-Type', 'text/calendar');
   res.setHeader('Content-Disposition', `attachment; filename="appointment.ics"`);
-  res.send(ics);
+  res.send(buildICS(b, config));
 });
 
 function buildICS(b, config) {
-  const icsDate = d => new Date(d).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const icsDate = d => new Date(d).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z?$/, '') + 'Z';
   return [
     'BEGIN:VCALENDAR', 'VERSION:2.0',
-    'PRODID:-//Business Booking App//EN', 'CALSCALE:GREGORIAN', 'METHOD:REQUEST',
+    'PRODID:-//BookingPro//EN', 'CALSCALE:GREGORIAN', 'METHOD:REQUEST',
     'BEGIN:VEVENT',
     `DTSTART:${icsDate(b.start)}`,
     `DTEND:${icsDate(b.end)}`,
@@ -260,7 +279,7 @@ function buildICS(b, config) {
     `LOCATION:${config.business.address || ''}`,
     `ORGANIZER;CN="${config.business.name}":mailto:${config.business.email || 'noreply@example.com'}`,
     `ATTENDEE;CN="${b.customer.name}";ROLE=REQ-PARTICIPANT:mailto:${b.customer.email}`,
-    `UID:${b.id}@bookingapp`,
+    `UID:${b.id}@bookingpro`,
     `DTSTAMP:${icsDate(new Date())}`,
     'STATUS:CONFIRMED', 'SEQUENCE:0',
     'END:VEVENT', 'END:VCALENDAR',
@@ -268,21 +287,20 @@ function buildICS(b, config) {
 }
 
 // ─────────────────────────────────────────────
-//  ADMIN (password-protected)
+//  ADMIN (protected)
 // ─────────────────────────────────────────────
 
 router.get('/admin/config', adminAuth, (_req, res) => res.json(store.getConfig()));
 
 router.put('/admin/config', adminAuth, (req, res) => {
-  const current = store.getConfig();
-  const merged = deepMerge(current, req.body);
+  const merged = deepMerge(store.getConfig(), req.body);
   res.json(store.saveConfig(merged));
 });
 
 function deepMerge(base, override) {
   const out = { ...base };
   for (const k of Object.keys(override)) {
-    if (override[k] && typeof override[k] === 'object' && !Array.isArray(override[k])) {
+    if (override[k] !== null && typeof override[k] === 'object' && !Array.isArray(override[k])) {
       out[k] = deepMerge(base[k] || {}, override[k]);
     } else {
       out[k] = override[k];
@@ -337,7 +355,7 @@ router.delete('/admin/staff/:id', adminAuth, (req, res) => {
   res.json({ success: true });
 });
 
-// Bookings list
+// Bookings list + search
 router.get('/admin/bookings', adminAuth, (req, res) => {
   let all = store.getAllBookings();
   const { status, from, to, search, staffId } = req.query;
@@ -351,13 +369,21 @@ router.get('/admin/bookings', adminAuth, (req, res) => {
       b.customer.name.toLowerCase().includes(q) ||
       b.customer.email.toLowerCase().includes(q) ||
       (b.customer.phone || '').includes(q) ||
-      b.serviceName.toLowerCase().includes(q)
+      b.serviceName.toLowerCase().includes(q) ||
+      b.id.includes(q)
     );
   }
-  all.sort((a, b) => a.start > b.start ? -1 : 1);
-  const page = Math.max(1, parseInt(req.query.page) || 1);
+  all.sort((a, b) => (a.start > b.start ? -1 : 1));
+  const page  = Math.max(1, parseInt(req.query.page) || 1);
   const limit = parseInt(req.query.limit) || 50;
   res.json({ bookings: all.slice((page - 1) * limit, page * limit), total: all.length, page });
+});
+
+// Get single booking (admin)
+router.get('/admin/bookings/:id', adminAuth, (req, res) => {
+  const b = store.getBookingById(req.params.id);
+  if (!b) return res.status(404).json({ error: 'Not found' });
+  res.json({ booking: b });
 });
 
 // Admin create booking
@@ -372,11 +398,12 @@ router.post('/admin/bookings', adminAuth, async (req, res) => {
     const assignedStaff = config.staff.find(s => s.id === staffId);
     const startIso = `${date}T${time}:00`;
     const endMs = new Date(startIso).getTime() + service.duration * 60000;
+    const endIso = new Date(endMs).toISOString().replace(/\.\d{3}Z$/, '');
 
     const b = store.createBooking({
       serviceId, serviceName: service.name, serviceColor: service.color,
       staffId: staffId || 'any', staffName: assignedStaff?.name || 'Any Available',
-      start: startIso, end: new Date(endMs).toISOString().replace('Z', ''), duration: service.duration,
+      start: startIso, end: endIso, duration: service.duration,
       price: service.price, depositRequired: service.depositRequired, amountPaid: service.price,
       status: 'confirmed', customerId: cust.id,
       customer: { name: customer.name, email: customer.email, phone: customer.phone || '' },
@@ -401,11 +428,13 @@ router.delete('/admin/bookings/:id', adminAuth, (req, res) => {
   res.json({ success: true });
 });
 
-// Admin send reminder
+// Send reminder
 router.post('/admin/bookings/:id/reminder', adminAuth, async (req, res) => {
   const b = store.getBookingById(req.params.id);
   if (!b) return res.status(404).json({ error: 'Not found' });
-  await notify.sendReminder(b, store.getConfig()).catch(console.error);
+  const config = store.getConfig();
+  await notify.sendReminder(b, config).catch(console.error);
+  await notify.sendSMS(b, config, 'reminder').catch(console.error);
   res.json({ success: true });
 });
 
@@ -415,25 +444,32 @@ router.get('/admin/customers', adminAuth, (req, res) => {
   const { search } = req.query;
   if (search) {
     const q = search.toLowerCase();
-    all = all.filter(c => c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q) || (c.phone || '').includes(q));
+    all = all.filter(c =>
+      c.name.toLowerCase().includes(q) ||
+      c.email.toLowerCase().includes(q) ||
+      (c.phone || '').includes(q)
+    );
   }
-  all.sort((a, b) => b.totalBookings - a.totalBookings);
+  all.sort((a, b) => (b.totalBookings || 0) - (a.totalBookings || 0));
   res.json({ customers: all });
 });
+
 router.put('/admin/customers/:id', adminAuth, (req, res) => {
   const updated = store.updateCustomer(req.params.id, req.body);
   if (!updated) return res.status(404).json({ error: 'Not found' });
   res.json({ customer: updated });
 });
 
-// Analytics
+// Analytics — fixed to include cancelRate + noShowRate
 router.get('/admin/analytics', adminAuth, (_req, res) => {
   const all = store.getAllBookings();
   const confirmed = all.filter(b => b.status === 'confirmed');
+  const cancelled = all.filter(b => b.status === 'cancelled');
+  const noShows   = all.filter(b => b.noShow);
   const now = new Date();
-  const todayStr = now.toISOString().split('T')[0];
-  const weekAgo = new Date(now); weekAgo.setDate(weekAgo.getDate() - 7);
-  const monthAgo = new Date(now); monthAgo.setDate(monthAgo.getDate() - 30);
+  const todayStr  = now.toISOString().split('T')[0];
+  const weekAgo   = new Date(now); weekAgo.setDate(weekAgo.getDate() - 7);
+  const monthAgo  = new Date(now); monthAgo.setDate(monthAgo.getDate() - 30);
 
   const todayBk  = confirmed.filter(b => b.start.startsWith(todayStr));
   const weekBk   = confirmed.filter(b => new Date(b.start) >= weekAgo);
@@ -447,7 +483,7 @@ router.get('/admin/analytics', adminAuth, (_req, res) => {
   const byStaff = {};
   confirmed.forEach(b => { byStaff[b.staffName] = (byStaff[b.staffName] || 0) + 1; });
 
-  // Daily for last 30 days
+  // Daily bookings — last 30 days
   const daily = {};
   for (let i = 29; i >= 0; i--) {
     const d = new Date(now); d.setDate(d.getDate() - i);
@@ -458,6 +494,7 @@ router.get('/admin/analytics', adminAuth, (_req, res) => {
     if (daily[k] !== undefined) daily[k]++;
   });
 
+  const total = all.length;
   res.json({
     summary: {
       totalBookings: confirmed.length,
@@ -467,8 +504,10 @@ router.get('/admin/analytics', adminAuth, (_req, res) => {
       totalRevenue: revenue(confirmed),
       weekRevenue: revenue(weekBk),
       monthRevenue: revenue(monthBk),
-      cancelled: all.filter(b => b.status === 'cancelled').length,
-      noShows: all.filter(b => b.noShow).length,
+      cancelled: cancelled.length,
+      noShows: noShows.length,
+      cancelRate: total > 0 ? Math.round(cancelled.length / total * 100) : 0,
+      noShowRate: confirmed.length > 0 ? Math.round(noShows.length / confirmed.length * 100) : 0,
       totalCustomers: store.getAllCustomers().length,
     },
     byService, byStaff, daily,
@@ -493,5 +532,55 @@ router.delete('/admin/blocks/:id', adminAuth, (req, res) => {
   store.saveConfig(config);
   res.json({ success: true });
 });
+
+// Waitlist
+router.get('/admin/waitlist', adminAuth, (_req, res) => {
+  res.json({ waitlist: store.getConfig().waitlist || [] });
+});
+router.delete('/admin/waitlist/:id', adminAuth, (req, res) => {
+  const config = store.getConfig();
+  config.waitlist = (config.waitlist || []).filter(w => w.id !== req.params.id);
+  store.saveConfig(config);
+  res.json({ success: true });
+});
+
+// ─────────────────────────────────────────────
+//  REMINDER SCHEDULER — runs on module load
+// ─────────────────────────────────────────────
+let reminderSchedulerStarted = false;
+function startReminderScheduler() {
+  if (reminderSchedulerStarted) return;
+  reminderSchedulerStarted = true;
+
+  async function runReminders() {
+    try {
+      const config = store.getConfig();
+      const reminderHours = config.business?.reminderHours || 24;
+      const now = new Date();
+      const windowEnd = new Date(now.getTime() + reminderHours * 3600000 + 30 * 60000);
+      const windowStart = new Date(now.getTime() + reminderHours * 3600000 - 30 * 60000);
+
+      const due = store.getAllBookings().filter(b => {
+        if (b.status !== 'confirmed' || b.reminderSent || b.noShow) return false;
+        const start = new Date(b.start);
+        return start >= windowStart && start <= windowEnd;
+      });
+
+      for (const b of due) {
+        console.log(`[reminders] Sending reminder for booking ${b.id} — ${b.customer.name}`);
+        await notify.sendReminder(b, config).catch(e => console.error('[reminders] email failed:', e.message));
+        await notify.sendSMS(b, config, 'reminder').catch(e => console.error('[reminders] SMS failed:', e.message));
+        store.updateBooking(b.id, { reminderSent: true });
+      }
+    } catch (e) { console.error('[reminders] scheduler error:', e.message); }
+  }
+
+  // Run every 30 minutes
+  runReminders();
+  setInterval(runReminders, 30 * 60 * 1000);
+  console.log('[reminders] Scheduler started — checking every 30 minutes');
+}
+
+startReminderScheduler();
 
 module.exports = router;

@@ -32,8 +32,10 @@ function checkPassword(provided) {
 }
 
 function requireAdmin(req, res, next) {
-  // AUTH DISABLED — re-enable by restoring token validation
-  next();
+  const auth = req.headers['authorization'] || '';
+  const token = auth.startsWith('Bearer ') ? auth.slice(7) : auth;
+  if (validateSession(token)) return next();
+  res.status(401).json({ error: 'Unauthorized' });
 }
 
 module.exports = { createSession, validateSession, checkPassword, requireAdmin };
