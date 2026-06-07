@@ -28,23 +28,34 @@ function analyzeOutcomes(leads) {
   const totalRevenue = closed.reduce((s, l) => s + (l.jobValue || 0), 0);
 
   // Win rates by dimension
-  const dims = { service: {}, city: {}, urgency: {} };
-  const wins = { service: {}, city: {}, urgency: {} };
+  const dims = { service: {}, city: {}, urgency: {}, source: {} };
+  const wins = { service: {}, city: {}, urgency: {}, source: {} };
 
   for (const l of [...closed, ...lost]) {
     dims.service[l.service || 'Unknown'] = (dims.service[l.service || 'Unknown'] || 0) + 1;
     dims.city[l.city || 'Unknown']       = (dims.city[l.city || 'Unknown'] || 0) + 1;
     dims.urgency[l.urgency || 'Unknown'] = (dims.urgency[l.urgency || 'Unknown'] || 0) + 1;
+    dims.source[l.source || 'Unknown']   = (dims.source[l.source || 'Unknown'] || 0) + 1;
   }
   for (const l of closed) {
     wins.service[l.service || 'Unknown'] = (wins.service[l.service || 'Unknown'] || 0) + 1;
     wins.city[l.city || 'Unknown']       = (wins.city[l.city || 'Unknown'] || 0) + 1;
     wins.urgency[l.urgency || 'Unknown'] = (wins.urgency[l.urgency || 'Unknown'] || 0) + 1;
+    wins.source[l.source || 'Unknown']   = (wins.source[l.source || 'Unknown'] || 0) + 1;
   }
 
   const rateTable = (dim) => Object.entries(dims[dim])
     .map(([k, n]) => ({ name: k, total: n, wins: wins[dim][k] || 0, rate: Math.round(((wins[dim][k] || 0) / n) * 100) }))
     .sort((a, b) => b.rate - a.rate).slice(0, 5);
+
+  // Revenue by source — which channel actually pays
+  const revBySource = {};
+  for (const l of closed) {
+    const src = l.source || 'Unknown';
+    if (!revBySource[src]) revBySource[src] = { count: 0, revenue: 0 };
+    revBySource[src].count++;
+    revBySource[src].revenue += (l.jobValue || 0);
+  }
 
   const lossReasons = {};
   for (const l of lost) { const r = l.lossReason || 'Unknown'; lossReasons[r] = (lossReasons[r] || 0) + 1; }
@@ -61,6 +72,8 @@ function analyzeOutcomes(leads) {
     serviceWinRates: rateTable('service'),
     cityWinRates:    rateTable('city'),
     urgencyWinRates: rateTable('urgency'),
+    sourceWinRates:  rateTable('source'),
+    sourceRevenue:   Object.entries(revBySource).map(([name, d]) => ({ name, ...d })).sort((a, b) => b.revenue - a.revenue),
     topLossReasons:  Object.entries(lossReasons).sort((a,b) => b[1]-a[1]).map(([r,c]) => ({ reason: r, count: c })),
     bestHours:       Object.entries(hourWins).sort((a,b) => b[1]-a[1]).slice(0, 3).map(([h,c]) => ({ hour: Number(h), count: c })),
   };
@@ -86,6 +99,8 @@ REAL PERFORMANCE DATA:
 - Avg job value: $${stats.avgJobValue}
 - Best services (by win rate): ${stats.serviceWinRates.slice(0,3).map(s=>`${s.name} ${s.rate}%`).join(', ')}
 - Best cities (by win rate): ${stats.cityWinRates.slice(0,3).map(c=>`${c.name} ${c.rate}%`).join(', ')}
+- Best lead SOURCES (by win rate — which channel actually converts): ${stats.sourceWinRates.slice(0,5).map(s=>`${s.name} ${s.rate}% (${s.wins}/${s.total})`).join(', ') || 'no source data yet'}
+- Revenue by source (which channel actually pays): ${stats.sourceRevenue.slice(0,5).map(s=>`${s.name}: $${s.revenue} (${s.count} jobs)`).join(', ') || 'no closed jobs yet'}
 - Top loss reasons: ${stats.topLossReasons.slice(0,3).map(r=>`${r.reason} (${r.count}x)`).join(', ')}
 - Best hours: ${stats.bestHours.map(h=>`${h.hour}:00`).join(', ')}${notesText}
 
@@ -113,6 +128,9 @@ async function run() {
   if (stats) {
     log(AGENT_ID, 'info', `${stats.totalClosed} closed ($${stats.totalRevenue}), ${stats.totalLost} lost — win rate ${stats.winRate}%`);
     addEntry({ type: 'win_pattern', content: `Win rate ${stats.winRate}% on ${stats.totalClosed+stats.totalLost} outcomes. Best service: ${stats.serviceWinRates[0]?.name}. Best city: ${stats.cityWinRates[0]?.name}. Avg job: $${stats.avgJobValue}`, tags: ['win','performance','jacksonville'], source: AGENT_ID });
+    if (stats.sourceWinRates[0]) {
+      addEntry({ type: 'win_pattern', content: `Best lead channel: ${stats.sourceWinRates[0].name} converts at ${stats.sourceWinRates[0].rate}% (${stats.sourceWinRates[0].wins}/${stats.sourceWinRates[0].total}). Top revenue channel: ${stats.sourceRevenue[0]?.name || 'unknown'} ($${stats.sourceRevenue[0]?.revenue || 0}). Double down on what's actually converting.`, tags: ['source','channel','marketing','performance'], source: AGENT_ID });
+    }
     if (stats.topLossReasons[0]) {
       addEntry({ type: 'win_pattern', content: `Top loss reason: ${stats.topLossReasons[0].reason} (${stats.topLossReasons[0].count} times). Address this in all agent messaging.`, tags: ['loss','pattern','improve'], source: AGENT_ID });
     }
@@ -137,7 +155,8 @@ async function run() {
       totalRevenue: memory.totalRevenue || 0, winRate: memory.winRate || 0,
       avgJobValue: memory.avgJobValue || 0, serviceWinRates: memory.serviceWinRates || [],
       cityWinRates: memory.cityWinRates || [], topLossReasons: memory.topLossReasons || [],
-      bestHours: memory.bestHours || [],
+      bestHours: memory.bestHours || [], sourceWinRates: memory.sourceWinRates || [],
+      sourceRevenue: memory.sourceRevenue || [],
     }),
     agentInstructions,
     manualNotes: memory.manualNotes || [],

@@ -332,7 +332,10 @@
       <div class="card">
         <div class="card-title">
           <span>Recent Leads</span>
-          <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
+          <span>
+            <button class="refresh-btn" onclick="logManualLead()" style="margin-right:0.4rem">+ Log a Lead</button>
+            <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
+          </span>
         </div>
         <div class="leads-stats" id="leadsStats" style="display:none">
           <div class="ls-item gold">Today: <strong id="statToday">—</strong></div>
@@ -1211,6 +1214,41 @@
       body: JSON.stringify({ status: 'lost', lossReason }),
     });
     loadLeads(); loadMemory();
+  }
+
+  // ── MANUAL LEAD LOGGING (calls/texts that didn't come through the website) ──
+  async function logManualLead() {
+    const source = prompt('Where did this lead come from?\n(e.g. craigslist, referral, walk-up, repeat-customer)');
+    if (!source) return;
+    const name  = prompt('Customer name (or leave blank):') || '';
+    const phone = prompt('Phone number:');
+    if (!phone) { alert('Phone is required to log a lead.'); return; }
+    const service = prompt('Service needed (e.g. Broken spring, Opener not working, New door installation):') || '';
+    const city    = prompt('City (e.g. Yulee, Fernandina Beach, Jacksonville):') || '';
+    const outcome = prompt('Outcome so far?\n1. Still in progress\n2. Closed (got the job)\n3. Lost (didn\'t get it)\nType 1, 2, or 3:');
+
+    const body = { name, phone, service, city, source, status: 'new' };
+    if (outcome === '2') {
+      const val = prompt('Job value ($)?');
+      body.status = 'closed';
+      body.jobValue = val ? Number(val.replace(/[^0-9.]/g, '')) : 0;
+    } else if (outcome === '3') {
+      const reason = prompt('Why was it lost? (e.g. Price too high, Found someone faster, Not ready yet)');
+      body.status = 'lost';
+      body.notes = reason || '';
+    }
+
+    try {
+      const r = await fetch('/api/admin/leads/manual', {
+        method: 'POST', headers: authHeaders(),
+        body: JSON.stringify(body),
+      });
+      if (!r.ok) throw new Error();
+      alert('Lead logged — it now feeds the learning loop just like a website lead.');
+      loadLeads(); loadMemory();
+    } catch {
+      alert('Could not log the lead — please try again.');
+    }
   }
 
   // ── OBSERVABILITY / API METRICS ───────────────────────────────────────────

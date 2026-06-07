@@ -11,6 +11,7 @@ function readMemory() {
       totalClosed: 0, totalLost: 0, totalRevenue: 0,
       winRate: 0, avgJobValue: 0,
       serviceWinRates: [], cityWinRates: [], topLossReasons: [], bestHours: [],
+      sourceWinRates: [], sourceRevenue: [],
       agentInstructions: {
         craigslist: 'No outcome data yet — focus on emergency and spring replacement posts in Ponte Vedra, Nocatee, Jacksonville Beach.',
         outreach:   'No outcome data yet — prioritize property managers and HOAs in premium zip codes (32082, 32081).',

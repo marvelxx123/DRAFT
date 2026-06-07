@@ -326,6 +326,47 @@ router.patch('/leads/:id/outcome', requireAdmin, (req, res) => {
   }
 });
 
+// POST /api/admin/leads/manual — log a lead that came in OUTSIDE the website
+// (Craigslist call/text, referral, walk-up, etc.) so it feeds the same learning loop
+router.post('/leads/manual', requireAdmin, (req, res) => {
+  const { name, phone, service, urgency, city, source, jobValue, status, notes } = req.body || {};
+  if (!phone) return res.status(400).json({ error: 'Phone required' });
+  if (!source) return res.status(400).json({ error: 'Source required (e.g. craigslist, referral, walk-up)' });
+
+  const leads = readLeadsAdmin();
+  const now = new Date().toISOString();
+  const entry = {
+    id:         Date.now(),
+    timestamp:  now,
+    name:       name    || 'Unknown',
+    phone,
+    service:    service || 'Not specified',
+    urgency:    urgency || 'Not specified',
+    city:       city    || 'Jacksonville',
+    source,
+    page:       'manual-entry',
+    cta:        'manual',
+    message:    notes   || '',
+    status:     status === 'closed' || status === 'lost' ? status : 'new',
+    leadScore:  0,
+    customerType: 'general',
+    loggedManually: true,
+  };
+  if (entry.status === 'closed' && jobValue) { entry.jobValue = Number(jobValue); entry.outcomeAt = now; }
+  if (entry.status === 'lost') entry.outcomeAt = now;
+
+  leads.unshift(entry);
+  fs.writeFileSync(LEADS_FILE, JSON.stringify(leads.slice(0, 500), null, 2));
+  log('admin', 'success', `Manual lead logged — source: ${source}, status: ${entry.status}${entry.jobValue ? `, $${entry.jobValue}` : ''}`);
+  res.json({ success: true, lead: entry });
+
+  if (entry.status === 'closed' && entry.phone) {
+    const firstName = (entry.name || '').split(' ')[0];
+    const reviewLink = require('../agents/jaxConfig').reviewLink || '';
+    sms.sendReviewRequest(entry.phone, firstName, reviewLink);
+  }
+});
+
 // ── AGENT MEMORY ───────────────────────────────────────────────────────────────
 
 const MEMORY_FILE = path.join(ROOT, 'data/agent-memory.json');
