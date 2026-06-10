@@ -633,99 +633,38 @@
     .ql-text { font-size: 0.78rem; font-weight: 700; color: var(--white); }
     .ql-sub { font-size: 0.65rem; color: var(--grey2); margin-top: 0.1rem; }
 
-    /* ── MONEY BUCKETS ── */
+    /* ── MONEY SNAPSHOT ── */
     .money-card {
       grid-column: 1 / -1;
       grid-row: 5;
     }
-    .money-head {
+    .money-snapshot {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 1.25rem;
-      margin-bottom: 1.25rem;
-      padding-bottom: 1.25rem;
-      border-bottom: 1px solid var(--border);
+      gap: 1.5rem;
     }
-    .money-income-block { display: flex; flex-direction: column; gap: 0.35rem; }
-    .money-label {
-      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em;
-      text-transform: uppercase; color: var(--grey);
+    .money-snapshot-stats { display: flex; gap: 1.75rem; flex-wrap: wrap; }
+    .money-stat { text-align: center; }
+    .money-stat-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; line-height: 1; color: var(--white); }
+    .money-stat-val.gold { color: var(--gold); }
+    .money-stat-val.green { color: var(--green); }
+    .money-stat-val.red { color: var(--red); }
+    .money-stat-label { font-size: 0.6rem; color: var(--grey2); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.2rem; }
+    .money-snapshot-bars { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 0.5rem; }
+    .money-mini-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.7rem; color: var(--grey2); }
+    .money-mini-label { width: 110px; flex-shrink: 0; }
+    .money-mini-bar { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .money-mini-fill { height: 100%; border-radius: 3px; }
+    .money-mini-amt { width: 60px; text-align: right; flex-shrink: 0; color: var(--white); font-weight: 700; }
+    .money-open-btn {
+      flex-shrink: 0;
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gold); text-decoration: none; border: 1px solid rgba(200,169,110,0.25);
+      padding: 0.6rem 1rem; border-radius: 8px; background: var(--gold-glow); white-space: nowrap;
     }
-    .money-income-input {
-      background: var(--card2); border: 1px solid var(--border2); border-radius: 8px;
-      color: var(--gold); font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem;
-      padding: 0.4rem 0.75rem; width: 170px; outline: none;
-    }
-    .money-income-input:focus { border-color: var(--gold); }
-    .money-summary { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-left: auto; }
-    .money-summary-item { text-align: center; }
-    .money-summary-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--white); }
-    .money-summary-val.green { color: var(--green); }
-    .money-summary-val.red { color: var(--red); }
-    .money-summary-val.gold { color: var(--gold); }
-    .money-summary-label {
-      font-size: 0.6rem; color: var(--grey2); text-transform: uppercase;
-      letter-spacing: 0.1em; margin-top: 0.15rem;
-    }
-    .money-week-btn {
-      padding: 0.65rem 1rem; border-radius: 8px; border: 1px solid var(--border2);
-      background: var(--card2); color: var(--white); font-size: 0.7rem; font-weight: 700;
-      letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
-      transition: background 0.2s, border-color 0.2s, color 0.2s;
-    }
-    .money-week-btn:hover { border-color: rgba(239,68,68,0.4); color: var(--red); }
-    .money-pct-warning {
-      font-size: 0.72rem; color: var(--yellow); margin: -0.75rem 0 1rem;
-      background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.25);
-      border-radius: 6px; padding: 0.5rem 0.75rem;
-    }
-    .money-buckets {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-      gap: 0.85rem;
-    }
-    .money-bucket {
-      background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 1rem;
-    }
-    .money-bucket-head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.7rem; }
-    .money-bucket-icon { font-size: 1.2rem; }
-    .money-bucket-name {
-      flex: 1; min-width: 0; background: none; border: none; color: var(--white);
-      font-size: 0.8rem; font-weight: 700; font-family: 'Inter', sans-serif;
-      outline: none; padding: 0;
-    }
-    .money-bucket-pct {
-      width: 46px; background: var(--card); border: 1px solid var(--border2); border-radius: 5px;
-      color: var(--grey2); font-size: 0.7rem; text-align: center; padding: 0.25rem 0.2rem; outline: none;
-      font-family: 'Inter', sans-serif;
-    }
-    .money-bucket-amounts {
-      display: flex; justify-content: space-between; font-size: 0.72rem;
-      color: var(--grey2); margin-bottom: 0.4rem;
-    }
-    .money-bucket-amounts .left { color: var(--white); font-weight: 700; }
-    .money-bucket-amounts .left.over { color: var(--red); }
-    .money-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 0.7rem; }
-    .money-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease, background 0.3s; }
-    .money-bucket-actions { display: flex; gap: 0.4rem; }
-    .money-expense-input {
-      flex: 1; min-width: 0; background: var(--card); border: 1px solid var(--border2); border-radius: 6px;
-      color: var(--white); font-size: 0.75rem; padding: 0.45rem 0.5rem; outline: none;
-      font-family: 'Inter', sans-serif;
-    }
-    .money-expense-input:focus { border-color: var(--gold); }
-    .money-expense-btn {
-      background: var(--gold-glow); border: 1px solid rgba(200,169,110,0.35); color: var(--gold);
-      border-radius: 6px; font-size: 0.7rem; font-weight: 700; padding: 0.45rem 0.65rem;
-      cursor: pointer; white-space: nowrap; transition: background 0.2s;
-    }
-    .money-expense-btn:hover { background: rgba(200,169,110,0.25); }
-    .money-bucket-undo {
-      background: none; border: none; color: var(--grey); font-size: 0.65rem;
-      cursor: pointer; text-decoration: underline; margin-top: 0.5rem; padding: 0;
-    }
-    .money-bucket-undo:hover { color: var(--grey2); }
+    .money-open-btn:hover { background: rgba(200,169,110,0.25); }
+    .money-empty { font-size: 0.8rem; color: var(--grey2); }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 1100px) {
@@ -746,8 +685,8 @@
       .timer-card, .tasks-card, .stats-card, .habits-card,
       .agents-card, .brain-card, .heatmap-card, .money-card { grid-column: 1; grid-row: auto; }
       .links-card { grid-column: 1; grid-row: auto; grid-template-columns: 1fr 1fr; }
-      .money-head { flex-direction: column; align-items: stretch; }
-      .money-summary { margin-left: 0; justify-content: space-between; }
+      .money-snapshot { flex-direction: column; align-items: stretch; }
+      .money-snapshot-stats { justify-content: space-between; }
       .topbar { gap: 0.5rem; }
     }
   </style>
@@ -1116,6 +1055,10 @@
       <span class="ql-icon">📋</span>
       <div><div class="ql-text">Daily 5</div><div class="ql-sub">Business tasks</div></div>
     </a>
+    <a class="quick-link" href="/money.html" target="_blank">
+      <span class="ql-icon">💰</span>
+      <div><div class="ql-text">Money Buckets</div><div class="ql-sub">Weekly budget</div></div>
+    </a>
     <a class="quick-link" href="/904garage.html" target="_blank">
       <span class="ql-icon">🏠</span>
       <div><div class="ql-text">904 Garage</div><div class="ql-sub">Your website</div></div>
@@ -1134,35 +1077,12 @@
     </a>
   </div>
 
-  <!-- MONEY BUCKETS -->
+  <!-- MONEY SNAPSHOT -->
   <div class="card money-card">
-    <div class="card-title"><div class="card-title-dot"></div>Money Buckets — This Week</div>
-
-    <div class="money-head">
-      <div class="money-income-block">
-        <span class="money-label">This Week's Income</span>
-        <input type="number" class="money-income-input" id="moneyIncome" placeholder="$0" min="0" step="1" inputmode="decimal" oninput="onIncomeChange()">
-      </div>
-      <div class="money-summary">
-        <div class="money-summary-item">
-          <div class="money-summary-val gold" id="moneyAllocated">$0</div>
-          <div class="money-summary-label">Budgeted</div>
-        </div>
-        <div class="money-summary-item">
-          <div class="money-summary-val" id="moneySpent">$0</div>
-          <div class="money-summary-label">Spent</div>
-        </div>
-        <div class="money-summary-item">
-          <div class="money-summary-val green" id="moneyLeft">$0</div>
-          <div class="money-summary-label">Left to Spend</div>
-        </div>
-      </div>
-      <button class="money-week-btn" onclick="startNewWeek()">↻ Start New Week</button>
+    <div class="card-title"><div class="card-title-dot"></div>Money Buckets</div>
+    <div class="money-snapshot" id="moneySnapshot">
+      <div class="money-empty">Loading…</div>
     </div>
-
-    <div class="money-pct-warning" id="moneyPctWarning" style="display:none;"></div>
-
-    <div class="money-buckets" id="moneyBuckets"></div>
   </div>
 
 </div><!-- /main -->
@@ -1572,173 +1492,67 @@ function formatTime(iso) {
 // Auto-refresh every 30s if MC token exists
 setInterval(refreshAgents, 30000);
 
-// ── MONEY BUCKETS ──────────────────────────────────────────────────────────
-const MONEY_KEY = 'cmdpost_money_v1';
+// ── MONEY SNAPSHOT ─────────────────────────────────────────────────────────
+const MONEY_KEY = 'moneyTracker_v1';
 
-function defaultMoney() {
-  return {
-    income: 0,
-    buckets: [
-      { id: 'fuel',    icon: '⛽', name: 'Gas & Vehicle',    pct: 15, spent: 0, lastExpense: 0 },
-      { id: 'parts',   icon: '🛠️', name: 'Parts & Supplies', pct: 15, spent: 0, lastExpense: 0 },
-      { id: 'taxes',   icon: '🏛️', name: 'Taxes Set-Aside',  pct: 15, spent: 0, lastExpense: 0 },
-      { id: 'savings', icon: '💰', name: 'Savings',          pct: 10, spent: 0, lastExpense: 0 },
-      { id: 'bills',   icon: '🏠', name: 'Bills & Rent',     pct: 30, spent: 0, lastExpense: 0 },
-      { id: 'spend',   icon: '🎉', name: 'Spending Money',   pct: 15, spent: 0, lastExpense: 0 },
-    ],
-  };
-}
-
-function getMoney() {
-  try {
-    const raw = localStorage.getItem(MONEY_KEY);
-    if (!raw) return defaultMoney();
-    const parsed = JSON.parse(raw);
-    if (!parsed.buckets || !parsed.buckets.length) return defaultMoney();
-    return parsed;
-  } catch { return defaultMoney(); }
-}
-
-function saveMoney() { localStorage.setItem(MONEY_KEY, JSON.stringify(money)); }
-
-let money = getMoney();
-
-function onIncomeChange() {
-  money.income = Math.max(0, parseFloat(document.getElementById('moneyIncome').value) || 0);
-  saveMoney();
-  renderMoney();
-}
-
-function onBucketNameChange(idx, val) {
-  money.buckets[idx].name = val;
-  saveMoney();
-}
-
-function onBucketPctChange(idx, val) {
-  money.buckets[idx].pct = Math.max(0, parseFloat(val) || 0);
-  saveMoney();
-  renderMoney();
-}
-
-function logExpense(idx) {
-  const input = document.getElementById('moneyExpense' + idx);
-  const val = parseFloat(input.value);
-  if (!val || val <= 0) return;
-  money.buckets[idx].spent += val;
-  money.buckets[idx].lastExpense = val;
-  input.value = '';
-  saveMoney();
-  renderMoney();
-}
-
-function undoExpense(idx) {
-  const last = money.buckets[idx].lastExpense || 0;
-  if (!last) return;
-  money.buckets[idx].spent = Math.max(0, money.buckets[idx].spent - last);
-  money.buckets[idx].lastExpense = 0;
-  saveMoney();
-  renderMoney();
-}
-
-function startNewWeek() {
-  if (!confirm("Start a new week? This resets every bucket's spending back to $0. Your income amount and bucket percentages stay the same.")) return;
-  money.buckets.forEach(b => { b.spent = 0; b.lastExpense = 0; });
-  saveMoney();
-  renderMoney();
+function fmtMoney(n) {
+  return '$' + (Math.round((n || 0) * 100) / 100).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 }
 
 function renderMoney() {
-  document.getElementById('moneyIncome').value = money.income || '';
+  const el = document.getElementById('moneySnapshot');
+  let m;
+  try {
+    m = JSON.parse(localStorage.getItem(MONEY_KEY));
+  } catch { m = null; }
 
-  const totalPct = Math.round(money.buckets.reduce((s, b) => s + b.pct, 0) * 100) / 100;
-  const warnEl = document.getElementById('moneyPctWarning');
-  if (totalPct !== 100) {
-    warnEl.style.display = 'block';
-    warnEl.textContent = totalPct > 100
-      ? `⚠ Your buckets add up to ${totalPct}% — that's ${(totalPct - 100).toFixed(0)}% over. Lower one or more so they total 100%.`
-      : `⚠ Your buckets add up to ${totalPct}% — there's ${(100 - totalPct).toFixed(0)}% unassigned. Raise one or more so they total 100%.`;
-  } else {
-    warnEl.style.display = 'none';
+  if (!m || !m.buckets) {
+    el.innerHTML = `
+      <div class="money-empty">No buckets set up yet — log this week's pay to split it into Fuel, Bills, Savings, Emergency, Parts &amp; Personal.</div>
+      <a class="money-open-btn" href="/money.html" target="_blank">Open Money Buckets →</a>
+    `;
+    return;
   }
 
-  let totalAllocated = 0, totalSpent = 0;
+  const totalSpent = Object.values(m.week?.spent || {}).reduce((s, v) => s + v, 0);
+  const personal = m.buckets.find(b => b.id === 'personal');
+  const free = personal ? personal.balance : 0;
 
-  const grid = document.getElementById('moneyBuckets');
-  grid.innerHTML = '';
-  money.buckets.forEach((b, i) => {
-    const allocated = (money.income || 0) * b.pct / 100;
-    const left = allocated - b.spent;
-    totalAllocated += allocated;
-    totalSpent += b.spent;
-
-    const pctUsed = allocated > 0 ? (b.spent / allocated) * 100 : (b.spent > 0 ? 100 : 0);
-    let barColor = 'var(--green)';
-    if (pctUsed >= 100) barColor = 'var(--red)';
-    else if (pctUsed >= 75) barColor = 'var(--yellow)';
-
-    const div = document.createElement('div');
-    div.className = 'money-bucket';
-
-    const nameInput = document.createElement('input');
-    nameInput.className = 'money-bucket-name';
-    nameInput.value = b.name;
-    nameInput.oninput = () => onBucketNameChange(i, nameInput.value);
-
-    const pctInput = document.createElement('input');
-    pctInput.type = 'number';
-    pctInput.className = 'money-bucket-pct';
-    pctInput.value = b.pct;
-    pctInput.min = '0';
-    pctInput.max = '100';
-    pctInput.oninput = () => onBucketPctChange(i, pctInput.value);
-
-    const head = document.createElement('div');
-    head.className = 'money-bucket-head';
-    const icon = document.createElement('span');
-    icon.className = 'money-bucket-icon';
-    icon.textContent = b.icon;
-    head.append(icon, nameInput, pctInput, document.createTextNode('%'));
-
-    const amounts = document.createElement('div');
-    amounts.className = 'money-bucket-amounts';
-    amounts.innerHTML = `
-      <span>Budget: $${allocated.toFixed(2)}</span>
-      <span class="left${left < 0 ? ' over' : ''}">${left < 0 ? '−$' + Math.abs(left).toFixed(2) + ' over' : '$' + left.toFixed(2) + ' left'}</span>
+  let bars = '';
+  m.buckets.forEach(b => {
+    let target;
+    if (b.id === 'emergency') target = m.settings?.emergencyTarget || 1000;
+    else target = (m.settings?.baselineIncome || 1800) * b.pct / 100;
+    const pctFull = target > 0 ? (b.balance / target) * 100 : 0;
+    let color = b.color || 'var(--gold)';
+    if (b.balance <= 0) color = 'var(--red)';
+    bars += `
+      <div class="money-mini-row">
+        <span class="money-mini-label">${b.icon} ${b.name}</span>
+        <div class="money-mini-bar"><div class="money-mini-fill" style="width:${Math.max(0, Math.min(pctFull, 100))}%; background:${color};"></div></div>
+        <span class="money-mini-amt">${fmtMoney(b.balance)}</span>
+      </div>
     `;
-
-    const bar = document.createElement('div');
-    bar.className = 'money-bar';
-    bar.innerHTML = `<div class="money-bar-fill" style="width:${Math.min(pctUsed, 100)}%; background:${barColor};"></div>`;
-
-    const actions = document.createElement('div');
-    actions.className = 'money-bucket-actions';
-    actions.innerHTML = `
-      <input type="number" class="money-expense-input" id="moneyExpense${i}" placeholder="Amount spent" min="0" step="0.01" inputmode="decimal">
-      <button class="money-expense-btn" onclick="logExpense(${i})">− Log</button>
-    `;
-
-    div.append(head, amounts, bar, actions);
-
-    if (b.lastExpense) {
-      const undo = document.createElement('button');
-      undo.className = 'money-bucket-undo';
-      undo.textContent = `Undo last −$${b.lastExpense.toFixed(2)}`;
-      undo.onclick = () => undoExpense(i);
-      div.append(undo);
-    }
-
-    grid.appendChild(div);
-
-    const expenseInput = actions.querySelector('.money-expense-input');
-    expenseInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') logExpense(i); });
   });
 
-  const totalLeft = totalAllocated - totalSpent;
-  document.getElementById('moneyAllocated').textContent = '$' + totalAllocated.toFixed(2);
-  document.getElementById('moneySpent').textContent = '$' + totalSpent.toFixed(2);
-  const leftEl = document.getElementById('moneyLeft');
-  leftEl.textContent = '$' + totalLeft.toFixed(2);
-  leftEl.className = 'money-summary-val ' + (totalLeft < 0 ? 'red' : 'green');
+  el.innerHTML = `
+    <div class="money-snapshot-stats">
+      <div class="money-stat">
+        <div class="money-stat-val gold">${fmtMoney(m.week?.incomeLogged || 0)}</div>
+        <div class="money-stat-label">In This Week</div>
+      </div>
+      <div class="money-stat">
+        <div class="money-stat-val">${fmtMoney(totalSpent)}</div>
+        <div class="money-stat-label">Spent</div>
+      </div>
+      <div class="money-stat">
+        <div class="money-stat-val ${free <= 0 ? 'red' : 'green'}">${fmtMoney(free)}</div>
+        <div class="money-stat-label">Free Right Now</div>
+      </div>
+    </div>
+    <div class="money-snapshot-bars">${bars}</div>
+    <a class="money-open-btn" href="/money.html" target="_blank">Open Money Buckets →</a>
+  `;
 }
 
 // ── INIT ───────────────────────────────────────────────────────────────────
