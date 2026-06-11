@@ -153,8 +153,23 @@
       color: var(--white); font-size: 0.85rem; padding: 0.4rem 0.6rem; outline: none; font-family: 'Inter', sans-serif;
     }
     .settings-row input:focus { border-color: var(--gold); }
+    .settings-row input.account-input { width: 150px; text-align: left; }
     .settings-total { font-size: 0.72rem; color: var(--grey); margin-top: 0.75rem; text-align: right; }
     .settings-total.bad { color: var(--red); font-weight: 700; }
+
+    /* ACCOUNTS */
+    .bucket-account {
+      font-size: 0.65rem; color: var(--grey); margin: -0.2rem 0 0.6rem;
+      display: flex; align-items: center; gap: 0.3rem; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .account-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.7rem 0; border-bottom: 1px solid var(--border);
+    }
+    .account-row:last-child { border-bottom: none; }
+    .account-name { font-size: 0.85rem; font-weight: 700; color: var(--white); }
+    .account-sub { font-size: 0.65rem; color: var(--grey); margin-top: 0.2rem; }
+    .account-total { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; color: var(--gold); }
 
     /* MODAL */
     .modal-overlay {
@@ -215,6 +230,13 @@
   </div>
 
   <button class="btn btn-primary" onclick="openIncomeModal()">+ Log This Week's Pay</button>
+
+  <!-- WHERE THE MONEY LIVES -->
+  <div class="card" style="border-left:4px solid var(--gold);">
+    <div class="card-label">🏦 Where This Money Should Live</div>
+    <div id="accountsList"></div>
+    <div class="bucket-target" style="margin-top:0.5rem;">Check these totals against your real bank balances. If an account is short, that's your sign something got mixed up.</div>
+  </div>
 
   <!-- BUCKETS -->
   <div class="buckets-heading">Your Buckets</div>
@@ -315,14 +337,14 @@ function defaultData() {
       partsWarn: 100,
     },
     buckets: [
-      { id: 'household', icon: '🏠', name: 'Household Bills',     pct: 15, color: 'var(--blue)',   balance: 0 },
-      { id: 'fuel',      icon: '⛽', name: 'Fuel',                 pct: 20, color: 'var(--orange)', balance: 0 },
-      { id: 'parts',     icon: '🔧', name: 'Parts / Manager Debt', pct: 15, color: 'var(--purple)', balance: 0 },
-      { id: 'emergency', icon: '🔥', name: 'Emergency Fund',       pct: 10, color: 'var(--red)',    balance: 0 },
-      { id: 'savings',   icon: '📈', name: 'Savings / Growth',     pct: 10, color: 'var(--green)',  balance: 0 },
-      { id: 'personal',  icon: '🎯', name: 'Personal / Free',      pct: 10, color: 'var(--gold)',   balance: 0 },
+      { id: 'household', icon: '🏠', name: 'Household Bills',     pct: 15, color: 'var(--blue)',   balance: 0, account: 'Chase' },
+      { id: 'fuel',      icon: '⛽', name: 'Fuel',                 pct: 20, color: 'var(--orange)', balance: 0, account: 'Wells Fargo (Business)' },
+      { id: 'parts',     icon: '🔧', name: 'Parts / Manager Debt', pct: 15, color: 'var(--purple)', balance: 0, account: 'Wells Fargo (Business)' },
+      { id: 'emergency', icon: '🔥', name: 'Emergency Fund',       pct: 10, color: 'var(--red)',    balance: 0, account: 'Truist Savings' },
+      { id: 'savings',   icon: '📈', name: 'Savings / Growth',     pct: 10, color: 'var(--green)',  balance: 0, account: 'Truist Savings' },
+      { id: 'personal',  icon: '🎯', name: 'Personal / Free',      pct: 10, color: 'var(--gold)',   balance: 0, account: 'Truist Checking' },
     ],
-    taxHold: { balance: 0 },
+    taxHold: { balance: 0, account: 'Wells Fargo (Business)' },
     managerDebt: { total: 2000, remaining: 2000 },
     week: { incomeLogged: 0, spent: {}, startedAt: new Date().toISOString() },
     history: [],
@@ -335,6 +357,15 @@ function getData() {
     if (!raw) return defaultData();
     const parsed = JSON.parse(raw);
     if (!parsed.buckets || !parsed.settings) return defaultData();
+    // migrate older saves that don't have account fields yet
+    const defaults = defaultData();
+    parsed.buckets.forEach(b => {
+      if (!b.account) {
+        const d = defaults.buckets.find(db => db.id === b.id);
+        b.account = d ? d.account : 'Unassigned';
+      }
+    });
+    if (parsed.taxHold && !parsed.taxHold.account) parsed.taxHold.account = defaults.taxHold.account;
     return parsed;
   } catch { return defaultData(); }
 }
@@ -460,16 +491,36 @@ function bindSettings() {
   const wrap = document.getElementById('settingsBuckets');
   wrap.innerHTML = '';
   data.buckets.forEach((b, i) => {
-    const row = document.createElement('div');
-    row.className = 'settings-row';
-    row.innerHTML = `<label>${b.icon} ${b.name} %</label>`;
-    const input = document.createElement('input');
-    input.type = 'number'; input.min = '0'; input.max = '100'; input.step = '1';
-    input.value = b.pct;
-    input.oninput = () => { b.pct = Math.max(0, parseFloat(input.value) || 0); saveData(); render(); };
-    row.appendChild(input);
-    wrap.appendChild(row);
+    const pctRow = document.createElement('div');
+    pctRow.className = 'settings-row';
+    pctRow.innerHTML = `<label>${b.icon} ${b.name} %</label>`;
+    const pctInput = document.createElement('input');
+    pctInput.type = 'number'; pctInput.min = '0'; pctInput.max = '100'; pctInput.step = '1';
+    pctInput.value = b.pct;
+    pctInput.oninput = () => { b.pct = Math.max(0, parseFloat(pctInput.value) || 0); saveData(); render(); };
+    pctRow.appendChild(pctInput);
+    wrap.appendChild(pctRow);
+
+    const acctRow = document.createElement('div');
+    acctRow.className = 'settings-row';
+    acctRow.innerHTML = `<label>${b.icon} ${b.name} account</label>`;
+    const acctInput = document.createElement('input');
+    acctInput.type = 'text'; acctInput.className = 'account-input';
+    acctInput.value = b.account;
+    acctInput.oninput = () => { b.account = acctInput.value; saveData(); render(); };
+    acctRow.appendChild(acctInput);
+    wrap.appendChild(acctRow);
   });
+
+  const taxAcctRow = document.createElement('div');
+  taxAcctRow.className = 'settings-row';
+  taxAcctRow.innerHTML = `<label>🧾 Tax Hold account</label>`;
+  const taxAcctInput = document.createElement('input');
+  taxAcctInput.type = 'text'; taxAcctInput.className = 'account-input';
+  taxAcctInput.value = data.taxHold.account;
+  taxAcctInput.oninput = () => { data.taxHold.account = taxAcctInput.value; saveData(); render(); };
+  taxAcctRow.appendChild(taxAcctInput);
+  wrap.appendChild(taxAcctRow);
 
   document.getElementById('setBaseline').oninput = (e) => { data.settings.baselineIncome = Math.max(0, parseFloat(e.target.value) || 0); saveData(); render(); };
   document.getElementById('setTaxPct').oninput = (e) => { data.settings.taxPct = Math.max(0, Math.min(100, parseFloat(e.target.value) || 0)); saveData(); render(); };
@@ -546,6 +597,7 @@ function render() {
         <span class="bucket-status">${locked ? '🔒' : (warnText ? '⚠️' : '🟢')}</span>
       </div>
       <div class="bucket-balance${locked ? ' zero' : ''}">${fmt(b.balance)}</div>
+      <div class="bucket-account">🏦 ${b.account}</div>
       <div class="bucket-gauge"><div class="bucket-gauge-fill${locked || warnText ? ' warn' : ''}" style="width:${Math.max(0, Math.min(pctFull, 100))}%;"></div></div>
       <div class="bucket-target">${targetLabel}</div>
       ${warnText ? `<div class="bucket-warn-text">${warnText}</div>` : ''}
@@ -559,9 +611,30 @@ function render() {
     if (inp) inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') spendFromBucket(b.id); });
   });
 
+  // Where the money lives (group buckets + tax hold by real account)
+  const accountTotals = {};
+  data.buckets.forEach(b => {
+    if (!accountTotals[b.account]) accountTotals[b.account] = { total: 0, parts: [] };
+    accountTotals[b.account].total += b.balance;
+    accountTotals[b.account].parts.push(`${b.icon} ${b.name} ${fmt(b.balance)}`);
+  });
+  if (!accountTotals[data.taxHold.account]) accountTotals[data.taxHold.account] = { total: 0, parts: [] };
+  accountTotals[data.taxHold.account].total += data.taxHold.balance;
+  accountTotals[data.taxHold.account].parts.push(`🧾 Tax Hold ${fmt(data.taxHold.balance)}`);
+
+  document.getElementById('accountsList').innerHTML = Object.entries(accountTotals).map(([account, info]) => `
+    <div class="account-row">
+      <div>
+        <div class="account-name">${account}</div>
+        <div class="account-sub">${info.parts.join(' · ')}</div>
+      </div>
+      <div class="account-total">${fmt(info.total)}</div>
+    </div>
+  `).join('');
+
   // Tax hold
   document.getElementById('taxBalance').textContent = fmt(data.taxHold.balance);
-  document.getElementById('taxNote').textContent = `Set aside at ${data.settings.taxPct}% of every paycheck. Keep this for tax season — never spend it.`;
+  document.getElementById('taxNote').textContent = `Set aside at ${data.settings.taxPct}% of every paycheck. Keep this for tax season — never spend it. Lives in: ${data.taxHold.account}.`;
 
   // Manager debt
   document.getElementById('debtRemaining').textContent = fmt(data.managerDebt.remaining);
