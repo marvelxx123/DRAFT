@@ -8,7 +8,7 @@ module.exports = {
   website:      'https://904garagedoors.com',
   areas:        ['Jacksonville', 'Orange Park', 'Fleming Island', 'Mandarin', 'Southside', 'Arlington', 'Ponte Vedra', 'Middleburg', 'Jacksonville Beach', 'Neptune Beach', 'Atlantic Beach', 'Nocatee', 'Palm Coast'],
   services:     ['new garage door installation', 'opener installation', 'garage door issues and troubleshooting', 'off-track door service', 'hurricane-rated door installation', 'garage door spring service', 'cable service', 'same-day garage door service'],
-  usp:          'We connect Jacksonville homeowners with trusted garage door pros — fast response, 7 days a week',
+  usp:          'We connect Jacksonville homeowners with trusted garage door pros — fast response',
   reviewLink:   '',
 
   // AGENT AWARENESS — all agents must operate within these boundaries
