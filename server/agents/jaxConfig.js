@@ -8,18 +8,18 @@ module.exports = {
   website:      'https://904garagedoors.com',
   areas:        ['Jacksonville', 'Orange Park', 'Fleming Island', 'Mandarin', 'Southside', 'Arlington', 'Ponte Vedra', 'Middleburg', 'Jacksonville Beach', 'Neptune Beach', 'Atlantic Beach', 'Nocatee', 'Palm Coast'],
   services:     ['new garage door installation', 'opener installation', 'garage door issues and troubleshooting', 'off-track door service', 'hurricane-rated door installation', 'garage door spring service', 'cable service', 'same-day garage door service'],
-  usp:          'We connect Jacksonville homeowners with trusted garage door pros — fast response',
+  usp:          'Our team of technicians provides garage door service across Jacksonville — fast response, straightforward service',
   reviewLink:   '',
 
   // AGENT AWARENESS — all agents must operate within these boundaries
   platformRules: [
-    'We are a lead generation and dispatch platform, not a direct service company',
-    'Never say "we fix", "we repair", "our technician" or imply hands-on work by the platform',
-    'Always use language like: "we will get someone to you", "we connect you with a pro", "a technician will be dispatched"',
+    'We are a lead generation and dispatch platform internally, but customer-facing tone should sound like an established local company with a team — not a referral/lead-gen middleman',
+    'Never say "we fix", "we repair" in first person as the platform — but "our team of technicians" is OK (it honestly covers the owner + dispatched techs without over-explaining the business model)',
+    'Customer-facing language: "our team of technicians", "call or text to schedule", "our team handles..." — NOT "we connect you with a pro" or "a technician will be dispatched" (customers find dispatch language cold/middleman-y)',
     'Never promise specific outcomes, pricing, or timelines as guarantees',
     'Never claim to be licensed, insured, or bonded as a platform',
-    'The customer experience is: they contact us → we dispatch a qualified pro → pro does the work',
-    'Tone: professional service platform, not a local handyman or buddy',
+    'Internally (CFO briefings, agent instructions, strategy docs): the dispatch/revenue-split model is operational truth and should be referenced normally',
+    'Tone: professional local company, not a corporate platform and not a one-man side hustle',
     'Never create liability by making specific repair promises on behalf of technicians',
   ],
 
