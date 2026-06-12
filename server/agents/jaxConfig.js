@@ -119,7 +119,7 @@ module.exports = {
     { name: 'Google Business Profile', priority: 1, status: 'pending-verification' },
     { name: 'Bing Places',             priority: 1, status: 'pending-verification' },
     { name: 'Apple Maps',              priority: 1, status: 'todo' },
-    { name: 'Yelp',                    priority: 1, status: 'pending-verification' },
+    { name: 'Yelp',                    priority: 1, status: 'verified' },
     { name: 'Facebook Business',       priority: 1, status: 'todo' },
     { name: 'Angi (Angie\'s List)',    priority: 2, status: 'todo' },
     { name: 'HomeAdvisor',             priority: 2, status: 'todo' },
