@@ -15,7 +15,7 @@
       --text:   #0d1117;
       --sub:    #6b7280;
       --red:    #d63b2f;
-      --gold:   #ad8636;
+      --gold:   #9f1d4f;
       --green:  #16a34a;
       --blue:   #2563eb;
       --orange: #ea580c;
@@ -115,11 +115,11 @@
     /* LEAD SCORE BADGES */
     .lead-score { font-size: 0.6rem; font-weight: 700; padding: 0.2rem 0.45rem; border-radius: 4px; white-space: nowrap; margin-top: 0.25rem; display: inline-block; }
     .score-blue { background: rgba(59,130,246,0.15); color: var(--blue); }
-    .score-gold { background: rgba(201,168,76,0.2); color: var(--gold); }
+    .score-gold { background: rgba(159,29,79,0.2); color: var(--gold); }
     .score-red  { background: rgba(214,59,47,0.2); color: var(--red); }
     .lead-type  { font-size: 0.6rem; font-weight: 700; padding: 0.2rem 0.45rem; border-radius: 4px; text-transform: uppercase; white-space: nowrap; display: inline-block; margin-top: 0.2rem; }
     .type-emergency   { background: rgba(214,59,47,0.2); color: var(--red); }
-    .type-replacement { background: rgba(201,168,76,0.15); color: var(--gold); }
+    .type-replacement { background: rgba(159,29,79,0.15); color: var(--gold); }
     .type-maintenance { background: rgba(34,197,94,0.12); color: var(--green); }
     .type-commercial  { background: rgba(59,130,246,0.15); color: var(--blue); }
 
@@ -127,7 +127,7 @@
     .lead-filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
     .filter-btn { background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; color: var(--sub); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.3rem 0.7rem; cursor: pointer; font-family: inherit; text-transform: uppercase; transition: border-color 0.2s, color 0.2s, background 0.2s; }
     .filter-btn:hover { color: var(--text); border-color: rgba(0,0,0,0.15); }
-    .filter-btn.active { background: rgba(201,168,76,0.12); border-color: var(--gold); color: var(--gold); }
+    .filter-btn.active { background: rgba(159,29,79,0.12); border-color: var(--gold); color: var(--gold); }
 
     /* LEADS STATS BAR */
     .leads-stats { display: flex; gap: 1.25rem; flex-wrap: wrap; padding: 0.75rem 1rem; background: var(--bg3); border-radius: 8px; margin-bottom: 1rem; }
@@ -146,7 +146,7 @@
     .seasonal-priority { font-size: 0.78rem; color: var(--gold); font-weight: 600; margin-bottom: 1rem; }
     .months-row { display: flex; gap: 0.3rem; flex-wrap: wrap; }
     .month-pip { font-size: 0.6rem; font-weight: 700; padding: 0.25rem 0.5rem; border-radius: 4px; background: var(--bg3); border: 1px solid var(--border); color: var(--sub); text-transform: uppercase; letter-spacing: 0.05em; }
-    .month-pip.current { background: rgba(201,168,76,0.15); border-color: var(--gold); color: var(--gold); }
+    .month-pip.current { background: rgba(159,29,79,0.15); border-color: var(--gold); color: var(--gold); }
 
     /* RESEARCH */
     .insight-item { padding: 0.85rem 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; color: var(--text); line-height: 1.6; }
@@ -172,13 +172,13 @@
     .health-item.ok     { border-color: rgba(34,197,94,0.2); }
     .health-item.error  { border-color: rgba(214,59,47,0.3); }
     .health-item.missing{ border-color: rgba(214,59,47,0.4); }
-    .health-item.fixed  { border-color: rgba(201,168,76,0.3); }
+    .health-item.fixed  { border-color: rgba(159,29,79,0.3); }
     .health-item.checking{ opacity: 0.5; }
     .health-bulb { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
     .health-bulb.ok      { background: var(--green); box-shadow: 0 0 6px rgba(34,197,94,0.6); }
     .health-bulb.error   { background: var(--red);   box-shadow: 0 0 6px rgba(214,59,47,0.6); animation: blink 1s infinite; }
     .health-bulb.missing { background: var(--red);   box-shadow: 0 0 6px rgba(214,59,47,0.6); animation: blink 1s infinite; }
-    .health-bulb.fixed   { background: var(--gold);  box-shadow: 0 0 6px rgba(201,168,76,0.5); }
+    .health-bulb.fixed   { background: var(--gold);  box-shadow: 0 0 6px rgba(159,29,79,0.5); }
     .health-bulb.checking{ background: var(--sub); }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
     .health-info { flex: 1; min-width: 0; }
@@ -243,7 +243,7 @@
     .lead-desc { font-size: 0.75rem; color: var(--sub); margin-bottom: 0.6rem; line-height: 1.5; }
     .reply-label { font-size: 0.58rem; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.3rem; }
     .reply-textarea { width: 100%; background: rgba(0,0,0,0.03); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 0.75rem; font-family: inherit; line-height: 1.6; padding: 0.6rem 0.75rem; resize: vertical; min-height: 70px; }
-    .reply-textarea:focus { outline: none; border-color: rgba(201,168,76,0.4); }
+    .reply-textarea:focus { outline: none; border-color: rgba(159,29,79,0.4); }
     .lead-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 0.6rem; flex-wrap: wrap; gap: 0.4rem; }
     .outreach-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.1rem; margin-bottom: 0.75rem; }
     .outreach-card:last-child { margin-bottom: 0; }
@@ -253,14 +253,14 @@
     .type-badge { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; padding: 0.15rem 0.45rem; }
     .type-pm    { background: rgba(59,130,246,0.12); color: var(--blue); }
     .type-re    { background: rgba(34,197,94,0.1);   color: var(--green); }
-    .type-hoa   { background: rgba(201,168,76,0.12); color: var(--gold); }
+    .type-hoa   { background: rgba(159,29,79,0.12); color: var(--gold); }
     .type-apt   { background: rgba(249,115,22,0.12); color: var(--orange); }
     .channel-badge { font-size: 0.58rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 4px; padding: 0.15rem 0.45rem; }
     .ch-email { background: rgba(214,59,47,0.12); color: var(--red); }
     .ch-dm    { background: rgba(139,92,246,0.12); color: #7c3aed; }
     .outreach-subject { font-size: 0.7rem; color: var(--gold); margin-bottom: 0.5rem; font-weight: 600; }
     .outreach-msg-textarea { width: 100%; background: rgba(0,0,0,0.03); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 0.75rem; font-family: inherit; line-height: 1.6; padding: 0.6rem 0.75rem; resize: vertical; min-height: 100px; }
-    .outreach-msg-textarea:focus { outline: none; border-color: rgba(201,168,76,0.4); }
+    .outreach-msg-textarea:focus { outline: none; border-color: rgba(159,29,79,0.4); }
     .mark-sent-btn { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.3); border-radius: 6px; font-size: 0.7rem; font-weight: 700; padding: 0.3rem 0.75rem; cursor: pointer; font-family: inherit; transition: background 0.2s; }
     .mark-sent-btn:hover { background: rgba(34,197,94,0.2); }
     .sent-counter { font-size: 0.72rem; color: var(--sub); margin-bottom: 1rem; }
@@ -498,7 +498,7 @@
       <div class="health-grid" id="healthGrid">
         <div class="empty" style="grid-column:1/-1">Checking pages…</div>
       </div>
-      <div id="fixNotice" style="display:none;margin-top:1rem;padding:0.75rem 1rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:8px;font-size:0.78rem;color:var(--gold)"></div>
+      <div id="fixNotice" style="display:none;margin-top:1rem;padding:0.75rem 1rem;background:rgba(159,29,79,0.08);border:1px solid rgba(159,29,79,0.2);border-radius:8px;font-size:0.78rem;color:var(--gold)"></div>
     </div>
 
     <!-- CITY PAGES + AGENTS -->
