@@ -118,10 +118,9 @@ module.exports = {
   citationDirectories: [
     { name: 'Google Business Profile', priority: 1, status: 'pending-verification' },
     { name: 'Bing Places',             priority: 1, status: 'pending-verification' },
-    { name: 'Apple Maps',              priority: 1, status: 'todo' },
+    { name: 'Apple Maps',              priority: 1, status: 'pending-verification' },
     { name: 'Yelp',                    priority: 1, status: 'verified' },
     { name: 'Facebook Business',       priority: 1, status: 'todo' },
-    { name: 'Angi (Angie\'s List)',    priority: 2, status: 'todo' },
     { name: 'HomeAdvisor',             priority: 2, status: 'todo' },
     { name: 'Thumbtack',               priority: 2, status: 'todo' },
     { name: 'Better Business Bureau',  priority: 2, status: 'todo' },
@@ -130,7 +129,8 @@ module.exports = {
     { name: 'Foursquare',              priority: 3, status: 'todo' },
     { name: 'Manta',                   priority: 3, status: 'todo' },
     { name: 'Alignable',               priority: 3, status: 'todo' },
-    { name: 'Jacksonville Chamber of Commerce', priority: 2, status: 'todo' },
+    { name: 'Angi (Angie\'s List)',    priority: 'skip', status: 'skip — 1.96/5 BBB rating, $7.2M FTC fine for deceptive lead claims, leads shared with 3-8 competitors, aggressive 12-mo contracts. Researched 2026-06-13.' },
+    { name: 'Jacksonville Chamber of Commerce', priority: 'deferred', status: 'deferred — paid membership (~$200-400/yr), revisit once cash flow supports it. Useful for B2B networking with property managers/HOAs, not urgent SEO.' },
   ],
 
   // Seasonal focus — agents use this to tailor content to the time of year
