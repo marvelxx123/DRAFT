@@ -101,4 +101,82 @@ function validateSchema(data, schema) {
   return true;
 }
 
-module.exports = { callClaude, callClaudeJSON };
+// ── Agentic loop: model can call tools (functions you define) before answering.
+// Each iteration sends the conversation so far; if the model asks for a tool,
+// we run the matching handler locally and feed the result back as a
+// "tool_result" message, then ask again — until it gives a final text answer.
+async function callClaudeWithTools(prompt, options = {}) {
+  const {
+    maxTokens    = 1024,
+    model        = 'claude-haiku-4-5-20251001',
+    agentId      = 'unknown',
+    callType     = 'agentic',
+    timeout      = DEFAULT_TIMEOUT_MS,
+    tools        = [],
+    toolHandlers = {},
+    system       = undefined,
+    maxSteps     = 6,
+  } = options;
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
+
+  const messages = [{ role: 'user', content: prompt }];
+  const toolLog  = [];
+  let totalInputTokens = 0, totalOutputTokens = 0, totalCostUsd = 0;
+  const startTime = Date.now();
+
+  for (let step = 1; step <= maxSteps; step++) {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      timeout,
+      headers: {
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        model, max_tokens: maxTokens, messages,
+        ...(system ? { system } : {}),
+        ...(tools.length ? { tools } : {}),
+      }),
+    });
+
+    if (!res.ok) throw new Error(`Claude API ${res.status} (tool-use step ${step})`);
+    const data = await res.json();
+
+    const inputTokens  = data.usage?.input_tokens  || 0;
+    const outputTokens = data.usage?.output_tokens || 0;
+    totalInputTokens  += inputTokens;
+    totalOutputTokens += outputTokens;
+    totalCostUsd += ((inputTokens / 1e6) * COST_INPUT) + ((outputTokens / 1e6) * COST_OUTPUT);
+
+    messages.push({ role: 'assistant', content: data.content });
+
+    if (data.stop_reason !== 'tool_use') {
+      const text = (data.content.find(b => b.type === 'text') || {}).text || '';
+      recordCall({ agentId, callType, latencyMs: Date.now() - startTime, inputTokens: totalInputTokens, outputTokens: totalOutputTokens, costUsd: totalCostUsd, attempt: step, success: true });
+      return { text: text.trim(), toolLog, steps: step };
+    }
+
+    const toolUses = data.content.filter(b => b.type === 'tool_use');
+    const toolResults = [];
+    for (const use of toolUses) {
+      const handler = toolHandlers[use.name];
+      let result;
+      try {
+        result = handler ? await handler(use.input) : { error: `No handler registered for tool "${use.name}"` };
+      } catch (err) {
+        result = { error: err.message };
+      }
+      toolLog.push({ tool: use.name, input: use.input, result });
+      toolResults.push({ type: 'tool_result', tool_use_id: use.id, content: JSON.stringify(result) });
+    }
+    messages.push({ role: 'user', content: toolResults });
+  }
+
+  recordCall({ agentId, callType, latencyMs: Date.now() - startTime, inputTokens: totalInputTokens, outputTokens: totalOutputTokens, costUsd: totalCostUsd, attempt: maxSteps, success: false, error: 'maxSteps exceeded' });
+  throw new Error(`Tool-use loop exceeded ${maxSteps} steps without a final answer`);
+}
+
+module.exports = { callClaude, callClaudeJSON, callClaudeWithTools };

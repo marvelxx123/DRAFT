@@ -288,6 +288,65 @@ router.post('/outreach/:id/sent', requireAdmin, (req, res) => {
   res.json({ success: true, item });
 });
 
+// ── LEAD TRIAGE ROUTES ─────────────────────────────────────────────────────────
+// Triage agent researches high-value leads and drafts a recommendation; nothing
+// is sent to a customer until the owner approves it here.
+
+const TRIAGE_FILE = path.join(ROOT, 'data/jax-triage.json');
+
+function readTriage() {
+  try {
+    const raw = JSON.parse(fs.readFileSync(TRIAGE_FILE, 'utf8'));
+    return Array.isArray(raw.queue) ? raw.queue : [];
+  } catch { return []; }
+}
+
+function saveTriage(queue) {
+  fs.writeFileSync(TRIAGE_FILE, JSON.stringify({ queue }, null, 2));
+}
+
+// GET /api/admin/triage — pending queue + recent decided items
+router.get('/triage', requireAdmin, (_req, res) => {
+  const all     = readTriage();
+  const pending = all.filter(i => i.status === 'pending');
+  const recent  = all.filter(i => i.status !== 'pending').slice(0, 20);
+  res.json({ pending, recent });
+});
+
+// POST /api/admin/triage/:id/approve — send the drafted SMS, mark approved
+router.post('/triage/:id/approve', requireAdmin, async (req, res) => {
+  const { id } = req.params;
+  const { editedSms } = req.body || {};
+  const queue = readTriage();
+  const item  = queue.find(i => String(i.id) === String(id));
+  if (!item) return res.status(404).json({ error: 'Triage item not found' });
+
+  const message = editedSms || item.draftSms;
+  if (message && item.phone) {
+    await sms.sendCustom(item.phone, message);
+  }
+  item.status    = 'approved';
+  item.sentSms   = message;
+  item.decidedAt = new Date().toISOString();
+  saveTriage(queue);
+  log('admin', 'success', `Triage item ${id} approved and sent`);
+  res.json({ success: true, item });
+});
+
+// POST /api/admin/triage/:id/reject — discard, no SMS sent
+router.post('/triage/:id/reject', requireAdmin, (req, res) => {
+  const { id } = req.params;
+  const queue = readTriage();
+  const item  = queue.find(i => String(i.id) === String(id));
+  if (!item) return res.status(404).json({ error: 'Triage item not found' });
+
+  item.status    = 'rejected';
+  item.decidedAt = new Date().toISOString();
+  saveTriage(queue);
+  log('admin', 'success', `Triage item ${id} rejected`);
+  res.json({ success: true, item });
+});
+
 // ── LEAD OUTCOME TRACKING ──────────────────────────────────────────────────────
 
 const LEADS_FILE = path.join(ROOT, 'data/leads.json');

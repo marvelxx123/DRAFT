@@ -4,6 +4,7 @@ const fs      = require('fs');
 const path    = require('path');
 const jaxConfig = require('../agents/jaxConfig');
 const sms       = require('../services/sms');
+const jaxTriageAgent = require('../agents/jaxTriageAgent');
 const { sanitizeContactBody, detectInjection } = require('../utils/security');
 const { log } = require('../agents/logger');
 
@@ -108,6 +109,10 @@ router.post('/', (req, res) => {
   sms.sendLeadConfirmation(phone, firstName);
   sms.sendOwnerAlert(saved);
   sms.scheduleFollowUp(phone, firstName);
+
+  // Autonomous triage — researches high-value/commercial leads and drafts a
+  // recommendation for owner approval. Never sends anything itself.
+  jaxTriageAgent.triageLead(saved).catch(err => log('triage', 'error', `Triage call failed for lead ${saved.id}: ${err.message}`));
 });
 
 // GET /api/contact

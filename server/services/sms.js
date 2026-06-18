@@ -69,4 +69,9 @@ async function sendReviewRequest(phone, firstName, reviewLink) {
   );
 }
 
-module.exports = { sendLeadConfirmation, sendOwnerAlert, scheduleFollowUp, sendReviewRequest };
+// Generic send — used by the triage approval flow once a human approves a drafted message
+async function sendCustom(phone, message) {
+  await send(phone, message);
+}
+
+module.exports = { sendLeadConfirmation, sendOwnerAlert, scheduleFollowUp, sendReviewRequest, sendCustom };

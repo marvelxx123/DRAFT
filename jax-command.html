@@ -325,6 +325,20 @@
       <div class="kpi"><div class="kpi-label">Agents Running</div><div class="kpi-val" id="kpiAgents">—</div><div class="kpi-sub">Active / total</div></div>
     </div>
 
+    <!-- LEAD TRIAGE — PENDING APPROVAL -->
+    <div class="section-panel" id="triagePanel">
+      <div class="section-header" onclick="toggleSection('triagePanel')">
+        <div class="section-title">
+          <span>Lead Triage — Pending Approval</span>
+          <span id="triageCount" style="color:var(--gold);font-size:0.65rem;letter-spacing:0.05em"></span>
+        </div>
+        <span class="section-chevron" id="triageChevron">▾</span>
+      </div>
+      <div class="section-body" id="triageBody">
+        <div id="triageContainer"><div class="empty">Loading triage queue…</div></div>
+      </div>
+    </div>
+
     <!-- TOP ROW: LEADS + MARKET ALERTS -->
     <div class="grid-2">
 
@@ -1192,6 +1206,89 @@
     }
   }
 
+  // ── LEAD TRIAGE — researched + drafted by the triage agent, approved by a human ──
+  async function loadTriage() {
+    try {
+      const r = await fetch('/api/admin/triage', { headers: authHeaders() });
+      const d = await r.json();
+      const pending = d.pending || [];
+
+      document.getElementById('triageCount').textContent =
+        pending.length > 0 ? `${pending.length} pending` : 'queue empty';
+
+      const container = document.getElementById('triageContainer');
+      if (!pending.length) {
+        container.innerHTML = '<div class="empty">No leads waiting on triage — high-value/commercial leads land here for review</div>';
+        return;
+      }
+
+      const PRIORITY_COLOR = { high: 'var(--red)', normal: 'var(--gold)', low: 'var(--sub)' };
+
+      container.innerHTML = pending.map(item => {
+        const prColor = PRIORITY_COLOR[item.priority] || 'var(--sub)';
+        return `<div class="outreach-card" id="triage-card-${item.id}">
+          <div class="outreach-top">
+            <div class="outreach-target">${esc(item.name || '—')} · ${esc(item.phone || '')}</div>
+            <div class="outreach-badges">
+              <span class="type-badge" style="background:${prColor};color:#fff">${esc((item.priority||'normal').toUpperCase())}</span>
+              ${item.escalate ? '<span class="overdue-badge">⚠ Escalate</span>' : ''}
+            </div>
+          </div>
+          <div class="outreach-subject">${esc(item.service || '')} — ${esc(item.city || '')} · score ${item.leadScore ?? '—'}</div>
+          ${item.escalate ? `<div class="outreach-subject" style="color:var(--red)">Escalation reason: ${esc(item.escalateReason || '')}</div>` : ''}
+          ${item.reasoning ? `<div class="outreach-subject">Agent reasoning: ${esc(item.reasoning)}</div>` : ''}
+          <textarea class="outreach-msg-textarea" id="triage-msg-${item.id}">${esc(item.draftSms || '')}</textarea>
+          <div style="display:flex;align-items:center;justify-content:flex-end;gap:0.6rem;margin-top:0.6rem">
+            <button class="cl-btn secondary" style="font-size:0.68rem;padding:0.28rem 0.65rem" onclick="copyReply('triage-msg-${item.id}')">Copy</button>
+            <button class="cl-btn secondary" style="font-size:0.68rem;padding:0.28rem 0.65rem" onclick="rejectTriage('${item.id}')">✕ Reject</button>
+            <button class="mark-sent-btn" onclick="approveTriage('${item.id}')">✓ Approve &amp; Send</button>
+          </div>
+        </div>`;
+      }).join('');
+    } catch (e) {
+      document.getElementById('triageContainer').innerHTML = '<div class="empty">Could not load triage queue</div>';
+    }
+  }
+
+  async function approveTriage(id) {
+    const textarea = document.getElementById(`triage-msg-${id}`);
+    const editedSms = textarea ? textarea.value : undefined;
+    try {
+      const r = await fetch(`/api/admin/triage/${id}/approve`, {
+        method: 'POST', headers: authHeaders(),
+        body: JSON.stringify({ editedSms }),
+      });
+      if (!r.ok) throw new Error();
+      const card = document.getElementById(`triage-card-${id}`);
+      if (card) {
+        card.style.opacity = '0';
+        card.style.transition = 'opacity 0.3s';
+        setTimeout(() => { card.remove(); loadTriage(); }, 300);
+      } else {
+        loadTriage();
+      }
+    } catch {
+      alert('Could not approve/send — please try again.');
+    }
+  }
+
+  async function rejectTriage(id) {
+    try {
+      const r = await fetch(`/api/admin/triage/${id}/reject`, { method: 'POST', headers: authHeaders() });
+      if (!r.ok) throw new Error();
+      const card = document.getElementById(`triage-card-${id}`);
+      if (card) {
+        card.style.opacity = '0';
+        card.style.transition = 'opacity 0.3s';
+        setTimeout(() => { card.remove(); loadTriage(); }, 300);
+      } else {
+        loadTriage();
+      }
+    } catch {
+      alert('Could not reject — please try again.');
+    }
+  }
+
   // ── LEAD OUTCOME TRACKING ─────────────────────────────────────────────────
   async function markLeadClosed(id) {
     const val = prompt('Job value ($)? Enter amount or leave blank:');
@@ -1470,6 +1567,7 @@
     await Promise.all([
       loadLeads(), loadResearch(), loadFunnel(), loadAgents(), loadLogs(), loadHealth(),
       loadCraigslist(), loadOutreach(), loadMemory(), loadMetrics(), loadCFO(), loadReviews(),
+      loadTriage(),
     ]);
   }
 
