@@ -57,6 +57,11 @@ const tools = [
       required: ['service'],
     },
   },
+  {
+    name: 'get_seasonal_context',
+    description: "Get what's currently happening seasonally in Jacksonville for garage doors (e.g. hurricane prep, post-storm surge, snowbird patterns) — use this to decide whether the draft SMS should mention something timely.",
+    input_schema: { type: 'object', properties: {}, required: [] },
+  },
 ];
 
 const toolHandlers = {
@@ -77,6 +82,10 @@ const toolHandlers = {
   get_competitor_research: async () => {
     const research = readJson(RESEARCH_FILE, {});
     return { topChannels: research.topChannels || [], keyInsights: research.keyInsights || [] };
+  },
+  get_seasonal_context: async () => {
+    const month = String(new Date().getMonth() + 1);
+    return { month, context: jaxConfig.seasonalContext[month] || 'no seasonal notes for this month' };
   },
 };
 
@@ -101,7 +110,7 @@ Lead:
 - Lead score: ${lead.leadScore}
 - Customer type: ${lead.customerType}
 
-Use get_market_data for the lead's city, get_lead_history for their phone number, and get_competitor_research for their service type before deciding — don't skip the research.
+Use get_market_data for the lead's city, get_lead_history for their phone number, get_competitor_research for their service type, and get_seasonal_context before deciding — don't skip the research. If the seasonal context is relevant to this lead's service or urgency, weave it into the draft SMS naturally.
 
 Respond with ONLY raw JSON in this exact shape, no markdown:
 {
