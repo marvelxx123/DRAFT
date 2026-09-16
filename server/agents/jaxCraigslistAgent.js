@@ -94,7 +94,7 @@ async function generateLeadReply(item) {
     `Title: "${item.title}"\n` +
     `Post: "${item.description.slice(0, 300)}"\n\n` +
     `Write a short Craigslist reply. Max 60 words. Professional but approachable. ` +
-    `Say we can get someone out same day or next day. Include phone number (904) 468-3428. ` +
+    `Say we can get someone out same day or next day. Include phone number (904) 447-2397. ` +
     `No bullet points, no markdown, no fake names. ` +
     `Never promise specific pricing or outcomes. Use "we can get someone out to you" not "we fix" or "we repair". ` +
     `Sign off as 904 Garage Doors.`;
@@ -102,7 +102,7 @@ async function generateLeadReply(item) {
     return await callClaude(prompt, { agentId: AGENT_ID, maxTokens: 500 });
   } catch (err) {
     log(AGENT_ID, 'warn', `Reply gen failed for lead "${item.title}": ${err.message}`);
-    return `Hi, saw your post — 904 Garage Doors here. We can get someone out to you same day or tomorrow to take a look. Give us a call at (904) 468-3428 and we'll get it sorted. — 904 Garage Doors`;
+    return `Hi, saw your post — 904 Garage Doors here. We can get someone out to you same day or tomorrow to take a look. Give us a call at (904) 447-2397 and we'll get it sorted. — 904 Garage Doors`;
   }
 }
 
@@ -190,7 +190,7 @@ async function run() {
     log(AGENT_ID, 'success', `Craigslist ad generated: "${adType.title}"`);
   } catch (err) {
     log(AGENT_ID, 'error', `Ad generation failed: ${err.message}`);
-    adBody = `Same-day garage door service in Jacksonville FL. Call (904) 468-3428 — 904 Garage Doors`;
+    adBody = `Same-day garage door service in Jacksonville FL. Call (904) 447-2397 — 904 Garage Doors`;
   };
 
   const adEntry = {

@@ -28,7 +28,7 @@ async function sendLeadConfirmation(phone, firstName) {
   const name = firstName ? ` ${firstName}` : '';
   await send(phone,
     `Hi${name}, got your request — we're on it. A pro will reach out within 30 minutes. ` +
-    `Questions? Call us: (904) 468-3428. — 904 Garage Doors`
+    `Questions? Call us: (904) 447-2397. — 904 Garage Doors`
   );
 }
 
@@ -53,7 +53,7 @@ async function scheduleFollowUp(phone, firstName) {
   setTimeout(async () => {
     await send(phone,
       `Hi${name}, just checking in — 904 Garage Doors here. ` +
-      `Still need help with your garage door? Call or text us anytime: (904) 468-3428.`
+      `Still need help with your garage door? Call or text us anytime: (904) 447-2397.`
     );
   }, 45 * 60 * 1000);
 }

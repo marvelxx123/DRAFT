@@ -4,7 +4,7 @@
 module.exports = {
   businessName: '904 Garage Doors',
   ownerName:    'Tal',
-  phone:        '(904) 468-3428',
+  phone:        '(904) 447-2397',
   website:      'https://904garagedoors.com',
   areas:        ['Jacksonville', 'Orange Park', 'Fleming Island', 'Mandarin', 'Southside', 'Arlington', 'Ponte Vedra', 'Middleburg', 'Jacksonville Beach', 'Neptune Beach', 'Atlantic Beach', 'Nocatee', 'Palm Coast'],
   services:     ['new garage door installation', 'opener installation', 'garage door issues and troubleshooting', 'off-track door service', 'hurricane-rated door installation', 'garage door spring service', 'cable service', 'same-day garage door service'],
@@ -94,8 +94,8 @@ module.exports = {
       { q: 'Do you service Ponte Vedra?', a: 'Yes, Ponte Vedra Beach and Ponte Vedra are among our primary service areas.' },
       { q: 'What types of garage door problems do you fix?', a: 'Springs, cables, openers, panels, tracks, and full door replacements — all brands.' },
       { q: 'Are you available on weekends and holidays?', a: 'Yes — 7 days a week including weekends.' },
-      { q: 'How do I get a free estimate?', a: 'Call (904) 468-3428 or submit the form at 904garagedoors.com — we respond fast.' },
-      { q: 'Do you handle emergency garage door repairs?', a: 'Yes — emergency same-day service is our specialty. Call (904) 468-3428 right now.' },
+      { q: 'How do I get a free estimate?', a: 'Call (904) 447-2397 or submit the form at 904garagedoors.com — we respond fast.' },
+      { q: 'Do you handle emergency garage door repairs?', a: 'Yes — emergency same-day service is our specialty. Call (904) 447-2397 right now.' },
     ],
   },
 
@@ -114,7 +114,7 @@ module.exports = {
   ],
 
   // ── CITATION DIRECTORIES (NAP must be 100% consistent) ───────────────────
-  // Name: 904 Garage Doors | Phone: (904) 468-3428 | Website: 904garagedoors.com
+  // Name: 904 Garage Doors | Phone: (904) 447-2397 | Website: 904garagedoors.com
   citationDirectories: [
     { name: 'Google Business Profile', priority: 1, status: 'pending-verification' },
     { name: 'Bing Places',             priority: 1, status: 'pending-verification' },

@@ -171,7 +171,7 @@ KEY FACTS:
 - Has Google LSA (background check complete)
 - Has GMB profile (verification pending)
 - Same-day dispatch, professional service platform, 7 days/week
-- Phone: (904) 468-3428
+- Phone: (904) 447-2397
 - No physical storefront — operates as service-area business
 
 LOCAL SEO PRINCIPLES TO APPLY:
@@ -260,7 +260,7 @@ Return ONLY the JSON array.`;
 
 Correct NAP (Name, Address, Phone):
 - Name: 904 Garage Doors
-- Phone: (904) 468-3428
+- Phone: (904) 447-2397
 - Website: https://904garagedoors.com
 - Service area: Jacksonville, FL and surrounding areas (no fixed address — service area business)
 
