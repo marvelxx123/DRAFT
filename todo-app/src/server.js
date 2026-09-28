@@ -1,4 +1,5 @@
 import express from 'express';
+import bcrypt from 'bcryptjs';
 import db from './db.js';
 
 const app = express();
@@ -6,6 +7,13 @@ app.use(express.json()); // lets us read a JSON body sent with POST
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
+});
+
+app.post('/api/register', async (req, res) => {
+  const { email, password } = req.body;
+  const passwordHash = await bcrypt.hash(password, 10); // "blend" the password
+  const info = db.prepare('INSERT INTO users (email, password_hash) VALUES (?, ?)').run(email, passwordHash);
+  res.status(201).json({ id: info.lastInsertRowid, email });
 });
 
 app.get('/api/tasks', (req, res) => {
