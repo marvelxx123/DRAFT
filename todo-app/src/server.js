@@ -8,19 +8,36 @@ const SECRET = 'dev-only-secret-well-fix-this-properly-later';
 const app = express();
 app.use(express.json()); // lets us read a JSON body sent with POST
 
+// Wraps an `async` route handler so that if it rejects, the error reaches
+// our error-handling middleware via next(err) instead of silently becoming
+// an unhandled rejection that can crash the whole process.
+function asyncHandler(fn) {
+  return (req, res, next) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
+}
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-app.post('/api/register', async (req, res) => {
+app.post('/api/register', asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ error: 'email and password are both required' });
+  }
+
   const passwordHash = await bcrypt.hash(password, 10); // "blend" the password
   const info = db.prepare('INSERT INTO users (email, password_hash) VALUES (?, ?)').run(email, passwordHash);
   res.status(201).json({ id: info.lastInsertRowid, email });
-});
+}));
 
-app.post('/api/login', async (req, res) => {
+app.post('/api/login', asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ error: 'email and password are both required' });
+  }
+
   const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
 
   if (!user) {
@@ -36,7 +53,7 @@ app.post('/api/login', async (req, res) => {
 
   const token = jwt.sign({ userId: user.id }, SECRET);
   res.json({ token });
-});
+}));
 
 // The checkpoint: runs BEFORE any route it's attached to. Checks the
 // wristband is real, then attaches whose it is (req.userId) so every route
@@ -65,6 +82,10 @@ app.get('/api/tasks', requireAuth, (req, res) => {
 
 app.post('/api/tasks', requireAuth, (req, res) => {
   const { title } = req.body;
+  if (!title || typeof title !== 'string' || !title.trim()) {
+    return res.status(400).json({ error: 'title is required' });
+  }
+
   const info = db.prepare('INSERT INTO tasks (user_id, title) VALUES (?, ?)').run(req.userId, title);
   res.status(201).json({ id: info.lastInsertRowid, title });
 });
@@ -95,6 +116,15 @@ app.patch('/api/tasks/:id', requireAuth, (req, res) => {
 app.delete('/api/tasks/:id', requireAuth, (req, res) => {
   db.prepare('DELETE FROM tasks WHERE id = ? AND user_id = ?').run(req.params.id, req.userId);
   res.status(204).send(); // 204 = "worked, nothing to send back"
+});
+
+// Safety net: a 4-argument function is how Express recognizes an error
+// handler. It only runs if something throws (or calls next(err)) in a route
+// above. MUST be registered last. Without this, Express falls back to its
+// own handler — the ugly HTML + stack trace you just saw.
+app.use((err, req, res, next) => {
+  console.error(err); // still log the real thing for us to debug
+  res.status(500).json({ error: 'Something went wrong' }); // never leak details to the client
 });
 
 app.listen(4000, () => {
