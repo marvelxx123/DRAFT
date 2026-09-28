@@ -1,6 +1,9 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import db from './db.js';
+
+const SECRET = 'dev-only-secret-well-fix-this-properly-later';
 
 const app = express();
 app.use(express.json()); // lets us read a JSON body sent with POST
@@ -14,6 +17,25 @@ app.post('/api/register', async (req, res) => {
   const passwordHash = await bcrypt.hash(password, 10); // "blend" the password
   const info = db.prepare('INSERT INTO users (email, password_hash) VALUES (?, ?)').run(email, passwordHash);
   res.status(201).json({ id: info.lastInsertRowid, email });
+});
+
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+  const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+
+  if (!user) {
+    return res.status(401).json({ error: 'Invalid email or password' });
+  }
+
+  // Blend the password they just typed and compare it to the stored smoothie.
+  // bcrypt.compare does this correctly and safely - we never "un-blend" anything.
+  const passwordMatches = await bcrypt.compare(password, user.password_hash);
+  if (!passwordMatches) {
+    return res.status(401).json({ error: 'Invalid email or password' });
+  }
+
+  const token = jwt.sign({ userId: user.id }, SECRET);
+  res.json({ token });
 });
 
 app.get('/api/tasks', (req, res) => {
