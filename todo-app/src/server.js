@@ -1,18 +1,22 @@
 import express from 'express';
+import db from './db.js';
 
 const app = express();
+app.use(express.json()); // lets us read a JSON body sent with POST
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-// No database yet — just proving the URL -> function -> response idea
-// with a fake, hardcoded list.
 app.get('/api/tasks', (req, res) => {
-  res.json([
-    { id: 1, title: 'Learn what an API is' },
-    { id: 2, title: 'Build the real database next' },
-  ]);
+  const tasks = db.prepare('SELECT * FROM tasks').all();
+  res.json(tasks);
+});
+
+app.post('/api/tasks', (req, res) => {
+  const { title } = req.body;
+  const info = db.prepare('INSERT INTO tasks (title) VALUES (?)').run(title);
+  res.status(201).json({ id: info.lastInsertRowid, title });
 });
 
 app.listen(4000, () => {
