@@ -2,8 +2,7 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import db from './db.js';
-
-const SECRET = 'dev-only-secret-well-fix-this-properly-later';
+import { config } from './config/env.js';
 
 const app = express();
 app.use(express.json()); // lets us read a JSON body sent with POST
@@ -51,7 +50,7 @@ app.post('/api/login', asyncHandler(async (req, res) => {
     return res.status(401).json({ error: 'Invalid email or password' });
   }
 
-  const token = jwt.sign({ userId: user.id }, SECRET);
+  const token = jwt.sign({ userId: user.id }, config.JWT_SECRET);
   res.json({ token });
 }));
 
@@ -67,7 +66,7 @@ function requireAuth(req, res, next) {
   }
 
   try {
-    const payload = jwt.verify(token, SECRET); // throws if forged/invalid
+    const payload = jwt.verify(token, config.JWT_SECRET); // throws if forged/invalid
     req.userId = payload.userId;
     next(); // let the request continue to the actual route
   } catch {
@@ -127,6 +126,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong' }); // never leak details to the client
 });
 
-app.listen(4000, () => {
-  console.log('listening on port 4000');
+app.listen(config.PORT, () => {
+  console.log(`listening on port ${config.PORT}`);
 });
