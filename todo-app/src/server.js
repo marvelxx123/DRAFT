@@ -19,6 +19,11 @@ app.post('/api/tasks', (req, res) => {
   res.status(201).json({ id: info.lastInsertRowid, title });
 });
 
+app.delete('/api/tasks/:id', (req, res) => {
+  db.prepare('DELETE FROM tasks WHERE id = ?').run(req.params.id);
+  res.status(204).send(); // 204 = "worked, nothing to send back"
+});
+
 app.listen(4000, () => {
   console.log('listening on port 4000');
 });
