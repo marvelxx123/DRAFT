@@ -1,0 +1,20 @@
+{
+  "name": "automatic-email-sender",
+  "version": "1.0.0",
+  "description": "Voice-driven AI agent that drafts Gmail messages from dictation, reads them back for approval, and sends from the Gmail account you choose.",
+  "type": "module",
+  "main": "server/index.js",
+  "engines": { "node": ">=20.0.0" },
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.80.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "googleapis": "^144.0.0",
+    "zod": "^3.23.8"
+  }
+}

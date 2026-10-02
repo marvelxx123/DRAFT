@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automatic Email Sender</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Automatic Email Sender</h1>
+    <div id="status" class="muted">Checking setup…</div>
+  </header>
+
+  <main>
+    <section class="panel" id="talk">
+      <div class="controls">
+        <button id="mic" class="mic" title="Hold to talk, or click to toggle">
+          <span class="dot"></span><span id="micLabel">Talk</span>
+        </button>
+        <label class="toggle"><input type="checkbox" id="handsFree" checked> Keep listening after each reply</label>
+        <label class="toggle">Language
+          <select id="lang">
+            <option value="en-US">English (US)</option>
+            <option value="en-GB">English (UK)</option>
+            <option value="he-IL">Hebrew</option>
+            <option value="es-ES">Spanish</option>
+            <option value="fr-FR">French</option>
+            <option value="de-DE">German</option>
+            <option value="pt-BR">Portuguese (BR)</option>
+            <option value="ru-RU">Russian</option>
+          </select>
+        </label>
+        <button id="newEmail" class="secondary">New email</button>
+      </div>
+      <div id="interim" class="interim"></div>
+      <form id="typeForm" class="typeForm">
+        <input id="typed" type="text" placeholder="Or type here and press Enter" autocomplete="off">
+        <button type="submit" class="secondary">Send text</button>
+      </form>
+
+      <div id="log" class="log"></div>
+
+      <div id="draft" class="draft hidden">
+        <h2>Draft</h2>
+        <div class="row"><span>From</span><strong id="dFrom"></strong></div>
+        <div class="row"><span>To</span><strong id="dTo"></strong></div>
+        <div class="row"><span>Subject</span><strong id="dSubject"></strong></div>
+        <pre id="dBody"></pre>
+        <div class="actions">
+          <button id="approve" class="primary" disabled>Approve and send</button>
+          <button id="cancel" class="danger">Cancel</button>
+        </div>
+        <div id="draftNote" class="muted"></div>
+      </div>
+    </section>
+
+    <aside>
+      <section class="panel">
+        <h2>Gmail accounts</h2>
+        <ul id="accounts" class="list"></ul>
+        <a class="button primary" href="/auth/google">Connect a Gmail account</a>
+      </section>
+
+      <section class="panel">
+        <h2>Contacts</h2>
+        <ul id="contacts" class="list"></ul>
+        <form id="contactForm" class="inline">
+          <input id="cName" placeholder="Name" required>
+          <input id="cEmail" type="email" placeholder="email@example.com" required>
+          <button type="submit" class="secondary">Add</button>
+        </form>
+      </section>
+
+      <section class="panel muted small">
+        <p>Say who the email is for, which account to send from, and what you want to say. The assistant reads the draft back. Say “send it” to approve, or ask for changes.</p>
+      </section>
+    </aside>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
