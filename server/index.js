@@ -7,6 +7,7 @@ const fs = require('fs');
 const adminRoutes    = require('./routes/admin');
 const contactRoutes  = require('./routes/contact');
 const blogRoutes     = require('./routes/blog');
+const inventoryRoutes = require('./routes/inventory');
 const agentRunner    = require('./agents/agentRunner');
 
 const app = express();
@@ -15,7 +16,7 @@ const PORT = process.env.PORT || 3000;
 // ── MIDDLEWARE ───────────────────────────────────────────────────────────────
 app.use(cors({
   origin: process.env.SITE_URL || '*',
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 }));
 app.use(express.json({ limit: '10mb' }));
 
@@ -23,6 +24,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use('/api/admin',    adminRoutes);
 app.use('/api/contact',  contactRoutes);
 app.use('/api/blog',     blogRoutes);
+app.use('/api/inventory', inventoryRoutes);
 
 // ── HEALTH CHECK ─────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {
@@ -55,6 +57,11 @@ app.get('/jax-command', (_req, res) => {
   res.sendFile(path.join(__dirname, '..', 'jax-command.html'));
 });
 
+// Technician inventory app
+app.get('/inventory', (_req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'inventory.html'));
+});
+
 // City landing pages — clean URLs without .html extension
 app.get('/garage-door-repair-:city', (req, res) => {
   const city = req.params.city.replace(/[^a-z0-9-]/g, '');
@@ -82,12 +89,15 @@ app.use((err, _req, res, _next) => {
 // Ensure data directory exists
 const DATA_DIR = path.join(__dirname, '..', 'data');
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+const UPLOAD_DIR = path.join(__dirname, '..', 'uploads', 'inventory');
+if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
 app.listen(PORT, () => {
   console.log(`\n 904 Garage Doors — server running on http://localhost:${PORT}`);
   console.log(`   Claude AI:  ${process.env.ANTHROPIC_API_KEY ? '✓' : '✗ missing ANTHROPIC_API_KEY (agents need this)'}`);
   console.log(`   Admin pwd:  ${process.env.ADMIN_PASSWORD    ? '✓ (from env)' : '⚠ using default password — set ADMIN_PASSWORD on Railway'}`);
   console.log(`   Dashboard:  /jax-command`);
+  console.log(`   Inventory:  /inventory`);
   console.log(`   Health:     /api/health\n`);
 
   // Start autonomous agents

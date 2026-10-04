@@ -4,3 +4,4 @@ screenshot*.mjs
 *.log
 .env
 DRAFT 2
+uploads
