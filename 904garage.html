@@ -144,21 +144,22 @@
 
     /* ── HERO ── */
     .hero {
-      background: var(--ink);
+      background: var(--white);
       padding: 130px 0 90px;
       position: relative; overflow: hidden;
+      border-bottom: 1px solid var(--border);
     }
     .hero-grid {
       position: absolute; inset: 0; pointer-events: none;
       background-image:
-        linear-gradient(rgba(245,197,24,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(245,197,24,0.04) 1px, transparent 1px);
+        linear-gradient(rgba(0,0,0,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.025) 1px, transparent 1px);
       background-size: 72px 72px;
     }
     .hero-glow {
       position: absolute; top: -20%; right: -10%;
       width: 600px; height: 600px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(245,197,24,0.12) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(245,197,24,0.18) 0%, transparent 70%);
       pointer-events: none;
     }
     .hero-inner {
@@ -169,56 +170,65 @@
     .hero-eyebrow {
       display: inline-flex; align-items: center; gap: 0.5rem;
       font-size: 0.65rem; font-weight: 800; letter-spacing: 0.22em;
-      text-transform: uppercase; color: var(--yellow);
+      text-transform: uppercase; color: var(--sub);
       margin-bottom: 1.5rem;
     }
-    .hero-eyebrow::before { content: ''; display: block; width: 28px; height: 1.5px; background: var(--yellow); }
+    .hero-eyebrow::before { content: ''; display: block; width: 28px; height: 2px; background: var(--yellow); }
     .hero-h1 {
       font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(3.2rem, 6.5vw, 5.5rem);
       line-height: 0.93; letter-spacing: 0.02em;
-      color: #fff; margin-bottom: 1.5rem;
+      color: var(--ink); margin-bottom: 1.5rem;
     }
-    .hero-h1 strong { color: var(--yellow); font-style: normal; }
+    .hero-h1 strong { color: var(--yellow-d); font-style: normal; }
     .hero-sub {
-      font-size: 1rem; color: rgba(255,255,255,0.5);
+      font-size: 1rem; color: var(--sub);
       line-height: 1.8; max-width: 480px; margin-bottom: 2.5rem;
     }
     .hero-phone {
       display: block;
       font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(2rem, 4vw, 3rem);
-      letter-spacing: 0.06em; color: var(--yellow);
+      letter-spacing: 0.06em; color: var(--ink);
       margin-bottom: 0.75rem;
       transition: color 0.2s, transform 0.2s;
     }
-    .hero-phone:hover { color: #fff; transform: translateX(4px); }
+    .hero-phone:hover { color: var(--yellow-d); transform: translateX(4px); }
     .hero-ctas { display: flex; gap: 0.75rem; flex-wrap: wrap; }
     .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--ink); color: #fff;
+      font-weight: 800; font-size: 0.88rem; letter-spacing: 0.04em;
+      padding: 0.9rem 1.85rem; border-radius: 8px;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    }
+    .btn-primary:hover { background: var(--ink-3); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.22); }
+    .btn-yellow {
       display: inline-flex; align-items: center; gap: 0.5rem;
       background: var(--yellow); color: var(--ink);
       font-weight: 800; font-size: 0.88rem; letter-spacing: 0.04em;
       padding: 0.9rem 1.85rem; border-radius: 8px;
-      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 24px rgba(245,197,24,0.45);
+      border: none; transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(245,197,24,0.4);
     }
-    .btn-primary:hover { background: var(--yellow-d); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(245,197,24,0.5); }
+    .btn-yellow:hover { background: var(--yellow-d); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(245,197,24,0.5); }
     .btn-ghost {
       display: inline-flex; align-items: center; gap: 0.5rem;
-      background: transparent; color: rgba(255,255,255,0.6);
+      background: transparent; color: var(--sub);
       font-weight: 600; font-size: 0.88rem; letter-spacing: 0.04em;
       padding: 0.9rem 1.85rem; border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.15);
+      border: 1px solid var(--border);
       transition: border-color 0.2s, color 0.2s;
     }
-    .btn-ghost:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+    .btn-ghost:hover { border-color: var(--ink-3); color: var(--ink); }
     .hero-trust {
       display: flex; flex-wrap: wrap; gap: 1.5rem;
       margin-top: 2.5rem; padding-top: 2rem;
-      border-top: 1px solid rgba(255,255,255,0.06);
+      border-top: 1px solid var(--border);
     }
-    .hero-trust-item { font-size: 0.78rem; color: rgba(255,255,255,0.4); font-weight: 600; }
-    .hero-trust-item b { color: rgba(255,255,255,0.85); }
+    .hero-trust-item { font-size: 0.78rem; color: var(--sub); font-weight: 600; }
+    .hero-trust-item b { color: var(--ink); }
 
     /* Hero form card */
     .hero-form-card {
@@ -348,22 +358,22 @@
     /* ── SECTION SHARED ── */
     .section { padding: 96px 0; }
     .section.bg-off { background: var(--off); }
-    .section.bg-dark { background: var(--ink-2); }
+    .section.bg-dark { background: var(--off); }
     .section.bg-warm { background: var(--warm); }
     .section-label {
       font-size: 0.62rem; font-weight: 800; letter-spacing: 0.24em;
       text-transform: uppercase; color: var(--yellow-d); margin-bottom: 0.75rem;
     }
-    .section-label.light { color: var(--yellow); }
+    .section-label.light { color: var(--yellow-d); }
     .section-title {
       font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(2rem, 4vw, 2.9rem);
       letter-spacing: 0.03em; line-height: 1.05;
       color: var(--ink);
     }
-    .section-title.light { color: #fff; }
+    .section-title.light { color: var(--ink); }
     .section-sub { font-size: 0.95rem; color: var(--sub); line-height: 1.8; margin-top: 0.75rem; }
-    .section-sub.light { color: rgba(255,255,255,0.4); }
+    .section-sub.light { color: var(--sub); }
 
     /* ── SERVICES ── */
     .services-head { margin-bottom: 3rem; }
@@ -392,7 +402,7 @@
     }
     .svc-name { font-size: 1rem; font-weight: 800; color: var(--ink); margin-bottom: 0.5rem; }
     .svc-desc { font-size: 0.83rem; color: var(--sub); line-height: 1.7; }
-    .svc-price { font-size: 0.72rem; font-weight: 700; color: var(--ink-3); margin-top: 1.1rem; letter-spacing: 0.04em; }
+    .svc-price { display: none; }
     @media (max-width: 820px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 480px) { .services-grid { grid-template-columns: 1fr; } }
 
@@ -401,19 +411,19 @@
     .steps::before {
       content: '';
       position: absolute; top: 24px; left: calc(16.66% + 1rem); right: calc(16.66% + 1rem);
-      height: 1px; background: rgba(255,255,255,0.06);
+      height: 1px; background: var(--border);
     }
     .step-num {
       width: 48px; height: 48px; border-radius: 50%;
-      border: 1.5px solid rgba(245,197,24,0.3);
+      border: 2px solid var(--yellow);
       display: flex; align-items: center; justify-content: center;
       font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem;
-      color: var(--yellow); margin-bottom: 1.5rem;
-      background: rgba(245,197,24,0.06);
+      color: var(--ink); margin-bottom: 1.5rem;
+      background: var(--yellow-pale);
       transition: background 0.25s, border-color 0.25s;
     }
-    .step-title { font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 0.6rem; }
-    .step-desc { font-size: 0.83rem; color: rgba(255,255,255,0.38); line-height: 1.7; }
+    .step-title { font-size: 0.95rem; font-weight: 800; color: var(--ink); margin-bottom: 0.6rem; }
+    .step-desc { font-size: 0.83rem; color: var(--sub); line-height: 1.7; }
     @media (max-width: 620px) {
       .steps { grid-template-columns: 1fr; gap: 2.25rem; }
       .steps::before { display: none; }
@@ -610,8 +620,8 @@
         </p>
         <a class="hero-phone reveal d2" href="tel:9044472397">(904) 447-2397</a>
         <div class="hero-ctas reveal d3">
-          <a class="btn-primary" href="tel:9044472397">Call Now — It's Free</a>
-          <a class="btn-ghost" href="#quote">Get a Quote</a>
+          <a class="btn-yellow" href="tel:9044472397">Call Now — It's Free</a>
+          <a class="btn-ghost" href="#quote">Request Service</a>
         </div>
         <div class="hero-trust reveal d4">
           <span class="hero-trust-item"><b>5.0</b> stars · 47 reviews</span>
@@ -623,7 +633,7 @@
 
       <!-- QUOTE FORM -->
       <div class="hero-form-card reveal d2" id="quote">
-        <div class="hfc-title">Free Estimate</div>
+        <div class="hfc-title">Get a Callback</div>
         <div class="hfc-heading">We Call Back<br>in 30 Minutes</div>
         <form id="heroForm" onsubmit="submitForm(event)">
           <div class="hfc-field">
@@ -657,11 +667,11 @@
               <option>Right now — emergency</option>
               <option>Today</option>
               <option>This week</option>
-              <option>Just getting a quote</option>
+              <option>Planning ahead</option>
             </select>
           </div>
-          <button class="hfc-submit" type="submit" id="hfBtn">Get My Free Quote →</button>
-          <p class="hfc-fine">We call back within 30 minutes · No obligation · No pressure</p>
+          <button class="hfc-submit" type="submit" id="hfBtn">Request a Callback →</button>
+          <p class="hfc-fine">We call back within 30 minutes · No commitment · No pressure</p>
         </form>
         <div class="hfc-success" id="hfSuccess">
           <div class="hfc-success-icon">✅</div>
@@ -763,7 +773,7 @@
       <div class="svc">
         <span class="svc-num">06</span>
         <div class="svc-name">Tune-Up &amp; Maintenance</div>
-        <p class="svc-desc">A 20-point inspection, full lubrication, and safety check. Catches the $30 problem before it becomes a $300 one.</p>
+        <p class="svc-desc">A 20-point inspection, full lubrication, and safety check. Catches small problems before they turn into big ones.</p>
         <div class="svc-price">$99 flat · Book anytime</div>
       </div>
     </div>
@@ -786,8 +796,8 @@
       </div>
       <div class="reveal d1">
         <div class="step-num">02</div>
-        <div class="step-title">Get a clear price upfront</div>
-        <p class="step-desc">Before any work starts you'll know the full price. If the number doesn't work for you, you owe us nothing — no trip charge, no pressure.</p>
+        <div class="step-title">We assess and tell you exactly what's needed</div>
+        <p class="step-desc">We diagnose the issue honestly — you'll know exactly what the problem is and what it takes to fix it, before anything starts.</p>
       </div>
       <div class="reveal d2">
         <div class="step-num">03</div>
@@ -808,45 +818,45 @@
     <div class="reviews-grid">
       <div class="review reveal">
         <div class="review-stars">★★★★★</div>
-        <p class="review-text">"Spring snapped at 7am on a Monday. Called 904, tech was at my door by 9:30. Fixed in under an hour, exactly the price he quoted on the phone. Don't bother calling anyone else."</p>
+        <p class="review-text">"Tal was quick and effective fixing our garage door. It became disconnected from the motor and he got it connected and up and running again. Very much worth the time and effort put in. Thank you again!"</p>
         <div class="review-bottom">
-          <div class="review-av">MR</div>
+          <div class="review-av">CC</div>
           <div>
-            <div class="review-name">Marcus R.</div>
-            <div class="review-loc">Ponte Vedra Beach · Spring Replacement</div>
+            <div class="review-name">Chelsey C.</div>
+            <div class="review-loc">Jacksonville · Garage Door Repair</div>
           </div>
         </div>
       </div>
       <div class="review reveal d1">
         <div class="review-stars">★★★★★</div>
-        <p class="review-text">"My opener died and my car was stuck inside. They picked up right away, showed up on time, fixed it, and left. No upsell, no drama. That's all I wanted and that's what I got."</p>
+        <p class="review-text">"Coming home unable to open the garage on a Sunday afternoon was a nightmare. We Show Up was fast responding, got to the house 45 minutes after my call. Super professional and saved the day. 10/10 would use again."</p>
         <div class="review-bottom">
-          <div class="review-av">TL</div>
+          <div class="review-av">RH</div>
           <div>
-            <div class="review-name">Tanya L.</div>
-            <div class="review-loc">Mandarin · Opener Repair</div>
+            <div class="review-name">Robert H.</div>
+            <div class="review-loc">Jacksonville · Emergency Service</div>
           </div>
         </div>
       </div>
       <div class="review reveal">
         <div class="review-stars">★★★★★</div>
-        <p class="review-text">"Got three quotes. 904 was the most honest — told me I only needed one cable, not both like another company said. Saved me $80. Locals taking care of locals. Will always use them."</p>
+        <p class="review-text">"Tal came to replace my damaged lock, he came quickly and gave me different options based on my budget, he was professional and very kind. Definitely going to use his service again."</p>
         <div class="review-bottom">
-          <div class="review-av">DW</div>
+          <div class="review-av">MM</div>
           <div>
-            <div class="review-name">David W.</div>
-            <div class="review-loc">Nocatee · Cable Repair</div>
+            <div class="review-name">Monica M.</div>
+            <div class="review-loc">Jacksonville · Lock &amp; Door Service</div>
           </div>
         </div>
       </div>
       <div class="review reveal d1">
         <div class="review-stars">★★★★★</div>
-        <p class="review-text">"Had our whole door replaced. They helped us pick the style, came back next morning to install it, and it looks incredible. Three neighbors came over to ask who did it."</p>
+        <p class="review-text">"Tal came on scheduled time and fixed everything. Professional, reliable, and on time — I recommend for any lock repair or replacement."</p>
         <div class="review-bottom">
-          <div class="review-av">SK</div>
+          <div class="review-av">AA</div>
           <div>
-            <div class="review-name">Sandra &amp; Phil K.</div>
-            <div class="review-loc">Fleming Island · New Door Installation</div>
+            <div class="review-name">Ajay A.</div>
+            <div class="review-loc">Jacksonville · Door &amp; Lock Service</div>
           </div>
         </div>
       </div>
@@ -861,7 +871,7 @@
       <div class="trust-item reveal"><div class="trust-item-top">Google 5.0 ★</div><div class="trust-item-sub">47 verified reviews</div></div>
       <div class="trust-item reveal d1"><div class="trust-item-top">Same-Day Service</div><div class="trust-item-sub">7 days a week</div></div>
       <div class="trust-item reveal d2"><div class="trust-item-top">Parts on Every Truck</div><div class="trust-item-sub">No second trip needed</div></div>
-      <div class="trust-item reveal d3"><div class="trust-item-top">Upfront Pricing</div><div class="trust-item-sub">Know before we start</div></div>
+      <div class="trust-item reveal d3"><div class="trust-item-top">Honest Assessment</div><div class="trust-item-sub">We tell you exactly what's needed</div></div>
       <div class="trust-item reveal d4"><div class="trust-item-top">Local Since 2017</div><div class="trust-item-sub">Jacksonville's own</div></div>
     </div>
   </div>
@@ -911,10 +921,10 @@
       </div>
       <div class="faq-item">
         <button class="faq-btn" onclick="toggleFaq(this)">
-          <span class="faq-q">What does spring replacement cost?</span>
+          <span class="faq-q">What happens when you show up?</span>
           <span class="faq-icon">+</span>
         </button>
-        <div class="faq-body"><div class="faq-a">Spring replacement starts at $150 depending on type and door size. You get a clear quote before we touch anything — no surprises. Most jobs take under an hour.</div></div>
+        <div class="faq-body"><div class="faq-a">We look at the door, diagnose the issue, and tell you exactly what's wrong and what it takes to fix it. No pressure, no obligation. You decide how you want to move forward.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-btn" onclick="toggleFaq(this)">
@@ -935,7 +945,7 @@
           <span class="faq-q">What's included in a tune-up?</span>
           <span class="faq-icon">+</span>
         </button>
-        <div class="faq-body"><div class="faq-a">A 20-point inspection, full lubrication, spring tension check, opener force test, cable inspection, and safety check. $99 flat. It's the cheapest way to avoid a $300 repair down the road.</div></div>
+        <div class="faq-body"><div class="faq-a">A 20-point inspection, full lubrication, spring tension check, opener force test, cable inspection, and safety check. It's the best way to catch a small issue before it turns into an emergency.</div></div>
       </div>
     </div>
   </div>
