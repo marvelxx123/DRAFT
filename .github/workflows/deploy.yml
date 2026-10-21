@@ -30,4 +30,4 @@ jobs:
           local-dir: ./deploy/
           server-dir: public_html/
           dangerous-clean-slate: false
-          state-name: .ftp-deploy-sync-state-v2.json
+          state-name: .ftp-deploy-sync-state-v3.json
