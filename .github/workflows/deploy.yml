@@ -16,6 +16,7 @@ jobs:
           cp 904garage.html deploy/index.html
           cp garage-door-repair-*.html deploy/
           cp sitemap.xml robots.txt 404.html adhd.html daily.html deploy/
+          cp hero-video.mp4 deploy/
           cp siteground-upload/.htaccess deploy/
           find deploy/ -name "*.html" -exec sed -i "s|fetch('/api/contact'|fetch('https://nine04-garage-doors.onrender.com/api/contact'|g" {} \;
 
