@@ -17,7 +17,6 @@ jobs:
           cp garage-door-repair-*.html deploy/
           cp sitemap.xml robots.txt 404.html adhd.html daily.html deploy/
           cp siteground-upload/.htaccess deploy/
-          cp ftp-test.html deploy/
           find deploy/ -name "*.html" -exec sed -i "s|fetch('/api/contact'|fetch('https://nine04-garage-doors.onrender.com/api/contact'|g" {} \;
 
       - name: Deploy via FTP
@@ -29,6 +28,6 @@ jobs:
           port: 21
           protocol: ftp
           local-dir: ./deploy/
-          server-dir: ./
+          server-dir: public_html/
           dangerous-clean-slate: false
-          state-name: .ftp-deploy-sync-state-v4.json
+          state-name: .ftp-deploy-sync-state-v5.json
