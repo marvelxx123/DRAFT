@@ -232,6 +232,23 @@
     @media (max-width: 768px) {
       .hero video { display: none !important; }
       .hero-mobile-bg { display: block !important; }
+      .hero {
+        height: 100svh;
+        height: 100vh;
+        padding: 0 !important;
+        display: flex;
+        align-items: flex-end;
+      }
+      .hero .wrap { width: 100%; padding-bottom: 2.5rem; }
+      .hero-inner { grid-template-columns: 1fr !important; gap: 0 !important; }
+      .hero-form-card { display: none !important; }
+      .hero-h1 { font-size: 2rem !important; margin-bottom: 0.75rem; }
+      .hero-sub { font-size: 0.82rem !important; margin-bottom: 1rem !important; line-height: 1.55 !important; }
+      .hero-phone { font-size: 1.5rem !important; margin-bottom: 0.75rem !important; }
+      .hero-ctas { flex-direction: column !important; gap: 0.6rem !important; }
+      .btn-yellow, .btn-ghost { justify-content: center; padding: 0.9rem 1.25rem !important; }
+      .hero-trust { margin-top: 1.25rem !important; padding-top: 1rem !important; gap: 0.75rem !important; }
+      .hero-eyebrow { margin-bottom: 0.75rem; }
     }
   </style>
 </head>
