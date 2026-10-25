@@ -3,6 +3,7 @@
 **To re-arm all schedules:** Say "re-arm the schedules" in any new session.
 **Repo:** /home/user/DRAFT/ | **Branch:** main | **Auto-deploys:** yes, every push
 **Business:** 904 Garage Doors | (904) 447-2397 | 904garagedoors.com | Owner: Tal
+**Business email:** 904garagee@gmail.com (GMB account + main business email)
 **RULE:** Never include home/service address in any public content. No pricing on any page.
 
 ---
