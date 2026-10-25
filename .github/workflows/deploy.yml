@@ -15,6 +15,9 @@ jobs:
           mkdir -p deploy
           cp 904garage.html deploy/index.html
           cp garage-door-repair-*.html deploy/
+          cp garage-door-spring-repair-jacksonville.html deploy/
+          cp emergency-garage-door-repair-jacksonville.html deploy/
+          cp garage-door-opener-repair-jacksonville.html deploy/
           cp sitemap.xml robots.txt 404.html adhd.html daily.html deploy/
           cp hero-video.mp4 deploy/
           cp siteground-upload/.htaccess deploy/
