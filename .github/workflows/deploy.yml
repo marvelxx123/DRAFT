@@ -20,6 +20,7 @@ jobs:
           cp garage-door-opener-repair-jacksonville.html deploy/
           cp sitemap.xml robots.txt 404.html adhd.html daily.html deploy/
           cp hero-video.mp4 deploy/
+          cp hero-mobile.jpg deploy/
           cp siteground-upload/.htaccess deploy/
           find deploy/ -name "*.html" -exec sed -i "s|fetch('/api/contact'|fetch('https://nine04-garage-doors.onrender.com/api/contact'|g" {} \;
 
