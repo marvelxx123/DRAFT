@@ -1,5 +1,8 @@
 Options -Indexes
 
+# Serve XML files with correct content type
+AddType application/xml .xml
+
 # Tell SiteGround Dynamic Cache not to cache HTML pages
 <FilesMatch "\.html$">
     Header always set Cache-Control "no-cache, no-store, must-revalidate"
