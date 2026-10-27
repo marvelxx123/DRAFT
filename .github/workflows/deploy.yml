@@ -37,6 +37,6 @@ jobs:
           port: 21
           protocol: ftp
           local-dir: ./deploy/
-          server-dir: public_html/
+          server-dir: 904garagedoors.com/public_html/
           dangerous-clean-slate: false
           state-name: .ftp-deploy-sync-state-v5.json
