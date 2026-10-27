@@ -29,7 +29,7 @@ WEEKLY SEO + CONTENT UPDATE — run this now:
    - Do NOT add pricing. Do NOT add the home address.
 6. Git commit the changes with a clear message and push to main
 7. Build a plain-text email summary with: what you found in rankings, which cities you updated, what you changed, and one key takeaway.
-8. Use mcp__Gmail__send_message to send that summary to tal.verbalogic.project@gmail.com with subject: "904 Garage Doors — Weekly SEO Update ✅"
+8. Use mcp__Gmail__send_message to send that summary to 904garagee@gmail.com with subject: "904 Garage Doors — Weekly SEO Update ✅"
 
 City pages: /home/user/DRAFT/garage-door-repair-[slug].html
 Slugs: arlington, atlantic-beach, bartram-park, fernandina-beach, fleming-island, jacksonville-beach, mandarin, middleburg, neptune-beach, nocatee, orange-park, ortega, palm-coast, ponte-vedra, southside, st-johns, yulee
@@ -57,7 +57,7 @@ WEEKLY GMB PREP + REPUTATION INTELLIGENCE — run this now:
    - Post 3: New construction homes in Nocatee/Ponte Vedra — smart opener installs
    Each post: 100-150 words, conversational, ends with "Call (904) 447-2397"
 5. Build a plain-text email summary with: competitor intelligence findings, any new mentions of 904 Garage Doors, the 3 GMB post titles written this week, and one recommended action for Tal.
-6. Use mcp__Gmail__send_message to send that summary to tal.verbalogic.project@gmail.com with subject: "904 Garage Doors — Weekly GMB + Reputation Report ✅"
+6. Use mcp__Gmail__send_message to send that summary to 904garagee@gmail.com with subject: "904 Garage Doors — Weekly GMB + Reputation Report ✅"
 ```
 
 ---
@@ -98,7 +98,7 @@ MONTHLY DEEP AUDIT — run this now:
 Create /home/user/DRAFT/reports/ directory if it doesn't exist.
 
 8. Build a plain-text email summary with: rank positions for all 6 keywords, top competitor threat, changes made this month, and the #1 priority for next month.
-9. Use mcp__Gmail__send_message to send that summary to tal.verbalogic.project@gmail.com with subject: "904 Garage Doors — Monthly SEO Audit ✅ [Month Year]"
+9. Use mcp__Gmail__send_message to send that summary to 904garagee@gmail.com with subject: "904 Garage Doors — Monthly SEO Audit ✅ [Month Year]"
 ```
 
 ---
