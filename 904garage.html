@@ -402,7 +402,10 @@
     }
     .svc-name { font-size: 1rem; font-weight: 800; color: var(--ink); margin-bottom: 0.5rem; }
     .svc-desc { font-size: 0.83rem; color: var(--sub); line-height: 1.7; }
-    .svc-price { display: none; }
+    a.svc { display: block; color: inherit; text-decoration: none; }
+    .svc-more { display: inline-block; margin-top: 0.9rem; font-size: 0.8rem; font-weight: 700; color: var(--yellow-d); }
+    .svc-also { margin-top: 1.25rem; font-size: 0.9rem; color: var(--sub); text-align: center; line-height: 1.8; }
+    .svc-also a { color: var(--ink); font-weight: 700; text-decoration: underline; text-decoration-color: var(--yellow); text-underline-offset: 3px; }
     @media (max-width: 820px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 480px) { .services-grid { grid-template-columns: 1fr; } }
 
@@ -743,43 +746,42 @@
       <p class="section-sub reveal d2">One call. Parts on the truck. Done the same day.</p>
     </div>
     <div class="services-grid reveal d2">
-      <div class="svc">
+      <a class="svc" href="/garage-door-spring-repair-jacksonville">
         <span class="svc-num">01</span>
         <div class="svc-name">Spring Replacement</div>
         <p class="svc-desc">Torsion or extension — springs are the most common failure. We carry both on every truck and replace them in under an hour.</p>
-        <div class="svc-price">From $150 · Same day</div>
-      </div>
-      <div class="svc">
+        <span class="svc-more">Learn more →</span>
+      </a>
+      <a class="svc" href="/garage-door-opener-repair-jacksonville">
         <span class="svc-num">02</span>
         <div class="svc-name">Opener Repair &amp; Install</div>
         <p class="svc-desc">LiftMaster, Chamberlain, Genie, Craftsman — all major brands. Includes Wi-Fi smart openers and wall panel repairs.</p>
-        <div class="svc-price">From $120 · Same day</div>
-      </div>
-      <div class="svc">
+        <span class="svc-more">Learn more →</span>
+      </a>
+      <a class="svc" href="/emergency-garage-door-repair-jacksonville">
         <span class="svc-num">03</span>
         <div class="svc-name">Emergency Repair</div>
         <p class="svc-desc">Car trapped. Door stuck open. We prioritize emergencies and answer 7 days a week — a real person picks up, not voicemail.</p>
-        <div class="svc-price">7 days a week · Priority dispatch</div>
-      </div>
-      <div class="svc">
+        <span class="svc-more">Learn more →</span>
+      </a>
+      <a class="svc" href="/garage-door-cable-repair-jacksonville">
         <span class="svc-num">04</span>
         <div class="svc-name">Cable Repair</div>
         <p class="svc-desc">Snapped cables make the door dangerous and unbalanced. We replace both cables at once — not just the broken one.</p>
-        <div class="svc-price">From $110 · Same day</div>
-      </div>
+        <span class="svc-more">Learn more →</span>
+      </a>
       <div class="svc">
         <span class="svc-num">05</span>
         <div class="svc-name">New Door Installation</div>
         <p class="svc-desc">Steel, carriage-house, glass panels — we help you choose the right door for your home and install it cleanly.</p>
-        <div class="svc-price">Free in-home consultation</div>
       </div>
       <div class="svc">
         <span class="svc-num">06</span>
         <div class="svc-name">Tune-Up &amp; Maintenance</div>
         <p class="svc-desc">A 20-point inspection, full lubrication, and safety check. Catches small problems before they turn into big ones.</p>
-        <div class="svc-price">$99 flat · Book anytime</div>
       </div>
     </div>
+    <p class="svc-also">More repairs: <a href="/garage-door-off-track-repair-jacksonville">Door off track</a> · <a href="/garage-door-roller-replacement-jacksonville">Roller replacement</a> · <a href="/garage-door-panel-replacement-jacksonville">Panel replacement</a></p>
   </div>
 </section>
 
