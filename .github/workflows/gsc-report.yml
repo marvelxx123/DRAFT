@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "0 10 * * 1"   # Mondays 6am Eastern, before the SEO agent runs
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - scripts/gsc_report.py
+      - .github/workflows/gsc-report.yml
 
 permissions:
   contents: write
