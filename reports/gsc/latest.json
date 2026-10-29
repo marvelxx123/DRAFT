@@ -1,0 +1,239 @@
+{
+ "range": [
+  "2026-09-29",
+  "2026-10-26"
+ ],
+ "totals": {
+  "clicks": 2,
+  "impressions": 5,
+  "ctr": 0.4,
+  "position": 9.2
+ },
+ "queries": [
+  {
+   "keys": [
+    "garage door repairs mandarin"
+   ],
+   "clicks": 0,
+   "impressions": 2,
+   "ctr": 0,
+   "position": 20
+  },
+  {
+   "keys": [
+    "garage doors mandarin"
+   ],
+   "clicks": 0,
+   "impressions": 1,
+   "ctr": 0,
+   "position": 1
+  }
+ ],
+ "pages": [
+  {
+   "keys": [
+    "https://904garagedoors.com/"
+   ],
+   "clicks": 2,
+   "impressions": 2,
+   "ctr": 1,
+   "position": 2.5
+  },
+  {
+   "keys": [
+    "https://904garagedoors.com/garage-door-repair-mandarin"
+   ],
+   "clicks": 0,
+   "impressions": 3,
+   "ctr": 0,
+   "position": 13.666666666666666
+  }
+ ],
+ "query_page": [
+  {
+   "keys": [
+    "garage door repairs mandarin",
+    "https://904garagedoors.com/garage-door-repair-mandarin"
+   ],
+   "clicks": 0,
+   "impressions": 2,
+   "ctr": 0,
+   "position": 20
+  },
+  {
+   "keys": [
+    "garage doors mandarin",
+    "https://904garagedoors.com/garage-door-repair-mandarin"
+   ],
+   "clicks": 0,
+   "impressions": 1,
+   "ctr": 0,
+   "position": 1
+  }
+ ],
+ "index": [
+  {
+   "url": "https://904garagedoors.com/",
+   "verdict": "PASS",
+   "coverage": "Submitted and indexed",
+   "lastCrawl": "2026-10-27T18:39:25Z"
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-repair-ponte-vedra",
+   "verdict": "NEUTRAL",
+   "coverage": "URL is unknown to Google",
+   "lastCrawl": null
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-repair-jacksonville-beach",
+   "verdict": "NEUTRAL",
+   "coverage": "Discovered - currently not indexed",
+   "lastCrawl": null
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-repair-fernandina-beach",
+   "verdict": "NEUTRAL",
+   "coverage": "Discovered - currently not indexed",
+   "lastCrawl": null
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-repair-yulee",
+   "verdict": "NEUTRAL",
+   "coverage": "Discovered - currently not indexed",
+   "lastCrawl": null
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-repair-nocatee",
+   "verdict": "NEUTRAL",
+   "coverage": "Discovered - currently not indexed",
+   "lastCrawl": null
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-repair-mandarin",
+   "verdict": "PASS",
+   "coverage": "Submitted and indexed",
+   "lastCrawl": "2026-09-23T07:04:06Z"
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-repair-orange-park",
+   "verdict": "NEUTRAL",
+   "coverage": "Discovered - currently not indexed",
+   "lastCrawl": null
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-repair-fleming-island",
+   "verdict": "NEUTRAL",
+   "coverage": "Discovered - currently not indexed",
+   "lastCrawl": null
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-repair-neptune-beach",
+   "verdict": "NEUTRAL",
+   "coverage": "Discovered - currently not indexed",
+   "lastCrawl": null
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-repair-atlantic-beach",
+   "verdict": "NEUTRAL",
+   "coverage": "Discovered - currently not indexed",
+   "lastCrawl": null
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-repair-bartram-park",
+   "verdict": "NEUTRAL",
+   "coverage": "Discovered - currently not indexed",
+   "lastCrawl": null
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-repair-arlington",
+   "verdict": "NEUTRAL",
+   "coverage": "Discovered - currently not indexed",
+   "lastCrawl": null
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-repair-southside",
+   "verdict": "NEUTRAL",
+   "coverage": "Discovered - currently not indexed",
+   "lastCrawl": null
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-repair-st-johns",
+   "verdict": "NEUTRAL",
+   "coverage": "Discovered - currently not indexed",
+   "lastCrawl": null
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-repair-middleburg",
+   "verdict": "NEUTRAL",
+   "coverage": "Discovered - currently not indexed",
+   "lastCrawl": null
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-repair-ortega",
+   "verdict": "NEUTRAL",
+   "coverage": "Discovered - currently not indexed",
+   "lastCrawl": null
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-spring-repair-jacksonville",
+   "verdict": "NEUTRAL",
+   "coverage": "Not found (404)",
+   "lastCrawl": "2026-10-28T23:07:45Z"
+  },
+  {
+   "url": "https://904garagedoors.com/emergency-garage-door-repair-jacksonville",
+   "verdict": "NEUTRAL",
+   "coverage": "Discovered - currently not indexed",
+   "lastCrawl": null
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-opener-repair-jacksonville",
+   "verdict": "NEUTRAL",
+   "coverage": "Not found (404)",
+   "lastCrawl": "2026-10-28T17:53:02Z"
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-cable-repair-jacksonville",
+   "verdict": "NEUTRAL",
+   "coverage": "Discovered - currently not indexed",
+   "lastCrawl": null
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-roller-replacement-jacksonville",
+   "verdict": "NEUTRAL",
+   "coverage": "Not found (404)",
+   "lastCrawl": "2026-10-28T10:07:15Z"
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-panel-replacement-jacksonville",
+   "verdict": "NEUTRAL",
+   "coverage": "Discovered - currently not indexed",
+   "lastCrawl": null
+  },
+  {
+   "url": "https://904garagedoors.com/garage-door-off-track-repair-jacksonville",
+   "verdict": "NEUTRAL",
+   "coverage": "Discovered - currently not indexed",
+   "lastCrawl": null
+  }
+ ],
+ "sitemaps": [
+  {
+   "path": "https://904garagedoors.com/sitemap.xml",
+   "lastSubmitted": "2026-10-27T16:45:08.934Z",
+   "isPending": false,
+   "isSitemapsIndex": false,
+   "type": "sitemap",
+   "lastDownloaded": "2026-10-27T16:45:11.225Z",
+   "warnings": "0",
+   "errors": "0",
+   "contents": [
+    {
+     "type": "web",
+     "submitted": "24",
+     "indexed": "0"
+    }
+   ]
+  }
+ ]
+}
