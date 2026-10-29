@@ -19,6 +19,15 @@ RULE: NEVER include the home/service address in any public content. No pricing o
 
 WEEKLY SEO + CONTENT UPDATE — run this now:
 
+0. SEARCH CONSOLE FIRST (real Google data beats guesses):
+   - Run `git pull origin main`, then read /home/user/DRAFT/reports/gsc/latest.md (written every Monday 6am by the GitHub Action).
+   - If the report is missing or older than 8 days, say so in the email and continue with steps 1-5.
+   - Priority order for this week's work:
+     a. "Not indexed" pages — find why (thin content, duplicate, missing from sitemap, broken links) and fix it.
+     b. "Close to page 1" queries — improve the exact page listed for that exact query: use the query wording in an H2, a FAQ item and the first paragraph. These are the fastest wins.
+     c. "Seen but not clicked" pages — rewrite <title> and meta description to be more clickable (keep keyword first, under 60 / 155 chars, include (904) 447-2397 where it fits).
+   - Compare totals to "Last report" and report the change.
+
 1. WebSearch "garage door repair Jacksonville FL" — note positions 1-5, does 904garagedoors.com appear?
 2. WebSearch "garage door repair Nocatee FL" — same check
 3. WebSearch "garage door repair Ponte Vedra FL" — same check
@@ -28,7 +37,7 @@ WEEKLY SEO + CONTENT UPDATE — run this now:
    - Keep the exact same HTML structure — only improve text content inside existing tags
    - Do NOT add pricing. Do NOT add the home address.
 6. Git commit the changes with a clear message and push to main
-7. Build a plain-text email summary with: what you found in rankings, which cities you updated, what you changed, and one key takeaway.
+7. Build a plain-text email summary with: Search Console numbers this week vs last (clicks, impressions, avg position), pages not indexed, what you found in rankings, which pages you updated and for which search terms, and one key takeaway.
 8. Use mcp__Gmail__send_message to send that summary to 904garagee@gmail.com with subject: "904 Garage Doors — Weekly SEO Update ✅"
 
 City pages: /home/user/DRAFT/garage-door-repair-[slug].html

@@ -1,0 +1,34 @@
+name: Search Console weekly report
+
+on:
+  schedule:
+    - cron: "0 10 * * 1"   # Mondays 6am Eastern, before the SEO agent runs
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install google-auth requests
+
+      - name: Pull Search Console data
+        env:
+          GSC_SA_KEY: ${{ secrets.GSC_SA_KEY }}
+        run: python scripts/gsc_report.py
+
+      - name: Save report
+        run: |
+          git config user.name "gsc-report-bot"
+          git config user.email "actions@github.com"
+          git add reports/gsc
+          git diff --cached --quiet || git commit -m "Search Console report $(date +%F)"
+          git push
