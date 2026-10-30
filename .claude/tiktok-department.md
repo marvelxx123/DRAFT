@@ -21,7 +21,10 @@
 6. **Proof** — real Thumbtack review read out loud (27 reviews, 5.0).
 
 ## Every video brief contains
-Hook (on-screen text, first 1s) · shot list · what to say out loud (keyword included) · caption (keyword + area + CTA, ~120–220 chars) · 3–5 hashtags · location tag · best posting time (test 7–9am, 12–1pm, 6–9pm local; adjust from data).
+Hook (on-screen text, first 1s) · shot list · what to say out loud (keyword included) · caption · 3–5 hashtags · location tag · best posting time (test 7–9am, 12–1pm, 6–9pm local; adjust from data).
+
+**Caption rules (Tal's call):** MAX 150 characters INCLUDING hashtags — aim for ≤145 since emojis may count double. Every caption leads with SAFETY (why the problem is risky) + SAME-DAY service, then the keyword phrase with the area ("garage door repair in Jacksonville" / "…in Nocatee"), then (904) 447-2397, then 2–3 hashtags. Count the characters before handing it over.
+Example (143): Shaky or noisy door? That's a safety risk ⚠️ Same-day garage door repair in Jacksonville. Call (904) 447-2397 #garagedoorrepair #jacksonvillefl
 
 ## Base hashtag sets (rotate, max 5)
 Local: #jacksonvillefl #jaxfl #904 #pontevedrabeach #nocatee #stjohnsfl #jacksonvillebeach
