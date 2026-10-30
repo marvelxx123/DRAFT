@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Prepare site files
         run: |
@@ -26,6 +28,7 @@ jobs:
           cp hero-video.mp4 deploy/
           cp hero-mobile.jpg deploy/
           cp siteground-upload/.htaccess deploy/
+          cp d77ebce5ea940d19af351d8349932320.txt deploy/
           find deploy/ -name "*.html" -exec sed -i "s|fetch('/api/contact'|fetch('https://nine04-garage-doors.onrender.com/api/contact'|g" {} \;
 
       - name: Deploy via FTP
@@ -40,3 +43,19 @@ jobs:
           server-dir: 904garagedoors.com/public_html/
           dangerous-clean-slate: false
           state-name: .ftp-deploy-sync-state-v5.json
+
+      - name: Notify Bing of changed pages (IndexNow)
+        continue-on-error: true
+        run: |
+          BEFORE="${{ github.event.before }}"
+          git cat-file -e "$BEFORE" 2>/dev/null || BEFORE=HEAD~1
+          URLS=$(git diff --name-only "$BEFORE" HEAD -- '*.html' | while read f; do
+            [ "$f" = "904garage.html" ] && path="" || path="${f%.html}"
+            url="https://904garagedoors.com/$path"
+            grep -q "<loc>$url</loc>" sitemap.xml && echo "\"$url\""
+          done | paste -sd, -)
+          [ -z "$URLS" ] && { echo "No sitemap pages changed"; exit 0; }
+          echo "Submitting: $URLS"
+          curl -sS -o /dev/null -w "IndexNow HTTP %{http_code}\n" -X POST https://api.indexnow.org/indexnow \
+            -H "Content-Type: application/json; charset=utf-8" \
+            -d "{\"host\":\"904garagedoors.com\",\"key\":\"d77ebce5ea940d19af351d8349932320\",\"keyLocation\":\"https://904garagedoors.com/d77ebce5ea940d19af351d8349932320.txt\",\"urlList\":[$URLS]}"
